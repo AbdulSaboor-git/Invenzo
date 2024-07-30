@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { MdClose, MdMenu, MdSettings } from "react-icons/md";
 
 export default function Header({ buttons, user }) {
-  const Buttons = buttons;
+  const [first_btn, ...Buttons] = buttons;
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleSidebar = () => {
@@ -45,7 +45,7 @@ export default function Header({ buttons, user }) {
             <div className="flex flex-col gap-2 pt-8 px-2">
               {Buttons.map((btn, index) => (
                 <button
-                  className="bg-[#00a5a5] hover:bg-[#009595] hover:scale-x-[1.01]  transition-transform duration-200 ease-in-out   text-white text-[11px] py-2 px-4 rounded-xl shadow-sm shadow-[#000000cd]"
+                  className="bg-[#14aeae] hover:bg-[#089393] hover:scale-x-[1.01]  transition-transform duration-200 ease-in-out   text-white text-[11px] py-2 px-4 rounded-xl shadow-sm shadow-[#000000cd]"
                   key={index}
                 >
                   <div className="flex gap-4 items-center justify-start">

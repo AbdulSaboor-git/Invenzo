@@ -31,7 +31,7 @@ export default function RightSide({ products }) {
             type="text"
             value={searchValue}
             onChange={handleSearchChange}
-            className="w-full h-10 md:h-11 rounded-full shadow-sm shadow-[#00000061] pl-4 pr-10"
+            className="w-full h-10 md:h-11 rounded-full  pl-4 pr-10"
             placeholder="Search..."
           />
           {searchValue && (
@@ -41,8 +41,8 @@ export default function RightSide({ products }) {
             />
           )}
         </div>
-        <FaFilter className="cursor-pointer text-[25px] text-[#008080]" />
-        <FaSort className="cursor-pointer text-[25px] text-[#008080]" />
+        <FaFilter className="cursor-pointer text-[25px] text-[#016c6c]" />
+        <FaSort className="cursor-pointer text-[25px] text-[#016c6c]" />
       </div>
       <div className="flex flex-col gap-2 w-full pb-1 px-2 md:max-h-[80vh] md:overflow-auto hidden_scroll_bar">
         {products
