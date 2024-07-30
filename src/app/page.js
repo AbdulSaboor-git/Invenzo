@@ -1,112 +1,207 @@
-import Image from "next/image";
+import Header from "@/components/header";
+import Footer from "@/components/footer";
+import Body from "@/components/body";
+import {
+  FaPlus,
+  FaCogs,
+  FaCloudUploadAlt,
+  FaFileExport,
+  FaTrashAlt,
+  FaUsers,
+} from "react-icons/fa";
+
+const user = {
+  name: "Abdul Saboor",
+  profile_pic: "/avatar.png",
+};
+
+const buttons = [
+  { btn_name: "Add Product", icon: <FaPlus /> },
+  { btn_name: "Manage Categories", icon: <FaCogs /> },
+  { btn_name: "Load Data", icon: <FaCloudUploadAlt /> },
+  { btn_name: "Export Data", icon: <FaFileExport /> },
+  { btn_name: "Clear Data", icon: <FaTrashAlt /> },
+  { btn_name: "Manage Users", icon: <FaUsers /> },
+];
+
+const products = [
+  {
+    id: 0,
+    name: "Product 0",
+    category: "A",
+    purchase_price: 300,
+    sale_price: 340,
+  },
+  {
+    id: 1,
+    name: "Product 1",
+    category: "B",
+    purchase_price: 150,
+    sale_price: 180,
+  },
+  {
+    id: 2,
+    name: "Product 2",
+    category: "A",
+    purchase_price: 500,
+    sale_price: 450,
+  },
+  {
+    id: 3,
+    name: "Product 3",
+    category: "C",
+    purchase_price: 200,
+    sale_price: 220,
+  },
+  {
+    id: 4,
+    name: "Product 4",
+    category: "B",
+    purchase_price: 350,
+    sale_price: 370,
+  },
+  {
+    id: 5,
+    name: "Product 5",
+    category: "A",
+    purchase_price: 400,
+    sale_price: 420,
+  },
+  {
+    id: 6,
+    name: "Product 6",
+    category: "C",
+    purchase_price: 250,
+    sale_price: 260,
+  },
+  {
+    id: 7,
+    name: "Product 7",
+    category: "B",
+    purchase_price: 120,
+    sale_price: 140,
+  },
+  {
+    id: 8,
+    name: "Product 8",
+    category: "A",
+    purchase_price: 600,
+    sale_price: 580,
+  },
+  {
+    id: 9,
+    name: "Product 9",
+    category: "C",
+    purchase_price: 180,
+    sale_price: 200,
+  },
+  {
+    id: 10,
+    name: "Product 10",
+    category: "B",
+    purchase_price: 400,
+    sale_price: 410,
+  },
+  {
+    id: 11,
+    name: "Product 11",
+    category: "A",
+    purchase_price: 300,
+    sale_price: 330,
+  },
+  {
+    id: 12,
+    name: "Product 12",
+    category: "C",
+    purchase_price: 220,
+    sale_price: 230,
+  },
+  {
+    id: 13,
+    name: "Product 13",
+    category: "B",
+    purchase_price: 180,
+    sale_price: 190,
+  },
+  {
+    id: 14,
+    name: "Product 14",
+    category: "A",
+    purchase_price: 550,
+    sale_price: 500,
+  },
+  {
+    id: 15,
+    name: "Product 15",
+    category: "C",
+    purchase_price: 210,
+    sale_price: 225,
+  },
+  {
+    id: 16,
+    name: "Product 15",
+    category: "C",
+    purchase_price: 210,
+    sale_price: 225,
+  },
+  {
+    id: 17,
+    name: "Product 15",
+    category: "C",
+    purchase_price: 210,
+    sale_price: 225,
+  },
+  {
+    id: 18,
+    name: "Product 15",
+    category: "C",
+    purchase_price: 210,
+    sale_price: 225,
+  },
+  {
+    id: 19,
+    name: "Product 15",
+    category: "C",
+    purchase_price: 210,
+    sale_price: 225,
+  },
+  {
+    id: 20,
+    name: "Product 15",
+    category: "C",
+    purchase_price: 210,
+    sale_price: 225,
+  },
+  {
+    id: 21,
+    name: "Product 15",
+    category: "C",
+    purchase_price: 210,
+    sale_price: 225,
+  },
+  {
+    id: 22,
+    name: "Product 15",
+    category: "C",
+    purchase_price: 210,
+    sale_price: 225,
+  },
+  {
+    id: 23,
+    name: "Product 15",
+    category: "C",
+    purchase_price: 210,
+    sale_price: 225,
+  },
+];
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">src/app/page.js</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-full sm:before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-full sm:after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800 hover:dark:bg-opacity-30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore starter templates for Next.js.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{" "}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50 text-balance`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
+    <main className={`flex min-h-screen flex-col items-center justify-between`}>
+      <div className="max-w-[1440px] w-full">
+        <Header buttons={buttons} user={user} />
+        <Body buttons={buttons} products={products} />
+        <Footer />
       </div>
     </main>
   );
