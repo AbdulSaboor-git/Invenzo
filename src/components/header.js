@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { MdClose, MdMenu, MdSettings } from "react-icons/md";
+import { MdClose, MdMenu, MdSettings, MdAdd } from "react-icons/md";
 
 export default function Header({ buttons, user }) {
   const [first_btn, ...Buttons] = buttons;
@@ -13,7 +13,7 @@ export default function Header({ buttons, user }) {
   return (
     <div className="relative flex justify-center items-center p-4 pt-10 z-50">
       <div className="absolute left-4 top-4 md:hidden">
-        <button onClick={toggleSidebar} className="text-2xl text-[#272727]">
+        <button onClick={toggleSidebar} className="text-2xl text-[#016c6c]">
           <MdMenu />
         </button>
       </div>
@@ -26,7 +26,7 @@ export default function Header({ buttons, user }) {
       >
         <button
           onClick={toggleSidebar}
-          className="absolute top-4 right-4 text-xl text-[#272727]"
+          className="absolute top-4 right-4 text-xl text-[#016c6c]"
         >
           <MdClose style={{ fontSize: "1.5rem" }} />
         </button>
@@ -45,7 +45,7 @@ export default function Header({ buttons, user }) {
             <div className="flex flex-col gap-2 pt-8 px-2">
               {Buttons.map((btn, index) => (
                 <button
-                  className="bg-[#14aeae] hover:bg-[#089393] hover:scale-x-[1.01]  transition-transform duration-200 ease-in-out   text-white text-[11px] py-2 px-4 rounded-xl shadow-sm shadow-[#000000cd]"
+                  className="bg-[#01b0b0] hover:bg-[#079d9d] hover:scale-x-[1.01]  transition-transform duration-200 ease-in-out   text-white text-[11px] py-2 px-4 rounded-xl shadow-sm shadow-[#0000008f]"
                   key={index}
                 >
                   <div className="flex gap-4 items-center justify-start">
@@ -89,6 +89,11 @@ export default function Header({ buttons, user }) {
             </p>
           </div>
         </div>
+      </div>
+      <div className="fixed block md:hidden bottom-8 right-6 rounded-full ">
+        <button className="rounded-full size-[45px] text-2xl bg-[#01b0b0] z-50 flex items-center justify-center hover:bg-[#079d9d] hover:scale-[1.05]  transition-transform duration-200 ease-in-out shadow-sm shadow-[#000000cd]">
+          {<MdAdd />}
+        </button>
       </div>
     </div>
   );
