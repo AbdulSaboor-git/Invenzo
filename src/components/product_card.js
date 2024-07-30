@@ -65,10 +65,10 @@ export default function ProductCard({
             <table className="w-full text-center text-[13px]">
               <tbody>
                 <tr>
-                  <td className="border border-[#0079796c] p-1 font-semibold">
+                  <td className="border border-[#0079796c] p-1 font-semibold min-w-[130px]">
                     Name
                   </td>
-                  <td className="border border-[#0079796c] p-1 min-w-[100px]">
+                  <td className="border border-[#0079796c] p-1 min-w-[130px]">
                     {prod.name}
                   </td>
                 </tr>
