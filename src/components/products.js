@@ -37,7 +37,7 @@ const products = [
   },
   {
     id: 4,
-    name: "Chicken Breast",
+    name: "Chicken",
     category: "Meat",
     purchase_price: 300,
     sale_price: 350,
