@@ -1,4 +1,17 @@
-const products = [
+const Categories = [
+  "Fruits",
+  "Vegetables",
+  "Meat",
+  "Dairy",
+  "Bakery",
+  "Beverages",
+  "Seafood",
+  "Grocery",
+  "Nuts",
+  "Snacks",
+];
+
+const Products = [
   {
     id: 0,
     name: "Apple",
@@ -7,6 +20,8 @@ const products = [
     sale_price: 120,
     govt_sale_price: null,
     tags: ["fresh", "fruit", "apple", "red"],
+    date_added: "2023-03-15",
+    date_updated: "2023-05-20",
   },
   {
     id: 1,
@@ -16,6 +31,8 @@ const products = [
     sale_price: 60,
     govt_sale_price: 55,
     tags: ["fresh", "fruit", "banana", "yellow"],
+    date_added: "2023-01-10",
+    date_updated: "2023-04-05",
   },
   {
     id: 2,
@@ -25,6 +42,8 @@ const products = [
     sale_price: 40,
     govt_sale_price: null,
     tags: ["fresh", "vegetable", "tomato", "red"],
+    date_added: "2023-02-12",
+    date_updated: "2023-06-18",
   },
   {
     id: 3,
@@ -34,6 +53,8 @@ const products = [
     sale_price: 35,
     govt_sale_price: null,
     tags: ["fresh", "vegetable", "potato", "root"],
+    date_added: "2023-04-22",
+    date_updated: "2023-07-30",
   },
   {
     id: 4,
@@ -43,6 +64,8 @@ const products = [
     sale_price: 350,
     govt_sale_price: 320,
     tags: ["meat", "chicken", "protein", "fresh"],
+    date_added: "2023-03-05",
+    date_updated: "2023-06-10",
   },
   {
     id: 5,
@@ -52,6 +75,8 @@ const products = [
     sale_price: 50,
     govt_sale_price: null,
     tags: ["dairy", "milk", "fresh", "calcium"],
+    date_added: "2023-02-18",
+    date_updated: "2023-05-25",
   },
   {
     id: 6,
@@ -61,6 +86,8 @@ const products = [
     sale_price: 90,
     govt_sale_price: 85,
     tags: ["dairy", "eggs", "protein", "fresh"],
+    date_added: "2023-03-10",
+    date_updated: "2023-07-15",
   },
   {
     id: 7,
@@ -70,6 +97,8 @@ const products = [
     sale_price: 40,
     govt_sale_price: 35,
     tags: ["bakery", "bread", "wheat", "fresh"],
+    date_added: "2023-04-01",
+    date_updated: "2023-06-28",
   },
   {
     id: 8,
@@ -79,6 +108,8 @@ const products = [
     sale_price: 140,
     govt_sale_price: null,
     tags: ["dairy", "butter", "fat", "spread"],
+    date_added: "2023-01-25",
+    date_updated: "2023-04-30",
   },
   {
     id: 9,
@@ -88,6 +119,8 @@ const products = [
     sale_price: 220,
     govt_sale_price: 210,
     tags: ["dairy", "cheese", "cheddar", "yellow"],
+    date_added: "2023-05-10",
+    date_updated: "2023-07-20",
   },
   {
     id: 10,
@@ -97,6 +130,8 @@ const products = [
     sale_price: 170,
     govt_sale_price: null,
     tags: ["beverages", "juice", "orange", "drink"],
+    date_added: "2023-02-05",
+    date_updated: "2023-04-22",
   },
   {
     id: 11,
@@ -106,6 +141,8 @@ const products = [
     sale_price: 100,
     govt_sale_price: 90,
     tags: ["vegetables", "broccoli", "green", "fresh"],
+    date_added: "2023-03-30",
+    date_updated: "2023-06-15",
   },
   {
     id: 12,
@@ -115,6 +152,8 @@ const products = [
     sale_price: 50,
     govt_sale_price: 45,
     tags: ["vegetables", "carrot", "orange", "root"],
+    date_added: "2023-04-10",
+    date_updated: "2023-07-01",
   },
   {
     id: 13,
@@ -124,6 +163,8 @@ const products = [
     sale_price: 70,
     govt_sale_price: null,
     tags: ["dairy", "yogurt", "probiotic", "fresh"],
+    date_added: "2023-01-12",
+    date_updated: "2023-03-25",
   },
   {
     id: 14,
@@ -133,6 +174,8 @@ const products = [
     sale_price: 450,
     govt_sale_price: null,
     tags: ["meat", "beef", "protein", "fresh"],
+    date_added: "2023-02-22",
+    date_updated: "2023-05-18",
   },
   {
     id: 15,
@@ -142,6 +185,8 @@ const products = [
     sale_price: 550,
     govt_sale_price: 530,
     tags: ["seafood", "salmon", "fish", "protein"],
+    date_added: "2023-03-08",
+    date_updated: "2023-06-01",
   },
   {
     id: 16,
@@ -151,6 +196,8 @@ const products = [
     sale_price: 90,
     govt_sale_price: null,
     tags: ["grocery", "pasta", "carbohydrate", "wheat"],
+    date_added: "2023-04-25",
+    date_updated: "2023-07-10",
   },
   {
     id: 17,
@@ -160,6 +207,8 @@ const products = [
     sale_price: 100,
     govt_sale_price: 90,
     tags: ["grocery", "rice", "carbohydrate", "grain"],
+    date_added: "2023-01-15",
+    date_updated: "2023-04-20",
   },
   {
     id: 18,
@@ -169,6 +218,8 @@ const products = [
     sale_price: 320,
     govt_sale_price: null,
     tags: ["grocery", "oil", "olive", "healthy"],
+    date_added: "2023-02-28",
+    date_updated: "2023-05-12",
   },
   {
     id: 19,
@@ -178,6 +229,8 @@ const products = [
     sale_price: 60,
     govt_sale_price: null,
     tags: ["vegetables", "spinach", "green", "leafy"],
+    date_added: "2023-04-18",
+    date_updated: "2023-06-27",
   },
   {
     id: 20,
@@ -187,6 +240,8 @@ const products = [
     sale_price: 220,
     govt_sale_price: null,
     tags: ["grocery", "peanut", "butter", "spread"],
+    date_added: "2023-01-18",
+    date_updated: "2023-04-05",
   },
   {
     id: 21,
@@ -196,6 +251,8 @@ const products = [
     sale_price: 650,
     govt_sale_price: null,
     tags: ["nuts", "almonds", "healthy", "snack"],
+    date_added: "2023-03-12",
+    date_updated: "2023-06-08",
   },
   {
     id: 22,
@@ -205,6 +262,8 @@ const products = [
     sale_price: 140,
     govt_sale_price: 130,
     tags: ["grocery", "cereal", "breakfast", "grain"],
+    date_added: "2023-02-02",
+    date_updated: "2023-05-22",
   },
   {
     id: 23,
@@ -214,7 +273,9 @@ const products = [
     sale_price: 60,
     govt_sale_price: 55,
     tags: ["snacks", "chocolate", "sweet", "candy"],
+    date_added: "2023-04-20",
+    date_updated: "2023-06-30",
   },
 ];
 
-export default products;
+export { Categories, Products };

@@ -1,27 +1,27 @@
-import React, { useState } from "react";
+import React from "react";
 import { MdDelete, MdEdit } from "react-icons/md";
+import { useDispatch } from "react-redux";
+import { openAddItemForm } from "../redux/addItemFormSlice";
 
 export default function ProductCard({
   prod,
   isExpanded,
   toggleProductDetails,
+  user,
 }) {
-  const handleTableClick = (e) => {
-    e.stopPropagation();
-    // Handle table functionality here
-    console.log("Tabble clicked");
-  };
+  const dispatch = useDispatch();
 
   const handleEditClick = (e) => {
     e.stopPropagation();
-    // Handle edit functionality here
-    console.log("Edit button clicked");
+    dispatch(openAddItemForm({ heading: "Edit", btn_text: "Update" }));
   };
 
   const handleDeleteClick = (e) => {
     e.stopPropagation();
-    // Handle delete functionality here
-    console.log("Delete button clicked");
+  };
+
+  const handleTableClick = (e) => {
+    e.stopPropagation();
   };
 
   return (
@@ -31,7 +31,7 @@ export default function ProductCard({
     >
       <div className="flex justify-between">
         <p className="text-sm font-bold">{prod.name}</p>
-        {isExpanded && (
+        {isExpanded && (user.role === "admin" || user.role === "manager") && (
           <div className="flex gap-3 text-base md:text-lg pr-2">
             <button
               className="hover:text-green-600 transition-colors duration-200 ease-in-out"
@@ -88,6 +88,7 @@ export default function ProductCard({
                     Rs. {prod.purchase_price}
                   </td>
                 </tr>
+
                 <tr>
                   <td className="border border-[#0079796c] p-1 font-semibold">
                     Sale Price
@@ -96,7 +97,6 @@ export default function ProductCard({
                     Rs. {prod.sale_price}
                   </td>
                 </tr>
-
                 {prod.govt_sale_price !== null && (
                   <tr>
                     <td className="border border-[#0079796c] p-1 font-semibold">
@@ -107,6 +107,22 @@ export default function ProductCard({
                     </td>
                   </tr>
                 )}
+                <tr>
+                  <td className="border border-[#0079796c] p-1 font-semibold">
+                    Date Added
+                  </td>
+                  <td className="border border-[#0079796c] p-1">
+                    {prod.date_added}
+                  </td>
+                </tr>
+                <tr>
+                  <td className="border border-[#0079796c] p-1 font-semibold">
+                    Date Updated
+                  </td>
+                  <td className="border border-[#0079796c] p-1">
+                    {prod.date_updated}
+                  </td>
+                </tr>
               </tbody>
             </table>
           </div>

@@ -1,19 +1,35 @@
 "use client";
-import React, { useState } from "react";
-import { MdClose, MdMenu, MdSettings, MdAdd } from "react-icons/md";
+import React, { useState, useEffect } from "react";
+import { MdClose, MdMenu, MdSettings } from "react-icons/md";
 
-export default function Header({ buttons, user }) {
-  const [first_btn, ...Buttons] = buttons;
+export default function Header({ user, Buttons }) {
   const [isOpen, setIsOpen] = useState(false);
-
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
+  const [firstButton, ...restButtons] = Buttons;
+  const openSidebar = () => {
+    setIsOpen(true);
   };
 
+  const closeSidebar = () => {
+    setIsOpen(false);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (isOpen && !event.target.closest(".sidebar")) {
+        closeSidebar();
+      }
+    };
+
+    document.body.addEventListener("click", handleClickOutside);
+
+    return () => {
+      document.body.removeEventListener("click", handleClickOutside);
+    };
+  }, [isOpen]);
   return (
-    <div className="relative flex justify-center items-center p-4 pt-10 z-50">
+    <div className="relative flex justify-center items-center p-4 pt-10 z-30">
       <div className="absolute left-4 top-4 md:hidden">
-        <button onClick={toggleSidebar} className="text-2xl text-[#016c6c]">
+        <button onClick={openSidebar} className="text-2xl text-teal-800">
           <MdMenu />
         </button>
       </div>
@@ -25,12 +41,12 @@ export default function Header({ buttons, user }) {
         style={{ boxShadow: "0 0 20px -5px #404040" }}
       >
         <button
-          onClick={toggleSidebar}
-          className="absolute top-4 right-4 text-xl text-[#016c6c]"
+          onClick={closeSidebar}
+          className="absolute top-4 right-4 text-xl text-[#7e7e7e]"
         >
-          <MdClose style={{ fontSize: "1.5rem" }} />
+          <MdClose style={{ fontSize: "1.2rem" }} />
         </button>
-        <div className="flex flex-col items-start p-6">
+        <div className="flex flex-col items-start p-6 sidebar">
           <div className=" flex flex-col justify-center items-center text-[#404040] font-[500] text-[12px]">
             <img
               className="w-[60px] h-[60px]"
@@ -43,8 +59,9 @@ export default function Header({ buttons, user }) {
           </div>
           <div className="flex flex-col w-full">
             <div className="flex flex-col gap-2 pt-8 px-2">
-              {Buttons.map((btn, index) => (
+              {restButtons.map((btn, index) => (
                 <button
+                  onClick={btn.clickEvent}
                   className="bg-[#01b0b0] hover:bg-[#079d9d] hover:scale-x-[1.01]  transition-transform duration-200 ease-in-out   text-white text-[11px] py-2 px-4 rounded-xl shadow-sm shadow-[#0000008f]"
                   key={index}
                 >
@@ -89,11 +106,6 @@ export default function Header({ buttons, user }) {
             </p>
           </div>
         </div>
-      </div>
-      <div className="fixed block md:hidden bottom-8 right-6 rounded-full ">
-        <button className="rounded-full size-[45px] text-2xl bg-[#01b0b0] z-50 flex items-center justify-center hover:bg-[#079d9d] hover:scale-[1.05]  transition-transform duration-200 ease-in-out shadow-sm shadow-[#000000cd]">
-          {<MdAdd />}
-        </button>
       </div>
     </div>
   );
