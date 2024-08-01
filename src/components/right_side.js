@@ -4,10 +4,11 @@ import { MdArrowDownward, MdArrowUpward, MdClose } from "react-icons/md";
 import { FaFilter, FaSort } from "react-icons/fa";
 import Product_card from "./product_card";
 
-export default function RightSide({ products, user }) {
+export default function RightSide({ products, categories, user }) {
   const [searchValue, setSearchValue] = useState("");
-  const [sortCard_isOpen, setSortCard_isOpen] = useState(false);
   const [sortedProducts, setSortedProducts] = useState(products);
+  const [sortCard_isOpen, setSortCard_isOpen] = useState(false);
+  const [filterCard_isOpen, setFilterCard_isOpen] = useState(false);
 
   const sortProducts = useCallback(
     (key, order) => {
@@ -30,11 +31,11 @@ export default function RightSide({ products, user }) {
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
-        sortCard_isOpen &&
-        !event.target.closest(".sortCard") &&
-        !event.target.closest("#sort_btn")
+        (sortCard_isOpen && !event.target.closest(".sortCard")) ||
+        (filterCard_isOpen && !event.target.closest(".filterCard"))
       ) {
         closeSortCard();
+        closeFilterCard();
       }
     };
 
@@ -43,7 +44,7 @@ export default function RightSide({ products, user }) {
     return () => {
       document.body.removeEventListener("click", handleClickOutside);
     };
-  }, [sortCard_isOpen]);
+  }, [sortCard_isOpen, filterCard_isOpen]);
 
   const toggleSortCard = () => {
     setSortCard_isOpen((prev) => !prev);
@@ -51,6 +52,14 @@ export default function RightSide({ products, user }) {
 
   const closeSortCard = () => {
     setSortCard_isOpen(false);
+    event.stopPropagation();
+  };
+  const toggleFilterCard = () => {
+    setFilterCard_isOpen((prev) => !prev);
+  };
+
+  const closeFilterCard = () => {
+    setFilterCard_isOpen(false);
     event.stopPropagation();
   };
 
@@ -86,14 +95,16 @@ export default function RightSide({ products, user }) {
             />
           )}
         </div>
-        <FaFilter className="cursor-pointer text-[25px] text-teal-800" />
+        <FaFilter
+          onClick={toggleFilterCard}
+          className="cursor-pointer text-[25px] text-teal-800"
+        />
         <FaSort
           onClick={toggleSortCard}
-          id="sort_btn"
           className="cursor-pointer text-[25px] text-teal-800 "
         />
         {sortCard_isOpen && (
-          <div className="absolute top-10 right-5 text-sm text-gray-600 w-auto bg-white shadow-md shadow-[#00000052] rounded-xl sortCard z-30">
+          <div className="sortCard absolute top-9 right-4 text-xs md:text-sm border border-gray-300 text-gray-600 w-auto bg-white shadow-md shadow-[#00000052] rounded-xl z-30">
             <div
               onClick={() => sortProducts("name", "asc")}
               className="flex items-center justify-center gap-3 p-2 px-8 hover:bg-[#dbeded] rounded-xl"
@@ -133,6 +144,43 @@ export default function RightSide({ products, user }) {
               className="flex items-center justify-center gap-3 p-2 hover:bg-[#dbeded] rounded-xl"
             >
               Last Updated
+            </div>
+          </div>
+        )}
+        {filterCard_isOpen && (
+          <div className="filterCard absolute p-5 top-9 right-12 text-xs md:text-sm border border-gray-300 text-gray-600 w-[300px] bg-[#dfeaea] shadow-md shadow-[#00000052] rounded-xl z-30">
+            <div className="flex flex-col gap-3">
+              <p className="font-bold text-lg md:text-xl pb-1 text-teal-700">
+                Filter Products
+              </p>
+              <div className="flex flex-col gap-1">
+                <p className="font-semibold">Category</p>
+                <select className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-600">
+                  <option value="">Select a category</option>
+                  {categories.map((categ, i) => (
+                    <option key={i} value={categ}>
+                      {categ}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex flex-col gap-1 ">
+                <p className="font-semibold">Min. Price</p>
+                <input
+                  type="number"
+                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-600"
+                />
+              </div>
+              <div className="flex flex-col gap-1">
+                <p className="font-semibold">Max. Price</p>
+                <input
+                  type="number"
+                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-600"
+                />
+              </div>
+              <button className="w-full mt-2 px-4 py-2 text-white bg-teal-600 rounded-md hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-600">
+                Apply Filter
+              </button>
             </div>
           </div>
         )}
