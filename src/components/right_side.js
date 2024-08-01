@@ -9,6 +9,7 @@ export default function RightSide({ products, categories, user }) {
   const [sortedProducts, setSortedProducts] = useState(products);
   const [sortCard_isOpen, setSortCard_isOpen] = useState(false);
   const [filterCard_isOpen, setFilterCard_isOpen] = useState(false);
+  const [filterApplied, set_filterApplied] = useState(false);
 
   const sortProducts = useCallback(
     (key, order) => {
@@ -45,6 +46,16 @@ export default function RightSide({ products, categories, user }) {
       document.body.removeEventListener("click", handleClickOutside);
     };
   }, [sortCard_isOpen, filterCard_isOpen]);
+
+  const applyFilter = () => {
+    set_filterApplied(true);
+    closeFilterCard();
+  };
+
+  const clearFilter = () => {
+    set_filterApplied(false);
+    closeFilterCard();
+  };
 
   const toggleSortCard = () => {
     setSortCard_isOpen((prev) => !prev);
@@ -178,9 +189,22 @@ export default function RightSide({ products, categories, user }) {
                   className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-600"
                 />
               </div>
-              <button className="w-full mt-2 px-4 py-2 text-white bg-teal-600 rounded-md hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-600">
-                Apply Filter
-              </button>
+              <div className="flex flex-col mt-2 gap-1">
+                <button
+                  onClick={applyFilter}
+                  className="w-full px-4 py-2 text-white bg-teal-600 rounded-md hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-600"
+                >
+                  Apply Filter
+                </button>
+                {filterApplied && (
+                  <button
+                    onClick={clearFilter}
+                    className="w-full px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
+                  >
+                    Clear Filter
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         )}
