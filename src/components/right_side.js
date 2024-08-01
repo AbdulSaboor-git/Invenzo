@@ -106,14 +106,19 @@ export default function RightSide({ products, categories, user }) {
             />
           )}
         </div>
-        <FaFilter
-          onClick={toggleFilterCard}
-          className="cursor-pointer text-[25px] text-teal-800"
-        />
+        <div className="relative">
+          <FaFilter
+            onClick={toggleFilterCard}
+            className={`cursor-pointer text-[25px] ${
+              filterApplied ? "text-red-500" : "text-teal-800"
+            }`}
+          />
+        </div>
         <FaSort
           onClick={toggleSortCard}
           className="cursor-pointer text-[25px] text-teal-800 "
         />
+
         {sortCard_isOpen && (
           <div className="sortCard absolute top-9 right-4 text-xs md:text-sm border border-gray-300 text-gray-600 w-auto bg-white shadow-md shadow-[#00000052] rounded-xl z-30">
             <div
