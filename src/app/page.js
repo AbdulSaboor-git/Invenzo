@@ -1,12 +1,15 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { openAddItemForm, closeAddItemForm } from "../redux/addItemFormSlice";
+import { triggerNotification } from "../redux/notificationThunk";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
+import Notify from "@/components/notification";
 import Body from "@/components/body";
 import { Products, Categories } from "@/components/products";
 import Add_Product_Form from "@/components/add_product";
+import Manage_Categories_Form from "@/components/manage_categories";
 import { MdAdd } from "react-icons/md";
 import {
   FaPlus,
@@ -28,6 +31,18 @@ export default function Home() {
   const addItemForm_isOpen = useSelector((state) => state.addItemForm.isOpen);
   const heading = useSelector((state) => state.addItemForm.heading);
   const btn_text = useSelector((state) => state.addItemForm.btn_text);
+  const notification = useSelector((state) => state.notification);
+
+  const [manageCategories_isOpen, set_manageCategories_isOpen] =
+    useState(false);
+
+  const open_manageCategories = () => {
+    set_manageCategories_isOpen(true);
+  };
+
+  const close_manageCategories = () => {
+    set_manageCategories_isOpen(false);
+  };
 
   const open_AddItemForm = () => {
     dispatch(openAddItemForm({ heading: "Add", btn_text: "Add" }));
@@ -49,7 +64,7 @@ export default function Home() {
       {
         btn_name: "Manage Categories",
         icon: <FaCogs />,
-        clickEvent: open_AddItemForm,
+        clickEvent: open_manageCategories,
       },
       {
         btn_name: "Load Data",
@@ -103,7 +118,13 @@ export default function Home() {
         <Add_Product_Form
           heading={heading}
           buttonText={btn_text}
-          onClose={close_AddItemForm}
+          CloseForm={close_AddItemForm}
+          categories={Categories}
+        />
+      )}
+      {manageCategories_isOpen && (
+        <Manage_Categories_Form
+          CloseForm={close_manageCategories}
           categories={Categories}
         />
       )}
@@ -115,6 +136,9 @@ export default function Home() {
           {<MdAdd />}
         </button>
       </div>
+      {notification.isVisible && (
+        <Notify msg={notification.msg} success={notification.success} />
+      )}
     </main>
   );
 }

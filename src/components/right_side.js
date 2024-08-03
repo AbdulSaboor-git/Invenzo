@@ -1,8 +1,12 @@
 "use client";
 import React, { useState, useEffect, useCallback } from "react";
-import { MdArrowDownward, MdArrowUpward, MdClose } from "react-icons/md";
+import { MdClose } from "react-icons/md";
 import { FaFilter, FaSort } from "react-icons/fa";
 import Product_card from "./product_card";
+import Sort_card from "./sortCard";
+import Filter_card from "./filterCard";
+import { useDispatch } from "react-redux";
+import { triggerNotification } from "../redux/notificationThunk";
 
 export default function RightSide({ products, categories, user }) {
   const [searchValue, setSearchValue] = useState("");
@@ -10,7 +14,7 @@ export default function RightSide({ products, categories, user }) {
   const [sortCard_isOpen, setSortCard_isOpen] = useState(false);
   const [filterCard_isOpen, setFilterCard_isOpen] = useState(false);
   const [filterApplied, set_filterApplied] = useState(false);
-
+  const Dispatch = useDispatch();
   const sortProducts = useCallback(
     (key, order) => {
       const sorted = [...products].sort((a, b) => {
@@ -49,11 +53,23 @@ export default function RightSide({ products, categories, user }) {
 
   const applyFilter = () => {
     set_filterApplied(true);
+    Dispatch(
+      triggerNotification({
+        msg: "Filter Applied Successfully!",
+        success: true,
+      })
+    );
     closeFilterCard();
   };
 
   const clearFilter = () => {
     set_filterApplied(false);
+    Dispatch(
+      triggerNotification({
+        msg: "Filters Cleared Successfully!",
+        success: true,
+      })
+    );
     closeFilterCard();
   };
 
@@ -90,7 +106,7 @@ export default function RightSide({ products, categories, user }) {
 
   return (
     <div className="flex flex-col w-full z-0">
-      <div className="flex gap-3 pb-4 items-center text-[#404040] px-2 relative">
+      <div className="flex gap-3 md:gap-4 pb-4 items-center text-[#404040] px-2 relative">
         <div className="relative w-full">
           <input
             type="text"
@@ -106,115 +122,30 @@ export default function RightSide({ products, categories, user }) {
             />
           )}
         </div>
-        <div className="relative">
+        <div className="relative  text-[22px] md:text-[25px] flex items-center justify-center gap-2 md:gap-3">
           <FaFilter
             onClick={toggleFilterCard}
-            className={`cursor-pointer text-[25px] ${
+            className={`cursor-pointer ${
               filterApplied ? "text-red-500" : "text-teal-800"
             }`}
           />
+          <FaSort
+            onClick={toggleSortCard}
+            className="cursor-pointer text-teal-800 "
+          />
         </div>
-        <FaSort
-          onClick={toggleSortCard}
-          className="cursor-pointer text-[25px] text-teal-800 "
-        />
 
-        {sortCard_isOpen && (
-          <div className="sortCard absolute top-9 right-4 text-xs md:text-sm border border-gray-300 text-gray-600 w-auto bg-white shadow-md shadow-[#00000052] rounded-xl z-30">
-            <div
-              onClick={() => sortProducts("name", "asc")}
-              className="flex items-center justify-center gap-3 p-2 px-8 hover:bg-[#dbeded] rounded-xl"
-            >
-              Name
-              <MdArrowUpward />
-            </div>
-            <div
-              onClick={() => sortProducts("name", "desc")}
-              className="flex items-center justify-center gap-3 p-2 hover:bg-[#dbeded] rounded-xl"
-            >
-              Name
-              <MdArrowDownward />
-            </div>
-            <div
-              onClick={() => sortProducts("sale_price", "asc")}
-              className="flex items-center justify-center gap-3 p-2 hover:bg-[#dbeded] rounded-xl"
-            >
-              Price
-              <MdArrowUpward />
-            </div>
-            <div
-              onClick={() => sortProducts("sale_price", "desc")}
-              className="flex items-center justify-center gap-3 p-2 hover:bg-[#dbeded] rounded-xl"
-            >
-              Price
-              <MdArrowDownward />
-            </div>
-            <div
-              onClick={() => sortProducts("date_added", "desc")}
-              className="flex items-center justify-center gap-3 p-2 hover:bg-[#dbeded] rounded-xl"
-            >
-              Last Added
-            </div>
-            <div
-              onClick={() => sortProducts("date_updated", "desc")}
-              className="flex items-center justify-center gap-3 p-2 hover:bg-[#dbeded] rounded-xl"
-            >
-              Last Updated
-            </div>
-          </div>
-        )}
+        {sortCard_isOpen && <Sort_card sortProducts={sortProducts} />}
         {filterCard_isOpen && (
-          <div className="filterCard absolute p-5 top-9 right-12 text-xs md:text-sm border border-gray-300 text-gray-600 w-[300px] bg-[#dfeaea] shadow-md shadow-[#00000052] rounded-xl z-30">
-            <div className="flex flex-col gap-3">
-              <p className="font-bold text-lg md:text-xl pb-1 text-teal-700">
-                Filter Products
-              </p>
-              <div className="flex flex-col gap-1">
-                <p className="font-semibold">Category</p>
-                <select className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-600">
-                  <option value="">Select a category</option>
-                  {categories.map((categ, i) => (
-                    <option key={i} value={categ}>
-                      {categ}
-                    </option>
-                  ))}
-                </select>
-              </div>
-              <div className="flex flex-col gap-1 ">
-                <p className="font-semibold">Min. Price</p>
-                <input
-                  type="number"
-                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-600"
-                />
-              </div>
-              <div className="flex flex-col gap-1">
-                <p className="font-semibold">Max. Price</p>
-                <input
-                  type="number"
-                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-600"
-                />
-              </div>
-              <div className="flex flex-col mt-2 gap-1">
-                <button
-                  onClick={applyFilter}
-                  className="w-full px-4 py-2 text-white bg-teal-600 rounded-md hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-600"
-                >
-                  Apply Filter
-                </button>
-                {filterApplied && (
-                  <button
-                    onClick={clearFilter}
-                    className="w-full px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500"
-                  >
-                    Clear Filter
-                  </button>
-                )}
-              </div>
-            </div>
-          </div>
+          <Filter_card
+            categories={categories}
+            applyFilter={applyFilter}
+            clearFilter={clearFilter}
+            filterApplied={filterApplied}
+          />
         )}
       </div>
-      <div className="flex flex-col gap-2 w-full pb-1 px-2 md:max-h-[80vh] md:overflow-auto hidden_scroll_bar">
+      <div className="flex flex-col gap-[6px]  w-full pb-1 px-2 md:max-h-[80vh] md:overflow-auto hidden_scroll_bar">
         {sortedProducts
           .filter((prod) => {
             const searchTerm = searchValue.toLowerCase().trim();

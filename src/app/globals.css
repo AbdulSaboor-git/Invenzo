@@ -59,3 +59,63 @@ body {
 .no-scroll {
   overflow: hidden;
 }
+
+@keyframes slideExpand {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  50% {
+    transform: translateY(0);
+    opacity: 0.85;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+@keyframes slideContract {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}
+
+@keyframes pulseBoxShadow {
+  0%,
+  100% {
+    box-shadow: 0px 0px 3px 0px green;
+  }
+  50% {
+    box-shadow: 0px 0px 10px 1px green;
+  }
+}
+
+@keyframes pulseBoxShadowError {
+  0%,
+  100% {
+    box-shadow: 0px 0px 3px 0px #ff2a2a;
+  }
+  50% {
+    box-shadow: 0px 0px 10px 1px #ff2a2a;
+  }
+}
+
+.animate-slide-expand {
+  animation: slideExpand 1s forwards, pulseBoxShadow 2s infinite;
+}
+.animate-slide-contract {
+  animation: slideContract 1s forwards;
+}
+
+.hidden {
+  display: none;
+}
