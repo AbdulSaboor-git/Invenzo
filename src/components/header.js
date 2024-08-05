@@ -4,7 +4,7 @@ import { MdClose, MdMenu, MdSettings } from "react-icons/md";
 
 export default function Header({ user, Buttons }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [firstButton, ...restButtons] = Buttons;
+  // const [firstButton, ...restButtons] = Buttons;
   const openSidebar = () => {
     setIsOpen(true);
   };
@@ -59,7 +59,7 @@ export default function Header({ user, Buttons }) {
           </div>
           <div className="flex flex-col w-full">
             <div className="flex flex-col gap-2 pt-8 px-2">
-              {restButtons.map((btn, index) => (
+              {Buttons.map((btn, index) => (
                 <button
                   onClick={btn.clickEvent}
                   className="bg-[#01b0b0] hover:bg-[#079d9d] hover:scale-x-[1.01]  transition-transform duration-200 ease-in-out   text-white text-[11px] py-2 px-4 rounded-xl shadow-sm shadow-[#0000008f]"
