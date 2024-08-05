@@ -2,14 +2,6 @@
 import React from "react";
 import { useAuthRedirect } from "@/hooks/useAuthRedirect";
 
-const user = {
-  id: "2380",
-  name: "Abdul Saboor",
-  profile_pic: "/avatar.png",
-  role: "moderator",
-};
-localStorage.setItem("user", JSON.stringify(user));
-
 export default function Home() {
   useAuthRedirect();
 

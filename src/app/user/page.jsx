@@ -19,8 +19,12 @@ export default function HomePage() {
   const [editInv, setEditInv] = useState(null);
   const router = useRouter();
 
-  const User = localStorage.getItem("user");
-  const user = JSON.parse(User);
+  const user = {
+    id: "2380",
+    name: "Abdul Saboor",
+    profile_pic: "/avatar.png",
+    role: "moderator",
+  };
 
   const toggle_editButtons = (id) => {
     setButtonId((prevId) => (prevId === id ? null : id));
