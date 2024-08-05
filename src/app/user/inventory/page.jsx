@@ -113,7 +113,7 @@ export default function Inventory() {
       }
     );
 
-  user.role === "manager" &&
+  user.role === "moderator" &&
     Buttons.push(
       {
         btn_name: "Add Product",

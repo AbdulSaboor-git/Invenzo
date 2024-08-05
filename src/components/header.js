@@ -4,7 +4,7 @@ import { MdClose, MdMenu, MdSettings } from "react-icons/md";
 
 export default function Header({ user, Buttons }) {
   const [isOpen, setIsOpen] = useState(false);
-  // const [firstButton, ...restButtons] = Buttons;
+
   const openSidebar = () => {
     setIsOpen(true);
   };
@@ -26,62 +26,67 @@ export default function Header({ user, Buttons }) {
       document.body.removeEventListener("click", handleClickOutside);
     };
   }, [isOpen]);
+
   return (
     <div className="relative flex justify-center items-center p-4 pt-10 z-30">
-      <div className="absolute left-4 top-4 md:hidden">
-        <button onClick={openSidebar} className="text-2xl text-teal-800">
-          <MdMenu />
-        </button>
-      </div>
-
-      <div
-        className={`fixed top-0 left-[-10px] w-[230px] h-full rounded-e-[30px] bg-white transition-transform duration-300 ease-in-out ${
-          isOpen ? "translate-x-0" : "-translate-x-[240px]"
-        }`}
-        style={{ boxShadow: "0 0 20px -5px #404040" }}
-      >
-        <button
-          onClick={closeSidebar}
-          className="absolute top-4 right-4 text-xl text-[#7e7e7e]"
-        >
-          <MdClose style={{ fontSize: "1.2rem" }} />
-        </button>
-        <div className="flex flex-col items-start p-6 sidebar">
-          <div className=" flex flex-col justify-center items-center text-[#404040] font-[500] text-[12px]">
-            <img
-              className="w-[60px] h-[60px]"
-              src={user.profile_pic}
-              alt="avatar"
-            />
-            <p className="max-w-[80px] max-h-[40px] overflow-hidden">
-              {user.name}
-            </p>
+      {(user || Buttons) && (
+        <>
+          <div className="absolute left-4 top-4 md:hidden">
+            <button onClick={openSidebar} className="text-2xl text-teal-800">
+              <MdMenu />
+            </button>
           </div>
-          <div className="flex flex-col w-full">
-            <div className="flex flex-col gap-2 pt-8 px-2">
-              {Buttons.map((btn, index) => (
-                <button
-                  onClick={btn.clickEvent}
-                  className="bg-[#01b0b0] hover:bg-[#079d9d] hover:scale-x-[1.01]  transition-transform duration-200 ease-in-out   text-white text-[11px] py-2 px-4 rounded-xl shadow-sm shadow-[#0000008f]"
-                  key={index}
-                >
-                  <div className="flex gap-4 items-center justify-start">
-                    {btn.icon}
-                    {btn.btn_name}
+
+          <div
+            className={`fixed top-0 left-[-10px] w-[230px] h-full rounded-e-[30px] bg-white transition-transform duration-300 ease-in-out ${
+              isOpen ? "translate-x-0" : "-translate-x-[240px]"
+            }`}
+            style={{ boxShadow: "0 0 20px -5px #404040" }}
+          >
+            <button
+              onClick={closeSidebar}
+              className="absolute top-4 right-4 text-xl text-[#7e7e7e]"
+            >
+              <MdClose style={{ fontSize: "1.2rem" }} />
+            </button>
+            <div className="flex flex-col items-start p-6 sidebar">
+              <div className=" flex flex-col justify-center items-center text-[#404040] font-[500] text-[12px]">
+                <img
+                  className="w-[60px] h-[60px]"
+                  src={user.profile_pic}
+                  alt="avatar"
+                />
+                <p className="max-w-[80px] max-h-[40px] overflow-hidden">
+                  {user.name}
+                </p>
+              </div>
+              <div className="flex flex-col w-full">
+                <div className="flex flex-col gap-2 pt-8 px-2">
+                  {Buttons.map((btn, index) => (
+                    <button
+                      onClick={btn.clickEvent}
+                      className="bg-[#01b0b0] hover:bg-[#079d9d] hover:scale-x-[1.01]  transition-transform duration-200 ease-in-out   text-white text-[11px] py-2 px-4 rounded-xl shadow-sm shadow-[#0000008f]"
+                      key={index}
+                    >
+                      <div className="flex gap-4 items-center justify-start">
+                        {btn.icon}
+                        {btn.btn_name}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+                <div className="flex flex-col absolute w-[190px] bottom-4 gap-1 text-[#404040]">
+                  <hr className="h-[1px] bg-[#999]" />
+                  <div className="flex justify-between w-[190px] text-[12px] px-2">
+                    <p className="">Preferences</p>
+                    <button>{<MdSettings className="text-base" />}</button>
                   </div>
-                </button>
-              ))}
-            </div>
-            <div className="flex flex-col absolute w-[190px] bottom-4 gap-1 text-[#404040]">
-              <hr className="h-[1px] bg-[#999]" />
-              <div className="flex justify-between w-[190px] text-[12px] px-2">
-                <p className="">Preferences</p>
-                <button>{<MdSettings className="text-base" />}</button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        </>
+      )}
 
       <div className="flex flex-col justify-center w-full max-w-[1200px] items-center">
         <div className="flex flex-col justify-center items-center gap-3">
@@ -91,11 +96,13 @@ export default function Header({ user, Buttons }) {
               src="/logo.png"
               alt="logo"
             />
-            <img
-              className="w-[60px] h-[60px] md:block absolute right-4 hidden"
-              src="/avatar.png"
-              alt="avatar"
-            />
+            {(user || Buttons) && (
+              <img
+                className="w-[60px] h-[60px] md:block absolute right-4 hidden"
+                src="/avatar.png"
+                alt="avatar"
+              />
+            )}
           </div>
           <div className="flex flex-col items-center">
             <p className="font-extrabold text-[14px] md:text-[16px] text-[#272727]">

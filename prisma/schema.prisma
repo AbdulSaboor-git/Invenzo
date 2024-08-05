@@ -1,90 +1,90 @@
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-    id                 Int             @id @default(autoincrement())
-    username           String          @unique
-    email              String          @unique
-    password           String
-    createdAt          DateTime        @default(now())
-    updatedAt          DateTime        @updatedAt
-    firstName          String?
-    lastName           String?
-    role               Role            @relation(fields: [roleId], references: [id])
-    roleId             Int
-    lastLogin          DateTime?
-    profilePicture     String?
-    isActive           Boolean         @default(true)
-    inventories        UserInventory[]
-    managedInventories Inventory[]
-    Moderator          Moderator[]
+  id                 Int             @id @default(autoincrement())
+  username           String          @unique
+  email              String          @unique
+  password           String
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+  firstName          String?
+  lastName           String?
+  role               Role            @relation(fields: [roleId], references: [id])
+  roleId             Int
+  lastLogin          DateTime?
+  profilePicture     String?
+  isActive           Boolean         @default(true)
+  inventories        UserInventory[]
+  managedInventories Inventory[]
+  Moderator          Moderator[]
 }
 
 model Role {
-    id   Int    @id @default(autoincrement())
-    name String @unique
-    User User[]
+  id   Int    @id @default(autoincrement())
+  name String @unique
+  User User[]
 }
 
 model Inventory {
-    id             Int             @id @default(autoincrement())
-    name           String
-    slug           String          @unique
-    createdAt      DateTime        @default(now())
-    updatedAt      DateTime        @updatedAt
-    profilePicture String?
-    products       Product[]
-    categories     Category[]
-    moderators     Moderator[]
-    adminId        Int
-    admin          User            @relation(fields: [adminId], references: [id])
-    users          UserInventory[]
+  id             Int             @id @default(autoincrement())
+  name           String
+  slug           String          @unique
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  profilePicture String?
+  products       Product[]
+  categories     Category[]
+  moderators     Moderator[]
+  adminId        Int
+  admin          User            @relation(fields: [adminId], references: [id])
+  users          UserInventory[]
 }
 
 model Product {
-    id          Int       @id @default(autoincrement())
-    name        String
-    description String?
-    price       Float
-    createdAt   DateTime  @default(now())
-    updatedAt   DateTime  @updatedAt
-    categoryId  Int
-    category    Category  @relation(fields: [categoryId], references: [id])
-    inventoryId Int
-    inventory   Inventory @relation(fields: [inventoryId], references: [id])
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String?
+  price       Float
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  categoryId  Int
+  category    Category  @relation(fields: [categoryId], references: [id])
+  inventoryId Int
+  inventory   Inventory @relation(fields: [inventoryId], references: [id])
 }
 
 model Category {
-    id          Int       @id @default(autoincrement())
-    name        String    @unique
-    slug        String    @unique
-    url         String?
-    createdAt   DateTime  @default(now())
-    updatedAt   DateTime  @updatedAt
-    inventoryId Int
-    inventory   Inventory @relation(fields: [inventoryId], references: [id])
-    products    Product[]
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  slug        String    @unique
+  url         String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  inventoryId Int
+  inventory   Inventory @relation(fields: [inventoryId], references: [id])
+  products    Product[]
 }
 
 model Moderator {
-    id          Int       @id @default(autoincrement())
-    userId      Int
-    user        User      @relation(fields: [userId], references: [id])
-    inventoryId Int
-    inventory   Inventory @relation(fields: [inventoryId], references: [id])
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+  inventoryId Int
+  inventory   Inventory @relation(fields: [inventoryId], references: [id])
 }
 
 model UserInventory {
-    id          Int       @id @default(autoincrement())
-    userId      Int
-    user        User      @relation(fields: [userId], references: [id])
-    inventoryId Int
-    inventory   Inventory @relation(fields: [inventoryId], references: [id])
-    role        String
+  id          Int       @id @default(autoincrement())
+  userId      Int
+  user        User      @relation(fields: [userId], references: [id])
+  inventoryId Int
+  inventory   Inventory @relation(fields: [inventoryId], references: [id])
+  role        String
 }
