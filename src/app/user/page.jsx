@@ -1,14 +1,16 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import AddInventory from "./components/AddInventory";
 import EditInventory from "./components/editInventory";
 import { useRouter } from "next/navigation";
 import { FaPlus } from "react-icons/fa";
+import useAuthUser from "@/hooks/authUser";
 import {
   MdDelete,
   MdDriveFileRenameOutline,
+  MdLogout,
   MdMenu,
   MdMenuOpen,
 } from "react-icons/md";
@@ -18,13 +20,17 @@ export default function HomePage() {
   const [AddInventory_isOpen, set_AddInventory_isOpen] = useState(false);
   const [editInv, setEditInv] = useState(null);
   const router = useRouter();
+  const { user, userLoading, logout } = useAuthUser();
 
-  const user = {
-    id: "2380",
-    name: "Abdul Saboor",
-    profile_pic: "/avatar.png",
-    role: "moderator",
-  };
+  useEffect(() => {
+    if (!userLoading && !user) {
+      router.push("/login");
+    }
+  }, [user, userLoading, router]);
+
+  if (userLoading || !user) {
+    return null;
+  }
 
   const toggle_editButtons = (id) => {
     setButtonId((prevId) => (prevId === id ? null : id));
@@ -91,6 +97,11 @@ export default function HomePage() {
       btn_name: "Create an Inventory",
       icon: <FaPlus />,
       clickEvent: open_AddInventory,
+    },
+    {
+      btn_name: "Logout",
+      icon: <MdLogout />,
+      clickEvent: logout,
     },
   ];
 

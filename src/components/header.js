@@ -53,11 +53,11 @@ export default function Header({ user, Buttons }) {
               <div className=" flex flex-col justify-center items-center text-[#404040] font-[500] text-[12px]">
                 <img
                   className="w-[60px] h-[60px]"
-                  src={user.profile_pic}
+                  src={"/avatar.png"}
                   alt="avatar"
                 />
                 <p className="max-w-[80px] max-h-[40px] overflow-hidden">
-                  {user.name}
+                  {user?.firstName} {user?.lastName}
                 </p>
               </div>
               <div className="flex flex-col w-full">

@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { openAddItemForm, closeAddItemForm } from "@/redux/addItemFormSlice";
 import Header from "@/components/header";
@@ -10,7 +10,9 @@ import { Products, Categories } from "@/components/products";
 import Add_Product_Form from "@/components/add_product";
 import Manage_Categories_Form from "@/components/manage_categories";
 import Manage_Moderators_Form from "@/components/manage_moderators";
-import { MdAdd } from "react-icons/md";
+import { MdAdd, MdLogout } from "react-icons/md";
+import { useRouter } from "next/navigation";
+import useAuthUser from "@/hooks/authUser";
 
 import {
   FaPlus,
@@ -20,13 +22,6 @@ import {
   FaTrashAlt,
   FaUsers,
 } from "react-icons/fa";
-
-const user = {
-  id: 2300,
-  name: "Abdul Saboor",
-  profile_pic: "/avatar.png",
-  role: "admin",
-};
 
 const moderators = [
   {
@@ -77,55 +72,58 @@ export default function Inventory() {
     dispatch(closeAddItemForm());
   };
 
+  const router = useRouter();
+  const { user, userLoading, logout } = useAuthUser();
+
+  useEffect(() => {
+    if (!userLoading && !user) {
+      router.push("/login");
+    }
+  }, [user, userLoading, router]);
+
+  if (userLoading || !user) {
+    return null;
+  }
+
   const Buttons = [];
 
-  user.role === "admin" &&
-    Buttons.push(
-      {
-        btn_name: "Add Product",
-        icon: <FaPlus />,
-        clickEvent: open_AddItemForm,
-      },
-      {
-        btn_name: "Manage Categories",
-        icon: <FaCogs />,
-        clickEvent: open_manageCategories,
-      },
-      {
-        btn_name: "Load Data",
-        icon: <FaCloudUploadAlt />,
-        // clickEvent: open_AddItemForm,
-      },
-      {
-        btn_name: "Export Data",
-        icon: <FaFileExport />,
-        // clickEvent: open_AddItemForm,
-      },
-      {
-        btn_name: "Clear Data",
-        icon: <FaTrashAlt />,
-        // clickEvent: open_AddItemForm,
-      },
-      {
-        btn_name: "Manage Moderators",
-        icon: <FaUsers />,
-        clickEvent: open_manageModerators,
-      }
-    );
-
-  user.role === "moderator" &&
-    Buttons.push(
-      {
-        btn_name: "Add Product",
-        icon: <FaPlus />,
-        clickEvent: open_AddItemForm,
-      },
-      {
-        btn_name: "Manage Categories",
-        icon: <FaCogs />,
-        clickEvent: open_AddItemForm,
-      }
-    );
+  Buttons.push(
+    {
+      btn_name: "Add Product",
+      icon: <FaPlus />,
+      clickEvent: open_AddItemForm,
+    },
+    {
+      btn_name: "Manage Categories",
+      icon: <FaCogs />,
+      clickEvent: open_manageCategories,
+    },
+    {
+      btn_name: "Load Data",
+      icon: <FaCloudUploadAlt />,
+      // clickEvent: open_AddItemForm,
+    },
+    {
+      btn_name: "Export Data",
+      icon: <FaFileExport />,
+      // clickEvent: open_AddItemForm,
+    },
+    {
+      btn_name: "Clear Data",
+      icon: <FaTrashAlt />,
+      // clickEvent: open_AddItemForm,
+    },
+    {
+      btn_name: "Manage Moderators",
+      icon: <FaUsers />,
+      clickEvent: open_manageModerators,
+    },
+    {
+      btn_name: "Logout",
+      icon: <MdLogout />,
+      clickEvent: logout,
+    }
+  );
 
   return (
     <div className={`flex min-h-screen flex-col items-center justify-between`}>
