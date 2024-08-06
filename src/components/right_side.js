@@ -106,7 +106,7 @@ export default function RightSide({ products, categories, user }) {
 
   return (
     <div className="flex flex-col w-full z-0">
-      <div className="flex gap-3 md:gap-4 pb-4 items-center text-[#404040] px-2 relative">
+      <div className="flex gap-3 md:gap-4 pb-4 items-center text-[#404040] px-0 md:px-2 relative">
         <div className="relative w-full">
           <input
             type="text"
@@ -145,7 +145,7 @@ export default function RightSide({ products, categories, user }) {
           />
         )}
       </div>
-      <div className="flex flex-col gap-[6px]  w-full pb-1 px-2 md:max-h-[80vh] md:overflow-auto hidden_scroll_bar">
+      <div className="flex flex-col gap-[6px]  w-full pb-1 px-0 md:px-2 md:max-h-[80vh] md:overflow-auto hidden_scroll_bar">
         {sortedProducts
           .filter((prod) => {
             const searchTerm = searchValue.toLowerCase().trim();
