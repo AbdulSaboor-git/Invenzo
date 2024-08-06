@@ -196,21 +196,23 @@ export default function HomePage() {
                 <div
                   onClick={inv.onClick}
                   key={inv.id}
-                  className={`my-1 cursor-pointer relative py-3 px-4 bg-white text-teal-700 rounded-lg transition-transform duration-200 ease-in-out shadow-md shadow-[#00000044] hover:scale-[1.005]`}
+                  className={`my-1 relative py-3 px-4 cursor-pointer bg-white text-teal-700 rounded-lg transition-transform duration-200 ease-in-out shadow-md shadow-[#00000044] hover:scale-[1.005]`}
                 >
                   <div
-                    className="absolute right-4  pt-1 "
+                    className={`absolute right-2 p-2 hover:scale-[1.1] top-2 ${
+                      ButtonId === inv.id ? "text-white" : "text-teal-700"
+                    } z-10`}
                     onClick={(e) => {
                       e.stopPropagation();
                       toggle_editButtons(inv.id);
                     }}
                   >
-                    {<MdMenu />}
+                    {ButtonId === inv.id ? <MdMenuOpen /> : <MdMenu />}
                   </div>
                   {ButtonId === inv.id && (
-                    <div className="absolute right-12  flex gap-3 items-center pt-[3px] text-[16px] text-gray-500">
+                    <div className="absolute bg-teal-600 right-2 rounded-s-full top-2 px-3 pr-8 flex items-center  text-[16px] text-white">
                       <button
-                        className="hover:text-green-600"
+                        className="hover:text-green-300 p-2"
                         onClick={(e) => {
                           e.stopPropagation();
                           open_Editorm(inv);
@@ -218,9 +220,8 @@ export default function HomePage() {
                       >
                         <MdDriveFileRenameOutline />
                       </button>
-
                       <button
-                        className="hover:text-red-600"
+                        className="hover:text-red-300 p-2 "
                         onClick={handleDeleteClick}
                       >
                         <MdDelete />
