@@ -82,7 +82,11 @@ export default function Inventory() {
   }, [user, userLoading, router]);
 
   if (userLoading || !user) {
-    return null;
+    return (
+      <div className="flex min-h-screen items-center justify-center text-teal-700">
+        <div className="loader">Loading...</div>{" "}
+      </div>
+    );
   }
 
   const Buttons = [];

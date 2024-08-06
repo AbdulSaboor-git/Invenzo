@@ -1,3 +1,4 @@
+//user.js
 "use client";
 import React, { useState, useEffect } from "react";
 import Header from "@/components/header";
@@ -29,7 +30,11 @@ export default function HomePage() {
   }, [user, userLoading, router]);
 
   if (userLoading || !user) {
-    return null;
+    return (
+      <div className="flex min-h-screen items-center justify-center text-teal-700">
+        <div className="loader">Loading...</div>{" "}
+      </div>
+    );
   }
 
   const toggle_editButtons = (id) => {

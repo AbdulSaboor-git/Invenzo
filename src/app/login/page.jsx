@@ -1,11 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/redux/userSlice";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import { setCookie } from "cookies-next";
+import useAuthUser from "@/hooks/authUser";
 
 export default function Login() {
   const router = useRouter();
@@ -13,6 +14,21 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const { user, userLoading } = useAuthUser();
+
+  useEffect(() => {
+    if (!userLoading && user) {
+      router.push("/user");
+    }
+  }, [user, userLoading, router]);
+
+  if (userLoading || user) {
+    return (
+      <div className="flex min-h-screen items-center justify-center text-teal-700">
+        <div className="loader">Loading...</div>{" "}
+      </div>
+    );
+  }
 
   const handleSignUpClick = () => {
     router.push("/sign-up");
@@ -38,15 +54,9 @@ export default function Login() {
 
       // Handle successful login (e.g., store token, user info, redirect user)
       // Set the cookies
-      setCookie("token", data.token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-      });
+      localStorage.setItem("token", data.token);
 
-      setCookie("user", JSON.stringify(data.user), {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-      });
+      localStorage.setItem("user", JSON.stringify(data.user));
 
       dispatch(setUser(data.user)); // Store user in Redux
       router.push("/user"); // Redirect to a different page after successful login
