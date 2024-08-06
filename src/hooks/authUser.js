@@ -25,10 +25,6 @@ export default function useAuthUser() {
     }
   }, [dispatch]);
 
-  console.log(JSON.parse(localStorage.getItem("user")));
-  console.log(loggedInUser);
-  console.log(useSelector((state) => state.user));
-
   const logout = useCallback(() => {
     if (typeof window !== "undefined") {
       localStorage.removeItem("user");
