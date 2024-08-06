@@ -3,12 +3,12 @@
 @tailwind utilities;
 
 :root {
-  --foreground-color: #404040;
+  --foreground-color: #fff;
   --background-dark-color: #00b7b7; /* Dark Teal */
-  --background-light-color: #000; /* Light Teal */
+  --background-light-color: #e1fafa; /* Light Teal */
 }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: light) {
   :root {
     --foreground-color: #fff;
     --background-dark-color: #00b7b7; /* Dark Teal */
