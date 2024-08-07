@@ -1,11 +1,19 @@
 import { showNotification, hideNotification } from "./notificationSlice";
 
+let FeedbackTimeout;
+
 export const triggerNotification =
   ({ msg, success }) =>
-  (dispatch) => {
+  async (dispatch) => {
+    if (FeedbackTimeout) {
+      clearTimeout(FeedbackTimeout);
+      await dispatch(hideNotification());
+    }
+
     dispatch(showNotification({ msg, success }));
 
-    setTimeout(() => {
+    FeedbackTimeout = setTimeout(() => {
       dispatch(hideNotification());
-    }, 4000);
+      FeedbackTimeout = null;
+    }, 5000);
   };

@@ -36,7 +36,7 @@ const POST = async (req, res) => {
 };
 
 const PATCH = async (req, res) => {
-  const { id, name, profilePicture, adminId } = req.body;
+  const { id, name, profilePicture } = req.body;
 
   try {
     const existingInventory = await prisma.inventory.findUnique({
@@ -53,17 +53,22 @@ const PATCH = async (req, res) => {
     if (name !== undefined) dataToUpdate.name = name;
     if (profilePicture !== undefined)
       dataToUpdate.profilePicture = profilePicture;
-    if (adminId !== undefined) dataToUpdate.adminId = adminId;
 
     const updatedInventory = await prisma.inventory.update({
       where: { id },
       data: dataToUpdate,
     });
 
-    const data = { inventory: updatedInventory, status: 200 };
+    const data = {
+      message: "Inventory updated successfully",
+      inventory: updatedInventory,
+      status: 200,
+    };
     res.status(200).json(data);
   } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
+    res
+      .status(500)
+      .json({ error: "Unable to edit inventory: Internal Server Error" });
   }
 };
 
@@ -81,11 +86,25 @@ const DELETE = async (req, res) => {
         .json({ error: "Inventory not found", errorCode: 3 });
     }
 
-    await prisma.inventory.delete({
-      where: { id },
-    });
-
-    res.status(200).json({ status: 200, message: "Inventory deleted" });
+    try {
+      await prisma.inventory.delete({
+        where: { id },
+      });
+      res
+        .status(200)
+        .json({ status: 200, message: "Inventory deleted successfully" });
+    } catch (error) {
+      if (error.code === "P2003") {
+        // Foreign key constraint error
+        res.status(409).json({
+          error:
+            "This inventory has moderators, remove moderators before deleting this inventory",
+          errorCode: error.code,
+        });
+      } else {
+        res.status(500).json({ error: "Internal Server Error" });
+      }
+    }
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
   }

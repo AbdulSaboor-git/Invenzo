@@ -6,17 +6,16 @@ import Footer from "@/components/footer";
 import AddInventory from "./components/AddInventory";
 import EditInventory from "./components/editInventory";
 import { useRouter } from "next/navigation";
-import { FaPlus } from "react-icons/fa";
 import useAuthUser from "@/hooks/authUser";
 import { triggerNotification } from "@/redux/notificationThunk";
-import { useDispatch, useSelector } from "react-redux";
-import Notify from "@/components/notification";
+import { useDispatch } from "react-redux";
+import Loader from "@/components/loader";
 import {
+  MdAdd,
   MdDelete,
   MdDriveFileRenameOutline,
   MdLogout,
-  MdMenu,
-  MdMenuOpen,
+  MdMoreVert,
 } from "react-icons/md";
 
 export default function HomePage() {
@@ -28,7 +27,7 @@ export default function HomePage() {
   const router = useRouter();
   const { user, userLoading, logout } = useAuthUser();
   const [loadingInventories, setLoadingInventories] = useState(true);
-  const notification = useSelector((state) => state.notification);
+  const [loading, setLoading] = useState(false);
   const Dispatch = useDispatch();
 
   const showMessage = (msg, state) => {
@@ -75,11 +74,7 @@ export default function HomePage() {
   }, [user]);
 
   if (userLoading || !user) {
-    return (
-      <div className="flex min-h-screen items-center justify-center text-teal-700">
-        <div className="loader">Loading...</div>
-      </div>
-    );
+    return <Loader />;
   }
 
   const refreshInventories = async () => {
@@ -101,12 +96,17 @@ export default function HomePage() {
     showMessage("Inventory Added Successfully!", true);
   };
 
+  const onEdit = async (msg) => {
+    refreshInventories();
+    showMessage("Inventory Updated Successfully!", true);
+  };
+
   const toggle_editButtons = (id) => {
     setButtonId((prevId) => (prevId === id ? null : id));
   };
 
   const handleOpenInventory = (invId) => {
-    router.push(`user/inventory/${invId}`);
+    router.push(`home/inventory/${invId}`);
   };
 
   const open_AddInventory = () => {
@@ -128,6 +128,7 @@ export default function HomePage() {
   const handleDeleteClick = async (id, e) => {
     e.stopPropagation();
     try {
+      setLoading(true);
       const response = await fetch("/api/inventory", {
         method: "DELETE",
         headers: {
@@ -135,19 +136,25 @@ export default function HomePage() {
         },
         body: JSON.stringify({ id }),
       });
+      const data = await response.json();
+
       if (response.ok) {
         setMyInventories(myInventories.filter((inv) => inv.id !== id));
-        showMessage("Inventory Deleted Successfully!", true);
+        showMessage(data.message, true);
+      } else {
+        showMessage(data.error || "Error deleting inventory", false);
       }
     } catch (error) {
-      showMessage("Error deleting inventory", false);
+      showMessage(data.error, false);
+    } finally {
+      setLoading(false);
     }
   };
 
   const Buttons = [
     {
       btn_name: "Create an Inventory",
-      icon: <FaPlus />,
+      icon: <MdAdd />,
       clickEvent: open_AddInventory,
     },
     {
@@ -159,6 +166,7 @@ export default function HomePage() {
 
   return (
     <div className={`flex min-h-screen flex-col items-center`}>
+      {loading && <Loader />}
       <div className="max-w-[1400px] w-full">
         <Header user={user} Buttons={Buttons} />
         <div className="hidden md:flex md:gap-3 justify-end w-full items-center pt-8  px-4 max-w-[1200px]">
@@ -189,7 +197,7 @@ export default function HomePage() {
                 <div className="text-gray-300 text-xs">
                   <p>Loading...</p>
                 </div>
-              ) : !myInventories.length ? (
+              ) : !myInventories?.length ? (
                 <div className="text-gray-300">
                   <p>{"(Empty)"}</p>
                 </div>
@@ -198,10 +206,10 @@ export default function HomePage() {
                   <div
                     onClick={() => handleOpenInventory(inv.id)}
                     key={inv.id}
-                    className={`my-1 relative py-3 px-4 cursor-pointer bg-white text-teal-700 rounded-lg transition-transform duration-200 ease-in-out shadow-md shadow-[#00000044] hover:scale-[1.005]`}
+                    className={`my-1 relative py-3 px-6 cursor-pointer text-sm md:text-base bg-white text-teal-700 rounded-lg transition-transform duration-200 ease-in-out shadow-md shadow-[#00000044] hover:scale-[1.005]`}
                   >
                     <div
-                      className={`absolute right-2 p-2 hover:scale-[1.1] top-2 ${
+                      className={`absolute right-1 p-2 hover:scale-[1.1] top-2 ${
                         ButtonId === inv.id ? "text-white" : "text-teal-700"
                       } z-10`}
                       onClick={(e) => {
@@ -209,10 +217,10 @@ export default function HomePage() {
                         toggle_editButtons(inv.id);
                       }}
                     >
-                      {ButtonId === inv.id ? <MdMenuOpen /> : <MdMenu />}
+                      <MdMoreVert />
                     </div>
                     {ButtonId === inv.id && (
-                      <div className="absolute bg-teal-600 right-2 rounded-s-full top-2 px-3 pr-8 flex items-center text-[16px] text-white">
+                      <div className="absolute bg-teal-600 bg-opacity-70 right-2 rounded-s-full top-2 px-3 pr-8 flex items-center text-[16px] text-white">
                         <button
                           className="hover:text-green-300 p-2"
                           onClick={(e) => {
@@ -249,7 +257,7 @@ export default function HomePage() {
                 <div className="text-gray-300 text-xs">
                   <p>Loading...</p>
                 </div>
-              ) : !moderatedInventories.length ? (
+              ) : !moderatedInventories?.length ? (
                 <div className="text-gray-300">
                   <p>{"(Empty)"}</p>
                 </div>
@@ -258,7 +266,7 @@ export default function HomePage() {
                   <div
                     onClick={() => handleOpenInventory(inv.id)}
                     key={inv.id}
-                    className={`my-1 relative py-3 px-4 cursor-pointer bg-white text-teal-700 rounded-lg transition-transform duration-200 ease-in-out shadow-md shadow-[#00000044] hover:scale-[1.005]`}
+                    className={`my-1 relative py-3 px-6 text-sm md:text-base cursor-pointer bg-white text-teal-700 rounded-lg transition-transform duration-200 ease-in-out shadow-md shadow-[#00000044] hover:scale-[1.005]`}
                   >
                     {inv.name}
                   </div>
@@ -276,9 +284,12 @@ export default function HomePage() {
           onSuccess={onAdd}
         />
       )}
-      {editInv && <EditInventory CloseForm={close_Editorm} inv={editInv} />}
-      {notification.isVisible && (
-        <Notify msg={notification.msg} success={notification.success} />
+      {editInv && (
+        <EditInventory
+          CloseForm={close_Editorm}
+          inv={editInv}
+          onSuccess={onEdit}
+        />
       )}
     </div>
   );

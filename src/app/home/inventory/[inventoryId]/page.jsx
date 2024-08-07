@@ -4,19 +4,18 @@ import { useSelector, useDispatch } from "react-redux";
 import { openAddItemForm, closeAddItemForm } from "@/redux/addItemFormSlice";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
-import Notify from "@/components/notification";
 import Body from "./components/body";
 import {
   Products,
   Categories,
-} from "@/app/user/inventory/[inventoryId]/components/products";
-import Add_Product_Form from "@/app/user/inventory/[inventoryId]/components/add_product";
-import Manage_Categories_Form from "@/app/user/inventory/[inventoryId]/components/manage_categories";
-import Manage_Moderators_Form from "@/app/user/inventory/[inventoryId]/components/manage_moderators";
+} from "@/app/home/inventory/[inventoryId]/components/products";
+import Add_Product_Form from "@/app/home/inventory/[inventoryId]/components/add_product";
+import Manage_Categories_Form from "@/app/home/inventory/[inventoryId]/components/manage_categories";
+import Manage_Moderators_Form from "@/app/home/inventory/[inventoryId]/components/manage_moderators";
 import { MdAdd, MdLogout } from "react-icons/md";
 import { useRouter } from "next/navigation";
 import useAuthUser from "@/hooks/authUser";
-
+import Loader from "@/components/loader";
 import {
   FaPlus,
   FaCogs,
@@ -44,7 +43,6 @@ export default function Inventory() {
   const addItemForm_isOpen = useSelector((state) => state.addItemForm.isOpen);
   const heading = useSelector((state) => state.addItemForm.heading);
   const btn_text = useSelector((state) => state.addItemForm.btn_text);
-  const notification = useSelector((state) => state.notification);
 
   const [manageCategories_isOpen, set_manageCategories_isOpen] =
     useState(false);
@@ -85,11 +83,7 @@ export default function Inventory() {
   }, [user, userLoading, router]);
 
   if (userLoading || !user) {
-    return (
-      <div className="flex min-h-screen items-center justify-center text-teal-700">
-        <div className="loader">Loading...</div>{" "}
-      </div>
-    );
+    return <Loader />;
   }
 
   const Buttons = [];
@@ -172,9 +166,6 @@ export default function Inventory() {
           {<MdAdd />}
         </button>
       </div>
-      {notification.isVisible && (
-        <Notify msg={notification.msg} success={notification.success} />
-      )}
     </div>
   );
 }

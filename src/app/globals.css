@@ -112,6 +112,9 @@ body {
 .animate-slide-expand {
   animation: slideExpand 1s forwards, pulseBoxShadow 2s infinite;
 }
+.animate-slide-expand-error {
+  animation: slideExpand 1s forwards, pulseBoxShadowError 2s infinite;
+}
 .animate-slide-contract {
   animation: slideContract 1s forwards;
 }

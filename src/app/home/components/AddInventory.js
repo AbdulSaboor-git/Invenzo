@@ -1,11 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { MdClose } from "react-icons/md";
+import { useDispatch } from "react-redux";
+import { triggerNotification } from "@/redux/notificationThunk";
 
 export default function Add_Inventory({ CloseForm, user, onSuccess }) {
   const [inventoryName, setInventoryName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const Dispatch = useDispatch();
 
+  const showMessage = (msg, state) => {
+    Dispatch(
+      triggerNotification({
+        msg: msg,
+        success: state,
+      })
+    );
+  };
   useEffect(() => {
     document.body.classList.add("no-scroll");
 
@@ -29,10 +40,11 @@ export default function Add_Inventory({ CloseForm, user, onSuccess }) {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name: inventoryName, adminId: user.id }),
+        body: JSON.stringify({ name: inventoryName.trim(), adminId: user.id }),
       });
 
       if (!response.ok) {
+        showMessage("Failed to add inventory", false);
         throw new Error("Failed to add inventory");
       }
 
@@ -59,7 +71,7 @@ export default function Add_Inventory({ CloseForm, user, onSuccess }) {
         <p className="font-bold text-lg md:text-xl pb-4 text-teal-700">
           Add Inventory
         </p>
-        {error && <p className="text-red-500 text-xs mb-4">{error}</p>}
+        {/* {error && <p className="text-red-500 text-xs mb-4">{error}</p>} */}
         <form
           className="space-y-3 text-xs md:text-sm text-gray-700"
           onSubmit={addInventory}

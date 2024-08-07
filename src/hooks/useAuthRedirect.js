@@ -15,7 +15,7 @@ export const useAuthRedirect = () => {
     const user = isAuthenticated();
 
     if (user) {
-      router.push(`/user/`);
+      router.push("/home/");
     } else {
       router.push("/login");
     }
