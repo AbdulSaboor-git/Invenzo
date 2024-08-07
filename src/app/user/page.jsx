@@ -140,7 +140,7 @@ export default function HomePage() {
         showMessage("Inventory Deleted Successfully!", true);
       }
     } catch (error) {
-      console.error("Error deleting inventory:", error);
+      showMessage("Error deleting inventory", false);
     }
   };
 
@@ -266,17 +266,17 @@ export default function HomePage() {
               )}
             </div>
           </div>
-          {AddInventory_isOpen && (
-            <AddInventory
-              CloseForm={close_AddInventory}
-              user={user}
-              onSuccess={onAdd}
-            />
-          )}
-          {editInv && <EditInventory CloseForm={close_Editorm} inv={editInv} />}
         </div>
         <Footer />
       </div>
+      {AddInventory_isOpen && (
+        <AddInventory
+          CloseForm={close_AddInventory}
+          user={user}
+          onSuccess={onAdd}
+        />
+      )}
+      {editInv && <EditInventory CloseForm={close_Editorm} inv={editInv} />}
       {notification.isVisible && (
         <Notify msg={notification.msg} success={notification.success} />
       )}
