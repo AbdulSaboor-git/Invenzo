@@ -1,4 +1,4 @@
-//user.js
+// user.js
 "use client";
 import React, { useState, useEffect } from "react";
 import Header from "@/components/header";
@@ -8,6 +8,9 @@ import EditInventory from "./components/editInventory";
 import { useRouter } from "next/navigation";
 import { FaPlus } from "react-icons/fa";
 import useAuthUser from "@/hooks/authUser";
+import { triggerNotification } from "@/redux/notificationThunk";
+import { useDispatch, useSelector } from "react-redux";
+import Notify from "@/components/notification";
 import {
   MdDelete,
   MdDriveFileRenameOutline,
@@ -20,29 +23,90 @@ export default function HomePage() {
   const [ButtonId, setButtonId] = useState(null);
   const [AddInventory_isOpen, set_AddInventory_isOpen] = useState(false);
   const [editInv, setEditInv] = useState(null);
+  const [myInventories, setMyInventories] = useState([]);
+  const [moderatedInventories, setModeratedInventories] = useState([]);
   const router = useRouter();
   const { user, userLoading, logout } = useAuthUser();
+  const [loadingInventories, setLoadingInventories] = useState(true);
+  const notification = useSelector((state) => state.notification);
+  const Dispatch = useDispatch();
 
+  const showMessage = (msg, state) => {
+    Dispatch(
+      triggerNotification({
+        msg: msg,
+        success: state,
+      })
+    );
+  };
   useEffect(() => {
     if (!userLoading && !user) {
       router.push("/login");
     }
   }, [user, userLoading, router]);
 
+  useEffect(() => {
+    const fetchInventories = async () => {
+      if (user) {
+        try {
+          setLoadingInventories(true);
+          // Fetch inventories where the user is an admin
+          const myInvResponse = await fetch(
+            `/api/inventory?adminId=${user.id}`
+          );
+          const myInvData = await myInvResponse.json();
+          setMyInventories(myInvData.inventories);
+
+          // Fetch inventories where the user is a moderator
+          const modInvResponse = await fetch(
+            `/api/inventory?moderatorId=${user.id}`
+          );
+          const modInvData = await modInvResponse.json();
+          setModeratedInventories(modInvData.inventories);
+        } catch (error) {
+          console.error("Error fetching inventories:", error);
+        } finally {
+          setLoadingInventories(false);
+        }
+      }
+    };
+
+    fetchInventories();
+  }, [user]);
+
   if (userLoading || !user) {
     return (
       <div className="flex min-h-screen items-center justify-center text-teal-700">
-        <div className="loader">Loading...</div>{" "}
+        <div className="loader">Loading...</div>
       </div>
     );
   }
+
+  const refreshInventories = async () => {
+    try {
+      setLoadingInventories(true);
+
+      const myInvResponse = await fetch(`/api/inventory?adminId=${user.id}`);
+      const myInvData = await myInvResponse.json();
+      setMyInventories(myInvData.inventories);
+    } catch (error) {
+      console.error("Error refreshing inventories:", error);
+    } finally {
+      setLoadingInventories(false);
+    }
+  };
+
+  const onAdd = async () => {
+    refreshInventories();
+    showMessage("Inventory Added Successfully!", true);
+  };
 
   const toggle_editButtons = (id) => {
     setButtonId((prevId) => (prevId === id ? null : id));
   };
 
-  const handleOpenInventory = () => {
-    router.push(`user/inventory`);
+  const handleOpenInventory = (invId) => {
+    router.push(`user/inventory/${invId}`);
   };
 
   const open_AddInventory = () => {
@@ -61,41 +125,24 @@ export default function HomePage() {
     setEditInv(null);
   };
 
-  const MyInventories = [
-    {
-      id: 0,
-      name: "A",
-      onClick: handleOpenInventory,
-    },
-    {
-      id: 1,
-      name: "B",
-      onClick: handleOpenInventory,
-    },
-    {
-      id: 2,
-      name: "C",
-      onClick: handleOpenInventory,
-    },
-  ];
-
-  const ModeratedInventories = [
-    {
-      id: 4,
-      name: "M",
-      onClick: handleOpenInventory,
-    },
-    {
-      id: 5,
-      name: "N",
-      onClick: handleOpenInventory,
-    },
-    {
-      id: 6,
-      name: "P",
-      onClick: handleOpenInventory,
-    },
-  ];
+  const handleDeleteClick = async (id, e) => {
+    e.stopPropagation();
+    try {
+      const response = await fetch("/api/inventory", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id }),
+      });
+      if (response.ok) {
+        setMyInventories(myInventories.filter((inv) => inv.id !== id));
+        showMessage("Inventory Deleted Successfully!", true);
+      }
+    } catch (error) {
+      console.error("Error deleting inventory:", error);
+    }
+  };
 
   const Buttons = [
     {
@@ -110,20 +157,16 @@ export default function HomePage() {
     },
   ];
 
-  const handleDeleteClick = (e) => {
-    e.stopPropagation();
-  };
-
   return (
     <div className={`flex min-h-screen flex-col items-center`}>
-      <div className="max-w-[1400px] w-full ">
+      <div className="max-w-[1400px] w-full">
         <Header user={user} Buttons={Buttons} />
-        <div className="hidden md:flex justify-end w-full items-center px-4 pt-8 max-w-[1200px]">
+        <div className="hidden md:flex md:gap-3 justify-end w-full items-center pt-8  px-4 max-w-[1200px]">
           {Buttons.map((btn, index) => (
             <button
               onClick={btn.clickEvent}
               style={{ boxShadow: "inset 0 0 10px #00443d" }}
-              className="bg-teal-600 hover:bg-teal-700  hover:scale-x-[1.01] text-sm transition-transform duration-200 ease-in-out text-white text-[11px] py-3 px-6 rounded-2xl"
+              className="bg-teal-600 hover:bg-teal-700 hover:scale-x-[1.01] text-sm transition-transform duration-200 ease-in-out text-white text-[11px] py-3 px-6 rounded-2xl"
               key={index}
             >
               <div className="flex gap-4 items-center justify-start">
@@ -142,45 +185,55 @@ export default function HomePage() {
               My Inventories
             </p>
             <div className="flex flex-col mx-5">
-              {MyInventories.map((inv) => (
-                <div
-                  onClick={inv.onClick}
-                  key={inv.id}
-                  className={`my-1 relative py-3 px-4 cursor-pointer bg-white text-teal-700 rounded-lg transition-transform duration-200 ease-in-out shadow-md shadow-[#00000044] hover:scale-[1.005]`}
-                >
-                  <div
-                    className={`absolute right-2 p-2 hover:scale-[1.1] top-2 ${
-                      ButtonId === inv.id ? "text-white" : "text-teal-700"
-                    } z-10`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggle_editButtons(inv.id);
-                    }}
-                  >
-                    {ButtonId === inv.id ? <MdMenuOpen /> : <MdMenu />}
-                  </div>
-                  {ButtonId === inv.id && (
-                    <div className="absolute bg-teal-600 right-2 rounded-s-full top-2 px-3 pr-8 flex items-center  text-[16px] text-white">
-                      <button
-                        className="hover:text-green-300 p-2"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          open_Editorm(inv);
-                        }}
-                      >
-                        <MdDriveFileRenameOutline />
-                      </button>
-                      <button
-                        className="hover:text-red-300 p-2 "
-                        onClick={handleDeleteClick}
-                      >
-                        <MdDelete />
-                      </button>
-                    </div>
-                  )}
-                  {inv.name}
+              {loadingInventories ? (
+                <div className="text-gray-300 text-xs">
+                  <p>Loading...</p>
                 </div>
-              ))}
+              ) : !myInventories.length ? (
+                <div className="text-gray-300">
+                  <p>{"(Empty)"}</p>
+                </div>
+              ) : (
+                myInventories.map((inv) => (
+                  <div
+                    onClick={() => handleOpenInventory(inv.id)}
+                    key={inv.id}
+                    className={`my-1 relative py-3 px-4 cursor-pointer bg-white text-teal-700 rounded-lg transition-transform duration-200 ease-in-out shadow-md shadow-[#00000044] hover:scale-[1.005]`}
+                  >
+                    <div
+                      className={`absolute right-2 p-2 hover:scale-[1.1] top-2 ${
+                        ButtonId === inv.id ? "text-white" : "text-teal-700"
+                      } z-10`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggle_editButtons(inv.id);
+                      }}
+                    >
+                      {ButtonId === inv.id ? <MdMenuOpen /> : <MdMenu />}
+                    </div>
+                    {ButtonId === inv.id && (
+                      <div className="absolute bg-teal-600 right-2 rounded-s-full top-2 px-3 pr-8 flex items-center text-[16px] text-white">
+                        <button
+                          className="hover:text-green-300 p-2"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            open_Editorm(inv);
+                          }}
+                        >
+                          <MdDriveFileRenameOutline />
+                        </button>
+                        <button
+                          className="hover:text-red-300 p-2"
+                          onClick={(e) => handleDeleteClick(inv.id, e)}
+                        >
+                          <MdDelete />
+                        </button>
+                      </div>
+                    )}
+                    {inv.name}
+                  </div>
+                ))
+              )}
             </div>
           </div>
           <div
@@ -192,54 +245,41 @@ export default function HomePage() {
             </p>
 
             <div className="flex flex-col mx-5">
-              {ModeratedInventories.map((inv) => (
-                <div
-                  onClick={inv.onClick}
-                  key={inv.id}
-                  className={`my-1 relative py-3 px-4 cursor-pointer bg-white text-teal-700 rounded-lg transition-transform duration-200 ease-in-out shadow-md shadow-[#00000044] hover:scale-[1.005]`}
-                >
-                  <div
-                    className={`absolute right-2 p-2 hover:scale-[1.1] top-2 ${
-                      ButtonId === inv.id ? "text-white" : "text-teal-700"
-                    } z-10`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggle_editButtons(inv.id);
-                    }}
-                  >
-                    {ButtonId === inv.id ? <MdMenuOpen /> : <MdMenu />}
-                  </div>
-                  {ButtonId === inv.id && (
-                    <div className="absolute bg-teal-600 right-2 rounded-s-full top-2 px-3 pr-8 flex items-center  text-[16px] text-white">
-                      <button
-                        className="hover:text-green-300 p-2"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          open_Editorm(inv);
-                        }}
-                      >
-                        <MdDriveFileRenameOutline />
-                      </button>
-                      <button
-                        className="hover:text-red-300 p-2 "
-                        onClick={handleDeleteClick}
-                      >
-                        <MdDelete />
-                      </button>
-                    </div>
-                  )}
-                  {inv.name}
+              {loadingInventories ? (
+                <div className="text-gray-300 text-xs">
+                  <p>Loading...</p>
                 </div>
-              ))}
+              ) : !moderatedInventories.length ? (
+                <div className="text-gray-300">
+                  <p>{"(Empty)"}</p>
+                </div>
+              ) : (
+                moderatedInventories.map((inv) => (
+                  <div
+                    onClick={() => handleOpenInventory(inv.id)}
+                    key={inv.id}
+                    className={`my-1 relative py-3 px-4 cursor-pointer bg-white text-teal-700 rounded-lg transition-transform duration-200 ease-in-out shadow-md shadow-[#00000044] hover:scale-[1.005]`}
+                  >
+                    {inv.name}
+                  </div>
+                ))
+              )}
             </div>
           </div>
           {AddInventory_isOpen && (
-            <AddInventory CloseForm={close_AddInventory} />
+            <AddInventory
+              CloseForm={close_AddInventory}
+              user={user}
+              onSuccess={onAdd}
+            />
           )}
           {editInv && <EditInventory CloseForm={close_Editorm} inv={editInv} />}
         </div>
         <Footer />
       </div>
+      {notification.isVisible && (
+        <Notify msg={notification.msg} success={notification.success} />
+      )}
     </div>
   );
 }

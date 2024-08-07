@@ -1,7 +1,7 @@
 import React from "react";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { useDispatch } from "react-redux";
-import { openAddItemForm } from "../redux/addItemFormSlice";
+import { openAddItemForm } from "../../../../../redux/addItemFormSlice";
 
 export default function ProductCard({
   prod,

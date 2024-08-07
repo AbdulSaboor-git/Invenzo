@@ -6,7 +6,7 @@ import Product_card from "./product_card";
 import Sort_card from "./sortCard";
 import Filter_card from "./filterCard";
 import { useDispatch } from "react-redux";
-import { triggerNotification } from "../redux/notificationThunk";
+import { triggerNotification } from "@/redux/notificationThunk";
 
 export default function RightSide({ products, categories, user }) {
   const [searchValue, setSearchValue] = useState("");

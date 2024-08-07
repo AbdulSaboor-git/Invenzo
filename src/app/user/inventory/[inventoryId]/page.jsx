@@ -5,11 +5,14 @@ import { openAddItemForm, closeAddItemForm } from "@/redux/addItemFormSlice";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import Notify from "@/components/notification";
-import Body from "@/components/body";
-import { Products, Categories } from "@/components/products";
-import Add_Product_Form from "@/components/add_product";
-import Manage_Categories_Form from "@/components/manage_categories";
-import Manage_Moderators_Form from "@/components/manage_moderators";
+import Body from "./components/body";
+import {
+  Products,
+  Categories,
+} from "@/app/user/inventory/[inventoryId]/components/products";
+import Add_Product_Form from "@/app/user/inventory/[inventoryId]/components/add_product";
+import Manage_Categories_Form from "@/app/user/inventory/[inventoryId]/components/manage_categories";
+import Manage_Moderators_Form from "@/app/user/inventory/[inventoryId]/components/manage_moderators";
 import { MdAdd, MdLogout } from "react-icons/md";
 import { useRouter } from "next/navigation";
 import useAuthUser from "@/hooks/authUser";
