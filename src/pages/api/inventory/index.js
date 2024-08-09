@@ -87,7 +87,7 @@ const DELETE = async (req, res) => {
     }
 
     await prisma.$transaction([
-      prisma.moderators.deleteMany({
+      prisma.moderator.deleteMany({
         where: {
           inventoryId: id,
         },
@@ -111,7 +111,7 @@ const DELETE = async (req, res) => {
       .status(200)
       .json({ status: 200, message: "Inventory deleted successfully" });
   } catch (error) {
-    console.error("Delete Error:", error); // Log the error for debugging
+    console.error("Delete Error:", error.message, error.stack);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
