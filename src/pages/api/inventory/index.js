@@ -92,15 +92,27 @@ const DELETE = async (req, res) => {
           inventoryId: id,
         },
       }),
+      prisma.product.deleteMany({
+        where: {
+          inventoryId: id,
+        },
+      }),
+      prisma.category.deleteMany({
+        where: {
+          inventoryId: id,
+        },
+      }),
       prisma.inventory.delete({
         where: { id },
       }),
     ]);
-    res
+
+    return res
       .status(200)
       .json({ status: 200, message: "Inventory deleted successfully" });
   } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error("Delete Error:", error); // Log the error for debugging
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
