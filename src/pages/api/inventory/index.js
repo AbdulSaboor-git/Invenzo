@@ -86,25 +86,19 @@ const DELETE = async (req, res) => {
         .json({ error: "Inventory not found", errorCode: 3 });
     }
 
-    try {
-      await prisma.inventory.delete({
+    await prisma.$transaction([
+      prisma.moderators.deleteMany({
+        where: {
+          inventoryId: id,
+        },
+      }),
+      prisma.inventory.delete({
         where: { id },
-      });
-      res
-        .status(200)
-        .json({ status: 200, message: "Inventory deleted successfully" });
-    } catch (error) {
-      if (error.code === "P2003") {
-        // Foreign key constraint error
-        res.status(409).json({
-          error:
-            "This inventory has moderators, remove moderators before deleting this inventory",
-          errorCode: error.code,
-        });
-      } else {
-        res.status(500).json({ error: "Internal Server Error" });
-      }
-    }
+      }),
+    ]);
+    res
+      .status(200)
+      .json({ status: 200, message: "Inventory deleted successfully" });
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
   }
