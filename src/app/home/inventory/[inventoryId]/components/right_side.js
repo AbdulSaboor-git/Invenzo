@@ -9,7 +9,7 @@ import { useDispatch } from "react-redux";
 import { triggerNotification } from "@/redux/notificationThunk";
 import Loader from "@/components/loader";
 
-export default function RightSide({ user, inventoryId }) {
+export default function RightSide({ user, inventoryId, role }) {
   const [searchValue, setSearchValue] = useState("");
   const [sortCard_isOpen, setSortCard_isOpen] = useState(false);
   const [filterCard_isOpen, setFilterCard_isOpen] = useState(false);
@@ -48,7 +48,11 @@ export default function RightSide({ user, inventoryId }) {
   const Dispatch = useDispatch();
   const sortProducts = useCallback(
     (key, order) => {
-      const sorted = products.sort((a, b) => {
+      if (!products || products.length === 0) {
+        setSortedProducts([]);
+        return;
+      }
+      const sorted = [...products].sort((a, b) => {
         if (key === "salePrice") {
           return order === "asc"
             ? parseFloat(a[key]) - parseFloat(b[key])
@@ -110,7 +114,6 @@ export default function RightSide({ user, inventoryId }) {
 
   const closeSortCard = () => {
     setSortCard_isOpen(false);
-    event.stopPropagation();
   };
   const toggleFilterCard = () => {
     setFilterCard_isOpen((prev) => !prev);
@@ -194,7 +197,7 @@ export default function RightSide({ user, inventoryId }) {
               return (
                 prod.name.toLowerCase().includes(searchTerm) ||
                 prod.category.name.toLowerCase().includes(searchTerm) ||
-                prod.tags.toLowerCase().includes(searchTerm)
+                prod.tags?.toLowerCase().includes(searchTerm)
               );
             })
             .map((prod) => (
@@ -203,7 +206,7 @@ export default function RightSide({ user, inventoryId }) {
                 prod={prod}
                 isExpanded={expandedProductId === prod.id}
                 toggleProductDetails={toggleProductDetails}
-                user={user}
+                user={role}
               />
             ))
         )}

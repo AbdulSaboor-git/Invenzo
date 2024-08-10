@@ -31,7 +31,7 @@ export default function ProductCard({
     >
       <div className="flex justify-between">
         <p className="text-sm font-bold">{prod.name}</p>
-        {isExpanded && (user.role === "admin" || user.role === "manager") && (
+        {isExpanded && (user === "admin" || user === "manager") && (
           <div className="flex gap-3 text-base md:text-lg pr-2">
             <button
               className="hover:text-green-600 transition-colors duration-200 ease-in-out"
@@ -49,7 +49,7 @@ export default function ProductCard({
         )}
       </div>
       <p className="text-[13px] text-[#626262]">Rs. {prod.salePrice}</p>
-      {prod.govt_sale_price !== null && (
+      {prod.govtSalePrice !== null && prod.govtSalePrice !== 0 && (
         <p className="text-[#626262] text-[13px]">
           Rs. {prod.govtSalePrice} (Govt)
         </p>
@@ -77,7 +77,7 @@ export default function ProductCard({
                     Category
                   </td>
                   <td className="border border-[#0079796c] p-1">
-                    {prod.categoryId}
+                    {prod.category.name}
                   </td>
                 </tr>
                 <tr>
@@ -97,7 +97,7 @@ export default function ProductCard({
                     Rs. {prod.salePrice}
                   </td>
                 </tr>
-                {prod.govt_sale_price !== null && (
+                {prod.govtSalePrice !== null && prod.govtSalePrice !== 0 && (
                   <tr>
                     <td className="border border-[#0079796c] p-1 font-semibold">
                       Govt. Sale Price

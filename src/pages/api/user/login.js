@@ -22,6 +22,7 @@ const POST = async (req, res) => {
   try {
     const user = await prisma.user.findUnique({
       where: { email },
+      include: { Inventories: true },
     });
 
     if (!user) {

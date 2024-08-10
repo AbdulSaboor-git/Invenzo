@@ -5,10 +5,7 @@ import { openAddItemForm, closeAddItemForm } from "@/redux/addItemFormSlice";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import Body from "./components/body";
-import {
-  Products,
-  Categories,
-} from "@/app/home/inventory/[inventoryId]/components/products";
+
 import Add_Product_Form from "@/app/home/inventory/[inventoryId]/components/add_product";
 import Manage_Categories_Form from "@/app/home/inventory/[inventoryId]/components/manage_categories";
 import Manage_Moderators_Form from "@/app/home/inventory/[inventoryId]/components/manage_moderators";
@@ -16,14 +13,7 @@ import { MdAdd, MdLogout } from "react-icons/md";
 import { useRouter } from "next/navigation";
 import useAuthUser from "@/hooks/authUser";
 import Loader from "@/components/loader";
-import {
-  FaPlus,
-  FaCogs,
-  FaCloudUploadAlt,
-  FaFileExport,
-  FaTrashAlt,
-  FaUsers,
-} from "react-icons/fa";
+import { FaPlus, FaCogs, FaTrashAlt, FaUsers } from "react-icons/fa";
 
 export default function Inventory({ params }) {
   const dispatch = useDispatch();
@@ -33,6 +23,7 @@ export default function Inventory({ params }) {
   const btn_text = useSelector((state) => state.addItemForm.btn_text);
 
   const invId = params.inventoryId;
+  let role = "viewer";
   const { user, userLoading, logout } = useAuthUser();
 
   const [manageCategories_isOpen, set_manageCategories_isOpen] =
@@ -73,7 +64,13 @@ export default function Inventory({ params }) {
   if (userLoading || !user) {
     return <Loader />;
   }
+  if (user?.Inventories?.some((inventory) => inventory.id === Number(invId))) {
+    role = "admin";
+  } else {
+    role = "viewer";
+  }
 
+  console.log(user.Inventories);
   const Buttons = [];
 
   Buttons.push(
@@ -109,7 +106,7 @@ export default function Inventory({ params }) {
       <div className="max-w-[1440px] w-full">
         <Header user={user} Buttons={Buttons} />
 
-        <Body buttons={Buttons} user={user} inventoryId={invId} />
+        <Body buttons={Buttons} user={user} inventoryId={invId} role={role} />
         <Footer />
       </div>
       {addItemForm_isOpen && (

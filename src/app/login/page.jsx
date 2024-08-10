@@ -5,8 +5,8 @@ import { useDispatch } from "react-redux";
 import { setUser } from "@/redux/userSlice";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
-import { setCookie } from "cookies-next";
 import useAuthUser from "@/hooks/authUser";
+import Loader from "@/components/loader";
 
 export default function Login() {
   const router = useRouter();
@@ -23,11 +23,7 @@ export default function Login() {
   }, [user, userLoading, router]);
 
   if (userLoading || user) {
-    return (
-      <div className="flex min-h-screen items-center justify-center text-teal-700">
-        <div className="loader">Loading...</div>{" "}
-      </div>
-    );
+    return <Loader />;
   }
 
   const handleSignUpClick = () => {

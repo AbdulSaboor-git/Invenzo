@@ -122,7 +122,7 @@ export default function HomePage() {
   };
 
   const handleOpenInventory = (invId) => {
-    router.push(`home/inventory/${invId}`);
+    router.push(`/home/inventory/${invId}`);
   };
 
   const open_AddInventory = () => {
