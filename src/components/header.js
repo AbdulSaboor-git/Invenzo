@@ -62,18 +62,21 @@ export default function Header({ user, Buttons }) {
               </div>
               <div className="flex flex-col w-full">
                 <div className="flex flex-col gap-2 pt-8 px-2">
-                  {Buttons.map((btn, index) => (
-                    <button
-                      onClick={btn.clickEvent}
-                      className="bg-[#01b0b0] hover:bg-[#079d9d] hover:scale-x-[1.01]  transition-transform duration-200 ease-in-out   text-white text-[11px] py-2 px-4 rounded-xl shadow-sm shadow-[#0000008f]"
-                      key={index}
-                    >
-                      <div className="flex gap-4 items-center justify-start">
-                        {btn.icon}
-                        {btn.btn_name}
-                      </div>
-                    </button>
-                  ))}
+                  {Buttons.map(
+                    (btn, index) =>
+                      btn.btn_name !== "Add Product" && (
+                        <button
+                          onClick={btn.clickEvent}
+                          className="bg-[#01b0b0] hover:bg-[#079d9d] hover:scale-x-[1.01]  transition-transform duration-200 ease-in-out   text-white text-[11px] py-2 px-4 rounded-xl shadow-sm shadow-[#0000008f]"
+                          key={index}
+                        >
+                          <div className="flex gap-4 items-center justify-start">
+                            {btn.icon}
+                            {btn.btn_name}
+                          </div>
+                        </button>
+                      )
+                  )}
                 </div>
                 <div className="flex flex-col absolute w-[190px] bottom-4 gap-1 text-[#404040]">
                   <hr className="h-[1px] bg-[#999]" />

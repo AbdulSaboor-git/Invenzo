@@ -49,14 +49,7 @@ model Product {
   category      Category  @relation(fields: [categoryId], references: [id])
   inventoryId   Int
   inventory     Inventory @relation(fields: [inventoryId], references: [id])
-  tags          Tags[]
-}
-
-model Tags {
-  id        Int     @id @default(autoincrement())
-  product   Product @relation(fields: [productId], references: [id])
-  productId Int
-  tag       String
+  tags          String?
 }
 
 model Category {

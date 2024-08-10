@@ -25,24 +25,15 @@ import {
   FaUsers,
 } from "react-icons/fa";
 
-const moderators = [
-  {
-    id: 12,
-    name: "abc",
-    email: "abc@email.com",
-  },
-  {
-    id: 15,
-    name: "xyz",
-    email: "xyz@email.com",
-  },
-];
-
-export default function Inventory() {
+export default function Inventory({ params }) {
   const dispatch = useDispatch();
+  const router = useRouter();
   const addItemForm_isOpen = useSelector((state) => state.addItemForm.isOpen);
   const heading = useSelector((state) => state.addItemForm.heading);
   const btn_text = useSelector((state) => state.addItemForm.btn_text);
+
+  const invId = params.inventoryId;
+  const { user, userLoading, logout } = useAuthUser();
 
   const [manageCategories_isOpen, set_manageCategories_isOpen] =
     useState(false);
@@ -73,9 +64,6 @@ export default function Inventory() {
     dispatch(closeAddItemForm());
   };
 
-  const router = useRouter();
-  const { user, userLoading, logout } = useAuthUser();
-
   useEffect(() => {
     if (!userLoading && !user) {
       router.push("/login");
@@ -100,16 +88,6 @@ export default function Inventory() {
       clickEvent: open_manageCategories,
     },
     {
-      btn_name: "Load Data",
-      icon: <FaCloudUploadAlt />,
-      // clickEvent: open_AddItemForm,
-    },
-    {
-      btn_name: "Export Data",
-      icon: <FaFileExport />,
-      // clickEvent: open_AddItemForm,
-    },
-    {
       btn_name: "Clear Data",
       icon: <FaTrashAlt />,
       // clickEvent: open_AddItemForm,
@@ -130,12 +108,8 @@ export default function Inventory() {
     <div className={`flex min-h-screen flex-col items-center justify-between`}>
       <div className="max-w-[1440px] w-full">
         <Header user={user} Buttons={Buttons} />
-        <Body
-          products={Products}
-          categories={Categories}
-          buttons={Buttons}
-          user={user}
-        />
+
+        <Body buttons={Buttons} user={user} inventoryId={invId} />
         <Footer />
       </div>
       {addItemForm_isOpen && (
@@ -143,19 +117,19 @@ export default function Inventory() {
           heading={heading}
           buttonText={btn_text}
           CloseForm={close_AddItemForm}
-          categories={Categories}
+          categories={[]}
         />
       )}
       {manageCategories_isOpen && (
         <Manage_Categories_Form
           CloseForm={close_manageCategories}
-          categories={Categories}
+          categories={[]}
         />
       )}
       {manageModerators_isOpen && (
         <Manage_Moderators_Form
           CloseForm={close_manageModerators}
-          moderators={moderators}
+          moderators={[]}
         />
       )}
       <div className="fixed block md:hidden bottom-8 right-6 rounded-full ">

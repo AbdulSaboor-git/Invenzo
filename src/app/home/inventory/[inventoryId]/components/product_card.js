@@ -48,10 +48,10 @@ export default function ProductCard({
           </div>
         )}
       </div>
-      <p className="text-[13px] text-[#626262]">Rs. {prod.sale_price}</p>
+      <p className="text-[13px] text-[#626262]">Rs. {prod.salePrice}</p>
       {prod.govt_sale_price !== null && (
         <p className="text-[#626262] text-[13px]">
-          Rs. {prod.govt_sale_price} (Govt)
+          Rs. {prod.govtSalePrice} (Govt)
         </p>
       )}
       <div className="flex justify-center ">
@@ -77,7 +77,7 @@ export default function ProductCard({
                     Category
                   </td>
                   <td className="border border-[#0079796c] p-1">
-                    {prod.category}
+                    {prod.categoryId}
                   </td>
                 </tr>
                 <tr>
@@ -85,7 +85,7 @@ export default function ProductCard({
                     Purchase Price
                   </td>
                   <td className="border border-[#0079796c] p-1">
-                    Rs. {prod.purchase_price}
+                    Rs. {prod.purchasePrice}
                   </td>
                 </tr>
 
@@ -94,7 +94,7 @@ export default function ProductCard({
                     Sale Price
                   </td>
                   <td className="border border-[#0079796c] p-1">
-                    Rs. {prod.sale_price}
+                    Rs. {prod.salePrice}
                   </td>
                 </tr>
                 {prod.govt_sale_price !== null && (
@@ -103,7 +103,7 @@ export default function ProductCard({
                       Govt. Sale Price
                     </td>
                     <td className="border border-[#0079796c] p-1">
-                      Rs. {prod.govt_sale_price}
+                      Rs. {prod.govtSalePrice}
                     </td>
                   </tr>
                 )}
@@ -112,7 +112,7 @@ export default function ProductCard({
                     Date Added
                   </td>
                   <td className="border border-[#0079796c] p-1">
-                    {prod.date_added}
+                    {prod.createdAt}
                   </td>
                 </tr>
                 <tr>
@@ -120,7 +120,7 @@ export default function ProductCard({
                     Date Updated
                   </td>
                   <td className="border border-[#0079796c] p-1">
-                    {prod.date_updated}
+                    {prod.updatedAt}
                   </td>
                 </tr>
               </tbody>

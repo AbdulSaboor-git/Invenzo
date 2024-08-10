@@ -7,18 +7,49 @@ import Sort_card from "./sortCard";
 import Filter_card from "./filterCard";
 import { useDispatch } from "react-redux";
 import { triggerNotification } from "@/redux/notificationThunk";
+import Loader from "@/components/loader";
 
-export default function RightSide({ products, categories, user }) {
+export default function RightSide({ user, inventoryId }) {
   const [searchValue, setSearchValue] = useState("");
-  const [sortedProducts, setSortedProducts] = useState(products);
   const [sortCard_isOpen, setSortCard_isOpen] = useState(false);
   const [filterCard_isOpen, setFilterCard_isOpen] = useState(false);
   const [filterApplied, set_filterApplied] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [loadingData, setLoadingData] = useState(true);
+  const [products, setProducts] = useState([]);
+  const [sortedProducts, setSortedProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const invId = inventoryId;
+
+  useEffect(() => {
+    const fetchInvData = async () => {
+      if (user) {
+        try {
+          setLoadingData(true);
+          const Response = await fetch(`/api/inventory/${invId}`);
+          const InvData = await Response.json();
+          setProducts(InvData.products);
+          setCategories(InvData.categories);
+        } catch (error) {
+          console.error("Error fetching inventory data:", error);
+        } finally {
+          setLoadingData(false);
+        }
+      }
+    };
+
+    fetchInvData();
+  }, [invId, user]);
+
+  useEffect(() => {
+    setSortedProducts(products);
+  }, [products]);
+
   const Dispatch = useDispatch();
   const sortProducts = useCallback(
     (key, order) => {
-      const sorted = [...products].sort((a, b) => {
-        if (key === "sale_price") {
+      const sorted = products.sort((a, b) => {
+        if (key === "salePrice") {
           return order === "asc"
             ? parseFloat(a[key]) - parseFloat(b[key])
             : parseFloat(b[key]) - parseFloat(a[key]);
@@ -106,6 +137,7 @@ export default function RightSide({ products, categories, user }) {
 
   return (
     <div className="flex flex-col w-full z-0">
+      {loading && <Loader />}
       <div className="flex gap-3 md:gap-4 pb-4 items-center text-[#404040] px-0 md:px-2 relative">
         <div className="relative w-full">
           <input
@@ -145,25 +177,36 @@ export default function RightSide({ products, categories, user }) {
           />
         )}
       </div>
+
       <div className="flex flex-col gap-[6px]  w-full pb-1 px-0 md:px-2 md:max-h-[80vh] md:overflow-auto hidden_scroll_bar">
-        {sortedProducts
-          .filter((prod) => {
-            const searchTerm = searchValue.toLowerCase().trim();
-            return (
-              prod.name.toLowerCase().includes(searchTerm) ||
-              prod.category.toLowerCase().includes(searchTerm) ||
-              prod.tags.some((tag) => tag.toLowerCase().includes(searchTerm))
-            );
-          })
-          .map((prod) => (
-            <Product_card
-              key={prod.id}
-              prod={prod}
-              isExpanded={expandedProductId === prod.id}
-              toggleProductDetails={toggleProductDetails}
-              user={user}
-            />
-          ))}
+        {loadingData ? (
+          <div className="text-gray-300 text-xs">
+            <p>Loading...</p>
+          </div>
+        ) : !sortedProducts?.length ? (
+          <div className="text-gray-300">
+            <p>{"(Empty)"}</p>
+          </div>
+        ) : (
+          sortedProducts
+            .filter((prod) => {
+              const searchTerm = searchValue.toLowerCase().trim();
+              return (
+                prod.name.toLowerCase().includes(searchTerm) ||
+                prod.category.name.toLowerCase().includes(searchTerm) ||
+                prod.tags.toLowerCase().includes(searchTerm)
+              );
+            })
+            .map((prod) => (
+              <Product_card
+                key={prod.id}
+                prod={prod}
+                isExpanded={expandedProductId === prod.id}
+                toggleProductDetails={toggleProductDetails}
+                user={user}
+              />
+            ))
+        )}
       </div>
     </div>
   );

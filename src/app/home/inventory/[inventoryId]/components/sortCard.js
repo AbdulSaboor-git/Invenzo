@@ -19,27 +19,27 @@ export default function notification({ sortProducts }) {
         <MdArrowDownward />
       </div>
       <div
-        onClick={() => sortProducts("sale_price", "asc")}
+        onClick={() => sortProducts("salePrice", "asc")}
         className="flex items-center justify-center gap-3 p-2 hover:bg-[#dbeded] rounded-xl"
       >
         Price
         <MdArrowUpward />
       </div>
       <div
-        onClick={() => sortProducts("sale_price", "desc")}
+        onClick={() => sortProducts("salePrice", "desc")}
         className="flex items-center justify-center gap-3 p-2 hover:bg-[#dbeded] rounded-xl"
       >
         Price
         <MdArrowDownward />
       </div>
       <div
-        onClick={() => sortProducts("date_added", "desc")}
+        onClick={() => sortProducts("createdAt", "desc")}
         className="flex items-center justify-center gap-3 p-2 hover:bg-[#dbeded] rounded-xl"
       >
         Last Added
       </div>
       <div
-        onClick={() => sortProducts("date_updated", "desc")}
+        onClick={() => sortProducts("updatedAt", "desc")}
         className="flex items-center justify-center gap-3 p-2 hover:bg-[#dbeded] rounded-xl"
       >
         Last Updated

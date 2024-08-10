@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
+import Confirmation_dialogue from "@/components/confirmation_dialogue";
 import AddInventory from "./components/AddInventory";
 import EditInventory from "./components/editInventory";
 import { useRouter } from "next/navigation";
@@ -29,6 +30,21 @@ export default function HomePage() {
   const [loadingInventories, setLoadingInventories] = useState(true);
   const [loading, setLoading] = useState(false);
   const Dispatch = useDispatch();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const openDialog = (e) => {
+    e.stopPropagation();
+    setIsDialogOpen(true);
+  };
+
+  const closeDialog = () => {
+    setIsDialogOpen(false);
+  };
+
+  const confirmDelete = (invId) => {
+    handleDeleteClick(invId);
+    closeDialog();
+  };
 
   const showMessage = (msg, state) => {
     Dispatch(
@@ -93,7 +109,7 @@ export default function HomePage() {
 
   const onAdd = async () => {
     refreshInventories();
-    showMessage("Inventory Added Successfully!", true);
+    showMessage("Inventory Created Successfully!", true);
   };
 
   const onEdit = async (msg) => {
@@ -125,8 +141,7 @@ export default function HomePage() {
     setEditInv(null);
   };
 
-  const handleDeleteClick = async (id, e) => {
-    e.stopPropagation();
+  const handleDeleteClick = async (id) => {
     try {
       setLoading(true);
       const response = await fetch("/api/inventory", {
@@ -220,7 +235,7 @@ export default function HomePage() {
                       <MdMoreVert />
                     </div>
                     {ButtonId === inv.id && (
-                      <div className="absolute bg-teal-600 bg-opacity-70 right-2 rounded-s-full top-2 px-3 pr-8 flex items-center text-[16px] text-white">
+                      <div className="absolute bg-teal-600 bg-opacity-70 right-2 rounded-s-full top-[6px] md:top-2 px-3 pr-8 flex items-center text-[16px] text-white">
                         <button
                           className="hover:text-green-300 p-2"
                           onClick={(e) => {
@@ -232,7 +247,7 @@ export default function HomePage() {
                         </button>
                         <button
                           className="hover:text-red-300 p-2"
-                          onClick={(e) => handleDeleteClick(inv.id, e)}
+                          onClick={(e) => openDialog(e)}
                         >
                           <MdDelete />
                         </button>
@@ -244,6 +259,13 @@ export default function HomePage() {
               )}
             </div>
           </div>
+          <Confirmation_dialogue
+            isOpen={isDialogOpen}
+            title="Confirm Delete"
+            message="Are you sure you want to delete this item?"
+            onConfirm={() => confirmDelete(ButtonId)}
+            onCancel={closeDialog}
+          />
           <div
             className="w-full max-w-[520px] px-6 py-8 rounded-2xl bg-teal-600"
             style={{ boxShadow: "inset 0 0 14px 6px #00443d" }}
