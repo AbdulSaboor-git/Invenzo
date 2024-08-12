@@ -89,8 +89,11 @@ export default function HomePage() {
     fetchInventories();
   }, [user]);
 
+  useEffect(() => {
+    document.body.classList.add("no-scroll");
+  }, []);
+
   if (userLoading || !user) {
-    document.body.classList.remove("no-scroll");
     return <Loader />;
   }
 
