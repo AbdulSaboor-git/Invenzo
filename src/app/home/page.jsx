@@ -36,7 +36,6 @@ export default function HomePage() {
     e.stopPropagation();
     setIsDialogOpen(true);
   };
-  document.body.classList.remove("no-scroll");
 
   const closeDialog = () => {
     setIsDialogOpen(false);
@@ -91,6 +90,7 @@ export default function HomePage() {
   }, [user]);
 
   if (userLoading || !user) {
+    document.body.classList.remove("no-scroll");
     return <Loader />;
   }
 
