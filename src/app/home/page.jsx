@@ -90,7 +90,7 @@ export default function HomePage() {
   }, [user]);
 
   useEffect(() => {
-    document.body.classList.add("no-scroll");
+    document.body.classList.remove("no-scroll");
   }, []);
 
   if (userLoading || !user) {
