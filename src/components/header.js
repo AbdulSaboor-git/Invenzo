@@ -5,6 +5,13 @@ import { MdClose, MdMenu, MdSettings } from "react-icons/md";
 export default function Header({ user, Buttons }) {
   const [isOpen, setIsOpen] = useState(false);
 
+  useEffect(() => {
+    isOpen && document.body.classList.add("no-scroll");
+    return () => {
+      document.body.classList.remove("no-scroll");
+    };
+  }, [isOpen]);
+
   const openSidebar = () => {
     setIsOpen(true);
   };
@@ -13,19 +20,18 @@ export default function Header({ user, Buttons }) {
     setIsOpen(false);
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (isOpen && !event.target.closest(".sidebar")) {
-        closeSidebar();
-      }
-    };
+  // useEffect(() => {
+  //   const handleClickOutside = (event) => {
+  //     if (isOpen && !event.target.closest(".sidebar")) {
+  //       closeSidebar();
+  //     }
+  //   };
+  //   document.body.addEventListener("click", handleClickOutside);
 
-    document.body.addEventListener("click", handleClickOutside);
-
-    return () => {
-      document.body.removeEventListener("click", handleClickOutside);
-    };
-  }, [isOpen]);
+  //   return () => {
+  //     document.body.removeEventListener("click", handleClickOutside);
+  //   };
+  // }, [isOpen]);
 
   return (
     <div className="relative flex justify-center items-center p-4 pt-10 z-30">
@@ -38,7 +44,7 @@ export default function Header({ user, Buttons }) {
           </div>
 
           <div
-            className={`fixed top-0 left-[-10px] w-[230px] h-full rounded-e-[30px] bg-white transition-transform duration-300 ease-in-out ${
+            className={`fixed top-0 left-[-10px] w-[230px] h-full rounded-e-[30px] sidebar bg-white transition-transform duration-300 ease-in-out ${
               isOpen ? "translate-x-0" : "-translate-x-[240px]"
             }`}
             style={{ boxShadow: "0 0 20px -5px #404040" }}
@@ -49,7 +55,7 @@ export default function Header({ user, Buttons }) {
             >
               <MdClose style={{ fontSize: "1.2rem" }} />
             </button>
-            <div className="flex flex-col items-start p-6 sidebar">
+            <div className="flex flex-col items-start p-6">
               <div className=" flex flex-col justify-center items-center text-[#404040] font-[500] text-[12px]">
                 <img
                   className="w-[60px] h-[60px]"
@@ -67,7 +73,7 @@ export default function Header({ user, Buttons }) {
                       btn.btn_name !== "Add Product" && (
                         <button
                           onClick={btn.clickEvent}
-                          className="bg-[#01b0b0] hover:bg-[#079d9d] hover:scale-x-[1.01]  transition-transform duration-200 ease-in-out   text-white text-[11px] py-2 px-4 rounded-xl shadow-sm shadow-[#0000008f]"
+                          className="bg-[#edf9f9] hover:bg-[#dcfdfd] hover:scale-x-[1.01]  transition-transform duration-200 ease-in-out   text-[#404040] text-[11px] py-2 px-4 rounded-xl shadow-sm shadow-[#00000066] drop-shadow-sm border border-[#6565650f]"
                           key={index}
                         >
                           <div className="flex gap-4 items-center justify-start">
