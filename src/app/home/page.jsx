@@ -91,7 +91,7 @@ export default function HomePage() {
 
   useEffect(() => {
     document.body.classList.remove("no-scroll");
-  }, []);
+  });
 
   if (userLoading || !user) {
     return <Loader />;
