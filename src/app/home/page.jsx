@@ -89,10 +89,6 @@ export default function HomePage() {
     fetchInventories();
   }, [user]);
 
-  useEffect(() => {
-    document.body.classList.remove("no-scroll");
-  });
-
   if (userLoading || !user) {
     return <Loader />;
   }
@@ -263,13 +259,15 @@ export default function HomePage() {
               )}
             </div>
           </div>
-          <Confirmation_dialogue
-            isOpen={isDialogOpen}
-            title="Confirm Delete"
-            message="Are you sure you want to delete this item?"
-            onConfirm={() => confirmDelete(ButtonId)}
-            onCancel={closeDialog}
-          />
+          {isDialogOpen && (
+            <Confirmation_dialogue
+              isOpen={isDialogOpen}
+              title="Confirm Delete"
+              message="Are you sure you want to delete this item?"
+              onConfirm={() => confirmDelete(ButtonId)}
+              onCancel={closeDialog}
+            />
+          )}
           <div
             className="w-full max-w-[520px] px-6 py-8 rounded-2xl bg-teal-600"
             style={{ boxShadow: "inset 0 0 14px 6px #00443d" }}
