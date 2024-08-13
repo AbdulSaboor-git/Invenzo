@@ -7,50 +7,37 @@ import Sort_card from "./sortCard";
 import Filter_card from "./filterCard";
 import { useDispatch } from "react-redux";
 import { triggerNotification } from "@/redux/notificationThunk";
-import Loader from "@/components/loader";
-import { setProducts } from "@/redux/products";
-import { setCategories } from "@/redux/categories";
 
-export default function RightSide({ user, inventoryId, role }) {
+export default function RightSide({
+  inventoryId,
+  role,
+  openEditForm,
+  handleDeleteClick,
+  setProd,
+  products,
+  loadingData,
+}) {
   const [searchValue, setSearchValue] = useState("");
   const [sortCard_isOpen, setSortCard_isOpen] = useState(false);
   const [filterCard_isOpen, setFilterCard_isOpen] = useState(false);
   const [filterApplied, set_filterApplied] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [loadingData, setLoadingData] = useState(true);
+
   const [sortedProducts, setSortedProducts] = useState([]);
-  const [products, setProducts_2] = useState([]);
-  const [categories, setCategories_2] = useState([]);
   const invId = inventoryId;
   const Dispatch = useDispatch();
 
-  useEffect(() => {
-    const fetchInvData = async () => {
-      if (user) {
-        try {
-          setLoadingData(true);
-          const Response = await fetch(`/api/inventory/${invId}`);
-          const InvData = await Response.json();
-          setProducts_2(InvData.products);
-          setCategories_2(InvData.categories);
-        } catch (error) {
-          console.error("Error fetching inventory data:", error);
-        } finally {
-          setLoadingData(false);
-        }
-      }
-    };
-
-    fetchInvData();
-  }, [invId, user]);
+  const showMessage = (msg, state) => {
+    Dispatch(
+      triggerNotification({
+        msg: msg,
+        success: state,
+      })
+    );
+  };
 
   useEffect(() => {
     setSortedProducts(products);
-    localStorage.setItem("products", JSON.stringify(products));
-    localStorage.setItem("categories", JSON.stringify(categories));
-    Dispatch(setProducts(products));
-    Dispatch(setCategories(categories));
-  }, [products, categories, Dispatch]);
+  }, [products]);
 
   const sortProducts = useCallback(
     (key, order) => {
@@ -146,7 +133,6 @@ export default function RightSide({ user, inventoryId, role }) {
 
   return (
     <div className="flex flex-col w-full z-0">
-      {loading && <Loader />}
       <div className="flex gap-3 md:gap-4 pb-4 items-center text-[#404040] px-0 md:px-2 relative">
         <div className="relative w-full">
           <input
@@ -213,6 +199,9 @@ export default function RightSide({ user, inventoryId, role }) {
                 isExpanded={expandedProductId === prod.id}
                 toggleProductDetails={toggleProductDetails}
                 user={role}
+                openEditForm={openEditForm}
+                handleDeleteClick={handleDeleteClick}
+                setProd={setProd}
               />
             ))
         )}

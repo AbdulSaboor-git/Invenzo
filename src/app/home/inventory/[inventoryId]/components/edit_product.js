@@ -3,11 +3,12 @@ import { MdClose, MdInfoOutline } from "react-icons/md";
 import { useDispatch } from "react-redux";
 import { triggerNotification } from "@/redux/notificationThunk";
 
-export default function AddProduct({
+export default function EditProduct({
   CloseForm,
   categories,
   invId,
   onSuccess,
+  product,
 }) {
   useEffect(() => {
     document.body.classList.add("no-scroll");
@@ -20,12 +21,16 @@ export default function AddProduct({
   const [infoBox_visible, setInfoBox_visible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [name, setName] = useState("");
-  const [categoryId, setCategoryId] = useState(null);
-  const [purchasePrice, setPurchasePrice] = useState(0);
-  const [salePrice, setSalePrice] = useState(0);
-  const [govtSalePrice, setGovtSalePrice] = useState(null);
-  const [tags, setTags] = useState("");
+  const [name, setName] = useState(product.name || "");
+  const [categoryId, setCategoryId] = useState(product.category.id || 0);
+  const [purchasePrice, setPurchasePrice] = useState(
+    product.purchasePrice || 0
+  );
+  const [salePrice, setSalePrice] = useState(product.salePrice || 0);
+  const [govtSalePrice, setGovtSalePrice] = useState(
+    product.govtSalePrice || null
+  );
+  const [tags, setTags] = useState(product.tags || "");
   const Dispatch = useDispatch();
 
   const showMessage = (msg, state) => {
@@ -68,7 +73,7 @@ export default function AddProduct({
     setTags(e.target.value);
   }
 
-  const addProduct = async (e) => {
+  const editProduct = async (e) => {
     e.preventDefault();
     setError(""); // Clear any existing errors
 
@@ -86,11 +91,12 @@ export default function AddProduct({
 
     try {
       const response = await fetch(`/api/inventory/${invId}`, {
-        method: "POST",
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
+          id: product.id,
           name: name.trim(),
           description: "",
           categoryId: parseInt(categoryId, 10),
@@ -103,7 +109,7 @@ export default function AddProduct({
 
       if (!response.ok) {
         showMessage(error, false);
-        throw new Error("Failed to add product");
+        throw new Error("Failed to edit product");
       }
 
       onSuccess();
@@ -128,12 +134,12 @@ export default function AddProduct({
           </button>
         </div>
         <p className="font-bold text-lg md:text-xl pb-4 text-teal-700">
-          Add Product
+          Edit Product
         </p>
         <form
           className="space-y-3 text-xs md:text-sm text-gray-700"
-          method="post"
-          onSubmit={addProduct}
+          method="patch"
+          onSubmit={editProduct}
         >
           <div className="flex flex-col">
             <label className="mb-1 font-semibold ">Product Name</label>
@@ -234,7 +240,7 @@ export default function AddProduct({
                 loading && "cursor-not-allowed"
               }`}
             >
-              {loading ? "Adding..." : "Add"}
+              {loading ? "Saving..." : "Save"}
             </button>
           </div>
         </form>

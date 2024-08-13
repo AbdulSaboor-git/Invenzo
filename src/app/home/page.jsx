@@ -60,32 +60,30 @@ export default function HomePage() {
     }
   }, [user, userLoading, router]);
 
-  useEffect(() => {
-    const fetchInventories = async () => {
-      if (user) {
-        try {
-          setLoadingInventories(true);
-          // Fetch inventories where the user is an admin
-          const myInvResponse = await fetch(
-            `/api/inventory?adminId=${user.id}`
-          );
-          const myInvData = await myInvResponse.json();
-          setMyInventories(myInvData.inventories);
+  const fetchInventories = async () => {
+    if (user) {
+      try {
+        setLoadingInventories(true);
+        // Fetch inventories where the user is an admin
+        const myInvResponse = await fetch(`/api/inventory?adminId=${user.id}`);
+        const myInvData = await myInvResponse.json();
+        setMyInventories(myInvData.inventories);
 
-          // Fetch inventories where the user is a moderator
-          const modInvResponse = await fetch(
-            `/api/inventory?moderatorId=${user.id}`
-          );
-          const modInvData = await modInvResponse.json();
-          setModeratedInventories(modInvData.inventories);
-        } catch (error) {
-          console.error("Error fetching inventories:", error);
-        } finally {
-          setLoadingInventories(false);
-        }
+        // Fetch inventories where the user is a moderator
+        const modInvResponse = await fetch(
+          `/api/inventory?moderatorId=${user.id}`
+        );
+        const modInvData = await modInvResponse.json();
+        setModeratedInventories(modInvData.inventories);
+      } catch (error) {
+        console.error("Error fetching inventories:", error);
+      } finally {
+        setLoadingInventories(false);
       }
-    };
+    }
+  };
 
+  useEffect(() => {
     fetchInventories();
   }, [user]);
 
@@ -93,27 +91,27 @@ export default function HomePage() {
     return <Loader />;
   }
 
-  const refreshInventories = async () => {
-    try {
-      setLoadingInventories(true);
+  // const refreshInventories = async () => {
+  //   try {
+  //     setLoadingInventories(true);
 
-      const myInvResponse = await fetch(`/api/inventory?adminId=${user.id}`);
-      const myInvData = await myInvResponse.json();
-      setMyInventories(myInvData.inventories);
-    } catch (error) {
-      console.error("Error refreshing inventories:", error);
-    } finally {
-      setLoadingInventories(false);
-    }
-  };
+  //     const myInvResponse = await fetch(`/api/inventory?adminId=${user.id}`);
+  //     const myInvData = await myInvResponse.json();
+  //     setMyInventories(myInvData.inventories);
+  //   } catch (error) {
+  //     console.error("Error refreshing inventories:", error);
+  //   } finally {
+  //     setLoadingInventories(false);
+  //   }
+  // };
 
   const onAdd = async () => {
-    refreshInventories();
+    fetchInventories();
     showMessage("Inventory Created Successfully!", true);
   };
 
   const onEdit = async (msg) => {
-    refreshInventories();
+    fetchInventories();
     showMessage("Inventory Updated Successfully!", true);
   };
 

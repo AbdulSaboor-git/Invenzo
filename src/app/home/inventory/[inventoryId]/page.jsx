@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { openAddItemForm, closeAddItemForm } from "@/redux/addItemFormSlice";
+// import { openAddItemForm, closeAddItemForm } from "@/redux/addItemFormSlice";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import Body from "./components/body";
@@ -18,9 +18,7 @@ import { FaPlus, FaCogs, FaTrashAlt, FaUsers } from "react-icons/fa";
 export default function Inventory({ params }) {
   const dispatch = useDispatch();
   const router = useRouter();
-  const addItemForm_isOpen = useSelector((state) => state.addItemForm.isOpen);
-  const heading = useSelector((state) => state.addItemForm.heading);
-  const btn_text = useSelector((state) => state.addItemForm.btn_text);
+  const [addItemForm_isOpen, setAddForm_isOpen] = useState(false);
   const invId = params.inventoryId;
   let role = "viewer";
   const { user, userLoading, logout } = useAuthUser();
@@ -30,6 +28,7 @@ export default function Inventory({ params }) {
     useState(false);
   const [manageModerators_isOpen, set_manageModerators_isOpen] =
     useState(false);
+  const [loading, setLoading] = useState(false);
 
   const showMessage = (msg, state) => {
     dispatch(
@@ -62,11 +61,11 @@ export default function Inventory({ params }) {
   };
 
   const open_AddItemForm = () => {
-    dispatch(openAddItemForm({ heading: "Add", btn_text: "Add" }));
+    setAddForm_isOpen(true);
   };
 
   const close_AddItemForm = () => {
-    dispatch(closeAddItemForm());
+    setAddForm_isOpen(false);
   };
 
   useEffect(() => {
@@ -116,16 +115,21 @@ export default function Inventory({ params }) {
 
   return (
     <div className={`flex min-h-screen flex-col items-center justify-between`}>
+      {loading && <Loader />}
       <div className="max-w-[1440px] w-full">
         <Header user={user} Buttons={Buttons} />
 
-        <Body buttons={Buttons} user={user} inventoryId={invId} role={role} />
+        <Body
+          buttons={Buttons}
+          user={user}
+          inventoryId={invId}
+          role={role}
+          setLoading={setLoading}
+        />
         <Footer />
       </div>
       {addItemForm_isOpen && (
         <Add_Product_Form
-          heading={heading}
-          buttonText={btn_text}
           CloseForm={close_AddItemForm}
           categories={categories}
           invId={invId}
@@ -135,7 +139,7 @@ export default function Inventory({ params }) {
       {manageCategories_isOpen && (
         <Manage_Categories_Form
           CloseForm={close_manageCategories}
-          categories={[]}
+          categories={categories}
         />
       )}
       {manageModerators_isOpen && (
@@ -144,14 +148,16 @@ export default function Inventory({ params }) {
           moderators={[]}
         />
       )}
-      <div className="fixed block md:hidden bottom-8 right-6 rounded-full ">
-        <button
-          onClick={open_AddItemForm}
-          className="rounded-full size-[45px] text-2xl bg-[#01b0b0] z-50 flex items-center justify-center hover:bg-[#079d9d] hover:scale-[1.05]  transition-transform duration-200 ease-in-out shadow-sm shadow-[#000000cd]"
-        >
-          {<MdAdd />}
-        </button>
-      </div>
+      {role !== "viewer" && (
+        <div className="fixed block md:hidden bottom-8 right-6 rounded-full ">
+          <button
+            onClick={open_AddItemForm}
+            className="rounded-full size-[45px] text-2xl bg-[#01b0b0] z-50 flex items-center justify-center hover:bg-[#079d9d] hover:scale-[1.05]  transition-transform duration-200 ease-in-out shadow-sm shadow-[#000000cd]"
+          >
+            {<MdAdd />}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

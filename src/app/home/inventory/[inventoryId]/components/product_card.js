@@ -1,29 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { MdDelete, MdEdit } from "react-icons/md";
-import { useDispatch } from "react-redux";
-import { openAddItemForm } from "../../../../../redux/addItemFormSlice";
 
 export default function ProductCard({
   prod,
   isExpanded,
   toggleProductDetails,
   user,
+  openEditForm,
+  handleDeleteClick,
+  setProd,
 }) {
-  const dispatch = useDispatch();
-
-  const handleEditClick = (e) => {
-    e.stopPropagation();
-    dispatch(openAddItemForm({ heading: "Edit", btn_text: "Update" }));
-  };
-
-  const handleDeleteClick = (e) => {
-    e.stopPropagation();
-  };
-
   const handleTableClick = (e) => {
     e.stopPropagation();
   };
-
   return (
     <div
       className="w-full bg-white rounded-xl p-4 text-[#404040] shadow-sm shadow-[#00000061] hover:scale-[1.005] transition-transform duration-200 ease-in-out cursor-pointer"
@@ -35,10 +24,11 @@ export default function ProductCard({
           <div className="flex gap-3 text-base md:text-lg pr-2">
             <button
               className="hover:text-green-600 transition-colors duration-200 ease-in-out"
-              onClick={handleEditClick}
+              onClick={(setProd(prod), openEditForm)}
             >
               <MdEdit />
             </button>
+
             <button
               className="hover:text-red-600 transition-colors duration-200 ease-in-out"
               onClick={handleDeleteClick}

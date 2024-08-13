@@ -10,7 +10,7 @@ export default function Loader() {
   }, []);
 
   return (
-    <div className="w-full fixed h-screen z-50 flex justify-center items-center  backdrop-blur-[2px] ">
+    <div className="w-full fixed h-[100%] z-[201] flex justify-center items-center  backdrop-blur-[2px] ">
       <div className="py-5 px-8 text-sm bg-[#000000be] flex justify-center items-center rounded-full">
         <p className="animate-pulse">Loading...</p>
       </div>

@@ -83,9 +83,58 @@ async function handleGet(req, res, inventoryId) {
 
 // Define PATCH and DELETE functions similarly if needed
 async function handlePatch(req, res, inventoryId) {
-  // Your PATCH implementation
+  const {
+    id,
+    name,
+    description,
+    categoryId,
+    purchasePrice,
+    salePrice,
+    govtSalePrice,
+    tags,
+  } = req.body;
+
+  try {
+    const updatedProduct = await prisma.product.update({
+      where: { id: id }, // Ensure this matches the product ID
+      data: {
+        name: name,
+        description: description,
+        categoryId: categoryId,
+        purchasePrice: purchasePrice,
+        salePrice: salePrice,
+        govtSalePrice: govtSalePrice,
+        tags: tags,
+      },
+    });
+    return res.status(200).json(updatedProduct);
+  } catch (error) {
+    console.error("Error updating product:", error);
+    return res.status(500).json({ message: "Failed to update product" });
+  }
 }
 
 async function handleDelete(req, res, inventoryId) {
-  // Your DELETE implementation
+  const { id } = req.body;
+
+  try {
+    const existingProduct = await prisma.product.findUnique({
+      where: { id },
+    });
+
+    if (!existingProduct) {
+      return res.status(404).json({ error: "Product not found", errorCode: 3 });
+    }
+
+    await prisma.product.delete({
+      where: { id },
+    });
+
+    return res
+      .status(200)
+      .json({ status: 200, message: "Product deleted successfully" });
+  } catch (error) {
+    console.error("Delete Error:", error.message, error.stack);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
 }

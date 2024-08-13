@@ -9,28 +9,28 @@ export default function notification({ sortProducts }) {
         className="flex items-center justify-center gap-3 p-2 px-8 hover:bg-[#dbeded] rounded-xl"
       >
         Name
-        <MdArrowUpward />
+        <MdArrowDownward />
       </div>
       <div
         onClick={() => sortProducts("name", "desc")}
         className="flex items-center justify-center gap-3 p-2 hover:bg-[#dbeded] rounded-xl"
       >
         Name
-        <MdArrowDownward />
+        <MdArrowUpward />
       </div>
       <div
         onClick={() => sortProducts("salePrice", "asc")}
         className="flex items-center justify-center gap-3 p-2 hover:bg-[#dbeded] rounded-xl"
       >
         Price
-        <MdArrowUpward />
+        <MdArrowDownward />
       </div>
       <div
         onClick={() => sortProducts("salePrice", "desc")}
         className="flex items-center justify-center gap-3 p-2 hover:bg-[#dbeded] rounded-xl"
       >
         Price
-        <MdArrowDownward />
+        <MdArrowUpward />
       </div>
       <div
         onClick={() => sortProducts("createdAt", "desc")}
