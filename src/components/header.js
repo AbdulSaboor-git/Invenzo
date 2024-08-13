@@ -55,8 +55,8 @@ export default function Header({ user, Buttons }) {
             >
               <MdClose style={{ fontSize: "1.2rem" }} />
             </button>
-            <div className="flex flex-col items-start p-6">
-              <div className=" flex flex-col justify-center items-center text-[#404040] font-[500] text-[12px]">
+            <div className="flex flex-col items-start py-6">
+              <div className=" flex flex-col justify-center items-center text-[#404040] font-[500] text-[12px] gap-1 ml-6">
                 <img
                   className="w-[60px] h-[60px]"
                   src={"/avatar.png"}
@@ -67,16 +67,20 @@ export default function Header({ user, Buttons }) {
                 </p>
               </div>
               <div className="flex flex-col w-full">
-                <div className="flex flex-col gap-2 pt-8 px-2">
+                <div className="flex flex-col pt-8">
                   {Buttons.map(
                     (btn, index) =>
                       btn.btn_name !== "Add Product" && (
                         <button
                           onClick={btn.clickEvent}
-                          className="bg-[#edf9f9] hover:bg-[#dcfdfd] hover:scale-x-[1.01]  transition-transform duration-200 ease-in-out   text-[#404040] text-[11px] py-2 px-4 rounded-xl shadow-sm shadow-[#00000066] drop-shadow-sm border border-[#6565650f]"
+                          className={`hover:bg-[#dff9f9]  transition-transform duration-200 ease-in-out ${
+                            btn.btn_name === "Logout"
+                              ? "text-[#c30000]"
+                              : "text-[#404040]"
+                          } text-[11px] px-6 py-[10px]  shadow-[#00000066]`}
                           key={index}
                         >
-                          <div className="flex gap-4 items-center justify-start">
+                          <div className="flex gap-3 items-center justify-start">
                             {btn.icon}
                             {btn.btn_name}
                           </div>
@@ -84,7 +88,7 @@ export default function Header({ user, Buttons }) {
                       )
                   )}
                 </div>
-                <div className="flex flex-col absolute w-[190px] bottom-4 gap-1 text-[#404040]">
+                <div className="flex flex-col absolute w-[190px] bottom-4 gap-1 text-[#404040] ml-6">
                   <hr className="h-[1px] bg-[#999]" />
                   <div className="flex justify-between w-[190px] text-[12px] px-2">
                     <p className="">Preferences</p>
