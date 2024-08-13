@@ -8,6 +8,8 @@ import Filter_card from "./filterCard";
 import { useDispatch } from "react-redux";
 import { triggerNotification } from "@/redux/notificationThunk";
 import Loader from "@/components/loader";
+import { setProducts } from "@/redux/products";
+import { setCategories } from "@/redux/categories";
 
 export default function RightSide({ user, inventoryId, role }) {
   const [searchValue, setSearchValue] = useState("");
@@ -16,10 +18,11 @@ export default function RightSide({ user, inventoryId, role }) {
   const [filterApplied, set_filterApplied] = useState(false);
   const [loading, setLoading] = useState(false);
   const [loadingData, setLoadingData] = useState(true);
-  const [products, setProducts] = useState([]);
   const [sortedProducts, setSortedProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const [products, setProducts_2] = useState([]);
+  const [categories, setCategories_2] = useState([]);
   const invId = inventoryId;
+  const Dispatch = useDispatch();
 
   useEffect(() => {
     const fetchInvData = async () => {
@@ -28,8 +31,8 @@ export default function RightSide({ user, inventoryId, role }) {
           setLoadingData(true);
           const Response = await fetch(`/api/inventory/${invId}`);
           const InvData = await Response.json();
-          setProducts(InvData.products);
-          setCategories(InvData.categories);
+          setProducts_2(InvData.products);
+          setCategories_2(InvData.categories);
         } catch (error) {
           console.error("Error fetching inventory data:", error);
         } finally {
@@ -43,9 +46,12 @@ export default function RightSide({ user, inventoryId, role }) {
 
   useEffect(() => {
     setSortedProducts(products);
-  }, [products]);
+    localStorage.setItem("products", JSON.stringify(products));
+    localStorage.setItem("categories", JSON.stringify(categories));
+    Dispatch(setProducts(products));
+    Dispatch(setCategories(categories));
+  }, [products, categories, Dispatch]);
 
-  const Dispatch = useDispatch();
   const sortProducts = useCallback(
     (key, order) => {
       if (!products || products.length === 0) {
@@ -187,7 +193,7 @@ export default function RightSide({ user, inventoryId, role }) {
             <p>Loading...</p>
           </div>
         ) : !sortedProducts?.length ? (
-          <div className="text-gray-300">
+          <div className="text-gray-300 text-xs">
             <p>{"(Empty)"}</p>
           </div>
         ) : (

@@ -7,15 +7,48 @@ export default async function handler(req, res) {
   switch (method) {
     case "GET":
       return handleGet(req, res, inventoryId);
+    case "POST":
+      return handlePost(req, res, inventoryId);
     case "PATCH":
-      return PATCH(req, res, inventoryId);
+      return handlePatch(req, res, inventoryId);
     case "DELETE":
-      return DELETE(req, res, inventoryId);
+      return handleDelete(req, res, inventoryId);
     default:
       res.setHeader("Allow", ["GET", "PATCH", "DELETE"]);
       return res.status(405).end(`Method ${method} Not Allowed`);
   }
 }
+
+const handlePost = async (req, res, inventoryId) => {
+  const {
+    name,
+    description,
+    purchasePrice,
+    salePrice,
+    govtSalePrice,
+    categoryId,
+    tags,
+  } = req.body;
+
+  try {
+    const newProduct = await prisma.product.create({
+      data: {
+        name,
+        description,
+        purchasePrice,
+        salePrice,
+        govtSalePrice,
+        categoryId,
+        inventoryId: parseInt(inventoryId, 10),
+        tags,
+      },
+    });
+    const data = { product: newProduct, status: 201 };
+    res.status(201).json(data);
+  } catch (error) {
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
 
 async function handleGet(req, res, inventoryId) {
   try {
@@ -49,10 +82,10 @@ async function handleGet(req, res, inventoryId) {
 }
 
 // Define PATCH and DELETE functions similarly if needed
-async function PATCH(req, res, inventoryId) {
+async function handlePatch(req, res, inventoryId) {
   // Your PATCH implementation
 }
 
-async function DELETE(req, res, inventoryId) {
+async function handleDelete(req, res, inventoryId) {
   // Your DELETE implementation
 }

@@ -5,7 +5,7 @@ import { openAddItemForm, closeAddItemForm } from "@/redux/addItemFormSlice";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import Body from "./components/body";
-
+import { triggerNotification } from "@/redux/notificationThunk";
 import Add_Product_Form from "@/app/home/inventory/[inventoryId]/components/add_product";
 import Manage_Categories_Form from "@/app/home/inventory/[inventoryId]/components/manage_categories";
 import Manage_Moderators_Form from "@/app/home/inventory/[inventoryId]/components/manage_moderators";
@@ -21,15 +21,29 @@ export default function Inventory({ params }) {
   const addItemForm_isOpen = useSelector((state) => state.addItemForm.isOpen);
   const heading = useSelector((state) => state.addItemForm.heading);
   const btn_text = useSelector((state) => state.addItemForm.btn_text);
-
   const invId = params.inventoryId;
   let role = "viewer";
   const { user, userLoading, logout } = useAuthUser();
-
+  const products = useSelector((state) => state.products);
+  const categories = useSelector((state) => state.categories);
   const [manageCategories_isOpen, set_manageCategories_isOpen] =
     useState(false);
   const [manageModerators_isOpen, set_manageModerators_isOpen] =
     useState(false);
+
+  const showMessage = (msg, state) => {
+    dispatch(
+      triggerNotification({
+        msg: msg,
+        success: state,
+      })
+    );
+  };
+
+  const onAdd = async () => {
+    // refreshInventories();
+    showMessage("Product added successfully!", true);
+  };
 
   const open_manageCategories = () => {
     set_manageCategories_isOpen(true);
@@ -70,7 +84,6 @@ export default function Inventory({ params }) {
     role = "viewer";
   }
 
-  console.log(user.Inventories);
   const Buttons = [];
 
   Buttons.push(
@@ -114,7 +127,9 @@ export default function Inventory({ params }) {
           heading={heading}
           buttonText={btn_text}
           CloseForm={close_AddItemForm}
-          categories={[]}
+          categories={categories}
+          invId={invId}
+          onSuccess={onAdd}
         />
       )}
       {manageCategories_isOpen && (
