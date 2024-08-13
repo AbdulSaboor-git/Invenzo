@@ -19,7 +19,7 @@ export default function Confirmation_dialogue({
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black bg-opacity-50"
+      className="fixed inset-0 z-[200] flex items-center justify-center bg-black bg-opacity-50"
       onClick={(e) => e.stopPropagation()} // Stop propagation on the overlay click
     >
       <div className="bg-white rounded-lg px-6 py-8 text-sm md:text-base max-w-sm w-full mx-6 text-gray-700">

@@ -26,7 +26,7 @@ export default function Notification() {
   return (
     <div className="flex w-full justify-center touch-none">
       <div
-        className={`fixed z-50 top-2 p-1 px-4 mx-10 bg-white text-xs rounded-full ${
+        className={`fixed z-[200] top-2 p-1 px-4 mx-10 bg-white text-xs rounded-full ${
           success ? "text-[#008514]" : "text-[#cb0000]"
         } transition-all duration-300 ${
           isVisible
