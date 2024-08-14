@@ -230,7 +230,7 @@ export default function AddProduct({
             <button
               disabled={loading}
               type="submit"
-              className={`py-2.5 bg-teal-600 w-3/5 rounded-full text-white hover:bg-teal-500 transition-all duration-200 text-sm font-semibold ${
+              className={`py-2.5 bg-teal-600 w-3/5 rounded-full text-white hover:bg-teal-700 transition-all duration-200 text-sm font-semibold ${
                 loading && "cursor-not-allowed"
               }`}
             >

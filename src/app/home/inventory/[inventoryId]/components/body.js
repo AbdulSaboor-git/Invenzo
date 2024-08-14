@@ -5,27 +5,23 @@ import Edit_Product_Form from "./edit_product";
 import { triggerNotification } from "@/redux/notificationThunk";
 import { useDispatch, useSelector } from "react-redux";
 import Confirmation_dialogue from "@/components/confirmation_dialogue";
-import Loader from "@/components/loader";
-import { setProducts } from "@/redux/products";
-import { setCategories } from "@/redux/categories";
 
-export default function Body({ buttons, user, inventoryId, role, setLoading }) {
+export default function Body({
+  buttons,
+  inventoryId,
+  role,
+  setLoading,
+  categories,
+  products,
+  loadingData,
+  fetchInvData,
+}) {
   const [editItemForm_isOpen, set_editItemForm_isOpen] = useState(false);
   const Dispatch = useDispatch();
   // const categories = useSelector((state) => state.categories);
   const [prod, setProd] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   // const [loading, setLoading] = useState(false);
-  const [loadingData, setLoadingData] = useState(true);
-  const [products, setProducts_2] = useState([]);
-  const [categories, setCategories_2] = useState([]);
-
-  useEffect(() => {
-    localStorage.setItem("products", JSON.stringify(products));
-    localStorage.setItem("categories", JSON.stringify(categories));
-    Dispatch(setProducts(products));
-    Dispatch(setCategories(categories));
-  }, [Dispatch, categories, products]);
 
   const openDialog = (e) => {
     e.stopPropagation();
@@ -49,26 +45,6 @@ export default function Body({ buttons, user, inventoryId, role, setLoading }) {
       })
     );
   };
-
-  const fetchInvData = async () => {
-    if (user) {
-      try {
-        setLoadingData(true);
-        const Response = await fetch(`/api/inventory/${inventoryId}`);
-        const InvData = await Response.json();
-        setProducts_2(InvData.products);
-        setCategories_2(InvData.categories);
-      } catch (error) {
-        console.error("Error fetching inventory data:", error);
-      } finally {
-        setLoadingData(false);
-      }
-    }
-  };
-
-  useEffect(() => {
-    fetchInvData();
-  }, [inventoryId, user]);
 
   const openEditForm = (e) => {
     e.stopPropagation();
@@ -118,6 +94,7 @@ export default function Body({ buttons, user, inventoryId, role, setLoading }) {
         <div className="w-full md:flex-[5]">
           <Right_Side
             products={products}
+            categories={categories}
             inventoryId={inventoryId}
             role={role}
             openEditForm={openEditForm}

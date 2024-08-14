@@ -62,11 +62,17 @@ async function handleGet(req, res, inventoryId) {
       include: {
         category: true, // Include the related category data
       },
+      orderBy: {
+        name: "asc",
+      },
     });
 
     const categories = await prisma.category.findMany({
       where: {
         inventoryId: id,
+      },
+      orderBy: {
+        name: "asc",
       },
     });
 

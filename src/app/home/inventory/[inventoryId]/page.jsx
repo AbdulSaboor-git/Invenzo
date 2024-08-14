@@ -14,6 +14,9 @@ import { useRouter } from "next/navigation";
 import useAuthUser from "@/hooks/authUser";
 import Loader from "@/components/loader";
 import { FaPlus, FaCogs, FaTrashAlt, FaUsers } from "react-icons/fa";
+import { setProducts } from "@/redux/products";
+import { setCategories } from "@/redux/categories";
+import Confirmation_dialogue from "@/components/confirmation_dialogue";
 
 export default function Inventory({ params }) {
   const dispatch = useDispatch();
@@ -22,13 +25,26 @@ export default function Inventory({ params }) {
   const invId = params.inventoryId;
   let role = "viewer";
   const { user, userLoading, logout } = useAuthUser();
-  const products = useSelector((state) => state.products);
-  const categories = useSelector((state) => state.categories);
+  // const products = useSelector((state) => state.products);
+  // const categories = useSelector((state) => state.categories);
   const [manageCategories_isOpen, set_manageCategories_isOpen] =
     useState(false);
   const [manageModerators_isOpen, set_manageModerators_isOpen] =
     useState(false);
   const [loading, setLoading] = useState(false);
+  const [loadingData, setLoadingData] = useState(true);
+  const [products, setProducts_2] = useState([]);
+  const [categories, setCategories_2] = useState([]);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const openDialog = (e) => {
+    e.stopPropagation();
+    setIsDialogOpen(true);
+  };
+
+  const closeDialog = () => {
+    setIsDialogOpen(false);
+  };
 
   const showMessage = (msg, state) => {
     dispatch(
@@ -39,10 +55,75 @@ export default function Inventory({ params }) {
     );
   };
 
+  const fetchInvData = async () => {
+    if (user) {
+      try {
+        setLoadingData(true);
+        const Response = await fetch(`/api/inventory/${invId}`);
+        const InvData = await Response.json();
+        setProducts_2(InvData.products);
+        setCategories_2(InvData.categories);
+      } catch (error) {
+        console.error("Error fetching inventory data:", error);
+      } finally {
+        setLoadingData(false);
+      }
+    }
+  };
+
+  const deleteAll = async () => {
+    try {
+      // Validate the inventoryId
+      if (!invId) {
+        alert("Invalid inventory ID");
+        return;
+      }
+
+      setLoading(true);
+      const response = await fetch(`/api/inventory/${invId}/deleteAll`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      // Handle response
+      if (response.ok) {
+        const data = await response.json();
+        showMessage(data.message || "Successfully cleared inventory", true);
+        fetchInvData();
+      } else {
+        const errorData = await response.json();
+        showMessage(`Failed to delete data: ${errorData.error}`, false);
+      }
+    } catch (error) {
+      console.error("Error deleting data:", error);
+      showMessage("An error occurred while deleting the data", false);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchInvData();
+  }, [invId, user]);
+
   const onAdd = async () => {
-    // refreshInventories();
+    fetchInvData();
     showMessage("Product added successfully!", true);
   };
+
+  const confirmClearData = () => {
+    deleteAll();
+    closeDialog();
+  };
+
+  useEffect(() => {
+    localStorage.setItem("products", JSON.stringify(products));
+    localStorage.setItem("categories", JSON.stringify(categories));
+    dispatch(setProducts(products));
+    dispatch(setCategories(categories));
+  }, [dispatch, categories, products]);
 
   const open_manageCategories = () => {
     set_manageCategories_isOpen(true);
@@ -85,33 +166,35 @@ export default function Inventory({ params }) {
 
   const Buttons = [];
 
-  Buttons.push(
-    {
-      btn_name: "Add Product",
-      icon: <FaPlus />,
-      clickEvent: open_AddItemForm,
-    },
-    {
-      btn_name: "Manage Categories",
-      icon: <FaCogs />,
-      clickEvent: open_manageCategories,
-    },
-    {
-      btn_name: "Clear Data",
-      icon: <FaTrashAlt />,
-      // clickEvent: open_AddItemForm,
-    },
-    {
-      btn_name: "Manage Moderators",
-      icon: <FaUsers />,
-      clickEvent: open_manageModerators,
-    },
-    {
-      btn_name: "Logout",
-      icon: <MdLogout />,
-      clickEvent: logout,
-    }
-  );
+  role !== "viewer" &&
+    Buttons.push(
+      {
+        btn_name: "Add Product",
+        icon: <FaPlus />,
+        clickEvent: open_AddItemForm,
+      },
+      {
+        btn_name: "Manage Categories",
+        icon: <FaCogs />,
+        clickEvent: open_manageCategories,
+      },
+      {
+        btn_name: "Clear Data",
+        icon: <FaTrashAlt />,
+        clickEvent: openDialog,
+      },
+      {
+        btn_name: "Manage Moderators",
+        icon: <FaUsers />,
+        clickEvent: open_manageModerators,
+      }
+    );
+
+  Buttons.push({
+    btn_name: "Logout",
+    icon: <MdLogout />,
+    clickEvent: logout,
+  });
 
   return (
     <div className={`flex min-h-screen flex-col items-center justify-between`}>
@@ -121,10 +204,13 @@ export default function Inventory({ params }) {
 
         <Body
           buttons={Buttons}
-          user={user}
           inventoryId={invId}
           role={role}
           setLoading={setLoading}
+          loadingData={loadingData}
+          products={products}
+          categories={categories}
+          fetchInvData={fetchInvData}
         />
         <Footer />
       </div>
@@ -139,7 +225,9 @@ export default function Inventory({ params }) {
       {manageCategories_isOpen && (
         <Manage_Categories_Form
           CloseForm={close_manageCategories}
+          inventoryId={invId}
           categories={categories}
+          fetchInvData={fetchInvData}
         />
       )}
       {manageModerators_isOpen && (
@@ -157,6 +245,15 @@ export default function Inventory({ params }) {
             {<MdAdd />}
           </button>
         </div>
+      )}
+      {isDialogOpen && (
+        <Confirmation_dialogue
+          isOpen={isDialogOpen}
+          title="Confirm Clear Data"
+          message="Are you sure you want to clear all data?"
+          onConfirm={confirmClearData}
+          onCancel={closeDialog}
+        />
       )}
     </div>
   );

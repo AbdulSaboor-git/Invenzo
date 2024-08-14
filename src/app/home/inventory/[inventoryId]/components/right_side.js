@@ -16,6 +16,7 @@ export default function RightSide({
   setProd,
   products,
   loadingData,
+  categories,
 }) {
   const [searchValue, setSearchValue] = useState("");
   const [sortCard_isOpen, setSortCard_isOpen] = useState(false);
@@ -175,11 +176,11 @@ export default function RightSide({
 
       <div className="flex flex-col gap-[6px]  w-full pb-1 px-0 md:px-2 md:max-h-[80vh] md:overflow-auto hidden_scroll_bar">
         {loadingData ? (
-          <div className="text-gray-300 text-xs">
+          <div className="text-gray-300 text-xs pl-2">
             <p>Loading...</p>
           </div>
         ) : !sortedProducts?.length ? (
-          <div className="text-gray-300 text-xs">
+          <div className="text-gray-300 text-xs pl-2">
             <p>{"(Empty)"}</p>
           </div>
         ) : (

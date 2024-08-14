@@ -16,8 +16,8 @@ export default function FilterCard({
           <p className="font-semibold">Category</p>
           <select className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-600">
             <option value="">Select a category</option>
-            {categories.map((categ, i) => (
-              <option key={i} value={categ.id}>
+            {categories?.map((categ) => (
+              <option key={categ.id} value={categ.id}>
                 {categ.name}
               </option>
             ))}

@@ -54,13 +54,14 @@ model Product {
 
 model Category {
   id          Int       @id @default(autoincrement())
-  name        String    @unique
-  url         String?
+  name        String
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   inventoryId Int
   inventory   Inventory @relation(fields: [inventoryId], references: [id])
   products    Product[]
+
+  @@unique([name, inventoryId]) // Composite unique constraint
 }
 
 model Moderator {
