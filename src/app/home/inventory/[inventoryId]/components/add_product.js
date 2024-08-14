@@ -22,8 +22,8 @@ export default function AddProduct({
   const [error, setError] = useState("");
   const [name, setName] = useState("");
   const [categoryId, setCategoryId] = useState(null);
-  const [purchasePrice, setPurchasePrice] = useState(0);
-  const [salePrice, setSalePrice] = useState(0);
+  const [purchasePrice, setPurchasePrice] = useState(null);
+  const [salePrice, setSalePrice] = useState(null);
   const [govtSalePrice, setGovtSalePrice] = useState(null);
   const [tags, setTags] = useState("");
   const Dispatch = useDispatch();
@@ -53,11 +53,16 @@ export default function AddProduct({
   }
 
   function handlePurchasePriceChange(e) {
-    setPurchasePrice(parseFloat(e.target.value) || 0);
+    setPurchasePrice(parseFloat(e.target.value));
+    setNewSalePrice(parseFloat(e.target.value));
+  }
+
+  function setNewSalePrice(PP) {
+    setSalePrice(Math.round((PP + PP * 0.07) / 10) * 10);
   }
 
   function handleSalePriceChange(e) {
-    setSalePrice(parseFloat(e.target.value) || 0);
+    setSalePrice(parseFloat(e.target.value));
   }
 
   function handleGovtSalePriceChange(e) {
