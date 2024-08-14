@@ -82,6 +82,7 @@ export default function Add_Inventory({ CloseForm, user, onSuccess }) {
               type="text"
               value={inventoryName}
               onChange={handleInputChange}
+              maxLength={50}
               className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-600"
               required
             />
