@@ -11,7 +11,7 @@ export default function Members({ CloseForm, moderators, inv, user }) {
   }, []);
   return (
     <div className="flex fixed z-[200] top-0 flex-col p-5 w-screen h-screen items-center justify-center bg-[#00000040] backdrop-blur-[2px] ">
-      <div className="pt-4  md:pt-4 p-7 md:p-10 mx-10 z-40 w-full max-w-[400px] h-[305px] md:h-[345px] md:max-w-[450px] overflow-auto hidden_scroll_bar bg-teal-700 rounded-lg shadow-lg shadow-[#00000040] text-[#404040]">
+      <div className="pt-4  md:pt-4 p-7 md:p-10 mx-10 z-40 w-full max-w-[400px] h-[320px] md:h-[350px] md:max-w-[450px] overflow-auto hidden_scroll_bar bg-teal-700 rounded-lg shadow-lg shadow-[#00000040] text-[#404040]">
         <div className="flex w-full justify-end sticky top-0">
           <button
             onClick={CloseForm}
@@ -23,7 +23,7 @@ export default function Members({ CloseForm, moderators, inv, user }) {
         <h1 className="font-bold text-lg md:text-xl pb-4 text-white">
           Inventory Members
         </h1>
-        <div className="flex flex-col gap-4 shadow-inner shadow-black p-6 bg-[#dfeaea] overflow-auto hidden_scroll_bar">
+        <div className="flex flex-col gap-4 shadow-inner shadow-black p-6 h-[200px] md:h-[220px] bg-[#dfeaea] overflow-auto hidden_scroll_bar">
           <div className="flex flex-col text-sm md:text-base">
             <h2 className="font-bold text-base md:text-lg pb-4 text-teal-700  mb-[-10px] ">
               Admin:
