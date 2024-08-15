@@ -7,6 +7,7 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import useAuthUser from "@/hooks/authUser";
 import Loader from "@/components/loader";
+import { triggerNotification } from "@/redux/notificationThunk";
 
 export default function Login() {
   const router = useRouter();
@@ -15,6 +16,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const { user, userLoading } = useAuthUser();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!userLoading && user) {
@@ -26,6 +28,15 @@ export default function Login() {
     return <Loader />;
   }
 
+  const showMessage = (msg, state) => {
+    dispatch(
+      triggerNotification({
+        msg: msg,
+        success: state,
+      })
+    );
+  };
+
   const handleSignUpClick = () => {
     router.push("/sign-up");
   };
@@ -33,6 +44,7 @@ export default function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
 
+    setLoading(true);
     try {
       const response = await fetch("/api/user/login", {
         method: "POST",
@@ -45,13 +57,13 @@ export default function Login() {
       const data = await response.json();
 
       if (!response.ok) {
+        showMessage(data.error || "Login failed", false);
         throw new Error(data.error || "Login failed");
       }
 
       // Handle successful login (e.g., store token, user info, redirect user)
       // Set the cookies
       localStorage.setItem("token", data.token);
-
       localStorage.setItem("user", JSON.stringify(data.user));
 
       dispatch(setUser(data.user)); // Store user in Redux
@@ -59,6 +71,8 @@ export default function Login() {
     } catch (err) {
       console.log(err);
       setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -67,7 +81,7 @@ export default function Login() {
       <div className="max-w-[1400px] w-full">
         <Header />
         <div className="flex w-full items-center justify-center">
-          <div className="w-full max-w-md bg-[#ffffff95] p-8 m-10 rounded shadow-md">
+          <div className="w-full max-w-[360px] bg-[#ffffff95] p-8 py-14 m-10 rounded shadow-md">
             <h2 className="text-2xl font-bold mb-6 text-center text-teal-700">
               Login
             </h2>
@@ -80,7 +94,10 @@ export default function Login() {
                   Email
                 </label>
                 <input
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  spellCheck="false"
+                  autoComplete="false"
+                  autoCorrect="false"
+                  className="shadow text-sm appearance-none border rounded w-full py-2 px-3 text-[#404040] leading-tight focus:outline-none focus:shadow-outline"
                   id="email"
                   type="email"
                   placeholder="Email"
@@ -97,7 +114,7 @@ export default function Login() {
                   Password
                 </label>
                 <input
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                  className="shadow text-sm appearance-none border rounded w-full py-2 px-3 text-[#404040] leading-tight focus:outline-none focus:shadow-outline"
                   id="password"
                   type="password"
                   placeholder="**********"
@@ -106,21 +123,24 @@ export default function Login() {
                   required
                 />
               </div>
-              {error && (
+              {/* {error && (
                 <div className="mb-4 text-xs text-red-500 text-center">
                   {error}
                 </div>
-              )}
-              <div className="flex items-center justify-between">
+              )} */}
+              <div className="flex items-center justify-center mt-8">
                 <button
-                  className="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  disabled={loading}
+                  className={`bg-teal-600 w-24 text-center hover:bg-teal-700 rounded-full text-white font-semibold py-2 px-5 focus:outline-none focus:shadow-outline ${
+                    loading ? "cursor-not-allowed" : "cursor-pointer"
+                  }`}
                   type="submit"
                 >
-                  Sign In
+                  {loading ? "..." : "Login"}
                 </button>
               </div>
             </form>
-            <div className="mt-8 text-center">
+            {/* <div className="mt-8 text-center">
               <p className="text-gray-600">
                 Don&apos;t have an account?{" "}
                 <button
@@ -130,7 +150,7 @@ export default function Login() {
                   Sign Up
                 </button>
               </p>
-            </div>
+            </div> */}
           </div>
         </div>
         <Footer />

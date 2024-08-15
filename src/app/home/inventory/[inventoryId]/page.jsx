@@ -9,7 +9,8 @@ import { triggerNotification } from "@/redux/notificationThunk";
 import Add_Product_Form from "@/app/home/inventory/[inventoryId]/components/add_product";
 import Manage_Categories_Form from "@/app/home/inventory/[inventoryId]/components/manage_categories";
 import Manage_Moderators_Form from "@/app/home/inventory/[inventoryId]/components/manage_moderators";
-import { MdAdd, MdLogout } from "react-icons/md";
+import Members from "@/app/home/inventory/[inventoryId]/components/members";
+import { MdAdd, MdLogout, MdPeopleAlt } from "react-icons/md";
 import { useRouter } from "next/navigation";
 import useAuthUser from "@/hooks/authUser";
 import Loader from "@/components/loader";
@@ -22,6 +23,7 @@ export default function Inventory({ params }) {
   const dispatch = useDispatch();
   const router = useRouter();
   const [addItemForm_isOpen, setAddForm_isOpen] = useState(false);
+  const [members_isOpen, set_Members_isOpen] = useState(false);
   const invId = params.inventoryId;
   let role = "viewer";
   const { user, userLoading, logout } = useAuthUser();
@@ -35,6 +37,8 @@ export default function Inventory({ params }) {
   const [loadingData, setLoadingData] = useState(true);
   const [products, setProducts_2] = useState([]);
   const [categories, setCategories_2] = useState([]);
+  const [moderators, setModerators] = useState([]);
+  const [invInfo, set_invInfo] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const openDialog = (e) => {
@@ -63,10 +67,27 @@ export default function Inventory({ params }) {
         const InvData = await Response.json();
         setProducts_2(InvData.products);
         setCategories_2(InvData.categories);
+        setModerators(InvData.moderators);
+        set_invInfo(InvData.inv);
       } catch (error) {
         console.error("Error fetching inventory data:", error);
       } finally {
         setLoadingData(false);
+      }
+    }
+  };
+
+  const refreshInvData = async () => {
+    if (user) {
+      try {
+        const Response = await fetch(`/api/inventory/${invId}`);
+        const InvData = await Response.json();
+        setProducts_2(InvData.products);
+        setCategories_2(InvData.categories);
+        setModerators(InvData.moderators);
+        set_invInfo(InvData.inv);
+      } catch (error) {
+        console.error("Error fetching inventory data:", error);
       }
     }
   };
@@ -149,6 +170,14 @@ export default function Inventory({ params }) {
     setAddForm_isOpen(false);
   };
 
+  const openMembers = () => {
+    set_Members_isOpen(true);
+  };
+
+  const closeMembers = () => {
+    set_Members_isOpen(false);
+  };
+
   useEffect(() => {
     if (!userLoading && !user) {
       router.push("/login");
@@ -158,7 +187,7 @@ export default function Inventory({ params }) {
   if (userLoading || !user) {
     return <Loader />;
   }
-  if (user?.Inventories?.some((inventory) => inventory.id === Number(invId))) {
+  if (user.id === invInfo?.admin?.id) {
     role = "admin";
   } else {
     role = "viewer";
@@ -175,26 +204,33 @@ export default function Inventory({ params }) {
       },
       {
         btn_name: "Manage Categories",
-        icon: <FaCogs />,
+        icon: <FaCogs size={13} className="pr-[1px]" />,
         clickEvent: open_manageCategories,
       },
       {
         btn_name: "Clear Data",
-        icon: <FaTrashAlt />,
+        icon: <FaTrashAlt size={13} className="pr-[1px]" />,
         clickEvent: openDialog,
       },
       {
         btn_name: "Manage Moderators",
-        icon: <FaUsers />,
+        icon: <FaUsers size={13} className="pr-[1px]" />,
         clickEvent: open_manageModerators,
       }
     );
 
-  Buttons.push({
-    btn_name: "Logout",
-    icon: <MdLogout />,
-    clickEvent: logout,
-  });
+  Buttons.push(
+    {
+      btn_name: "Members",
+      icon: <MdPeopleAlt size={13} className="pr-[1px]" />,
+      clickEvent: openMembers,
+    },
+    {
+      btn_name: "Logout",
+      icon: <MdLogout size={13} className="pr-[1px]" />,
+      clickEvent: logout,
+    }
+  );
 
   return (
     <div className={`flex min-h-screen flex-col items-center justify-between`}>
@@ -227,13 +263,24 @@ export default function Inventory({ params }) {
           CloseForm={close_manageCategories}
           inventoryId={invId}
           categories={categories}
-          fetchInvData={fetchInvData}
+          fetchInvData={refreshInvData}
         />
       )}
       {manageModerators_isOpen && (
         <Manage_Moderators_Form
           CloseForm={close_manageModerators}
-          moderators={[]}
+          moderators={moderators}
+          refreshModerators={refreshInvData}
+          inventoryId={invId}
+          adminEmail={invInfo?.admin?.email}
+        />
+      )}
+      {members_isOpen && (
+        <Members
+          CloseForm={closeMembers}
+          moderators={moderators}
+          inv={invInfo}
+          user={user}
         />
       )}
       {role !== "viewer" && (

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { MdClose } from "react-icons/md";
 import { useDispatch } from "react-redux";
 import { triggerNotification } from "@/redux/notificationThunk";
+import Confirmation_dialogue from "@/components/confirmation_dialogue";
 
 export default function ManageCategories({
   CloseForm,
@@ -33,6 +34,16 @@ export default function ManageCategories({
         success: state,
       })
     );
+  };
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const openDialog = (e) => {
+    e.stopPropagation();
+    setIsDialogOpen(true);
+  };
+
+  const closeDialog = () => {
+    setIsDialogOpen(false);
   };
 
   const handleAddClick = () => {
@@ -119,7 +130,12 @@ export default function ManageCategories({
     }
   };
 
-  const handleDeleteCategory = async () => {
+  const handleDeleteCategory = () => {
+    DeleteCategory();
+    closeDialog();
+  };
+
+  const DeleteCategory = async () => {
     if (!selectedCategoryId) {
       showMessage("Please select a category to delete", false);
       return;
@@ -281,7 +297,7 @@ export default function ManageCategories({
               <div className="pt-2 flex justify-center">
                 <button
                   disabled={loading}
-                  onClick={handleDeleteCategory}
+                  onClick={openDialog}
                   className={`py-2.5 bg-teal-600 w-3/5 rounded-full text-white hover:bg-teal-700 transition-all duration-200 text-sm font-semibold ${
                     loading && "cursor-not-allowed"
                   }`}
@@ -293,6 +309,15 @@ export default function ManageCategories({
           )}
         </div>
       </div>
+      {isDialogOpen && (
+        <Confirmation_dialogue
+          isOpen={isDialogOpen}
+          title="Confirm Deletion"
+          message="Are you sure you want to delete this category?"
+          onConfirm={handleDeleteCategory}
+          onCancel={closeDialog}
+        />
+      )}
     </div>
   );
 }

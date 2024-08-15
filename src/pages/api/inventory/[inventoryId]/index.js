@@ -62,25 +62,42 @@ async function handleGet(req, res, inventoryId) {
       include: {
         category: true, // Include the related category data
       },
-      orderBy: {
-        name: "asc",
-      },
     });
 
     const categories = await prisma.category.findMany({
       where: {
         inventoryId: id,
       },
-      orderBy: {
-        name: "asc",
+    });
+
+    const inv = await prisma.inventory.findUnique({
+      where: {
+        id: id,
+      },
+      include: {
+        admin: true,
       },
     });
 
-    if (!products.length && !categories.length) {
-      return res.status(404).json({ message: "Inventory data not found" });
-    }
+    const moderators = await prisma.moderator.findMany({
+      where: {
+        inventoryId: id,
+      },
+      include: {
+        user: true, // Include the related category data
+      },
+      orderBy: {
+        userId: "asc",
+      },
+    });
 
-    return res.status(200).json({ products, categories });
+    categories.sort((a, b) =>
+      a.name.localeCompare(b.name, undefined, { sensitivity: "base" })
+    );
+    products.sort((a, b) =>
+      a.name.localeCompare(b.name, undefined, { sensitivity: "base" })
+    );
+    return res.status(200).json({ products, categories, moderators, inv });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Internal Server Error" });

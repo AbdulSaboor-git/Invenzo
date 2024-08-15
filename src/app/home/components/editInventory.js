@@ -43,9 +43,11 @@ export default function Edit_Inventory({ CloseForm, inv, onSuccess }) {
         }),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        showMessage(data.error, false);
-        throw new Error(data.error);
+        showMessage(data.error || "Failed to edit inventory", false);
+        throw new Error("Failed to edit inventory");
       }
 
       onSuccess();

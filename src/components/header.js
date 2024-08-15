@@ -37,7 +37,7 @@ export default function Header({ user, Buttons }) {
     <div>
       <div
         onClick={closeSidebar}
-        className={`md:hidden fixed h-full w-full z-40 ${
+        className={`md:hidden fixed h-full w-full z-40  ${
           isOpen ? "translate-x-0" : "-translate-x-[100%]"
         }`}
       ></div>
@@ -107,11 +107,11 @@ export default function Header({ user, Buttons }) {
           </>
         )}
 
-        <div className="flex flex-col justify-center w-full max-w-[1200px] items-center">
-          <div
-            className="flex flex-col justify-center items-center gap-3"
-            onClick={closeSidebar}
-          >
+        <div
+          onClick={closeSidebar}
+          className="flex flex-col justify-center w-full max-w-[1200px] items-center"
+        >
+          <div className="flex flex-col justify-center items-center gap-3">
             <div className="flex ">
               <img
                 className="size-[90px] md:size-[130px]"

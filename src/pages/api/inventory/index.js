@@ -19,8 +19,16 @@ export default async function handler(req, res) {
 
 const POST = async (req, res) => {
   const { name, profilePicture, adminId } = req.body;
-
   try {
+    const existingInventory = await prisma.inventory.findFirst({
+      where: { name: name },
+    });
+
+    if (existingInventory) {
+      return res.status(409).json({
+        error: "Inventory with this name already exists",
+      });
+    }
     const newInventory = await prisma.inventory.create({
       data: {
         name,
@@ -39,6 +47,15 @@ const PATCH = async (req, res) => {
   const { id, name, profilePicture } = req.body;
 
   try {
+    const existingInventoryName = await prisma.inventory.findFirst({
+      where: { name: name },
+    });
+
+    if (existingInventoryName) {
+      return res.status(409).json({
+        error: "Error: Inventory with this name already exists",
+      });
+    }
     const existingInventory = await prisma.inventory.findUnique({
       where: { id },
     });
@@ -46,7 +63,7 @@ const PATCH = async (req, res) => {
     if (!existingInventory) {
       return res
         .status(404)
-        .json({ error: "Inventory not found", errorCode: 3 });
+        .json({ error: "Error: Inventory not found", errorCode: 3 });
     }
 
     const dataToUpdate = {};
@@ -83,7 +100,7 @@ const DELETE = async (req, res) => {
     if (!existingInventory) {
       return res
         .status(404)
-        .json({ error: "Inventory not found", errorCode: 3 });
+        .json({ error: "Error: Inventory not found", errorCode: 3 });
     }
 
     await prisma.$transaction([

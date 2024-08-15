@@ -43,8 +43,10 @@ export default function Add_Inventory({ CloseForm, user, onSuccess }) {
         body: JSON.stringify({ name: inventoryName.trim(), adminId: user.id }),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        showMessage("Failed to add inventory", false);
+        showMessage(data.error || "Failed to add inventory", false);
         throw new Error("Failed to add inventory");
       }
 

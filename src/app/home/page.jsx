@@ -211,7 +211,7 @@ export default function HomePage() {
                   <p>Loading...</p>
                 </div>
               ) : !myInventories?.length ? (
-                <div className="text-gray-300">
+                <div className="text-gray-300 text-xs">
                   <p>{"(Empty)"}</p>
                 </div>
               ) : (
@@ -280,7 +280,7 @@ export default function HomePage() {
                   <p>Loading...</p>
                 </div>
               ) : !moderatedInventories?.length ? (
-                <div className="text-gray-300">
+                <div className="text-gray-300 text-xs">
                   <p>{"(Empty)"}</p>
                 </div>
               ) : (

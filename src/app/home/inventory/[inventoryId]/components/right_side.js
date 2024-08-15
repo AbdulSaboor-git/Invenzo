@@ -145,7 +145,7 @@ export default function RightSide({
           />
           {searchValue && (
             <MdClose
-              className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer text-[20px]"
+              className="absolute right-0 rounded-e-full top-1/2 transform -translate-y-1/2  p-[11px] text-[40px] cursor-pointer  text-[#959595]"
               onClick={clearSearch}
             />
           )}
