@@ -140,7 +140,7 @@ export default function RightSide({
             type="text"
             value={searchValue}
             onChange={handleSearchChange}
-            className="w-full h-10 md:h-11 rounded-full text-sm md:text-base pl-4 pr-10"
+            className="w-full h-10 md:h-11 rounded-full text-[12px] md:text-[14px] pl-4 pr-10"
             placeholder="Search..."
           />
           {searchValue && (
