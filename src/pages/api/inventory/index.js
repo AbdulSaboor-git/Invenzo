@@ -53,7 +53,7 @@ const PATCH = async (req, res) => {
 
     if (existingInventoryName) {
       return res.status(409).json({
-        error: "Error: Inventory with this name already exists",
+        error: "No changings made",
       });
     }
     const existingInventory = await prisma.inventory.findUnique({

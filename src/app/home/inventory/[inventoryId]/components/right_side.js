@@ -22,9 +22,11 @@ export default function RightSide({
   const [sortCard_isOpen, setSortCard_isOpen] = useState(false);
   const [filterCard_isOpen, setFilterCard_isOpen] = useState(false);
   const [filterApplied, set_filterApplied] = useState(false);
-
-  const [sortedProducts, setSortedProducts] = useState([]);
-  const invId = inventoryId;
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(Infinity);
+  const [filterCategoryId, setFilterCategoryId] = useState("");
+  const [PRODUCTS, setPRODUCTS] = useState([]);
+  const [originalProducts, setOriginalProducts] = useState([]);
   const Dispatch = useDispatch();
 
   const showMessage = (msg, state) => {
@@ -37,16 +39,47 @@ export default function RightSide({
   };
 
   useEffect(() => {
-    setSortedProducts(products);
+    setOriginalProducts(products);
+    setPRODUCTS(products);
   }, [products]);
+
+  const ApplyFilter = useCallback(() => {
+    if (!products || products.length === 0) {
+      setPRODUCTS([]);
+      return;
+    }
+
+    if (
+      minPrice === 0 &&
+      maxPrice === (Infinity || "") &&
+      filterCategoryId === ""
+    ) {
+      showMessage("No filter criteria entered", false);
+      setPRODUCTS(originalProducts);
+      return;
+    }
+
+    const filtered = originalProducts.filter((prod) => {
+      return (
+        (minPrice ? prod.salePrice >= minPrice : true) &&
+        (maxPrice ? prod.salePrice <= maxPrice : true) &&
+        (filterCategoryId ? prod.categoryId == filterCategoryId : true)
+      );
+    });
+
+    setPRODUCTS(filtered);
+    set_filterApplied(true);
+    // showMessage("Filters applied successfully", true);
+    // closeFilterCard();
+  }, [originalProducts, filterCategoryId, minPrice, maxPrice, products]);
 
   const sortProducts = useCallback(
     (key, order) => {
       if (!products || products.length === 0) {
-        setSortedProducts([]);
+        setPRODUCTS([]);
         return;
       }
-      const sorted = [...products].sort((a, b) => {
+      const sorted = [...PRODUCTS].sort((a, b) => {
         if (key === "salePrice") {
           return order === "asc"
             ? parseFloat(a[key]) - parseFloat(b[key])
@@ -57,9 +90,9 @@ export default function RightSide({
             : b[key].localeCompare(a[key]);
         }
       });
-      setSortedProducts(sorted);
+      setPRODUCTS(sorted);
     },
-    [products]
+    [PRODUCTS, products]
   );
 
   useEffect(() => {
@@ -80,25 +113,13 @@ export default function RightSide({
     };
   }, [sortCard_isOpen, filterCard_isOpen]);
 
-  const applyFilter = () => {
-    set_filterApplied(true);
-    Dispatch(
-      triggerNotification({
-        msg: "Filter Applied Successfully!",
-        success: true,
-      })
-    );
-    closeFilterCard();
-  };
-
   const clearFilter = () => {
+    setMinPrice(0);
+    setMaxPrice(Infinity);
+    setFilterCategoryId("");
+    setPRODUCTS(originalProducts);
     set_filterApplied(false);
-    Dispatch(
-      triggerNotification({
-        msg: "Filters Cleared Successfully!",
-        success: true,
-      })
-    );
+    showMessage("Filters cleared successfully", true);
     closeFilterCard();
   };
 
@@ -109,13 +130,19 @@ export default function RightSide({
   const closeSortCard = () => {
     setSortCard_isOpen(false);
   };
+
   const toggleFilterCard = () => {
     setFilterCard_isOpen((prev) => !prev);
   };
 
   const closeFilterCard = () => {
+    console.log("filter:" + filterApplied);
+    // if (!filterApplied) {
+    //   setMinPrice(0);
+    //   setMaxPrice(Infinity);
+    //   setFilterCategoryId("");
+    // }
     setFilterCard_isOpen(false);
-    event.stopPropagation();
   };
 
   const handleSearchChange = (e) => {
@@ -150,7 +177,7 @@ export default function RightSide({
             />
           )}
         </div>
-        <div className="relative  text-[22px] md:text-[25px] flex items-center justify-center gap-2 md:gap-3">
+        <div className="relative text-[22px] md:text-[25px] flex items-center justify-center gap-2 md:gap-3">
           <FaFilter
             onClick={toggleFilterCard}
             className={`cursor-pointer ${
@@ -167,44 +194,48 @@ export default function RightSide({
         {filterCard_isOpen && (
           <Filter_card
             categories={categories}
-            applyFilter={applyFilter}
+            applyFilter={ApplyFilter}
             clearFilter={clearFilter}
             filterApplied={filterApplied}
+            setMaxPrice={setMaxPrice}
+            setMinPrice={setMinPrice}
+            setFilterCategoryId={setFilterCategoryId}
+            minPrice={minPrice}
+            maxPrice={maxPrice}
+            filterCategoryId={filterCategoryId}
           />
         )}
       </div>
 
-      <div className="flex flex-col gap-[6px]  w-full pb-1 px-0 md:px-2 md:max-h-[80vh] md:overflow-auto hidden_scroll_bar">
+      <div className="flex flex-col gap-[6px] w-full pb-1 px-0 md:px-2 md:max-h-[80vh] md:overflow-auto hidden_scroll_bar">
         {loadingData ? (
           <div className="text-gray-300 text-xs pl-2">
             <p>Loading...</p>
           </div>
-        ) : !sortedProducts?.length ? (
+        ) : !PRODUCTS?.length ? (
           <div className="text-gray-300 text-xs pl-2">
             <p>{"(Empty)"}</p>
           </div>
         ) : (
-          sortedProducts
-            .filter((prod) => {
-              const searchTerm = searchValue.toLowerCase().trim();
-              return (
-                prod.name.toLowerCase().includes(searchTerm) ||
-                prod.category.name.toLowerCase().includes(searchTerm) ||
-                prod.tags?.toLowerCase().includes(searchTerm)
-              );
-            })
-            .map((prod) => (
-              <Product_card
-                key={prod.id}
-                prod={prod}
-                isExpanded={expandedProductId === prod.id}
-                toggleProductDetails={toggleProductDetails}
-                user={role}
-                openEditForm={openEditForm}
-                handleDeleteClick={handleDeleteClick}
-                setProd={setProd}
-              />
-            ))
+          PRODUCTS.filter((prod) => {
+            const searchTerm = searchValue.toLowerCase().trim();
+            return (
+              prod.name.toLowerCase().includes(searchTerm) ||
+              prod.category.name.toLowerCase().includes(searchTerm) ||
+              prod.tags?.toLowerCase().includes(searchTerm)
+            );
+          }).map((prod) => (
+            <Product_card
+              key={prod.id}
+              prod={prod}
+              isExpanded={expandedProductId === prod.id}
+              toggleProductDetails={toggleProductDetails}
+              user={role}
+              openEditForm={openEditForm}
+              handleDeleteClick={handleDeleteClick}
+              setProd={setProd}
+            />
+          ))
         )}
       </div>
     </div>

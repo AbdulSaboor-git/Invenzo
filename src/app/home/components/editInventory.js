@@ -96,7 +96,7 @@ export default function Edit_Inventory({ CloseForm, inv, onSuccess }) {
               loading ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >
-            {loading ? "Saving..." : "Save"}
+            {loading ? "Updated..." : "Update"}
           </button>
         </form>
       </div>

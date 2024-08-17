@@ -240,7 +240,7 @@ export default function EditProduct({
                 loading && "cursor-not-allowed"
               }`}
             >
-              {loading ? "Saving..." : "Save"}
+              {loading ? "Updating..." : "Update"}
             </button>
           </div>
         </form>

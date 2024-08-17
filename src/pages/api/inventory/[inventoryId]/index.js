@@ -31,7 +31,7 @@ const handlePost = async (req, res, inventoryId) => {
   } = req.body;
 
   try {
-    const newProduct = await prisma.product.create({
+    const newProduct = await prisma.product.createMany({
       data: {
         name,
         description,

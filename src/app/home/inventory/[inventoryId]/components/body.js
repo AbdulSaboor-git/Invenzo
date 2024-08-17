@@ -80,7 +80,7 @@ export default function Body({
   };
 
   const onEdit = () => {
-    showMessage("Product edited successfully!", true);
+    showMessage("Product updated successfully!", true);
     fetchInvData();
   };
 

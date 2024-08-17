@@ -107,12 +107,12 @@ export default function HomePage() {
 
   const onAdd = async () => {
     fetchInventories();
-    showMessage("Inventory Created Successfully!", true);
+    showMessage("Inventory created successfully!", true);
   };
 
   const onEdit = async (msg) => {
     fetchInventories();
-    showMessage("Inventory Updated Successfully!", true);
+    showMessage("Inventory updated successfully!", true);
   };
 
   const toggle_editButtons = (id) => {
