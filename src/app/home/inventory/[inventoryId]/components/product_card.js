@@ -9,10 +9,18 @@ export default function ProductCard({
   openEditForm,
   handleDeleteClick,
   setProd,
+  userId,
 }) {
   const handleTableClick = (e) => {
     e.stopPropagation();
   };
+  let savedPreferences = [];
+
+  if (user) {
+    savedPreferences = JSON.parse(
+      localStorage.getItem(`preferences_${userId}`)
+    );
+  }
   return (
     <div
       className="w-full bg-white rounded-xl p-4 text-[#404040] shadow-sm shadow-[#00000061] hover:scale-[1.005] transition-transform duration-200 ease-in-out cursor-pointer"
@@ -20,7 +28,7 @@ export default function ProductCard({
     >
       <div className="flex justify-between">
         <p className="text-sm font-bold">{prod.name}</p>
-        {isExpanded && user !== "viewer" && (
+        {isExpanded && user !== "viewer" && savedPreferences.add_edit_del && (
           <div className="flex gap-3 text-base md:text-lg pr-2">
             <button
               className="hover:text-green-600 transition-colors duration-200 ease-in-out"
@@ -62,22 +70,26 @@ export default function ProductCard({
                     {prod.name}
                   </td>
                 </tr>
-                <tr>
-                  <td className="border border-[#0079796c] p-1 font-semibold">
-                    Category
-                  </td>
-                  <td className="border border-[#0079796c] p-1">
-                    {prod.category.name}
-                  </td>
-                </tr>
-                <tr>
-                  <td className="border border-[#0079796c] p-1 font-semibold">
-                    Purchase Price
-                  </td>
-                  <td className="border border-[#0079796c] p-1">
-                    Rs. {prod.purchasePrice}
-                  </td>
-                </tr>
+                {savedPreferences.categ && (
+                  <tr>
+                    <td className="border border-[#0079796c] p-1 font-semibold">
+                      Category
+                    </td>
+                    <td className="border border-[#0079796c] p-1">
+                      {prod.category.name}
+                    </td>
+                  </tr>
+                )}
+                {savedPreferences.pp && (
+                  <tr>
+                    <td className="border border-[#0079796c] p-1 font-semibold">
+                      Purchase Price
+                    </td>
+                    <td className="border border-[#0079796c] p-1">
+                      Rs. {prod.purchasePrice}
+                    </td>
+                  </tr>
+                )}
 
                 <tr>
                   <td className="border border-[#0079796c] p-1 font-semibold">
@@ -97,7 +109,7 @@ export default function ProductCard({
                     </td>
                   </tr>
                 )}
-                {user !== "viewer" && (
+                {savedPreferences.dateAdd === true && (
                   <tr>
                     <td className="border border-[#0079796c] p-1 font-semibold">
                       Date Added
@@ -110,7 +122,7 @@ export default function ProductCard({
                     </td>
                   </tr>
                 )}
-                {user !== "viewer" && (
+                {savedPreferences.dateUpdate === true && (
                   <tr>
                     <td className="border border-[#0079796c] p-1 font-semibold">
                       Date Updated

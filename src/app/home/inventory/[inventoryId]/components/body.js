@@ -15,6 +15,7 @@ export default function Body({
   products,
   loadingData,
   fetchInvData,
+  userId,
 }) {
   const [editItemForm_isOpen, set_editItemForm_isOpen] = useState(false);
   const Dispatch = useDispatch();
@@ -101,6 +102,7 @@ export default function Body({
             handleDeleteClick={openDialog}
             setProd={setProd}
             loadingData={loadingData}
+            userId={userId}
           />
         </div>
       </div>

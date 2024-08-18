@@ -48,6 +48,14 @@ export default function Inventory({ params }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [preferences_isOpen, set_preferences_IsOpen] = useState(false);
 
+  let savedPreferences = [];
+
+  if (user) {
+    savedPreferences = JSON.parse(
+      localStorage.getItem(`preferences_${user.id}`)
+    );
+  }
+
   const openPreferences = () => {
     set_preferences_IsOpen(true);
   };
@@ -215,12 +223,15 @@ export default function Inventory({ params }) {
   const Buttons = [];
 
   role !== "viewer" &&
+    savedPreferences.add_edit_del &&
+    Buttons.push({
+      btn_name: "Add Product",
+      icon: <FaPlus className="pr-[1px] text-[12px] md:text-[14px]" />,
+      clickEvent: open_AddItemForm,
+    });
+
+  role !== "viewer" &&
     Buttons.push(
-      {
-        btn_name: "Add Product",
-        icon: <FaPlus className="pr-[1px] text-[12px] md:text-[14px]" />,
-        clickEvent: open_AddItemForm,
-      },
       {
         btn_name: "Manage Categories",
         icon: <FaCogs className="pr-[1px] text-[14px] md:text-[16px]" />,
@@ -280,6 +291,7 @@ export default function Inventory({ params }) {
           products={products}
           categories={categories}
           fetchInvData={fetchInvData}
+          userId={user.id}
         />
         <Footer />
       </div>
@@ -316,7 +328,7 @@ export default function Inventory({ params }) {
           user={user}
         />
       )}
-      {role !== "viewer" && (
+      {role !== "viewer" && savedPreferences.add_edit_del === true && (
         <div className="fixed block md:hidden bottom-8 right-6 rounded-full ">
           <button
             onClick={open_AddItemForm}

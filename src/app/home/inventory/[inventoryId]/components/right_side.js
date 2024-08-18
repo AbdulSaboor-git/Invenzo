@@ -17,6 +17,7 @@ export default function RightSide({
   products,
   loadingData,
   categories,
+  userId,
 }) {
   const [searchValue, setSearchValue] = useState("");
   const [sortCard_isOpen, setSortCard_isOpen] = useState(false);
@@ -234,6 +235,7 @@ export default function RightSide({
               openEditForm={openEditForm}
               handleDeleteClick={handleDeleteClick}
               setProd={setProd}
+              userId={userId}
             />
           ))
         )}

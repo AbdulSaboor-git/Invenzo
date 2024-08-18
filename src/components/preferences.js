@@ -3,7 +3,7 @@ import { FaMoon } from "react-icons/fa";
 import { MdClose, MdSunny } from "react-icons/md";
 
 export default function Preferences({ CloseForm, userId }) {
-  const [editdel, set_editdel] = useState(false);
+  const [add_edit_del, set_add_edit_del] = useState(false);
   const [pp, set_pp] = useState(false);
   const [categ, set_categ] = useState(false);
   const [dateAdd, set_dateAdd] = useState(false);
@@ -19,7 +19,7 @@ export default function Preferences({ CloseForm, userId }) {
       localStorage.getItem(`preferences_${userId}`)
     );
     if (savedPreferences) {
-      set_editdel(savedPreferences.editdel);
+      set_add_edit_del(savedPreferences.add_edit_del);
       set_pp(savedPreferences.pp);
       set_categ(savedPreferences.categ);
       set_dateAdd(savedPreferences.dateAdd);
@@ -36,9 +36,9 @@ export default function Preferences({ CloseForm, userId }) {
 
   const generalOptions = [
     {
-      name: "Allow Edit and Delete Products",
-      value: editdel,
-      setter: set_editdel,
+      name: "Allow Add, Edit and Delete Products",
+      value: add_edit_del,
+      setter: set_add_edit_del,
     },
   ];
   const productOptions = [
@@ -54,7 +54,7 @@ export default function Preferences({ CloseForm, userId }) {
 
   const savePreferences = () => {
     const preferences = {
-      editdel,
+      add_edit_del,
       pp,
       categ,
       dateAdd,
@@ -66,7 +66,7 @@ export default function Preferences({ CloseForm, userId }) {
   };
 
   const cancelChanges = () => {
-    set_editdel(tempPreferences.editdel);
+    set_editdel(tempPreferences.add_edit_del);
     set_pp(tempPreferences.pp);
     set_categ(tempPreferences.categ);
     set_dateAdd(tempPreferences.dateAdd);
