@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
+import { MdSettings } from "react-icons/md";
 
-export default function left_side({ buttons }) {
+export default function Left_side({ buttons, openPreferences }) {
   return (
     <div className="flex flex-col gap-2 px-2 w-full min-w-[250px]">
       {buttons.map((btn, index) => (
@@ -15,6 +16,15 @@ export default function left_side({ buttons }) {
           </div>
         </button>
       ))}
+      <button
+        onClick={openPreferences}
+        className="bg-[#008e8e] hover:bg-[#007c7c] hover:scale-x-[1.01]  transition-transform duration-200 ease-in-out   text-white text-sm text-left py-4 px-6 rounded-xl shadow-sm shadow-[#000000cd]"
+      >
+        <div className="flex gap-4 items-center justify-start">
+          <div>{<MdSettings className="text-base" />}</div>
+          <p>Preferences</p>
+        </div>
+      </button>
     </div>
   );
 }

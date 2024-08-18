@@ -17,7 +17,9 @@ import {
   MdDriveFileRenameOutline,
   MdLogout,
   MdMoreVert,
+  MdSettings,
 } from "react-icons/md";
+import Preferences from "@/components/preferences";
 
 export default function HomePage() {
   const [ButtonId, setButtonId] = useState(null);
@@ -31,6 +33,16 @@ export default function HomePage() {
   const [loading, setLoading] = useState(false);
   const Dispatch = useDispatch();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const [preferences_isOpen, set_preferences_IsOpen] = useState(false);
+
+  const openPreferences = () => {
+    set_preferences_IsOpen(true);
+  };
+
+  const clossePreferences = () => {
+    set_preferences_IsOpen(false);
+  };
 
   const openDialog = (e) => {
     e.stopPropagation();
@@ -181,7 +193,11 @@ export default function HomePage() {
     <div className={`flex min-h-screen flex-col items-center`}>
       {loading && <Loader />}
       <div className="max-w-[1400px] w-full">
-        <Header user={user} Buttons={Buttons} />
+        <Header
+          user={user}
+          Buttons={Buttons}
+          openPreferences={openPreferences}
+        />
         <div className="hidden md:flex md:gap-3 justify-end w-full items-center pt-8  px-4 max-w-[1200px]">
           {Buttons.map((btn, index) => (
             <button
@@ -196,6 +212,16 @@ export default function HomePage() {
               </div>
             </button>
           ))}
+          <button
+            onClick={openPreferences}
+            style={{ boxShadow: "inset 0 0 10px #00443d" }}
+            className="bg-teal-600 hover:bg-teal-700 hover:scale-x-[1.01] text-sm transition-transform duration-200 ease-in-out text-white text-[11px] py-3 px-6 rounded-2xl"
+          >
+            <div className="flex gap-4 items-center justify-start">
+              <MdSettings />
+              Preferences
+            </div>
+          </button>
         </div>
         <div className="flex flex-wrap w-full max-w-[1200px] justify-center items-center text-center py-8 px-4 gap-8">
           <div
@@ -312,6 +338,9 @@ export default function HomePage() {
           inv={editInv}
           onSuccess={onEdit}
         />
+      )}
+      {preferences_isOpen && (
+        <Preferences CloseForm={clossePreferences} userId={user.id} />
       )}
     </div>
   );

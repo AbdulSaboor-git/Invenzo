@@ -20,7 +20,7 @@ export default function ProductCard({
     >
       <div className="flex justify-between">
         <p className="text-sm font-bold">{prod.name}</p>
-        {isExpanded && (user === "admin" || user === "manager") && (
+        {isExpanded && user !== "viewer" && (
           <div className="flex gap-3 text-base md:text-lg pr-2">
             <button
               className="hover:text-green-600 transition-colors duration-200 ease-in-out"
@@ -97,22 +97,32 @@ export default function ProductCard({
                     </td>
                   </tr>
                 )}
-                <tr>
-                  <td className="border border-[#0079796c] p-1 font-semibold">
-                    Date Added
-                  </td>
-                  <td className="border border-[#0079796c] p-1">
-                    {prod.createdAt}
-                  </td>
-                </tr>
-                <tr>
-                  <td className="border border-[#0079796c] p-1 font-semibold">
-                    Date Updated
-                  </td>
-                  <td className="border border-[#0079796c] p-1">
-                    {prod.updatedAt}
-                  </td>
-                </tr>
+                {user !== "viewer" && (
+                  <tr>
+                    <td className="border border-[#0079796c] p-1 font-semibold">
+                      Date Added
+                    </td>
+                    <td className="border border-[#0079796c] p-1">
+                      {new Date(prod.createdAt).toLocaleString("en-GB", {
+                        hour12: true,
+                        timeZone: "Asia/Karachi",
+                      })}
+                    </td>
+                  </tr>
+                )}
+                {user !== "viewer" && (
+                  <tr>
+                    <td className="border border-[#0079796c] p-1 font-semibold">
+                      Date Updated
+                    </td>
+                    <td className="border border-[#0079796c] p-1">
+                      {new Date(prod.updatedAt).toLocaleString("en-GB", {
+                        hour12: true,
+                        timeZone: "Asia/Karachi",
+                      })}
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>

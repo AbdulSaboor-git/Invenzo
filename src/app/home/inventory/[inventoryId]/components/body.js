@@ -15,6 +15,7 @@ export default function Body({
   products,
   loadingData,
   fetchInvData,
+  openPreferences,
 }) {
   const [editItemForm_isOpen, set_editItemForm_isOpen] = useState(false);
   const Dispatch = useDispatch();
@@ -88,7 +89,7 @@ export default function Body({
     <div className="flex flex-col items-center p-6 z-[200]">
       <div className="flex justify-center w-full max-w-[1200px] gap-4">
         <div className="hidden md:flex-[2] md:block">
-          <Left_Side buttons={buttons} />
+          <Left_Side buttons={buttons} openPreferences={openPreferences} />
         </div>
         <div className="w-[2px] bg-[#008080a4] border-0 hidden shadow-black md:block"></div>
         <div className="w-full md:flex-[5]">

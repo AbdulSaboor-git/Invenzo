@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-// import { openAddItemForm, closeAddItemForm } from "@/redux/addItemFormSlice";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import Body from "./components/body";
@@ -10,7 +9,13 @@ import Add_Product_Form from "@/app/home/inventory/[inventoryId]/components/add_
 import Manage_Categories_Form from "@/app/home/inventory/[inventoryId]/components/manage_categories";
 import Manage_Moderators_Form from "@/app/home/inventory/[inventoryId]/components/manage_moderators";
 import Members from "@/app/home/inventory/[inventoryId]/components/members";
-import { MdAdd, MdLogout, MdPeopleAlt } from "react-icons/md";
+import {
+  MdAdd,
+  MdInventory,
+  MdInventory2,
+  MdLogout,
+  MdPeopleAlt,
+} from "react-icons/md";
 import { useRouter } from "next/navigation";
 import useAuthUser from "@/hooks/authUser";
 import Loader from "@/components/loader";
@@ -18,6 +23,7 @@ import { FaPlus, FaCogs, FaTrashAlt, FaUsers } from "react-icons/fa";
 import { setProducts } from "@/redux/products";
 import { setCategories } from "@/redux/categories";
 import Confirmation_dialogue from "@/components/confirmation_dialogue";
+import Preferences from "@/components/preferences";
 
 export default function Inventory({ params }) {
   const dispatch = useDispatch();
@@ -40,6 +46,19 @@ export default function Inventory({ params }) {
   const [moderators, setModerators] = useState([]);
   const [invInfo, set_invInfo] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [preferences_isOpen, set_preferences_IsOpen] = useState(false);
+
+  const openPreferences = () => {
+    set_preferences_IsOpen(true);
+  };
+
+  const clossePreferences = () => {
+    set_preferences_IsOpen(false);
+  };
+
+  const goToHome = () => {
+    router.push("/home");
+  };
 
   const openDialog = (e) => {
     e.stopPropagation();
@@ -207,11 +226,11 @@ export default function Inventory({ params }) {
         icon: <FaCogs size={13} className="pr-[1px]" />,
         clickEvent: open_manageCategories,
       },
-      {
-        btn_name: "Clear Data",
-        icon: <FaTrashAlt size={13} className="pr-[1px]" />,
-        clickEvent: openDialog,
-      },
+      // {
+      //   btn_name: "Clear Data",
+      //   icon: <FaTrashAlt size={13} className="pr-[1px]" />,
+      //   clickEvent: openDialog,
+      // },
       {
         btn_name: "Manage Moderators",
         icon: <FaUsers size={13} className="pr-[1px]" />,
@@ -226,6 +245,11 @@ export default function Inventory({ params }) {
       clickEvent: openMembers,
     },
     {
+      btn_name: "Other Inventories",
+      icon: <MdInventory size={13} className="pr-[1px]" />,
+      clickEvent: goToHome,
+    },
+    {
       btn_name: "Logout",
       icon: <MdLogout size={13} className="pr-[1px]" />,
       clickEvent: logout,
@@ -236,7 +260,11 @@ export default function Inventory({ params }) {
     <div className={`flex min-h-screen flex-col items-center justify-between`}>
       {loading && <Loader />}
       <div className="max-w-[1440px] w-full">
-        <Header user={user} Buttons={Buttons} />
+        <Header
+          user={user}
+          Buttons={Buttons}
+          openPreferences={openPreferences}
+        />
 
         <Body
           buttons={Buttons}
@@ -247,6 +275,7 @@ export default function Inventory({ params }) {
           products={products}
           categories={categories}
           fetchInvData={fetchInvData}
+          openPreferences={openPreferences}
         />
         <Footer />
       </div>
@@ -301,6 +330,9 @@ export default function Inventory({ params }) {
           onConfirm={confirmClearData}
           onCancel={closeDialog}
         />
+      )}
+      {preferences_isOpen && (
+        <Preferences CloseForm={clossePreferences} userId={user.id} />
       )}
     </div>
   );

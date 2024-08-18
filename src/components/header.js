@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { MdClose, MdMenu, MdSettings } from "react-icons/md";
 
-export default function Header({ user, Buttons }) {
+export default function Header({ user, Buttons, openPreferences }) {
   const [isOpen, setIsOpen] = useState(false);
 
   // useEffect(() => {
@@ -95,10 +95,14 @@ export default function Header({ user, Buttons }) {
                     )}
                   </div>
                   <div className="flex flex-col absolute w-[190px] bottom-4 gap-1 text-[#404040] ml-6">
-                    <hr className="h-[1px] bg-[#999]" />
+                    <hr className="h-[2px] bg-[#b3b3b3]" />
                     <div className="flex justify-between w-[190px] text-[12px] px-2">
-                      <p className="">Preferences</p>
-                      <button>{<MdSettings className="text-base" />}</button>
+                      <p onClick={openPreferences} className="cursor-pointer">
+                        Preferences
+                      </p>
+                      <button onClick={openPreferences}>
+                        {<MdSettings className="text-base" />}
+                      </button>
                     </div>
                   </div>
                 </div>
