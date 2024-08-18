@@ -12,9 +12,9 @@ import Members from "@/app/home/inventory/[inventoryId]/components/members";
 import {
   MdAdd,
   MdInventory,
-  MdInventory2,
   MdLogout,
   MdPeopleAlt,
+  MdSettings,
 } from "react-icons/md";
 import { useRouter } from "next/navigation";
 import useAuthUser from "@/hooks/authUser";
@@ -218,12 +218,12 @@ export default function Inventory({ params }) {
     Buttons.push(
       {
         btn_name: "Add Product",
-        icon: <FaPlus />,
+        icon: <FaPlus className="pr-[1px] text-[12px] md:text-[14px]" />,
         clickEvent: open_AddItemForm,
       },
       {
         btn_name: "Manage Categories",
-        icon: <FaCogs size={13} className="pr-[1px]" />,
+        icon: <FaCogs className="pr-[1px] text-[14px] md:text-[16px]" />,
         clickEvent: open_manageCategories,
       },
       // {
@@ -233,7 +233,7 @@ export default function Inventory({ params }) {
       // },
       {
         btn_name: "Manage Moderators",
-        icon: <FaUsers size={13} className="pr-[1px]" />,
+        icon: <FaUsers className="pr-[1px] text-[14px] md:text-[16px]" />,
         clickEvent: open_manageModerators,
       }
     );
@@ -241,17 +241,22 @@ export default function Inventory({ params }) {
   Buttons.push(
     {
       btn_name: "Members",
-      icon: <MdPeopleAlt size={13} className="pr-[1px]" />,
+      icon: <MdPeopleAlt className="pr-[1px] text-[14px] md:text-[16px]" />,
       clickEvent: openMembers,
     },
     {
       btn_name: "Other Inventories",
-      icon: <MdInventory size={13} className="pr-[1px]" />,
+      icon: <MdInventory className="pr-[1px] text-[14px] md:text-[16px]" />,
       clickEvent: goToHome,
     },
     {
+      btn_name: "Preferences",
+      icon: <MdSettings className="pr-[1px] text-[14px] md:text-[16px]" />,
+      clickEvent: openPreferences,
+    },
+    {
       btn_name: "Logout",
-      icon: <MdLogout size={13} className="pr-[1px]" />,
+      icon: <MdLogout className="pr-[1px] text-[14px] md:text-[16px]" />,
       clickEvent: logout,
     }
   );
@@ -275,7 +280,6 @@ export default function Inventory({ params }) {
           products={products}
           categories={categories}
           fetchInvData={fetchInvData}
-          openPreferences={openPreferences}
         />
         <Footer />
       </div>

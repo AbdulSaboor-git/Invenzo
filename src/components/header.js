@@ -76,7 +76,8 @@ export default function Header({ user, Buttons, openPreferences }) {
                   <div className="flex flex-col pt-8">
                     {Buttons.map(
                       (btn, index) =>
-                        btn.btn_name !== "Add Product" && (
+                        btn.btn_name !== "Add Product" &&
+                        btn.btn_name !== "Preferences" && (
                           <button
                             onClick={btn.clickEvent}
                             className={`hover:bg-[#dff9f9]  transition-transform duration-200 ease-in-out ${
