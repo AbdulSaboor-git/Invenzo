@@ -110,7 +110,7 @@ export default function Preferences({ CloseForm, userId }) {
             <h1 className="text-base md:text-lg font-bold mb-2">General</h1>
             {generalOptions.map((op, index) => (
               <div className="flex justify-between items-center" key={index}>
-                <label className="cursor-pointer">{op.name}</label>
+                <label className="">{op.name}</label>
                 <div
                   onClick={() => toggleSwitch(op.setter)}
                   className={`relative w-10 h-5 transition duration-200 ease-linear rounded-full ${
@@ -136,7 +136,7 @@ export default function Preferences({ CloseForm, userId }) {
             </h1>
             {productOptions.map((op, index) => (
               <div className="flex justify-between items-center" key={index}>
-                <label className="cursor-pointer">{op.name}</label>
+                <label className="">{op.name}</label>
                 <div
                   onClick={() => toggleSwitch(op.setter)}
                   className={`relative w-10 h-5 transition duration-200 ease-linear rounded-full ${

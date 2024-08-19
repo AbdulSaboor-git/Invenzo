@@ -23,7 +23,7 @@ export default function ProductCard({
   }
   return (
     <div
-      className="w-full bg-white rounded-xl p-4 text-[#404040] shadow-sm shadow-[#00000061] hover:scale-[1.005] transition-transform duration-200 ease-in-out cursor-pointer"
+      className="w-full bg-white rounded-xl p-4 text-[#424242] shadow-sm shadow-[#00000061] hover:scale-[1.005] transition-transform duration-200 ease-in-out cursor-pointer"
       onClick={() => toggleProductDetails(prod.id)}
     >
       <div className="flex justify-between">
@@ -59,20 +59,22 @@ export default function ProductCard({
             style={{ boxShadow: "0 0 10px -2px #00000096" }}
             onClick={handleTableClick}
           >
-            <p className="font-bold py-2">Product Details</p>
-            <table className="w-full text-center text-[13px]">
+            <p className="font-bold py-2 text-center text-teal-700 text-base md:text-[18px]">
+              {prod.name}
+            </p>
+            <table className="w-full text-center text-[12px] md:text-[14px] ">
               <tbody>
-                <tr>
+                {/* <tr>
                   <td className="border border-[#0079796c] p-1 font-semibold min-w-[130px]">
                     Name
                   </td>
                   <td className="border border-[#0079796c] p-1 min-w-[130px]">
                     {prod.name}
                   </td>
-                </tr>
+                </tr> */}
                 {savedPreferences.categ && (
                   <tr>
-                    <td className="border border-[#0079796c] p-1 font-semibold">
+                    <td className="border border-[#0079796c] text-teal-800 p-1 font-semibold">
                       Category
                     </td>
                     <td className="border border-[#0079796c] p-1">
@@ -82,7 +84,7 @@ export default function ProductCard({
                 )}
                 {savedPreferences.pp && (
                   <tr>
-                    <td className="border border-[#0079796c] p-1 font-semibold">
+                    <td className="border border-[#0079796c] text-teal-800 p-1 font-semibold">
                       Purchase Price
                     </td>
                     <td className="border border-[#0079796c] p-1">
@@ -92,7 +94,7 @@ export default function ProductCard({
                 )}
 
                 <tr>
-                  <td className="border border-[#0079796c] p-1 font-semibold">
+                  <td className="border border-[#0079796c] text-teal-800 p-1 font-semibold">
                     Sale Price
                   </td>
                   <td className="border border-[#0079796c] p-1">
@@ -101,7 +103,7 @@ export default function ProductCard({
                 </tr>
                 {prod.govtSalePrice !== null && prod.govtSalePrice !== 0 && (
                   <tr>
-                    <td className="border border-[#0079796c] p-1 font-semibold">
+                    <td className="border border-[#0079796c] text-teal-800 p-1 font-semibold">
                       Govt. Sale Price
                     </td>
                     <td className="border border-[#0079796c] p-1">
@@ -111,10 +113,10 @@ export default function ProductCard({
                 )}
                 {savedPreferences.dateAdd === true && (
                   <tr>
-                    <td className="border border-[#0079796c] p-1 font-semibold">
+                    <td className="border border-[#0079796c] text-teal-800 p-1 font-semibold">
                       Date Added
                     </td>
-                    <td className="border border-[#0079796c] p-1">
+                    <td className="border border-[#0079796c] p-1 min-w-[140px]">
                       {new Date(prod.createdAt).toLocaleString("en-GB", {
                         hour12: true,
                         timeZone: "Asia/Karachi",
@@ -124,7 +126,7 @@ export default function ProductCard({
                 )}
                 {savedPreferences.dateUpdate === true && (
                   <tr>
-                    <td className="border border-[#0079796c] p-1 font-semibold">
+                    <td className="border border-[#0079796c] text-teal-800 p-1 font-semibold">
                       Date Updated
                     </td>
                     <td className="border border-[#0079796c] p-1">
