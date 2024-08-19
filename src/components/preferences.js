@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { FaMoon } from "react-icons/fa";
 import { MdClose, MdSunny } from "react-icons/md";
+import { triggerNotification } from "@/redux/notificationThunk";
+import { useDispatch } from "react-redux";
 
 export default function Preferences({ CloseForm, userId }) {
   const [add_edit_del, set_add_edit_del] = useState(false);
@@ -9,8 +11,17 @@ export default function Preferences({ CloseForm, userId }) {
   const [dateAdd, set_dateAdd] = useState(false);
   const [dateUpdate, set_dateUpdate] = useState(false);
   const [theme, set_theme] = useState(false);
-
   const [tempPreferences, setTempPreferences] = useState({});
+  const dispatch = useDispatch();
+
+  const showMessage = (msg, state) => {
+    dispatch(
+      triggerNotification({
+        msg: msg,
+        success: state,
+      })
+    );
+  };
 
   useEffect(() => {
     document.body.classList.add("no-scroll");
@@ -62,17 +73,18 @@ export default function Preferences({ CloseForm, userId }) {
       theme,
     };
     localStorage.setItem(`preferences_${userId}`, JSON.stringify(preferences));
-    CloseForm(); // Close the form after saving
+    showMessage("Preferences saved", true);
+    CloseForm();
   };
 
   const cancelChanges = () => {
-    set_editdel(tempPreferences.add_edit_del);
+    set_add_edit_del(tempPreferences.add_edit_del);
     set_pp(tempPreferences.pp);
     set_categ(tempPreferences.categ);
     set_dateAdd(tempPreferences.dateAdd);
     set_dateUpdate(tempPreferences.dateUpdate);
     set_theme(tempPreferences.theme);
-    CloseForm(); // Close the form without saving
+    CloseForm();
   };
 
   const toggleSwitch = (setter) => {

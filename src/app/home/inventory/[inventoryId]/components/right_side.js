@@ -70,8 +70,8 @@ export default function RightSide({
 
     setPRODUCTS(filtered);
     set_filterApplied(true);
-    // showMessage("Filters applied successfully", true);
-    // closeFilterCard();
+    showMessage("Filters applied successfully", true);
+    closeFilterCard();
   }, [originalProducts, filterCategoryId, minPrice, maxPrice, products]);
 
   const sortProducts = useCallback(

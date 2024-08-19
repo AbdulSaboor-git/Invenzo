@@ -22,7 +22,7 @@ export default function EditProduct({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [name, setName] = useState(product.name || "");
-  const [categoryId, setCategoryId] = useState(product.category.id || 0);
+  const [categoryId, setCategoryId] = useState(product.category.id || null);
   const [purchasePrice, setPurchasePrice] = useState(
     product.purchasePrice || 0
   );
@@ -58,13 +58,17 @@ export default function EditProduct({
   }
 
   function handlePurchasePriceChange(e) {
-    setPurchasePrice(parseFloat(e.target.value) || 0);
+    setPurchasePrice(parseFloat(e.target.value));
+    setNewSalePrice(parseFloat(e.target.value));
+  }
+
+  function setNewSalePrice(PP) {
+    setSalePrice(Math.round((PP + PP * 0.07) / 10) * 10);
   }
 
   function handleSalePriceChange(e) {
-    setSalePrice(parseFloat(e.target.value) || 0);
+    setSalePrice(parseFloat(e.target.value));
   }
-
   function handleGovtSalePriceChange(e) {
     setGovtSalePrice(parseFloat(e.target.value) || null);
   }
