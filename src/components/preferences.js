@@ -93,11 +93,11 @@ export default function Preferences({ CloseForm, userId }) {
 
   return (
     <div className="flex fixed z-[200] top-0 flex-col p-5 w-screen h-screen items-center justify-center bg-[#00000040] backdrop-blur-[2px]">
-      <div className="pt-4 md:pt-4 p-7 md:p-10 mx-10 z-40 w-full max-w-[400px] md:max-w-[450px] overflow-auto hidden_scroll_bar bg-[#dfeaea] rounded-lg shadow-lg shadow-[#00000040] text-[#404040]">
-        <div className="flex w-full justify-end sticky top-0">
+      <div className="pt-4 md:pt-4 p-7 border-[10px] border-transparent  md:p-10 mx-10 z-40 w-full max-w-[400px] md:max-w-[450px] overflow-auto hidden_scroll_bar bg-[#dfeaea] rounded-lg shadow-lg shadow-[#00000040] text-[#404040]">
+        <div className="flex w-full justify-end ">
           <button
             onClick={CloseForm}
-            className="mr-[-15px] md:mr-[-25px] text-gray-600 flex justify-center items-center size-6 rounded-full hover:bg-red-500 hover:text-white transition-all duration-200"
+            className="mr-[-25px] mt-[-10px] md:mr-[-35px] text-gray-600 flex justify-center items-center size-6 rounded-full hover:bg-red-500 hover:text-white transition-all duration-200"
           >
             <MdClose size={16} />
           </button>
@@ -105,11 +105,14 @@ export default function Preferences({ CloseForm, userId }) {
         <p className="font-bold text-lg md:text-xl pb-4 text-teal-700">
           Preferences
         </p>
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 text-sm md:text-base">
           <div className="flex flex-col gap-1">
-            <h1 className="text-base md:text-lg font-bold mb-2">General</h1>
+            <h1 className=" font-bold mb-2">General</h1>
             {generalOptions.map((op, index) => (
-              <div className="flex justify-between items-center" key={index}>
+              <div
+                className="flex justify-between gap-2 items-center"
+                key={index}
+              >
                 <label className="">{op.name}</label>
                 <div
                   onClick={() => toggleSwitch(op.setter)}
@@ -131,11 +134,12 @@ export default function Preferences({ CloseForm, userId }) {
 
           <hr />
           <div className="flex flex-col gap-1">
-            <h1 className="text-base md:text-lg font-bold mb-2">
-              Product Details
-            </h1>
+            <h1 className="font-bold mb-2">Product Details</h1>
             {productOptions.map((op, index) => (
-              <div className="flex justify-between items-center" key={index}>
+              <div
+                className="flex justify-between gap-2 items-center"
+                key={index}
+              >
                 <label className="">{op.name}</label>
                 <div
                   onClick={() => toggleSwitch(op.setter)}
@@ -157,7 +161,7 @@ export default function Preferences({ CloseForm, userId }) {
 
           <hr />
           <div className="flex justify-between items-center">
-            <h1 className="text-base md:text-lg font-bold">Theme</h1>
+            <h1 className="font-bold">Theme</h1>
             <label className="relative inline-flex items-center cursor-pointer">
               <input
                 type="checkbox"

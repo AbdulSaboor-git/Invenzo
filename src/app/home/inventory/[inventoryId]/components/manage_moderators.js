@@ -159,11 +159,11 @@ export default function Manage_Moderators({
 
   return (
     <div className="flex fixed z-[200] top-0 flex-col p-5 w-screen h-screen items-center justify-center bg-[#00000040] backdrop-blur-[2px] ">
-      <div className="pt-4  md:pt-4 p-7 md:p-10 mx-10 z-40 w-full max-w-[400px] h-[365px] md:h-[395px] md:max-w-[450px] overflow-auto hidden_scroll_bar bg-[#dfeaea] rounded-lg shadow-lg shadow-[#00000040] text-[#404040]">
-        <div className="flex w-full justify-end sticky top-0">
+      <div className="pt-4 md:pt-4 p-7 border-[10px] border-transparent  md:p-10 mx-10 z-40 w-full max-w-[400px] md:max-w-[450px] overflow-auto hidden_scroll_bar bg-[#dfeaea] rounded-lg shadow-lg shadow-[#00000040] text-[#404040]">
+        <div className="flex w-full justify-end ">
           <button
             onClick={CloseForm}
-            className="mr-[-15px] md:mr-[-25px] text-gray-600 flex justify-center items-center size-6  rounded-full hover:bg-red-500 hover:text-white transition-all duration-200"
+            className="mr-[-25px] mt-[-10px] md:mr-[-35px] text-gray-600 flex justify-center items-center size-6 rounded-full hover:bg-red-500 hover:text-white transition-all duration-200"
           >
             <MdClose size={16} />
           </button>

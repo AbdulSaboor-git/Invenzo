@@ -59,7 +59,7 @@ export default function ProductCard({
             style={{ boxShadow: "0 0 10px -2px #00000096" }}
             onClick={handleTableClick}
           >
-            <p className="font-bold py-2 text-center text-teal-700 text-base md:text-[18px]">
+            <p className="font-bold py-2 text-center text-teal-800 text-base md:text-[18px]">
               {prod.name}
             </p>
             <table className="w-full text-center text-[12px] md:text-[14px] ">
