@@ -136,7 +136,9 @@ export default function Login() {
                   }`}
                   type="submit"
                 >
-                  {loading ? "..." : "Login"}
+                  <p className={` ${loading && "animate-bounce"}`}>
+                    {loading ? "..." : "Login"}
+                  </p>
                 </button>
               </div>
             </form>

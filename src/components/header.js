@@ -68,7 +68,7 @@ export default function Header({ user, Buttons, openPreferences }) {
                     src={"/avatar.png"}
                     alt="avatar"
                   />
-                  <p className="max-w-[80px] max-h-[40px] overflow-hidden">
+                  <p className="max-w-[120px] max-h-[40px] overflow-hidden">
                     {user?.firstName} {user?.lastName}
                   </p>
                 </div>
