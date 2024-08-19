@@ -90,7 +90,29 @@ export default function Inventory({ params }) {
     if (user) {
       try {
         setLoadingData(true);
-        const Response = await fetch(`/api/inventory/${invId}`);
+        const Response = await fetch(
+          `/api/inventory/${invId}?userId=${user.id}`
+        );
+
+        if (!Response.ok) {
+          const errorData = await Response.json();
+          if (
+            errorData.message ===
+            "User is not authorized to access this inventory"
+          ) {
+            showMessage(
+              "You are not authorized to access this inventory. Redirecting to Home...",
+              false
+            );
+          } else if (errorData.message === "Invalid inventory ID") {
+            showMessage("Invalid inventory ID. Redirecting to Home...", false);
+          } else {
+            showMessage("Invalid inventory ID. Redirecting to Home...", false);
+          }
+          router.push("/home");
+          return;
+        }
+
         const InvData = await Response.json();
         setProducts_2(InvData.products);
         setCategories_2(InvData.categories);

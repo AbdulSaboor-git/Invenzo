@@ -52,51 +52,70 @@ const handlePost = async (req, res, inventoryId) => {
 
 async function handleGet(req, res, inventoryId) {
   try {
-    // Ensure inventoryId is an integer
+    // Ensure inventoryId is a valid integer
     const id = parseInt(inventoryId, 10);
+    if (isNaN(id) || id <= 0) {
+      return res.status(400).json({ message: "Invalid inventory ID" });
+    }
 
-    const products = await prisma.product.findMany({
+    // Extract userId from request (assuming it's coming from a header or request body)
+    const userId = req.query.userId || req.body.userId || req.headers["userId"];
+    if (!userId) {
+      return res.status(400).json({ message: "User ID is required" });
+    }
+
+    console.log("User ID:", userId, "Inventory ID:", id); // Log to verify values
+
+    // Check if inventory exists
+    const inv = await prisma.inventory.findUnique({
+      where: { id },
+      include: { admin: true },
+    });
+
+    if (!inv) {
+      return res.status(404).json({ message: "Inventory not found" });
+    }
+
+    // Check if the user is either the admin or a moderator of the inventory
+    const isAdmin = inv.adminId === parseInt(userId, 10);
+
+    const isModerator = await prisma.moderator.findFirst({
       where: {
         inventoryId: id,
+        userId: parseInt(userId, 10),
       },
-      include: {
-        category: true, // Include the related category data
-      },
+    });
+
+    if (!isAdmin && !isModerator) {
+      return res
+        .status(403)
+        .json({ message: "User is not authorized to access this inventory" });
+    }
+
+    // Fetch products, categories, and moderators
+    const products = await prisma.product.findMany({
+      where: { inventoryId: id },
+      include: { category: true }, // Include the related category data
     });
 
     const categories = await prisma.category.findMany({
-      where: {
-        inventoryId: id,
-      },
-    });
-
-    const inv = await prisma.inventory.findUnique({
-      where: {
-        id: id,
-      },
-      include: {
-        admin: true,
-      },
+      where: { inventoryId: id },
     });
 
     const moderators = await prisma.moderator.findMany({
-      where: {
-        inventoryId: id,
-      },
-      include: {
-        user: true, // Include the related category data
-      },
-      orderBy: {
-        userId: "asc",
-      },
+      where: { inventoryId: id },
+      include: { user: true }, // Include the related user data
+      orderBy: { userId: "asc" },
     });
 
+    // Sort categories and products alphabetically
     categories.sort((a, b) =>
       a.name.localeCompare(b.name, undefined, { sensitivity: "base" })
     );
     products.sort((a, b) =>
       a.name.localeCompare(b.name, undefined, { sensitivity: "base" })
     );
+
     return res.status(200).json({ products, categories, moderators, inv });
   } catch (error) {
     console.error(error);

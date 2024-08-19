@@ -80,6 +80,7 @@ export default function HomePage() {
         const myInvResponse = await fetch(`/api/inventory?adminId=${user.id}`);
         const myInvData = await myInvResponse.json();
         setMyInventories(myInvData.inventories);
+        localStorage.setItem("myInv", JSON.stringify(myInvData.inventories));
 
         // Fetch inventories where the user is a moderator
         const modInvResponse = await fetch(
@@ -87,6 +88,7 @@ export default function HomePage() {
         );
         const modInvData = await modInvResponse.json();
         setModeratedInventories(modInvData.inventories);
+        localStorage.setItem("modInv", JSON.stringify(modInvData.inventories));
       } catch (error) {
         console.error("Error fetching inventories:", error);
       } finally {
