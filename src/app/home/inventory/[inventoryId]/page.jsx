@@ -129,7 +129,9 @@ export default function Inventory({ params }) {
   const refreshInvData = async () => {
     if (user) {
       try {
-        const Response = await fetch(`/api/inventory/${invId}`);
+        const Response = await fetch(
+          `/api/inventory/${invId}?userId=${user.id}`
+        );
         const InvData = await Response.json();
         setProducts_2(InvData.products);
         setCategories_2(InvData.categories);
