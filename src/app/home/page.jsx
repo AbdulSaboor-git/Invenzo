@@ -35,20 +35,27 @@ export default function HomePage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const [preferences_isOpen, set_preferences_IsOpen] = useState(false);
-  const savedPreferences = JSON.parse(
-    localStorage.getItem(`preferences_${user.id}`)
-  );
-  if (!savedPreferences) {
-    const preferences = {
-      add_edit_del: false,
-      pp: false,
-      categ: false,
-      dateAdd: false,
-      dateUpdate: false,
-      theme: false,
-    };
-    localStorage.setItem(`preferences_${user.id}`, JSON.stringify(preferences));
-  }
+  useEffect(() => {
+    if (typeof window !== "undefined" && user) {
+      const savedPreferences = JSON.parse(
+        localStorage.getItem(`preferences_${user.id}`)
+      );
+      if (!savedPreferences) {
+        const preferences = {
+          add_edit_del: true,
+          pp: true,
+          categ: true,
+          dateAdd: true,
+          dateUpdate: true,
+          theme: true,
+        };
+        localStorage.setItem(
+          `preferences_${user.id}`,
+          JSON.stringify(preferences)
+        );
+      }
+    }
+  }, [user]);
 
   const openPreferences = () => {
     set_preferences_IsOpen(true);

@@ -5,12 +5,12 @@ import { triggerNotification } from "@/redux/notificationThunk";
 import { useDispatch } from "react-redux";
 
 export default function Preferences({ CloseForm, userId }) {
-  const [add_edit_del, set_add_edit_del] = useState(false);
-  const [pp, set_pp] = useState(false);
-  const [categ, set_categ] = useState(false);
-  const [dateAdd, set_dateAdd] = useState(false);
-  const [dateUpdate, set_dateUpdate] = useState(false);
-  const [theme, set_theme] = useState(false);
+  const [add_edit_del, set_add_edit_del] = useState(true);
+  const [pp, set_pp] = useState(true);
+  const [categ, set_categ] = useState(true);
+  const [dateAdd, set_dateAdd] = useState(true);
+  const [dateUpdate, set_dateUpdate] = useState(true);
+  const [theme, set_theme] = useState(true);
   const [tempPreferences, setTempPreferences] = useState({});
   const dispatch = useDispatch();
 
