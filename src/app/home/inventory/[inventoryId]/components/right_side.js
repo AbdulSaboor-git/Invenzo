@@ -30,9 +30,27 @@ export default function RightSide({
   const [sortId, setSortId] = useState("name");
   const [sortOrder, setSortOrder] = useState("asc");
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedSortOrder = JSON.parse(localStorage.getItem("sortOrder"));
+      const savedSortId = JSON.parse(localStorage.getItem("sortId"));
+
+      if (savedSortId && savedSortOrder) {
+        setSortId(savedSortId);
+        setSortOrder(savedSortOrder);
+      }
+    }
+  }, [sortId, sortOrder]);
+
   const setSortValues = (id, order) => {
     setSortId(id);
     setSortOrder(order);
+    localStorage.setItem("sortId", JSON.stringify(id));
+    localStorage.setItem("sortOrder", JSON.stringify(order));
+  };
+
+  const getSortData = () => {
+    setJSON.parse(localStorage.getItem("products"));
   };
 
   const dispatch = useDispatch();
