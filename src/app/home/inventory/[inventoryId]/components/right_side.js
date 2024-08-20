@@ -1,4 +1,3 @@
-"use client";
 import React, { useState, useEffect, useCallback } from "react";
 import { MdClose } from "react-icons/md";
 import { FaFilter, FaSort } from "react-icons/fa";
@@ -28,10 +27,18 @@ export default function RightSide({
   const [filterCategoryId, setFilterCategoryId] = useState("");
   const [PRODUCTS, setPRODUCTS] = useState([]);
   const [originalProducts, setOriginalProducts] = useState([]);
-  const Dispatch = useDispatch();
+  const [sortId, setSortId] = useState("name");
+  const [sortOrder, setSortOrder] = useState("asc");
+
+  const setSortValues = (id, order) => {
+    setSortId(id);
+    setSortOrder(order);
+  };
+
+  const dispatch = useDispatch();
 
   const showMessage = (msg, state) => {
-    Dispatch(
+    dispatch(
       triggerNotification({
         msg: msg,
         success: state,
@@ -44,57 +51,30 @@ export default function RightSide({
     setPRODUCTS(products);
   }, [products]);
 
-  const ApplyFilter = useCallback(() => {
+  const sortProducts = useCallback(() => {
     if (!products || products.length === 0) {
       setPRODUCTS([]);
       return;
     }
 
-    if (
-      minPrice === 0 &&
-      maxPrice === (Infinity || "") &&
-      filterCategoryId === ""
-    ) {
-      showMessage("No filter criteria entered", false);
-      setPRODUCTS(originalProducts);
-      return;
-    }
-
-    const filtered = originalProducts.filter((prod) => {
-      return (
-        (minPrice ? prod.salePrice >= minPrice : true) &&
-        (maxPrice ? prod.salePrice <= maxPrice : true) &&
-        (filterCategoryId ? prod.categoryId == filterCategoryId : true)
-      );
+    const sorted = [...products].sort((a, b) => {
+      if (sortId === "salePrice") {
+        return sortOrder === "asc"
+          ? parseFloat(a.salePrice) - parseFloat(b.salePrice)
+          : parseFloat(b.salePrice) - parseFloat(a.salePrice);
+      } else {
+        return sortOrder === "asc"
+          ? a[sortId].localeCompare(b[sortId])
+          : b[sortId].localeCompare(a[sortId]);
+      }
     });
 
-    setPRODUCTS(filtered);
-    set_filterApplied(true);
-    showMessage("Filters applied successfully", true);
-    closeFilterCard();
-  }, [originalProducts, filterCategoryId, minPrice, maxPrice, products]);
+    setPRODUCTS(sorted);
+  }, [products, sortId, sortOrder]);
 
-  const sortProducts = useCallback(
-    (key, order) => {
-      if (!products || products.length === 0) {
-        setPRODUCTS([]);
-        return;
-      }
-      const sorted = [...PRODUCTS].sort((a, b) => {
-        if (key === "salePrice") {
-          return order === "asc"
-            ? parseFloat(a[key]) - parseFloat(b[key])
-            : parseFloat(b[key]) - parseFloat(a[key]);
-        } else {
-          return order === "asc"
-            ? a[key].localeCompare(b[key])
-            : b[key].localeCompare(a[key]);
-        }
-      });
-      setPRODUCTS(sorted);
-    },
-    [PRODUCTS, products]
-  );
+  useEffect(() => {
+    sortProducts();
+  }, [sortId, sortOrder, products]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -113,6 +93,34 @@ export default function RightSide({
       document.body.removeEventListener("click", handleClickOutside);
     };
   }, [sortCard_isOpen, filterCard_isOpen]);
+
+  const ApplyFilter = useCallback(() => {
+    if (!products || products.length === 0) {
+      setPRODUCTS([]);
+      return;
+    }
+
+    if (minPrice === 0 && maxPrice === Infinity && filterCategoryId === "") {
+      showMessage("No filter criteria entered", false);
+      setPRODUCTS(originalProducts);
+      return;
+    }
+
+    const filtered = originalProducts.filter((prod) => {
+      return (
+        (minPrice ? prod.salePrice >= minPrice : true) &&
+        (maxPrice ? prod.salePrice <= maxPrice : true) &&
+        (filterCategoryId
+          ? prod.categoryId === parseInt(filterCategoryId)
+          : true)
+      );
+    });
+
+    setPRODUCTS(filtered);
+    set_filterApplied(true);
+    showMessage("Filters applied successfully", true);
+    closeFilterCard();
+  }, [originalProducts, filterCategoryId, minPrice, maxPrice, products]);
 
   const clearFilter = () => {
     setMinPrice(0);
@@ -137,12 +145,6 @@ export default function RightSide({
   };
 
   const closeFilterCard = () => {
-    console.log("filter:" + filterApplied);
-    // if (!filterApplied) {
-    //   setMinPrice(0);
-    //   setMaxPrice(Infinity);
-    //   setFilterCategoryId("");
-    // }
     setFilterCard_isOpen(false);
   };
 
@@ -191,7 +193,7 @@ export default function RightSide({
           />
         </div>
 
-        {sortCard_isOpen && <Sort_card sortProducts={sortProducts} />}
+        {sortCard_isOpen && <Sort_card setSortValues={setSortValues} />}
         {filterCard_isOpen && (
           <Filter_card
             categories={categories}

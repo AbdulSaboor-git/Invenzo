@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import Body from "./components/body";
@@ -19,7 +19,7 @@ import {
 import { useRouter } from "next/navigation";
 import useAuthUser from "@/hooks/authUser";
 import Loader from "@/components/loader";
-import { FaPlus, FaCogs, FaTrashAlt, FaUsers } from "react-icons/fa";
+import { FaPlus, FaCogs, FaUsers } from "react-icons/fa";
 import { setProducts } from "@/redux/products";
 import { setCategories } from "@/redux/categories";
 import Confirmation_dialogue from "@/components/confirmation_dialogue";
@@ -191,11 +191,13 @@ export default function Inventory({ params }) {
   };
 
   useEffect(() => {
-    localStorage.setItem("products", JSON.stringify(products));
-    localStorage.setItem("categories", JSON.stringify(categories));
+    // localStorage.setItem("products", JSON.stringify(products));
+    // localStorage.setItem("categories", JSON.stringify(categories));
+    // localStorage.setItem("moderators", JSON.stringify(moderators));
+
     dispatch(setProducts(products));
     dispatch(setCategories(categories));
-  }, [dispatch, categories, products]);
+  }, [categories, products, moderators]);
 
   const open_manageCategories = () => {
     set_manageCategories_isOpen(true);
