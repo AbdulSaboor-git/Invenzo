@@ -46,7 +46,7 @@ export default function Footer() {
             </div>
           </div>
         </div>
-        <hr className="h-[2px] w-full bg-[#999]" />
+        <hr className="h-[1px] w-full bg-[#999] border-none" />
         <div className="flex flex-col md:flex-row justify-between p-2 pb-0 text-[10px] md:text-[12px] text-[#404040] text-center md:text-left">
           <p>The MSA Super Store™</p>
           <p>Copyright © 2024 - All Rights Reserved</p>

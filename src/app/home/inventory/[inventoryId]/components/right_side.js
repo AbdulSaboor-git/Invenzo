@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { MdClose } from "react-icons/md";
 import { FaFilter, FaSort } from "react-icons/fa";
 import Product_card from "./product_card";
@@ -25,6 +25,9 @@ export default function RightSide({
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(Infinity);
   const [filterCategoryId, setFilterCategoryId] = useState("");
+  const [AppliedMinPrice, setAppliedMinPrice] = useState(0);
+  const [AppliedMaxPrice, setAppliedMaxPrice] = useState(Infinity);
+  const [AppliedFilterCategoryId, setAppliedFilterCategoryId] = useState("");
   const [PRODUCTS, setPRODUCTS] = useState([]);
   const [originalProducts, setOriginalProducts] = useState([]);
   const [sortId, setSortId] = useState("name");
@@ -42,15 +45,17 @@ export default function RightSide({
     }
   }, [sortId, sortOrder]);
 
+  const setAppliedFilterValues = () => {
+    setAppliedMinPrice(minPrice);
+    setAppliedMaxPrice(maxPrice);
+    setAppliedFilterCategoryId(filterCategoryId);
+  };
+
   const setSortValues = (id, order) => {
     setSortId(id);
     setSortOrder(order);
     localStorage.setItem("sortId", JSON.stringify(id));
     localStorage.setItem("sortOrder", JSON.stringify(order));
-  };
-
-  const getSortData = () => {
-    setJSON.parse(localStorage.getItem("products"));
   };
 
   const dispatch = useDispatch();
@@ -95,6 +100,10 @@ export default function RightSide({
   }, [sortId, sortOrder, products]);
 
   useEffect(() => {
+    filterApplied && reApplyFilter();
+  }, [filterApplied]);
+
+  useEffect(() => {
     const handleClickOutside = (event) => {
       if (
         (sortCard_isOpen && !event.target.closest(".sortCard")) ||
@@ -102,6 +111,7 @@ export default function RightSide({
       ) {
         closeSortCard();
         closeFilterCard();
+        setFilterFields();
       }
     };
 
@@ -119,6 +129,10 @@ export default function RightSide({
     }
 
     if (minPrice === 0 && maxPrice === Infinity && filterCategoryId === "") {
+      if (filterApplied) {
+        clearFilter();
+        return;
+      }
       showMessage("No filter criteria entered", false);
       setPRODUCTS(originalProducts);
       return;
@@ -133,21 +147,58 @@ export default function RightSide({
           : true)
       );
     });
-
     setPRODUCTS(filtered);
+    setAppliedFilterValues();
     set_filterApplied(true);
     showMessage("Filters applied successfully", true);
     closeFilterCard();
-  }, [originalProducts, filterCategoryId, minPrice, maxPrice, products]);
+  }, [
+    originalProducts,
+    filterCategoryId,
+    minPrice,
+    maxPrice,
+    products,
+    filterApplied,
+  ]);
 
-  const clearFilter = () => {
+  const reApplyFilter = () => {
+    const filtered = originalProducts.filter((prod) => {
+      return (
+        (minPrice ? prod.salePrice >= minPrice : true) &&
+        (maxPrice ? prod.salePrice <= maxPrice : true) &&
+        (filterCategoryId
+          ? prod.categoryId === parseInt(filterCategoryId)
+          : true)
+      );
+    });
+
+    closeFilterCard();
+    setPRODUCTS(filtered);
+  };
+
+  const clearFilter = async () => {
     setMinPrice(0);
     setMaxPrice(Infinity);
     setFilterCategoryId("");
+    setAppliedMinPrice(0);
+    setAppliedMaxPrice(Infinity);
+    setAppliedFilterCategoryId("");
     setPRODUCTS(originalProducts);
-    set_filterApplied(false);
     showMessage("Filters cleared successfully", true);
     closeFilterCard();
+    set_filterApplied(false);
+  };
+
+  const setFilterFields = () => {
+    if (!filterApplied) {
+      setMinPrice(0);
+      setMaxPrice(Infinity);
+      setFilterCategoryId("");
+    } else {
+      setMinPrice(AppliedMinPrice);
+      setMaxPrice(AppliedMaxPrice);
+      setFilterCategoryId(AppliedFilterCategoryId);
+    }
   };
 
   const toggleSortCard = () => {
@@ -180,9 +231,40 @@ export default function RightSide({
     setExpandedProductId((prevId) => (prevId === productId ? null : productId));
   };
 
+  const [isSticky, setIsSticky] = useState(false);
+  const placeholderRef = useRef(null);
+  const headerRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsSticky(!entry.isIntersecting);
+      },
+      { threshold: [1] }
+    );
+
+    if (placeholderRef.current) {
+      observer.observe(placeholderRef.current);
+    }
+
+    return () => {
+      if (placeholderRef.current) {
+        observer.unobserve(placeholderRef.current);
+      }
+    };
+  }, []);
+
   return (
-    <div className="flex flex-col w-full z-0">
-      <div className="flex gap-3 md:gap-4 pb-4 items-center text-[#404040] px-0 md:px-2 relative">
+    <div className="flex flex-col w-full">
+      <div ref={placeholderRef} className="mt-[-9px]"></div>
+      <div
+        ref={headerRef}
+        className={`flex transition-all -mx-6 px-6 p-4 pt-0 z-20  gap-1 md:gap-4 items-center text-[#404040]  md:mx-0 md:top-0 md:pb-4 md:bg-transparent md:relative md:backdrop-blur-none md:pt-0 md:px-2 ${
+          isSticky
+            ? "fixed top-[86.5px] w-full backdrop-blur-[10px] bg-[#23b2b26a] "
+            : "relative "
+        }`}
+      >
         <div className="relative w-full">
           <input
             type="text"
@@ -198,20 +280,26 @@ export default function RightSide({
             />
           )}
         </div>
-        <div className="relative text-[22px] md:text-[25px] flex items-center justify-center gap-2 md:gap-3">
+        <div className="relative text-[32px] text-teal-900 md:text-[35px] flex items-center justify-between gap-[2px] md:gap-3">
           <FaFilter
             onClick={toggleFilterCard}
-            className={`cursor-pointer ${
-              filterApplied ? "text-red-500" : "text-teal-800"
+            className={` py-[6px] cursor-pointer hover:text-teal-800 ${
+              filterApplied && "text-red-500"
             }`}
           />
           <FaSort
             onClick={toggleSortCard}
-            className="cursor-pointer text-teal-800 "
+            className=" py-[6px] cursor-pointer hover:text-teal-800"
           />
         </div>
 
-        {sortCard_isOpen && <Sort_card setSortValues={setSortValues} />}
+        {sortCard_isOpen && (
+          <Sort_card
+            setSortValues={setSortValues}
+            sortId={sortId}
+            sortOrder={sortOrder}
+          />
+        )}
         {filterCard_isOpen && (
           <Filter_card
             categories={categories}
@@ -224,11 +312,16 @@ export default function RightSide({
             minPrice={minPrice}
             maxPrice={maxPrice}
             filterCategoryId={filterCategoryId}
+            onMouseLeave={closeFilterCard}
           />
         )}
       </div>
 
-      <div className="flex flex-col gap-[6px] w-full pb-1 px-0 md:px-2 md:max-h-[80vh] md:overflow-auto hidden_scroll_bar">
+      <div
+        className={`flex flex-col gap-[6px] w-full pb-1 px-0 md:px-2 md:max-h-[80vh] md:overflow-auto hidden_scroll_bar ${
+          isSticky ? "pt-[170px] md:p-0" : ""
+        }`}
+      >
         {loadingData ? (
           <div className="text-gray-300 text-xs pl-2">
             <p>Loading...</p>

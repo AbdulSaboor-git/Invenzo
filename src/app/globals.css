@@ -4,15 +4,15 @@
 
 :root {
   --foreground-color: #fff;
-  --background-dark-color: #00b7b7; /* Dark Teal */
-  --background-light-color: #e1fafa; /* Light Teal */
+  --background-dark-color: #00a5a5; /* Dark Teal */
+  --background-light-color: #b7ffff; /* Light Teal */
 }
 
 @media (prefers-color-scheme: light) {
   :root {
     --foreground-color: #fff;
-    --background-dark-color: #00b7b7; /* Dark Teal */
-    --background-light-color: #e1fafa; /* Light Teal */
+    --background-dark-color: #00a5a5; /* Dark Teal */
+    --background-light-color: #b7ffff; /* Light Teal */
   }
 }
 

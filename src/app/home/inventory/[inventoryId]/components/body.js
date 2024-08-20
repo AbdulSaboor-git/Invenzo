@@ -86,7 +86,7 @@ export default function Body({
   };
 
   return (
-    <div className="flex flex-col items-center p-6 z-[200]">
+    <div className="flex flex-col items-center p-6 pt-2 z-[200]">
       <div className="flex justify-center w-full max-w-[1200px] gap-4">
         <div className="hidden md:flex-[2] md:block">
           <Left_Side buttons={buttons} />
