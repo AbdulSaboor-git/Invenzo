@@ -159,8 +159,8 @@ export default function Header({ user, Buttons, openPreferences }) {
             >
               <div className="flex ">
                 <img
-                  className={`size-[90px] md:size-[130px] transition-all ${
-                    isSticky ? "size-[50px]" : ""
+                  className={` md:size-[130px] transition-all ${
+                    isSticky ? "size-[50px]" : "size-[90px]"
                   }`}
                   src="/logo.png"
                   alt="logo"
@@ -175,8 +175,8 @@ export default function Header({ user, Buttons, openPreferences }) {
               </div>
               <div className="flex flex-col items-center">
                 <p
-                  className={`font-extrabold text-[14px] md:text-[16px] text-[#272727] ${
-                    isSticky && "text-xs"
+                  className={`font-extrabold  md:text-[16px] text-[#272727] ${
+                    isSticky ? "text-xs" : "text-[14px]"
                   }`}
                 >
                   Mian Shakeel Ahmad
