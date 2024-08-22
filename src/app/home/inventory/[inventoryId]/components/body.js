@@ -96,7 +96,6 @@ export default function Body({
           <Right_Side
             products={products}
             categories={categories}
-            inventoryId={inventoryId}
             role={role}
             openEditForm={openEditForm}
             handleDeleteClick={openDialog}

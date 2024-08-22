@@ -8,7 +8,6 @@ import { useDispatch } from "react-redux";
 import { triggerNotification } from "@/redux/notificationThunk";
 
 export default function RightSide({
-  inventoryId,
   role,
   openEditForm,
   handleDeleteClick,
