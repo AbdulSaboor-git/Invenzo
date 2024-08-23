@@ -57,12 +57,18 @@ export default function Header({ user, Buttons, openPreferences }) {
 
   return (
     <div>
-      <div ref={placeholderRef} className=""></div>
-
+      <div ref={placeholderRef} className="absolute mt-[85px]"></div>
       <div
         className={`${
           isSticky
-            ? "fixed top-0 transition-all left-0 right-0 z-[40] backdrop-blur-[10px] bg-[#23b2b26a] md:backdrop-blur-none md:bg-transparent md:relative"
+            ? " transition-all duration-300 ease-in-out fixed top-0 h-[137px] backdrop-blur-[10px] bg-[#23b2b26a] w-full z-[20]  md:hidden"
+            : "bg-[#23b2b2] "
+        }`}
+      ></div>
+      <div
+        className={`${
+          isSticky
+            ? "fixed transition-all duration-300 ease-in-out top-0 left-0 right-0 z-[40]  md:relative"
             : "relative"
         }`}
       >
@@ -75,10 +81,10 @@ export default function Header({ user, Buttons, openPreferences }) {
         <div className="relative flex justify-center items-center p-4 pt-10 z-50">
           {(user || Buttons) && (
             <>
-              <div className="absolute left-4 top-4 md:hidden">
+              <div className=" fixed left-4 top-4 md:hidden">
                 <button
                   onClick={openSidebar}
-                  className="text-2xl text-teal-900"
+                  className=" text-2xl text-teal-900"
                 >
                   <MdMenu />
                 </button>
@@ -151,7 +157,7 @@ export default function Header({ user, Buttons, openPreferences }) {
             className="flex flex-col justify-center w-full max-w-[1200px] items-center"
           >
             <div
-              className={`flex items-center justify-center gap-2 ${
+              className={`flex transition-all ease-in-out duration-300 items-center justify-center gap-2 ${
                 isSticky
                   ? "flex-row w-full gap-5 -mt-5 md:flex-col"
                   : "flex-col "
@@ -159,8 +165,8 @@ export default function Header({ user, Buttons, openPreferences }) {
             >
               <div className="flex ">
                 <img
-                  className={` md:size-[130px] transition-all ${
-                    isSticky ? "size-[50px]" : "size-[90px]"
+                  className={` md:size-[130px] transition-all ease-in-out duration-0  ${
+                    isSticky ? "size-[50px] " : " size-[90px]"
                   }`}
                   src="/logo.png"
                   alt="logo"
@@ -175,14 +181,14 @@ export default function Header({ user, Buttons, openPreferences }) {
               </div>
               <div className="flex flex-col items-center">
                 <p
-                  className={`font-extrabold  md:text-[16px] text-[#272727] ${
+                  className={`font-extrabold transition-all duration-300 ease-in-out  md:text-[16px] text-[#272727] ${
                     isSticky ? "text-xs" : "text-[14px]"
                   }`}
                 >
                   Mian Shakeel Ahmad
                 </p>
                 <p
-                  className={`font-normal text-[12px] md:text-[14px] text-[#404040] ${
+                  className={`font-normal text-[12px] transition-all duration-300 ease-in-out md:text-[14px] text-[#404040] ${
                     isSticky && "text-[10px]"
                   }`}
                 >

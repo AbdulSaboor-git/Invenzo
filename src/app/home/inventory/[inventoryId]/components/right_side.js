@@ -255,13 +255,13 @@ export default function RightSide({
 
   return (
     <div className="flex flex-col w-full">
-      <div ref={placeholderRef} className="mt-[-9px]"></div>
+      <div ref={placeholderRef} className="absolute mt-[70px]"></div>
       <div
         ref={headerRef}
-        className={`flex transition-all -mx-6 px-6 p-4 pt-0 z-20  gap-1 md:gap-4 items-center text-[#404040]  md:mx-0 md:top-0 md:pb-4 md:bg-transparent md:relative md:backdrop-blur-none md:pt-0 md:px-2 ${
+        className={`flex -mx-6 px-6 p-4 pt-0 z-20  gap-1 md:gap-4 transition-all duration-300 ease-in-out items-center text-[#404040]  md:mx-0 md:top-0 md:pb-4  md:relative md:pt-0 md:px-2 ${
           isSticky
-            ? "fixed top-[86.5px] w-full backdrop-blur-[10px] bg-[#23b2b26a] "
-            : "relative "
+            ? "fixed translate-y-[-30px] top-[116.5px]  w-full "
+            : "relative"
         }`}
       >
         <div className="relative w-full">
@@ -269,7 +269,7 @@ export default function RightSide({
             type="text"
             value={searchValue}
             onChange={handleSearchChange}
-            className="w-full h-10 md:h-11 rounded-full text-[12px] md:text-[14px] pl-4 pr-10"
+            className="w-full h-9 md:h-10 rounded-full text-[12px] md:text-[14px] pl-4 pr-10"
             placeholder="Search..."
           />
           {searchValue && (
@@ -315,11 +315,13 @@ export default function RightSide({
           />
         )}
       </div>
-
       <div
-        className={`flex flex-col gap-[6px] w-full pb-1 px-0 md:px-2 md:max-h-[80vh] md:overflow-auto hidden_scroll_bar ${
-          isSticky ? "pt-[170px] md:p-0" : ""
+        className={`h-[245px] transition-all md:h-0 ${
+          isSticky ? "block" : "hidden"
         }`}
+      ></div>
+      <div
+        className={`flex flex-col gap-[6px] w-full pb-1 px-0 md:px-2 md:max-h-[80vh] md:overflow-auto hidden_scroll_bar`}
       >
         {loadingData ? (
           <div className="text-gray-300 text-xs pl-2">
