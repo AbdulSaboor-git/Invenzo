@@ -283,7 +283,7 @@ export default function RightSide({
           <FaFilter
             onClick={toggleFilterCard}
             className={` py-[6px] cursor-pointer hover:text-teal-800 ${
-              filterApplied && "text-red-500"
+              filterApplied && "text-red-500 hover:text-red-600"
             }`}
           />
           <FaSort
