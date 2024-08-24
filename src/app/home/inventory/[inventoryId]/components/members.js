@@ -11,16 +11,16 @@ export default function Members({ CloseForm, moderators, inv, user }) {
   }, []);
   return (
     <div className="flex fixed z-[200] top-0 flex-col p-5 w-screen h-screen items-center justify-center bg-[#00000040] backdrop-blur-[2px] ">
-      <div className="pt-4  md:pt-4 p-7 md:p-10 mx-10 z-40 w-full max-w-[420px] h-[350px] md:h-[380px] md:max-w-[470px] overflow-auto hidden_scroll_bar bg-teal-700 rounded-lg shadow-lg shadow-[#00000040] text-[#404040]">
+      <div className="pt-4  md:pt-4 p-7 md:p-10 mx-10 z-40 w-full max-w-[420px] h-[350px] md:h-[380px] md:max-w-[470px] overflow-auto hidden_scroll_bar bg-[#99d2cf] rounded-lg shadow-lg shadow-[#00000040] text-[#404040]">
         <div className="flex w-full justify-end sticky top-0">
           <button
             onClick={CloseForm}
-            className="mr-[-15px] md:mr-[-25px] text-white flex justify-center items-center size-6  rounded-full hover:bg-red-500 hover:text-white transition-all duration-200"
+            className="mr-[-15px] md:mr-[-25px] text-gray-500 flex justify-center items-center size-6  rounded-full hover:bg-red-500 hover:text-white transition-all duration-200"
           >
             <MdClose size={16} />
           </button>
         </div>
-        <h1 className="font-bold text-lg md:text-xl pb-4 text-white">
+        <h1 className="font-bold text-lg md:text-xl pb-4 text-teal-700">
           Inventory Members
         </h1>
         <div className="flex flex-col gap-4 shadow-inner shadow-black p-6 h-[230px] md:h-[250px] bg-[#dfeaea] overflow-auto hidden_scroll_bar">
