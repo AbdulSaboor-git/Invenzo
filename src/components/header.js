@@ -90,7 +90,7 @@ export default function Header({ user, Buttons, openPreferences }) {
                 </button>
               </div>
               <div
-                className={` md:hidden fixed top-0 left-[-10px] w-[230px] h-screen rounded-e-[30px] sidebar bg-white transition-transform duration-300 ease-in-out ${
+                className={` md:hidden fixed top-0 left-[-10px] w-[230px] h-full rounded-e-[30px] sidebar bg-white transition-transform duration-300 ease-in-out ${
                   isOpen ? "translate-x-0" : "-translate-x-[240px]"
                 }`}
                 style={{ boxShadow: "0 0 20px -5px #404040" }}
@@ -160,13 +160,13 @@ export default function Header({ user, Buttons, openPreferences }) {
               className={`flex transition-all ease-in-out duration-300 items-center justify-center gap-2 ${
                 isSticky
                   ? "flex-row w-full gap-5 -mt-5 md:flex-col"
-                  : "flex-col "
+                  : "flex-col md:mt-0"
               }`}
             >
               <div className="flex ">
                 <img
                   className={` md:size-[130px] transition-all ease-in-out duration-0  ${
-                    isSticky ? "size-[50px] " : " size-[90px]"
+                    isSticky ? "size-[50px]" : "size-[90px]"
                   }`}
                   src="/logo.png"
                   alt="logo"
@@ -189,7 +189,7 @@ export default function Header({ user, Buttons, openPreferences }) {
                 </p>
                 <p
                   className={`font-normal text-[12px] transition-all duration-300 ease-in-out md:text-[14px] text-[#404040] ${
-                    isSticky && "text-[10px]"
+                    isSticky ? "text-[10px]" : "text-[12px]"
                   }`}
                 >
                   Super Store
