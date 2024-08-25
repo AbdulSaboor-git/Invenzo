@@ -306,6 +306,8 @@ export default function Inventory({ params }) {
           user={user}
           Buttons={Buttons}
           openPreferences={openPreferences}
+          inv={invInfo}
+          dockOnTop={true}
         />
 
         <Body

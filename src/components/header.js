@@ -2,7 +2,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { MdClose, MdMenu, MdSettings } from "react-icons/md";
 
-export default function Header({ user, Buttons, openPreferences }) {
+export default function Header({
+  user,
+  Buttons,
+  openPreferences,
+  inv,
+  dockOnTop,
+}) {
   const [isOpen, setIsOpen] = useState(false);
 
   // useEffect(() => {
@@ -34,6 +40,7 @@ export default function Header({ user, Buttons, openPreferences }) {
   // }, [isOpen]);
 
   const [isSticky, setIsSticky] = useState(false);
+
   const placeholderRef = useRef(null);
 
   useEffect(() => {
@@ -60,14 +67,14 @@ export default function Header({ user, Buttons, openPreferences }) {
       <div ref={placeholderRef} className="absolute mt-[85px]"></div>
       <div
         className={`${
-          isSticky
+          isSticky && dockOnTop
             ? " transition-all duration-300 ease-in-out fixed top-0 h-[137px] backdrop-blur-[10px] bg-[#23b2b26a] w-full z-[20]  md:hidden"
             : "bg-[#23b2b2] "
         }`}
       ></div>
       <div
         className={`${
-          isSticky
+          isSticky && dockOnTop
             ? "fixed transition-all duration-300 ease-in-out top-0 left-0 right-0 z-[40]  md:relative"
             : "relative"
         }`}
@@ -157,16 +164,16 @@ export default function Header({ user, Buttons, openPreferences }) {
             className="flex flex-col justify-center w-full max-w-[1200px] items-center"
           >
             <div
-              className={`flex transition-all ease-in-out duration-300 items-center justify-center gap-2 ${
-                isSticky
-                  ? "flex-row w-full gap-5 -mt-5 md:flex-col"
+              className={`flex transition-all ease-in-out duration-300 items-center justify-center gap-1 ${
+                isSticky && dockOnTop
+                  ? "flex-row w-full gap-3 -mt-5 md:flex-col"
                   : "flex-col md:mt-0"
               }`}
             >
               <div className="flex ">
                 <img
-                  className={` md:size-[130px] transition-all ease-in-out duration-0  ${
-                    isSticky ? "size-[50px]" : "size-[90px]"
+                  className={` md:h-[130px] transition-all ease-in-out duration-0  ${
+                    isSticky && dockOnTop ? "h-[50px]" : "h-[90px]"
                   }`}
                   src="/logo.png"
                   alt="logo"
@@ -181,19 +188,17 @@ export default function Header({ user, Buttons, openPreferences }) {
               </div>
               <div className="flex flex-col items-center">
                 <p
-                  className={`font-extrabold transition-all duration-300 ease-in-out  md:text-[16px] text-[#272727] ${
-                    isSticky ? "text-xs" : "text-[14px]"
+                  className={`font-extrabold transition-all duration-300 ease-in-out  md:text-[16px] text-teal-950 ${
+                    isSticky && dockOnTop ? "text-xs" : "text-[14px]"
                   }`}
                 >
-                  Mian Shakeel Ahmad
+                  {inv?.name}
                 </p>
                 <p
                   className={`font-normal text-[12px] transition-all duration-300 ease-in-out md:text-[14px] text-[#404040] ${
-                    isSticky ? "text-[10px]" : "text-[12px]"
+                    isSticky && dockOnTop ? "text-[10px]" : "text-[12px]"
                   }`}
-                >
-                  Super Store
-                </p>
+                ></p>
               </div>
             </div>
           </div>
