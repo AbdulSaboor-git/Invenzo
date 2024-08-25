@@ -145,7 +145,6 @@ export default function Inventory({ params }) {
 
   const deleteAll = async () => {
     try {
-      // Validate the inventoryId
       if (!invId) {
         alert("Invalid inventory ID");
         return;
