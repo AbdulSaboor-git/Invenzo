@@ -194,7 +194,7 @@ export default function Header({
               <div className="flex flex-col items-center">
                 <p
                   className={`font-extrabold transition-all duration-300 ease-in-out  md:text-[16px] text-teal-950 ${
-                    isSticky && dockOnTop ? "hidden" : "block text-[14px]"
+                    isSticky && dockOnTop ? "hidden md:block" : "text-[14px]"
                   }`}
                 >
                   {inv?.name}
