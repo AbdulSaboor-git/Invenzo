@@ -10,7 +10,7 @@ export default function Header({
   dockOnTop,
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const username = user?.firstName + " " + user.lastName;
+  const username = user?.firstName + " " + user?.lastName;
   // useEffect(() => {
   //   isOpen && document.body.classList.add("no-scroll");
   //   return () => {
