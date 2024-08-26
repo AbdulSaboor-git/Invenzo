@@ -38,7 +38,7 @@ export default function Login() {
   };
 
   const handleSignUpClick = () => {
-    router.push("/sign-up");
+    // router.push("/sign-up");
   };
 
   const handleLogin = async (e) => {
