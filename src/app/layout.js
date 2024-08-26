@@ -5,7 +5,7 @@ import ReduxProvider from "./reduxProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "MSA Super Store",
+  title: "Invenzo - Inventory Management",
   description: "",
 };
 
