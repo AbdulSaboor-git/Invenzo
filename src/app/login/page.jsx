@@ -82,7 +82,7 @@ export default function Login() {
         <Header />
         <div className="flex w-full items-center justify-center">
           <div className="w-full max-w-[360px] bg-[#ffffff95] p-8 py-14 m-10 rounded shadow-md">
-            <h2 className="text-2xl font-bold mb-6 text-center text-teal-700">
+            <h2 className="text-2xl font-bold mb-6 text-center text-teal-900">
               Login
             </h2>
             <form onSubmit={handleLogin}>
@@ -131,7 +131,7 @@ export default function Login() {
               <div className="flex items-center justify-center mt-8">
                 <button
                   disabled={loading}
-                  className={`bg-teal-600 w-24 text-center hover:bg-teal-700 rounded-full text-white font-semibold py-2 px-5 focus:outline-none focus:shadow-outline ${
+                  className={`bg-teal-900 w-24 text-center hover:bg-teal-800 rounded-full text-white font-semibold py-2 px-5 focus:outline-none focus:shadow-outline ${
                     loading ? "cursor-not-allowed" : "cursor-pointer"
                   }`}
                   type="submit"

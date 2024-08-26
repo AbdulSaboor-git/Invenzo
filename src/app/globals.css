@@ -5,14 +5,14 @@
 :root {
   --foreground-color: #fff;
   --background-dark-color: #00a5a5; /* Dark Teal */
-  --background-light-color: #b7ffff; /* Light Teal */
+  --background-light-color: #daffff; /* Light Teal */
 }
 
 @media (prefers-color-scheme: light) {
   :root {
     --foreground-color: #fff;
     --background-dark-color: #00a5a5; /* Dark Teal */
-    --background-light-color: #b7ffff; /* Light Teal */
+    --background-light-color: #daffff; /* Light Teal */
   }
 }
 
@@ -58,6 +58,51 @@ body {
 
 .no-scroll {
   overflow: hidden;
+}
+
+.loader-ring {
+  position: relative;
+  width: 64px;
+  height: 64px;
+}
+
+.inner-ring {
+  position: absolute;
+  border: 8px solid #042f2e84;
+  border-top-color: #053f3e;
+  border-radius: 50%;
+  animation: spin 1.5s linear infinite;
+  width: 48px;
+  height: 48px;
+  top: 8px;
+  left: 8px;
+}
+
+.loader-ring-sm {
+  position: relative;
+  width: 25px;
+  height: 25px;
+}
+
+.inner-ring-sm {
+  position: absolute;
+  border: 4px solid #06454484;
+  border-top-color: #044d4c;
+  border-radius: 50%;
+  animation: spin 1.5s linear infinite;
+  width: 18px;
+  height: 18px;
+  top: 8px;
+  left: 8px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes slideExpand {

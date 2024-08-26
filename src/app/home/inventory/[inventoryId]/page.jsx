@@ -11,6 +11,7 @@ import Manage_Moderators_Form from "@/app/home/inventory/[inventoryId]/component
 import Members from "@/app/home/inventory/[inventoryId]/components/members";
 import {
   MdAdd,
+  MdArrowUpward,
   MdInventory,
   MdLogout,
   MdPeopleAlt,
@@ -47,6 +48,50 @@ export default function Inventory({ params }) {
   const [invInfo, set_invInfo] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [preferences_isOpen, set_preferences_IsOpen] = useState(false);
+
+  const [showScrollToTop, setShowScrollToTop] = useState(false);
+  const [showAddItemBtn, setShowAddItemBtn] = useState(true);
+
+  const [networkError, setNetworkError] = useState(false);
+  const adminEmail = invInfo?.admin?.email;
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
+  // Handle scroll behavior
+  useEffect(() => {
+    let lastScrollTop = 0;
+
+    const handleScroll = () => {
+      const scrollTop =
+        window.pageYOffset || document.documentElement.scrollTop;
+
+      if (scrollTop > 700) {
+        setShowScrollToTop(true);
+      } else {
+        setShowScrollToTop(false);
+      }
+
+      if (scrollTop > lastScrollTop) {
+        // User is scrolling down
+        setShowAddItemBtn(false);
+      } else {
+        // User is scrolling up
+        setShowAddItemBtn(true);
+      }
+
+      lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   let savedPreferences = [];
 
@@ -104,12 +149,14 @@ export default function Inventory({ params }) {
               "You are not authorized to access this inventory. Redirecting to Home...",
               false
             );
+            router.push("/home");
           } else if (errorData.message === "Invalid inventory ID") {
             showMessage("Invalid inventory ID. Redirecting to Home...", false);
+            router.push("/home");
           } else {
-            showMessage("Invalid inventory ID. Redirecting to Home...", false);
+            showMessage("Network Error", false);
+            setNetworkError("true");
           }
-          router.push("/home");
           return;
         }
 
@@ -319,6 +366,7 @@ export default function Inventory({ params }) {
           categories={categories}
           fetchInvData={fetchInvData}
           userId={user.id}
+          networkError={networkError}
         />
         <Footer />
       </div>
@@ -344,7 +392,7 @@ export default function Inventory({ params }) {
           moderators={moderators}
           refreshModerators={refreshInvData}
           inventoryId={invId}
-          adminEmail={invInfo?.admin?.email}
+          adminEmail={adminEmail}
         />
       )}
       {members_isOpen && (
@@ -356,13 +404,37 @@ export default function Inventory({ params }) {
         />
       )}
       {role !== "viewer" && savedPreferences.add_edit_del === true && (
-        <div className="fixed block md:hidden bottom-8 right-6 rounded-full ">
-          <button
-            onClick={open_AddItemForm}
-            className="rounded-full size-[45px] text-2xl bg-[#01b0b0] z-50 flex items-center justify-center hover:bg-[#079d9d] hover:scale-[1.05]  transition-transform duration-200 ease-in-out shadow-sm shadow-[#000000cd]"
+        <div className="flex flex-col gap-2 fixed bottom-[25px] items-center justify-center transition-all right-6 md:hidden">
+          <div
+            className={`transition-all duration-300 ${
+              showScrollToTop
+                ? showAddItemBtn
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-100 translate-y-12"
+                : "opacity-0 translate-y-0"
+            }`}
           >
-            {<MdAdd />}
-          </button>
+            <button
+              onClick={scrollToTop}
+              className="rounded-full size-[30px] text-base bg-teal-800 z-50 flex items-center justify-center hover:bg-teal-900 hover:scale-[1.05] transition-transform duration-200 ease-in-out shadow-sm shadow-[#000000cd]"
+            >
+              <MdArrowUpward />
+            </button>
+          </div>
+          <div
+            className={`transition-all duration-300 ${
+              showAddItemBtn
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-20"
+            }`}
+          >
+            <button
+              onClick={open_AddItemForm}
+              className="rounded-full size-[40px] text-2xl bg-teal-600 z-50 flex items-center justify-center hover:bg-teal-700 hover:scale-[1.05] transition-transform duration-200 ease-in-out shadow-sm shadow-[#000000cd]"
+            >
+              <MdAdd />
+            </button>
+          </div>
         </div>
       )}
       {isDialogOpen && (

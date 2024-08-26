@@ -6,6 +6,7 @@ import Sort_card from "./sortCard";
 import Filter_card from "./filterCard";
 import { useDispatch } from "react-redux";
 import { triggerNotification } from "@/redux/notificationThunk";
+import LoaderSmall from "@/components/loader_small";
 
 export default function RightSide({
   role,
@@ -15,6 +16,7 @@ export default function RightSide({
   products,
   loadingData,
   categories,
+  networkError,
   userId,
 }) {
   const [searchValue, setSearchValue] = useState("");
@@ -255,13 +257,11 @@ export default function RightSide({
 
   return (
     <div className="flex flex-col w-full">
-      <div ref={placeholderRef} className="absolute mt-[70px]"></div>
+      <div ref={placeholderRef}></div>
       <div
         ref={headerRef}
         className={`flex -mx-6 px-6 p-4 pt-0 z-20  gap-1 md:gap-4 transition-all duration-300 ease-in-out items-center text-[#404040]  md:mx-0 md:top-0 md:pb-4  md:relative md:pt-0 md:px-2 ${
-          isSticky
-            ? "fixed translate-y-[-30px] top-[116.5px]  w-full "
-            : "relative"
+          isSticky ? "fixed translate-y-[-5px] top-[75px]  w-full " : "relative"
         }`}
       >
         <div className="relative w-full">
@@ -274,21 +274,21 @@ export default function RightSide({
           />
           {searchValue && (
             <MdClose
-              className="absolute right-0 rounded-e-full top-1/2 transform -translate-y-1/2  p-[11px] text-[40px] cursor-pointer  text-[#959595]"
+              className="absolute right-0 rounded-e-full top-1/2 transform -translate-y-1/2  p-[11px] text-[40px] cursor-pointer  text-gray-600"
               onClick={clearSearch}
             />
           )}
         </div>
-        <div className="relative text-[32px] text-teal-900 md:text-[35px] flex items-center justify-between gap-[2px] md:gap-3">
+        <div className="relative text-[32px] text-teal-950 md:text-[35px] flex items-center justify-between gap-[2px] md:gap-3">
           <FaFilter
             onClick={toggleFilterCard}
-            className={` py-[6px] cursor-pointer hover:text-teal-800 ${
+            className={` py-[6px] cursor-pointer hover:text-teal-900 ${
               filterApplied && "text-red-500 hover:text-red-600"
             }`}
           />
           <FaSort
             onClick={toggleSortCard}
-            className=" py-[6px] cursor-pointer hover:text-teal-800"
+            className=" py-[6px] cursor-pointer hover:text-teal-900"
           />
         </div>
 
@@ -316,7 +316,7 @@ export default function RightSide({
         )}
       </div>
       <div
-        className={`h-[245px] transition-all md:h-0 ${
+        className={`h-[240px] transition-all md:h-0 ${
           isSticky ? "block" : "hidden"
         }`}
       ></div>
@@ -324,11 +324,13 @@ export default function RightSide({
         className={`flex flex-col gap-[6px] w-full pb-1 px-0 md:px-2 md:max-h-[80vh] md:overflow-auto hidden_scroll_bar`}
       >
         {loadingData ? (
-          <div className="text-gray-300 text-xs pl-2">
-            <p>Loading...</p>
+          <LoaderSmall />
+        ) : networkError ? (
+          <div className="text-gray-300 text-xs pl-2 text-center">
+            <p>{"Please check your network connection and try again"}</p>
           </div>
         ) : !PRODUCTS?.length ? (
-          <div className="text-gray-300 text-xs pl-2">
+          <div className="text-gray-300 text-xs pl-2 text-center">
             <p>{"(Empty)"}</p>
           </div>
         ) : (

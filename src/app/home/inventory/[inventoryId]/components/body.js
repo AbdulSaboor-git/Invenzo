@@ -16,6 +16,7 @@ export default function Body({
   loadingData,
   fetchInvData,
   userId,
+  networkError,
 }) {
   const [editItemForm_isOpen, set_editItemForm_isOpen] = useState(false);
   const Dispatch = useDispatch();
@@ -102,6 +103,7 @@ export default function Body({
             setProd={setProd}
             loadingData={loadingData}
             userId={userId}
+            networkError={networkError}
           />
         </div>
       </div>

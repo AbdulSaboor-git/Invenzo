@@ -73,7 +73,7 @@ async function handleGet(req, res, inventoryId) {
     });
 
     if (!inv) {
-      return res.status(404).json({ message: "Inventory not found" });
+      return res.status(404).json({ message: "Invalid inventory ID" });
     }
 
     // Check if the user is either the admin or a moderator of the inventory

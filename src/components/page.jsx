@@ -20,7 +20,6 @@ import {
   MdSettings,
 } from "react-icons/md";
 import Preferences from "@/components/preferences";
-import LoaderSmall from "@/components/loader_small";
 
 export default function HomePage() {
   const [ButtonId, setButtonId] = useState(null);
@@ -257,7 +256,9 @@ export default function HomePage() {
             </p>
             <div className="flex flex-col mx-5">
               {loadingInventories ? (
-                <LoaderSmall />
+                <div className="text-gray-300 text-xs">
+                  <p>Loading...</p>
+                </div>
               ) : !myInventories?.length ? (
                 <div className="text-gray-300 text-xs">
                   <p>{"(Empty)"}</p>
@@ -324,7 +325,9 @@ export default function HomePage() {
 
             <div className="flex flex-col mx-5">
               {loadingInventories ? (
-                <LoaderSmall />
+                <div className="text-gray-300 text-xs">
+                  <p>Loading...</p>
+                </div>
               ) : !moderatedInventories?.length ? (
                 <div className="text-gray-300 text-xs">
                   <p>{"(Empty)"}</p>

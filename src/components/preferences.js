@@ -105,9 +105,9 @@ export default function Preferences({ CloseForm, userId }) {
         <p className="font-bold text-lg md:text-xl pb-4 text-teal-700">
           Preferences
         </p>
-        <div className="flex flex-col gap-3 text-sm md:text-base">
+        <div className="flex flex-col gap-4 text-sm md:text-base">
           <div className="flex flex-col gap-1">
-            <h1 className=" font-bold mb-2">General</h1>
+            <h1 className=" font-semibold mb-2">General</h1>
             {generalOptions.map((op, index) => (
               <div
                 className="flex justify-between gap-2 items-center"
@@ -132,9 +132,10 @@ export default function Preferences({ CloseForm, userId }) {
             ))}
           </div>
 
-          <hr />
+          <hr className="h-[1px] border-none bg-gray-300" />
+
           <div className="flex flex-col gap-1">
-            <h1 className="font-bold mb-2">Product Details</h1>
+            <h1 className="font-semibold mb-2">Product Details</h1>
             {productOptions.map((op, index) => (
               <div
                 className="flex justify-between gap-2 items-center"
@@ -159,9 +160,10 @@ export default function Preferences({ CloseForm, userId }) {
             ))}
           </div>
 
-          <hr />
+          <hr className="h-[1px]  border-none bg-gray-300" />
+
           <div className="flex justify-between items-center">
-            <h1 className="font-bold">Theme</h1>
+            <h1 className="font-semibold">Theme</h1>
             <label className="relative inline-flex items-center cursor-pointer">
               <input
                 type="checkbox"
