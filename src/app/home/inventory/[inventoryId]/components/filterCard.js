@@ -22,7 +22,7 @@ export default function FilterCard({
   };
 
   return (
-    <div className="filterCard absolute p-6 pt-8 top-9 right-[75px] text-xs md:text-sm border border-gray-300 text-gray-600 w-[300px] bg-[#dfeaea] shadow-md shadow-[#00000052] rounded-xl z-30">
+    <div className="filterCard absolute p-6 pt-8 top-9 right-[75px] text-xs md:text-sm border border-gray-300 text-gray-600 w-[280px] bg-[#dfeaea] shadow-md shadow-[#00000052] rounded-xl z-30">
       <div className="flex flex-col gap-3">
         <p className="font-bold text-lg md:text-xl pb-1 text-teal-700">
           Filter Products

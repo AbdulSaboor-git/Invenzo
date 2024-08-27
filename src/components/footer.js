@@ -24,7 +24,7 @@ export default function Footer() {
               </p>
             </div>
           </div>
-          <div className="flex gap-24 md:gap-16 md:justify-center md:mr-16">
+          <div className="flex gap-10 md:gap-16 justify-center  md:px-16">
             <div className="flex flex-col w-full md:w-auto text-[#404040] text-[12px] md:text-[14px] gap-3">
               <div className="flex items-center gap-3">
                 <SiGoogleplay className="text-lg md:text-xl" />

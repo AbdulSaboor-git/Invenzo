@@ -11,6 +11,7 @@ export default function Header({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const username = user?.firstName + " " + user?.lastName;
+  const invName = inv?.name;
   // useEffect(() => {
   //   isOpen && document.body.classList.add("no-scroll");
   //   return () => {
@@ -73,9 +74,11 @@ export default function Header({
         }`}
       ></div>
       <div
-        className={`${
+        className={` ${
           isSticky && dockOnTop
-            ? "fixed transition-all duration-300 ease-in-out top-[-50px] translate-y-[50px] left-0 right-0 z-[40]  md:relative"
+            ? `${
+                isOpen && "h-full"
+              } fixed transition-all duration-300 ease-in-out top-[-50px] translate-y-[50px] left-0 right-0 z-[40]  md:relative  `
             : "relative"
         }`}
       >
@@ -87,7 +90,7 @@ export default function Header({
         ></div>
         <div className="relative flex justify-center items-center p-4 pt-10 z-50">
           {(user || Buttons) && (
-            <>
+            <div>
               <div
                 className={` ${
                   isSticky && dockOnTop ? "fixed" : "absolute"
@@ -101,7 +104,7 @@ export default function Header({
                 </button>
               </div>
               <div
-                className={` md:hidden fixed top-0 left-[-10px] w-[230px] h-full  rounded-e-[30px] sidebar bg-white transition-transform duration-300 ease-in-out ${
+                className={` md:hidden fixed top-0 left-[-10px] w-[230px] h-full rounded-e-[30px] sidebar bg-white transition-transform duration-300 ease-in-out ${
                   isOpen ? "translate-x-0" : "-translate-x-[240px]"
                 }`}
                 style={{ boxShadow: "0 0 20px -5px #404040" }}
@@ -161,7 +164,7 @@ export default function Header({
                   </div>
                 </div>
               </div>
-            </>
+            </div>
           )}
 
           <div
@@ -197,7 +200,7 @@ export default function Header({
                     isSticky && dockOnTop ? "hidden md:block" : "text-[14px]"
                   }`}
                 >
-                  {inv?.name}
+                  {invName}
                 </p>
                 <p
                   className={`font-normal text-[12px] transition-all duration-300 ease-in-out md:text-[14px] text-[#404040] ${
