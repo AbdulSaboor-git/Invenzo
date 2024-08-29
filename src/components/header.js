@@ -126,7 +126,7 @@ export default function Header({
                     className="cursor-pointer flex flex-col justify-center items-center text-[#404040] font-[500] text-[12px] gap-1 ml-6"
                   >
                     <img
-                      className="w-[60px] h-[60px] object-cover hover:border-[2px] hover:border-[#00530622] rounded-full"
+                      className="w-[60px] h-[60px] object-cover hover:scale-[1.03] transition-all rounded-full"
                       src={userProfilePicture || "/avatar.png"}
                       alt="avatar"
                     />
@@ -196,7 +196,7 @@ export default function Header({
                 {(user || Buttons) && (
                   <img
                     onClick={openProfile}
-                    className="cursor-pointer  object-cover w-[60px] h-[60px] md:block absolute right-4 hidden rounded-full hover:border-[2px] hover:border-[#00530622]"
+                    className="cursor-pointer  object-cover w-[60px] h-[60px] md:block absolute right-4 hidden rounded-full hover:scale-[1.03] transition-all"
                     src={userProfilePicture || "/avatar.png"}
                     alt="avatar"
                   />

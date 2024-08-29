@@ -1,30 +1,11 @@
 import React, { useState, useEffect } from "react";
-import {
-  FaAd,
-  FaExpand,
-  FaExpandAlt,
-  FaExpandArrowsAlt,
-  FaThLarge,
-} from "react-icons/fa";
+
 import {
   MdClose,
   MdVisibility,
   MdVisibilityOff,
   MdLogout,
-  MdPinch,
-  MdZoomIn,
-  MdExpand,
-  MdExpandMore,
-  MdArrowCircleUp,
-  MdOutlineExpandCircleDown,
-  MdPictureInPictureAlt,
-  MdZoomInMap,
-  MdHideImage,
-  MdImageSearch,
-  MdImageAspectRatio,
-  MdImage,
 } from "react-icons/md";
-import { SiExpedia } from "react-icons/si";
 
 export default function UserProfile({ CloseForm, user, logout }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -42,7 +23,7 @@ export default function UserProfile({ CloseForm, user, logout }) {
 
   return (
     <div className="flex fixed z-[200] top-0 flex-col p-5 w-screen h-screen items-center justify-center bg-[#00000040] backdrop-blur-[2px] ">
-      <div className="pt-4 pb-10 md:py-4  md:pb-12 px-10 md:px-14 mx-10 z-40 w-full max-w-[420px] md:max-w-[470px] overflow-auto hidden_scroll_bar bg-[#d5edeb] rounded-3xl shadow-lg shadow-[#00000040] text-[#404040]">
+      <div className="pt-4 pb-10 md:py-4  md:pb-12 px-10 md:px-14 mx-10 z-40 w-full max-w-[420px] md:max-w-[470px] overflow-auto hidden_scroll_bar bg-[#dfeaea] rounded-3xl shadow-lg shadow-[#00000040] text-[#404040]">
         <div className="flex w-full justify-end sticky top-0">
           <button
             onClick={CloseForm}
@@ -56,9 +37,9 @@ export default function UserProfile({ CloseForm, user, logout }) {
           User Profile
         </h1>
         <div>
-          <div className="flex flex-col mt-3 mb-5 items-center justify-center">
+          <div className="flex flex-col mt-3 mb-4  items-center justify-center">
             <img
-              className="object-cover w-[100px] h-[100px] md:w-[120px] md:h-[120px] rounded-full transition-all hover:w-[180px] hover:h-[180px] "
+              className="object-cover w-[100px] h-[100px] md:w-[120px] md:h-[120px] rounded-full transition-all duration-[400ms] hover:scale-[1.5] "
               src={profilePic || "/avatar.png"}
               alt="avatar"
             />
