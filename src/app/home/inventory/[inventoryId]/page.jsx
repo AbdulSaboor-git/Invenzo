@@ -354,6 +354,7 @@ export default function Inventory({ params }) {
           openPreferences={openPreferences}
           inv={invInfo}
           dockOnTop={true}
+          logout={logout}
         />
 
         <Body

@@ -220,6 +220,7 @@ export default function HomePage() {
         <Header
           user={user}
           Buttons={Buttons}
+          logout={logout}
           openPreferences={openPreferences}
         />
         <div className="hidden md:flex md:gap-3 justify-end w-full items-center pt-8  px-4 max-w-[1200px]">

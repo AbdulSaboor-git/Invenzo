@@ -11,7 +11,7 @@ export default function Members({ CloseForm, moderators, inv, user }) {
   }, []);
   return (
     <div className="flex fixed z-[200] top-0 flex-col p-5 w-screen h-screen items-center justify-center bg-[#00000040] backdrop-blur-[2px] ">
-      <div className="pt-4  md:pt-4 p-7 md:p-10 mx-10 z-40 w-full max-w-[420px] h-[350px] md:h-[380px] md:max-w-[470px] overflow-auto hidden_scroll_bar bg-[#99d2cf] rounded-lg shadow-lg shadow-[#00000040] text-[#404040]">
+      <div className="pt-4  md:pt-4 p-7 md:p-10 mx-10 z-40 w-full max-w-[420px] h-[350px] md:h-[380px] md:max-w-[470px] overflow-auto hidden_scroll_bar bg-[#99d2cf] rounded-xl shadow-lg shadow-[#00000040] text-[#404040]">
         <div className="flex w-full justify-end sticky top-0">
           <button
             onClick={CloseForm}

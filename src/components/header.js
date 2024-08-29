@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { MdClose, MdMenu, MdSettings } from "react-icons/md";
+import UserProfile from "@/app/home/inventory/[inventoryId]/components/user_profile";
 
 export default function Header({
   user,
@@ -8,10 +9,14 @@ export default function Header({
   openPreferences,
   inv,
   dockOnTop,
+  logout,
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [profileIsOpen, setProfileIsOpen] = useState(false);
   const username = user?.firstName + " " + user?.lastName;
   const invName = inv?.name;
+  const userProfilePicture = user?.profilePicture;
+
   // useEffect(() => {
   //   isOpen && document.body.classList.add("no-scroll");
   //   return () => {
@@ -25,6 +30,14 @@ export default function Header({
 
   const closeSidebar = () => {
     setIsOpen(false);
+  };
+
+  const openProfile = () => {
+    setProfileIsOpen(true);
+  };
+
+  const closeProfile = () => {
+    setProfileIsOpen(false);
   };
 
   // useEffect(() => {
@@ -62,6 +75,8 @@ export default function Header({
       }
     };
   }, []);
+
+  console.log(userProfilePicture);
 
   return (
     <div>
@@ -117,10 +132,13 @@ export default function Header({
                 </button>
 
                 <div className="flex flex-col items-start py-6">
-                  <div className=" flex flex-col justify-center items-center text-[#404040] font-[500] text-[12px] gap-1 ml-6">
+                  <div
+                    onClick={openProfile}
+                    className="cursor-pointer flex flex-col justify-center items-center text-[#404040] font-[500] text-[12px] gap-1 ml-6"
+                  >
                     <img
-                      className="w-[60px] h-[60px]"
-                      src={"/avatar.png"}
+                      className="w-[60px] h-[60px] object-cover hover:border-[2px] hover:border-[#00530622] rounded-full"
+                      src={userProfilePicture || "/avatar.png"}
                       alt="avatar"
                     />
                     <p className="max-w-[120px] max-h-[40px] overflow-hidden">
@@ -166,6 +184,15 @@ export default function Header({
               </div>
             </div>
           )}
+          {profileIsOpen && (
+            <div>
+              <UserProfile
+                user={user}
+                CloseForm={closeProfile}
+                logout={logout}
+              />
+            </div>
+          )}
 
           <div
             onClick={closeSidebar}
@@ -188,8 +215,9 @@ export default function Header({
                 />
                 {(user || Buttons) && (
                   <img
-                    className="w-[60px] h-[60px] md:block absolute right-4 hidden"
-                    src="/avatar.png"
+                    onClick={openProfile}
+                    className="cursor-pointer  object-cover w-[60px] h-[60px] md:block absolute right-4 hidden rounded-full hover:border-[2px] hover:border-[#00530622]"
+                    src={userProfilePicture || "/avatar.png"}
                     alt="avatar"
                   />
                 )}
