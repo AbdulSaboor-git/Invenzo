@@ -11,6 +11,10 @@ export default function Header({
   openProfile,
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const logoLink =
+    "https://lh3.googleusercontent.com/pw/AP1GczN9HraQsHh0pJ0YoBThzcS0tY_-uk5zyQquRDFTVgpN6peh1An56u-fUREcdmwVRl0gE_E7MGnSXH_Zsj-fjMW8nIFHQ8lKIep5Xwi6TKKsPZa7kyQLrqofq3dw8994xfpRNfHIjbG257eM0pMU9f4U=w658-h263-s-no-gm";
+  const defaultProfilePictureLink =
+    "https://lh3.googleusercontent.com/pw/AP1GczM2cnSQPHG8oKKskeSFKCFjs3z_NG31Tt4bQPqb4Fp-Qdteh0m-84BjSvDgQTkscceDPu1eD1Rs2OxUSd0InRuqnowixs1x8kqSVIcu_7BbkBi4XFK13ZqIeq56OxPw0bzq0hoUgYtTHteuYB1cTI-K=w883-h883-s-no-gm";
 
   const invName = inv?.name;
   const username = user?.firstName + " " + user?.lastName;
@@ -127,7 +131,7 @@ export default function Header({
                   >
                     <img
                       className="w-[60px] h-[60px] object-cover hover:scale-[1.03] transition-all rounded-full"
-                      src={userProfilePicture || "/avatar.png"}
+                      src={userProfilePicture || defaultProfilePictureLink}
                       alt="avatar"
                     />
                     <p className="max-w-[120px] max-h-[40px] overflow-hidden">
@@ -190,14 +194,14 @@ export default function Header({
                   className={` md:h-[130px] transition-all ease-in-out duration-0  ${
                     isSticky && dockOnTop ? "h-[55px]" : "h-[90px]"
                   }`}
-                  src="/logo.png"
+                  src={logoLink}
                   alt="logo"
                 />
                 {(user || Buttons) && (
                   <img
                     onClick={openProfile}
                     className="cursor-pointer  object-cover w-[60px] h-[60px] md:block absolute right-4 hidden rounded-full hover:scale-[1.03] transition-all"
-                    src={userProfilePicture || "/avatar.png"}
+                    src={userProfilePicture || defaultProfilePictureLink}
                     alt="avatar"
                   />
                 )}

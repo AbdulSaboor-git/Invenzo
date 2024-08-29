@@ -13,6 +13,8 @@ export default function UserProfile({ CloseForm, user, logout }) {
   const profilePic = user?.profilePicture;
   const email = user?.email;
   const password = user?.password;
+  const defaultProfilePictureLink =
+    "https://lh3.googleusercontent.com/pw/AP1GczM2cnSQPHG8oKKskeSFKCFjs3z_NG31Tt4bQPqb4Fp-Qdteh0m-84BjSvDgQTkscceDPu1eD1Rs2OxUSd0InRuqnowixs1x8kqSVIcu_7BbkBi4XFK13ZqIeq56OxPw0bzq0hoUgYtTHteuYB1cTI-K=w883-h883-s-no-gm";
 
   useEffect(() => {
     document.body.classList.add("no-scroll");
@@ -40,7 +42,7 @@ export default function UserProfile({ CloseForm, user, logout }) {
           <div className="flex flex-col mt-3 mb-4  items-center justify-center">
             <img
               className="object-cover w-[100px] h-[100px] md:w-[120px] md:h-[120px] rounded-full transition-all duration-[400ms] hover:scale-[1.5] "
-              src={profilePic || "/avatar.png"}
+              src={profilePic || defaultProfilePictureLink}
               alt="avatar"
             />
           </div>
