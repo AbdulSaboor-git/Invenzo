@@ -1,10 +1,30 @@
 import React, { useState, useEffect } from "react";
 import {
+  FaAd,
+  FaExpand,
+  FaExpandAlt,
+  FaExpandArrowsAlt,
+  FaThLarge,
+} from "react-icons/fa";
+import {
   MdClose,
   MdVisibility,
   MdVisibilityOff,
   MdLogout,
+  MdPinch,
+  MdZoomIn,
+  MdExpand,
+  MdExpandMore,
+  MdArrowCircleUp,
+  MdOutlineExpandCircleDown,
+  MdPictureInPictureAlt,
+  MdZoomInMap,
+  MdHideImage,
+  MdImageSearch,
+  MdImageAspectRatio,
+  MdImage,
 } from "react-icons/md";
+import { SiExpedia } from "react-icons/si";
 
 export default function UserProfile({ CloseForm, user, logout }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -21,7 +41,7 @@ export default function UserProfile({ CloseForm, user, logout }) {
   }, []);
 
   return (
-    <div className="flex fixed z-[200] w-[105vw] -ml-7 top-0 flex-col p-5 h-screen items-center justify-center bg-[#00000040] backdrop-blur-[2px] ">
+    <div className="flex fixed z-[200] top-0 flex-col p-5 w-screen h-screen items-center justify-center bg-[#00000040] backdrop-blur-[2px] ">
       <div className="pt-4 pb-10 md:py-4  md:pb-12 px-10 md:px-14 mx-10 z-40 w-full max-w-[420px] md:max-w-[470px] overflow-auto hidden_scroll_bar bg-[#d5edeb] rounded-3xl shadow-lg shadow-[#00000040] text-[#404040]">
         <div className="flex w-full justify-end sticky top-0">
           <button
@@ -36,9 +56,9 @@ export default function UserProfile({ CloseForm, user, logout }) {
           User Profile
         </h1>
         <div>
-          <div className="flex flex-col mt-3 mb-7">
+          <div className="flex flex-col mt-3 mb-5 items-center justify-center">
             <img
-              className="self-center cursor-pointer object-cover w-[80px] h-[80px] md:w-[100px] md:h-[100px] rounded-full"
+              className="object-cover w-[100px] h-[100px] md:w-[120px] md:h-[120px] rounded-full transition-all hover:w-[180px] hover:h-[180px] "
               src={profilePic || "/avatar.png"}
               alt="avatar"
             />
@@ -46,17 +66,15 @@ export default function UserProfile({ CloseForm, user, logout }) {
           <div className="flex flex-col gap-2">
             <div>
               <p className="font-bold text-base md:text-lg">Name</p>
-              <p className="ml-4 text-gray-600 text-sm md:text-base">
-                {username}
-              </p>
+              <p className="ml-4 text-gray-600 ">{username}</p>
             </div>
             <div>
               <p className="font-bold text-base md:text-lg">Email Address</p>
-              <p className="ml-4 text-gray-600 text-sm md:text-base">{email}</p>
+              <p className="ml-4 text-gray-600 ">{email}</p>
             </div>
             <div>
               <p className="font-bold text-base md:text-lg">Password</p>
-              <div className="ml-4 text-gray-600 text-sm md:text-base flex items-center">
+              <div className="ml-4 text-gray-600 flex items-center">
                 <span className="mr-2">
                   {showPassword ? password : "•".repeat(password.length)}
                 </span>

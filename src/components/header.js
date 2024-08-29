@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { MdClose, MdMenu, MdSettings } from "react-icons/md";
-import UserProfile from "@/app/home/inventory/[inventoryId]/components/user_profile";
 
 export default function Header({
   user,
@@ -9,12 +8,12 @@ export default function Header({
   openPreferences,
   inv,
   dockOnTop,
-  logout,
+  openProfile,
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [profileIsOpen, setProfileIsOpen] = useState(false);
-  const username = user?.firstName + " " + user?.lastName;
+
   const invName = inv?.name;
+  const username = user?.firstName + " " + user?.lastName;
   const userProfilePicture = user?.profilePicture;
 
   // useEffect(() => {
@@ -30,14 +29,6 @@ export default function Header({
 
   const closeSidebar = () => {
     setIsOpen(false);
-  };
-
-  const openProfile = () => {
-    setProfileIsOpen(true);
-  };
-
-  const closeProfile = () => {
-    setProfileIsOpen(false);
   };
 
   // useEffect(() => {
@@ -75,8 +66,6 @@ export default function Header({
       }
     };
   }, []);
-
-  console.log(userProfilePicture);
 
   return (
     <div>
@@ -182,15 +171,6 @@ export default function Header({
                   </div>
                 </div>
               </div>
-            </div>
-          )}
-          {profileIsOpen && (
-            <div>
-              <UserProfile
-                user={user}
-                CloseForm={closeProfile}
-                logout={logout}
-              />
             </div>
           )}
 

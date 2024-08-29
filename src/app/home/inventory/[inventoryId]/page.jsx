@@ -25,6 +25,7 @@ import { setProducts } from "@/redux/products";
 import { setCategories } from "@/redux/categories";
 import Confirmation_dialogue from "@/components/confirmation_dialogue";
 import Preferences from "@/components/preferences";
+import UserProfile from "@/app/home/inventory/[inventoryId]/components/user_profile";
 
 export default function Inventory({ params }) {
   const dispatch = useDispatch();
@@ -54,12 +55,21 @@ export default function Inventory({ params }) {
 
   const [networkError, setNetworkError] = useState(false);
   const adminEmail = invInfo?.admin?.email;
+  const [profileIsOpen, setProfileIsOpen] = useState(false);
 
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
       behavior: "smooth",
     });
+  };
+
+  const openProfile = () => {
+    setProfileIsOpen(true);
+  };
+
+  const closeProfile = () => {
+    setProfileIsOpen(false);
   };
 
   // Handle scroll behavior
@@ -354,7 +364,7 @@ export default function Inventory({ params }) {
           openPreferences={openPreferences}
           inv={invInfo}
           dockOnTop={true}
-          logout={logout}
+          openProfile={openProfile}
         />
 
         <Body
@@ -371,6 +381,7 @@ export default function Inventory({ params }) {
         />
         <Footer />
       </div>
+
       {addItemForm_isOpen && (
         <Add_Product_Form
           CloseForm={close_AddItemForm}
@@ -449,6 +460,9 @@ export default function Inventory({ params }) {
       )}
       {preferences_isOpen && (
         <Preferences CloseForm={clossePreferences} userId={user.id} />
+      )}
+      {profileIsOpen && (
+        <UserProfile user={user} CloseForm={closeProfile} logout={logout} />
       )}
     </div>
   );

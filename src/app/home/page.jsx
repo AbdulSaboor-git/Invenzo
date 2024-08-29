@@ -21,6 +21,7 @@ import {
 } from "react-icons/md";
 import Preferences from "@/components/preferences";
 import LoaderSmall from "@/components/loader_small";
+import UserProfile from "@/app/home/inventory/[inventoryId]/components/user_profile";
 
 export default function HomePage() {
   const [ButtonId, setButtonId] = useState(null);
@@ -34,6 +35,7 @@ export default function HomePage() {
   const [loading, setLoading] = useState(false);
   const Dispatch = useDispatch();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [profileIsOpen, setProfileIsOpen] = useState(false);
 
   const [preferences_isOpen, set_preferences_IsOpen] = useState(false);
   useEffect(() => {
@@ -64,6 +66,14 @@ export default function HomePage() {
 
   const clossePreferences = () => {
     set_preferences_IsOpen(false);
+  };
+
+  const openProfile = () => {
+    setProfileIsOpen(true);
+  };
+
+  const closeProfile = () => {
+    setProfileIsOpen(false);
   };
 
   const openDialog = (e) => {
@@ -220,7 +230,7 @@ export default function HomePage() {
         <Header
           user={user}
           Buttons={Buttons}
-          logout={logout}
+          openProfile={openProfile}
           openPreferences={openPreferences}
         />
         <div className="hidden md:flex md:gap-3 justify-end w-full items-center pt-8  px-4 max-w-[1200px]">
@@ -259,7 +269,7 @@ export default function HomePage() {
             <div className="flex flex-col mx-5">
               {loadingInventories ? (
                 <LoaderSmall />
-              ) : !myInventories?.length ? (
+              ) : !myInventories.length ? (
                 <div className="text-gray-300 text-xs">
                   <p>{"(Empty)"}</p>
                 </div>
@@ -326,7 +336,7 @@ export default function HomePage() {
             <div className="flex flex-col mx-5">
               {loadingInventories ? (
                 <LoaderSmall />
-              ) : !moderatedInventories?.length ? (
+              ) : !moderatedInventories.length ? (
                 <div className="text-gray-300 text-xs">
                   <p>{"(Empty)"}</p>
                 </div>
@@ -352,6 +362,9 @@ export default function HomePage() {
           user={user}
           onSuccess={onAdd}
         />
+      )}
+      {profileIsOpen && (
+        <UserProfile user={user} CloseForm={closeProfile} logout={logout} />
       )}
       {editInv && (
         <EditInventory
