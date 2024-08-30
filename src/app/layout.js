@@ -7,13 +7,14 @@ import { useEffect } from "react";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({ children }) {
-  const theme = JSON.parse(localStorage.getItem("theme"));
-
   useEffect(() => {
-    document.documentElement.setAttribute(
-      "data-theme",
-      theme ? "light" : "dark"
-    );
+    const theme = JSON.parse(localStorage.getItem("theme"));
+    if (theme !== null) {
+      document.documentElement.setAttribute(
+        "data-theme",
+        theme ? "light" : "dark"
+      );
+    }
   }, []);
 
   return (
