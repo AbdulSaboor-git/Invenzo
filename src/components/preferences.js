@@ -73,8 +73,11 @@ export default function Preferences({ CloseForm, userId }) {
       theme,
     };
     localStorage.setItem(`preferences_${userId}`, JSON.stringify(preferences));
+    document.documentElement.setAttribute(
+      "data-theme",
+      theme ? "light" : "dark"
+    );
     showMessage("Preferences saved", true);
-    CloseForm();
   };
 
   const cancelChanges = () => {
@@ -93,16 +96,16 @@ export default function Preferences({ CloseForm, userId }) {
 
   return (
     <div className="flex fixed z-[200] top-0 flex-col p-5 w-screen h-screen items-center justify-center bg-[#00000040] backdrop-blur-[2px]">
-      <div className="pt-4 md:pt-4 p-7 border-[10px] border-transparent  md:p-10 mx-10 z-40 w-full max-w-[400px] md:max-w-[450px] overflow-auto hidden_scroll_bar bg-[#dfeaea] rounded-lg shadow-lg shadow-[#00000040] text-[#404040]">
+      <div className="pt-4 md:pt-4 p-7 border-[10px] border-transparent  md:p-10 mx-10 z-40 w-full max-w-[400px] md:max-w-[450px] overflow-auto hidden_scroll_bar bg-[var(--form-bg)] rounded-lg shadow-lg shadow-[var(--shaddow)] text-[var(--text-prim)]">
         <div className="flex w-full justify-end ">
           <button
             onClick={CloseForm}
-            className="mr-[-25px] mt-[-10px] md:mr-[-35px] text-gray-600 flex justify-center items-center size-6 rounded-full hover:bg-red-500 hover:text-white transition-all duration-200"
+            className="mr-[-25px] mt-[-10px] md:mr-[-35px] text-[var(--text-sec)] flex justify-center items-center size-6 rounded-full hover:bg-red-500 hover:text-white transition-all duration-200"
           >
             <MdClose size={16} />
           </button>
         </div>
-        <p className="font-bold text-lg md:text-xl pb-4 text-teal-700">
+        <p className="font-bold text-lg md:text-xl pb-4 text-[var(--form-heading)]">
           Preferences
         </p>
         <div className="flex flex-col gap-4 text-sm md:text-base">
@@ -132,7 +135,7 @@ export default function Preferences({ CloseForm, userId }) {
             ))}
           </div>
 
-          <hr className="h-[1px] border-none bg-gray-300" />
+          <hr className="h-[1px] border-none bg-[#c1c1c1a6] " />
 
           <div className="flex flex-col gap-1">
             <h1 className="font-semibold mb-2">Product Details</h1>
@@ -160,7 +163,7 @@ export default function Preferences({ CloseForm, userId }) {
             ))}
           </div>
 
-          <hr className="h-[1px]  border-none bg-gray-300" />
+          <hr className="h-[1px] border-none bg-[#c1c1c1a6]" />
 
           <div className="flex justify-between items-center">
             <h1 className="font-semibold">Theme</h1>
@@ -177,7 +180,7 @@ export default function Preferences({ CloseForm, userId }) {
                     ? "0 0 13px 2px #deee00"
                     : "0 0 13px 2px #ffffff",
                 }}
-                className="w-10 h-6  peer-focus:outline-none rounded-full peer dark:bg-[#686868] peer-checked:bg-blue-500 "
+                className="w-10 h-6  peer-focus:outline-none rounded-full peer bg-[#686868] peer-checked:bg-blue-500 "
               ></div>
               <span className="absolute left-1 w-[18px] h-6 top-1 rounded-full transition-transform peer-checked:translate-x-full ">
                 {theme ? (
@@ -192,13 +195,13 @@ export default function Preferences({ CloseForm, userId }) {
           <div className="flex justify-end gap-3 mt-6">
             <button
               onClick={cancelChanges}
-              className="px-4 py-2 text-sm font-medium text-gray-600 rounded-lg hover:bg-gray-300"
+              className="px-4 py-2 text-sm font-medium  transition-all text-[var(--text-sec)] rounded-lg hover:text-[var(--shaddow)]"
             >
               Cancel
             </button>
             <button
               onClick={savePreferences}
-              className="px-4 py-2 text-sm font-medium text-white bg-teal-600 rounded-lg hover:bg-teal-700"
+              className="px-4 py-2 text-sm font-medium   transition-all  text-white bg-[var(--btn-bg)] rounded-lg hover:bg-[var(--btn-bg-sec)]"
             >
               Save
             </button>

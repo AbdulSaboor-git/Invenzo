@@ -3,32 +3,51 @@
 @tailwind utilities;
 
 :root {
-  --foreground-color: #fff;
-  --background-dark-color: #00a5a5; /* Dark Teal */
-  --background-light-color: #daffff; /* Light Teal */
+  --background-prim: #daffff;
+  --background-sec: #00a5a5; /* Dark Teal */
+  --background-sec-transparent: #1eb1b175; /* Dark Teal */
+  --text-prim: #404040;
+  --text-sec: #626262;
+  --form-bg: #dfeaea;
+  --form-heading: #0f766e;
+  --input-field: #fff;
+  --shaddow: #00000040;
+  --btn-bg: #0d9488;
+  --btn-bg-sec: #0c8278;
+  --searchbar: #fff;
+  --btn-icons: #042f2e;
+  --btn-icons-sec: #053c3b;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    --foreground-color: #fff;
-    --background-dark-color: #00a5a5; /* Dark Teal */
-    --background-light-color: #daffff; /* Light Teal */
-  }
-}
-
-input {
-  outline: none;
+[data-theme="dark"] {
+  --background-sec: #001c1c;
+  --background-prim: #006767; /* Darker Teal for dark mode */
+  --background-sec-transparent: #002525c2; /* Dark Teal */
+  --text-prim: #eeeeee;
+  --text-sec: #d9d9d9;
+  --form-bg: #0a4f4f;
+  --form-heading: #d4f9f6;
+  --input-field: #457b77;
+  --shaddow: #ffffff8f;
+  --searchbar: #457b77;
+  --btn-icons: #d4f9f6;
+  --btn-icons-sec: #abe4df;
 }
 
 body {
-  color: var(--foreground-color);
+  color: var(--text-prim); /* This applies Tailwind's text color */
   background: linear-gradient(
     to bottom,
-    var(--background-dark-color) 5%,
-    var(--background-light-color) 90% /* Light Teal starts from 15% downwards */
+    var(--background-sec) 5%,
+    var(--background-prim) 90%
   );
   background-attachment: fixed;
   user-select: none;
+}
+
+select,
+input {
+  background-color: var(--input-field);
 }
 
 @layer utilities {

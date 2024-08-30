@@ -25,17 +25,19 @@ export default function UserProfile({ CloseForm, user, logout }) {
 
   return (
     <div className="flex fixed z-[200] top-0 flex-col p-5 w-screen h-screen items-center justify-center bg-[#00000040] backdrop-blur-[2px] ">
-      <div className="pt-4 pb-10 md:py-4  md:pb-12 px-10 md:px-14 mx-10 z-40 w-full max-w-[420px] md:max-w-[470px] overflow-auto hidden_scroll_bar bg-[#dfeaea] rounded-3xl shadow-lg shadow-[#00000040] text-[#404040]">
-        <div className="flex w-full justify-end sticky top-0">
+      <div
+        className={`pt-4 pb-10 md:py-4 text-[var(--text-prim)]  md:pb-12 px-10 md:px-14 mx-10 z-40 w-full max-w-[420px] md:max-w-[470px] overflow-auto hidden_scroll_bar bg-[var(--form-bg)] rounded-3xl shadow-lg shadow-[var(--shaddow)]`}
+      >
+        <div className="flex w-full justify-end sticky top-0 ">
           <button
             onClick={CloseForm}
-            className="mr-[-27px] md:mr-[-43px] text-gray-500 flex justify-center items-center size-6  rounded-full hover:bg-red-500 hover:text-white transition-all duration-200"
+            className="mr-[-27px] md:mr-[-43px] text-[var(--text-sec)] flex justify-center items-center size-6  rounded-full hover:bg-red-500 hover:text-white transition-all duration-200"
           >
             <MdClose size={16} />
           </button>
         </div>
 
-        <h1 className="font-bold text-xl md:text-2xl text-center pb-4 text-teal-700">
+        <h1 className="font-bold text-xl md:text-2xl text-center pb-4 text-[var(--form-heading)]">
           User Profile
         </h1>
         <div>
@@ -49,21 +51,21 @@ export default function UserProfile({ CloseForm, user, logout }) {
           <div className="flex flex-col gap-2">
             <div>
               <p className="font-bold text-base md:text-lg">Name</p>
-              <p className="ml-4 text-gray-600 ">{username}</p>
+              <p className="ml-4 text-[var(--text-sec)] ">{username}</p>
             </div>
             <div>
               <p className="font-bold text-base md:text-lg">Email Address</p>
-              <p className="ml-4 text-gray-600 ">{email}</p>
+              <p className="ml-4 text-[var(--text-sec)] ">{email}</p>
             </div>
             <div>
               <p className="font-bold text-base md:text-lg">Password</p>
-              <div className="ml-4 text-gray-600 flex items-center">
+              <div className="ml-4 text-[var(--text-sec)]  flex items-center">
                 <span className="mr-2">
                   {showPassword ? password : "•".repeat(password.length)}
                 </span>
                 <button
                   onClick={() => setShowPassword(!showPassword)}
-                  className="text-gray-500 hover:text-teal-700 transition-all duration-200"
+                  className="text-[var(--text-sec)] hover:text-[var(--form-heading)] transition-all duration-200"
                 >
                   {showPassword ? <MdVisibilityOff /> : <MdVisibility />}
                 </button>

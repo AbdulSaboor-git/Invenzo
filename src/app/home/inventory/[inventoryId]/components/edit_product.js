@@ -128,20 +128,20 @@ export default function EditProduct({
 
   return (
     <div className="flex fixed z-[200] top-0 flex-col p-5 w-screen h-screen items-center justify-center bg-[#00000040] backdrop-blur-[2px]">
-      <div className="pt-4 md:pt-4 p-7 border-[10px] border-transparent  md:p-10 mx-10 z-40 w-full max-w-[400px] md:max-w-[450px] overflow-auto hidden_scroll_bar bg-[#dfeaea] rounded-lg shadow-lg shadow-[#00000040] text-[#404040]">
+      <div className="pt-4 md:pt-4 p-7 border-[10px] border-transparent  md:p-10 mx-10 z-40 w-full max-w-[400px] md:max-w-[450px] overflow-auto hidden_scroll_bar bg-[var(--form-bg)] rounded-lg shadow-lg shadow-[var(--shaddow)] text-[var(--text-prim)]">
         <div className="flex w-full justify-end ">
           <button
             onClick={CloseForm}
-            className="mr-[-25px] mt-[-10px] md:mr-[-35px] text-gray-600 flex justify-center items-center size-6 rounded-full hover:bg-red-500 hover:text-white transition-all duration-200"
+            className="mr-[-25px] mt-[-10px] md:mr-[-35px] text-[var(--text-sec)] flex justify-center items-center size-6 rounded-full hover:bg-red-500 hover:text-white transition-all duration-200"
           >
             <MdClose size={16} />
           </button>
         </div>
-        <p className="font-bold text-lg md:text-xl pb-4 text-teal-700">
+        <p className="font-bold text-lg md:text-xl pb-4 text-[var(--form-heading)]">
           Edit Product
         </p>
         <form
-          className="space-y-3 text-xs md:text-sm text-gray-700"
+          className="space-y-3 text-xs md:text-sm "
           method="patch"
           onSubmit={editProduct}
         >
@@ -151,7 +151,7 @@ export default function EditProduct({
               type="text"
               value={name}
               onChange={handleNameChange}
-              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-600"
+              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--form-heading)]"
               required
               maxLength={40}
             />
@@ -162,7 +162,7 @@ export default function EditProduct({
             <select
               value={categoryId}
               onChange={handleCategoryChange}
-              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-600"
+              className="px-3 py-2 border  border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--form-heading)]"
               required
             >
               <option value="">Select a category</option>
@@ -180,7 +180,7 @@ export default function EditProduct({
               type="number"
               value={purchasePrice}
               onChange={handlePurchasePriceChange}
-              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-600"
+              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--form-heading)]"
               max={999999999}
               required
             />
@@ -192,7 +192,7 @@ export default function EditProduct({
               type="number"
               value={salePrice}
               onChange={handleSalePriceChange}
-              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-600"
+              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--form-heading)]"
               required
               max={999999999}
             />
@@ -201,14 +201,16 @@ export default function EditProduct({
           <div className="flex flex-col">
             <label className="mb-1 font-semibold ">
               Govt. Sale Price
-              <span className="font-light text-[#838383] ml-2">(optional)</span>
+              <span className="font-light text-[var(--text-sec)] ml-2">
+                (optional)
+              </span>
             </label>
             <input
               type="number"
               value={govtSalePrice || ""}
               onChange={handleGovtSalePriceChange}
               max={999999999}
-              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-600"
+              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--form-heading)]"
             />
           </div>
 
@@ -216,13 +218,13 @@ export default function EditProduct({
             <div className="flex gap-2 items-center mb-1">
               <label className="font-semibold ">Tags</label>
               <MdInfoOutline
-                className="text-[#949494]"
+                className="text-[var(--text-sec)]"
                 onMouseEnter={showInfoBox}
                 onMouseLeave={hideInfoBox}
                 onClick={showInfoBox}
               />
               {infoBox_visible && (
-                <div className="absolute rounded-md px-2 py-[2px] border text-[#7d7d7d] border-[#a0a0a094] bg-white shadow-md shadow-[#0004] ml-12 mb-8 text-[10px]">
+                <div className="absolute rounded-md px-2 py-[2px] border text-gray-500 border-[var(--text-sec)] bg-white shadow-md shadow-[#0004] ml-12 mb-8 text-[10px]">
                   Separate tags by spaces
                 </div>
               )}
@@ -231,7 +233,7 @@ export default function EditProduct({
               type="text"
               value={tags}
               onChange={handleTagsChange}
-              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-600"
+              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--form-heading)]"
               maxLength={400}
             />
           </div>
@@ -240,7 +242,7 @@ export default function EditProduct({
             <button
               disabled={loading}
               type="submit"
-              className={`py-2.5 bg-teal-600 w-3/5 rounded-full text-white hover:bg-teal-500 transition-all duration-200 text-sm font-semibold ${
+              className={`py-2.5 bg-[var(--btn-bg)] w-3/5 rounded-full text-white hover:bg-[var(--btn-bg-sec)] transition-all duration-200 text-sm font-semibold ${
                 loading && "cursor-not-allowed"
               }`}
             >

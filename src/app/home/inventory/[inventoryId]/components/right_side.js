@@ -269,7 +269,7 @@ export default function RightSide({
             type="text"
             value={searchValue}
             onChange={handleSearchChange}
-            className="w-full h-9 md:h-10 rounded-full text-[12px] md:text-[14px] pl-4 pr-10"
+            className="w-full h-9 md:h-10 bg-[var(--searchbar)] text-[var(--text-prim)] placeholder:text-[var(--text-sec)]  rounded-full text-[12px] md:text-[14px] pl-4 pr-10"
             placeholder="Search..."
           />
           {searchValue && (
@@ -279,16 +279,16 @@ export default function RightSide({
             />
           )}
         </div>
-        <div className="relative text-[32px] text-teal-950 md:text-[35px] flex items-center justify-between gap-[2px] md:gap-3">
+        <div className="relative text-[32px] text-[var(--btn-icons)] md:text-[35px] flex items-center justify-between gap-[2px] md:gap-3">
           <FaFilter
             onClick={toggleFilterCard}
-            className={` py-[6px] cursor-pointer hover:text-teal-900 ${
+            className={` py-[6px] cursor-pointer hover:text-[var(--btn-icons-sec)] ${
               filterApplied && "text-red-500 hover:text-red-600"
             }`}
           />
           <FaSort
             onClick={toggleSortCard}
-            className=" py-[6px] cursor-pointer hover:text-teal-900"
+            className=" py-[6px] cursor-pointer hover:text-[var(--btn-icons-sec)]"
           />
         </div>
 
