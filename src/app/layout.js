@@ -7,22 +7,14 @@ import { useEffect } from "react";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function RootLayout({ children }) {
-  const user =
-    typeof window !== "undefined"
-      ? JSON.parse(localStorage.getItem("user"))
-      : null;
-  const savedPref = user
-    ? JSON.parse(localStorage.getItem(`preferences_${user.id}`))
-    : null;
+  const theme = JSON.parse(localStorage.getItem("theme"));
 
   useEffect(() => {
-    if (savedPref) {
-      document.documentElement.setAttribute(
-        "data-theme",
-        savedPref.theme ? "light" : "dark"
-      );
-    }
-  }, [savedPref]);
+    document.documentElement.setAttribute(
+      "data-theme",
+      theme ? "light" : "dark"
+    );
+  }, []);
 
   return (
     <html lang="en">

@@ -442,7 +442,7 @@ export default function Inventory({ params }) {
           >
             <button
               onClick={open_AddItemForm}
-              className="rounded-full size-[40px] text-2xl bg-teal-600 z-50 flex items-center justify-center hover:bg-teal-700 hover:scale-[1.05] transition-transform duration-200 ease-in-out shadow-sm shadow-[#000000cd]"
+              className="rounded-full size-[40px] text-2xl text-white bg-teal-600 z-50 flex items-center justify-center hover:bg-teal-700 hover:scale-[1.05] transition-transform duration-200 ease-in-out shadow-sm shadow-[#000000cd]"
             >
               <MdAdd />
             </button>

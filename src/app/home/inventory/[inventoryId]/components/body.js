@@ -92,7 +92,7 @@ export default function Body({
         <div className="hidden md:flex-[2] md:block">
           <Left_Side buttons={buttons} />
         </div>
-        <div className="w-[2px] bg-[#008080a4] border-0 hidden shadow-black md:block"></div>
+        <div className="w-[2px] bg-[var(--shaddow)] border-none hidden md:block"></div>
         <div className="w-full md:flex-[5]">
           <Right_Side
             products={products}

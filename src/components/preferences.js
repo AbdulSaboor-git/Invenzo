@@ -12,6 +12,7 @@ export default function Preferences({ CloseForm, userId }) {
   const [dateUpdate, set_dateUpdate] = useState(true);
   const [theme, set_theme] = useState(true);
   const [tempPreferences, setTempPreferences] = useState({});
+  const [tempTheme, setTempTheme] = useState(true);
   const dispatch = useDispatch();
 
   const showMessage = (msg, state) => {
@@ -26,18 +27,25 @@ export default function Preferences({ CloseForm, userId }) {
   useEffect(() => {
     document.body.classList.add("no-scroll");
 
-    const savedPreferences = JSON.parse(
-      localStorage.getItem(`preferences_${userId}`)
-    );
-    if (savedPreferences) {
-      set_add_edit_del(savedPreferences.add_edit_del);
-      set_pp(savedPreferences.pp);
-      set_categ(savedPreferences.categ);
-      set_dateAdd(savedPreferences.dateAdd);
-      set_dateUpdate(savedPreferences.dateUpdate);
-      set_theme(savedPreferences.theme);
+    // Retrieve and parse saved preferences
+    const savedPreferences =
+      JSON.parse(localStorage.getItem(`preferences_${userId}`)) || {};
+    const savedTheme = localStorage.getItem("theme");
 
-      setTempPreferences(savedPreferences);
+    // Set preferences state
+    set_add_edit_del(savedPreferences.add_edit_del ?? true);
+    set_pp(savedPreferences.pp ?? true);
+    set_categ(savedPreferences.categ ?? true);
+    set_dateAdd(savedPreferences.dateAdd ?? true);
+    set_dateUpdate(savedPreferences.dateUpdate ?? true);
+    setTempPreferences(savedPreferences);
+
+    // Set theme state
+    if (savedTheme !== null) {
+      set_theme(JSON.parse(savedTheme));
+      setTempTheme(JSON.parse(savedTheme));
+    } else {
+      set_theme(true); // Default to light theme if no saved theme
     }
 
     return () => {
@@ -70,9 +78,9 @@ export default function Preferences({ CloseForm, userId }) {
       categ,
       dateAdd,
       dateUpdate,
-      theme,
     };
     localStorage.setItem(`preferences_${userId}`, JSON.stringify(preferences));
+    localStorage.setItem("theme", JSON.stringify(theme));
     document.documentElement.setAttribute(
       "data-theme",
       theme ? "light" : "dark"
@@ -86,7 +94,7 @@ export default function Preferences({ CloseForm, userId }) {
     set_categ(tempPreferences.categ);
     set_dateAdd(tempPreferences.dateAdd);
     set_dateUpdate(tempPreferences.dateUpdate);
-    set_theme(tempPreferences.theme);
+    set_theme(tempTheme);
     CloseForm();
   };
 
@@ -96,8 +104,8 @@ export default function Preferences({ CloseForm, userId }) {
 
   return (
     <div className="flex fixed z-[200] top-0 flex-col p-5 w-screen h-screen items-center justify-center bg-[#00000040] backdrop-blur-[2px]">
-      <div className="pt-4 md:pt-4 p-7 border-[10px] border-transparent  md:p-10 mx-10 z-40 w-full max-w-[400px] md:max-w-[450px] overflow-auto hidden_scroll_bar bg-[var(--form-bg)] rounded-lg shadow-lg shadow-[var(--shaddow)] text-[var(--text-prim)]">
-        <div className="flex w-full justify-end ">
+      <div className="pt-4 md:pt-4 p-7 border-[10px] border-transparent md:p-10 mx-10 z-40 w-full max-w-[400px] md:max-w-[450px] overflow-auto hidden_scroll_bar bg-[var(--form-bg)] rounded-lg shadow-lg shadow-[var(--shaddow)] text-[var(--text-prim)]">
+        <div className="flex w-full justify-end">
           <button
             onClick={CloseForm}
             className="mr-[-25px] mt-[-10px] md:mr-[-35px] text-[var(--text-sec)] flex justify-center items-center size-6 rounded-full hover:bg-red-500 hover:text-white transition-all duration-200"
@@ -110,13 +118,13 @@ export default function Preferences({ CloseForm, userId }) {
         </p>
         <div className="flex flex-col gap-4 text-sm md:text-base">
           <div className="flex flex-col gap-1">
-            <h1 className=" font-semibold mb-2">General</h1>
+            <h1 className="font-semibold mb-2">General</h1>
             {generalOptions.map((op, index) => (
               <div
                 className="flex justify-between gap-2 items-center"
                 key={index}
               >
-                <label className="">{op.name}</label>
+                <label>{op.name}</label>
                 <div
                   onClick={() => toggleSwitch(op.setter)}
                   className={`relative w-10 h-5 transition duration-200 ease-linear rounded-full ${
@@ -135,7 +143,7 @@ export default function Preferences({ CloseForm, userId }) {
             ))}
           </div>
 
-          <hr className="h-[1px] border-none bg-[#c1c1c1a6] " />
+          <hr className="h-[1px] border-none bg-[#c1c1c1a6]" />
 
           <div className="flex flex-col gap-1">
             <h1 className="font-semibold mb-2">Product Details</h1>
@@ -144,7 +152,7 @@ export default function Preferences({ CloseForm, userId }) {
                 className="flex justify-between gap-2 items-center"
                 key={index}
               >
-                <label className="">{op.name}</label>
+                <label>{op.name}</label>
                 <div
                   onClick={() => toggleSwitch(op.setter)}
                   className={`relative w-10 h-5 transition duration-200 ease-linear rounded-full ${
@@ -180,9 +188,9 @@ export default function Preferences({ CloseForm, userId }) {
                     ? "0 0 13px 2px #deee00"
                     : "0 0 13px 2px #ffffff",
                 }}
-                className="w-10 h-6  peer-focus:outline-none rounded-full peer bg-[#686868] peer-checked:bg-blue-500 "
+                className="w-10 h-6 peer-focus:outline-none rounded-full peer bg-[#686868] peer-checked:bg-blue-500"
               ></div>
-              <span className="absolute left-1 w-[18px] h-6 top-1 rounded-full transition-transform peer-checked:translate-x-full ">
+              <span className="absolute left-1 w-[18px] h-6 top-1 rounded-full transition-transform peer-checked:translate-x-full">
                 {theme ? (
                   <MdSunny className="text-yellow-300" size={16} />
                 ) : (
@@ -195,13 +203,13 @@ export default function Preferences({ CloseForm, userId }) {
           <div className="flex justify-end gap-3 mt-6">
             <button
               onClick={cancelChanges}
-              className="px-4 py-2 text-sm font-medium  transition-all text-[var(--text-sec)] rounded-lg hover:text-[var(--shaddow)]"
+              className="px-4 py-2 text-sm font-medium transition-all text-[var(--text-sec)] rounded-lg hover:text-[var(--shaddow)]"
             >
               Cancel
             </button>
             <button
               onClick={savePreferences}
-              className="px-4 py-2 text-sm font-medium   transition-all  text-white bg-[var(--btn-bg)] rounded-lg hover:bg-[var(--btn-bg-sec)]"
+              className="px-4 py-2 text-sm font-medium transition-all text-white bg-[var(--btn-bg)] rounded-lg hover:bg-[var(--btn-bg-sec)]"
             >
               Save
             </button>

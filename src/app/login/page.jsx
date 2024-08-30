@@ -79,7 +79,7 @@ export default function Login() {
   return (
     <div className="flex min-h-screen flex-col items-center">
       <div className="max-w-[1400px] w-full">
-        <Header />
+        <Header user={user} />
         <div className="flex w-full items-center justify-center">
           <div className="w-full max-w-[360px] bg-[#ffffff95] p-8 py-14 m-10 rounded shadow-md">
             <h2 className="text-2xl font-bold mb-6 text-center text-teal-900">

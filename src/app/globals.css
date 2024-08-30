@@ -17,6 +17,8 @@
   --searchbar: #fff;
   --btn-icons: #042f2e;
   --btn-icons-sec: #053c3b;
+  --loader-prim: #042f2e84;
+  --loader-sec: #053f3e;
 }
 
 [data-theme="dark"] {
@@ -32,6 +34,8 @@
   --searchbar: #457b77;
   --btn-icons: #d4f9f6;
   --btn-icons-sec: #abe4df;
+  --loader-prim: #9ecac9ae;
+  --loader-sec: #efffff;
 }
 
 body {
@@ -87,8 +91,8 @@ input {
 
 .inner-ring {
   position: absolute;
-  border: 8px solid #042f2e84;
-  border-top-color: #053f3e;
+  border: 8px solid var(--loader-prim);
+  border-top-color: var(--loader-sec);
   border-radius: 50%;
   animation: spin 1.5s linear infinite;
   width: 48px;
@@ -105,8 +109,8 @@ input {
 
 .inner-ring-sm {
   position: absolute;
-  border: 4px solid #06454484;
-  border-top-color: #044d4c;
+  border: 4px solid var(--loader-prim);
+  border-top-color: var(--loader-sec);
   border-radius: 50%;
   animation: spin 1.5s linear infinite;
   width: 18px;

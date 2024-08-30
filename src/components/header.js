@@ -10,10 +10,10 @@ export default function Header({
   dockOnTop,
   openProfile,
 }) {
-  const userId = user?.id;
-  const savedPref = JSON.parse(localStorage.getItem(`preferences_${userId}`));
   const [isOpen, setIsOpen] = useState(false);
-  const logoLink = savedPref.theme
+
+  const theme = JSON.parse(localStorage.getItem("theme"));
+  const logoLink = theme
     ? "https://lh3.googleusercontent.com/pw/AP1GczN9HraQsHh0pJ0YoBThzcS0tY_-uk5zyQquRDFTVgpN6peh1An56u-fUREcdmwVRl0gE_E7MGnSXH_Zsj-fjMW8nIFHQ8lKIep5Xwi6TKKsPZa7kyQLrqofq3dw8994xfpRNfHIjbG257eM0pMU9f4U=w658-h263-s-no-gm"
     : "https://lh3.googleusercontent.com/pw/AP1GczP9XQIrnoVRw2kYBcnVxH8YYxN-SykWCV3zqQKMNev0_k6-Avre4beasxj4GhyKMmQvBKxB4aixxiopYtbKylT2sZbS8Mds7hgD6pL6y1Pc2-ZS2aCOg4K2JWKuTX_Cz9RGVnD3yYEECkwl9j2E59TF=w1350-h540-s-no-gm";
   const defaultProfilePictureLink =

@@ -22,9 +22,9 @@ export default function FilterCard({
   };
 
   return (
-    <div className="filterCard absolute p-6 pt-8 top-9 right-[75px] text-xs md:text-sm border border-gray-300 text-gray-600 w-[280px] bg-[#dfeaea] shadow-md shadow-[#00000052] rounded-xl z-30">
+    <div className="filterCard absolute p-6 pt-8 top-9 right-[75px] text-xs md:text-sm border border-gray-300 text-[var(--text-prim)] w-[280px] bg-[var(--form-bg)] shadow-md shadow-[var(--shaddow)] rounded-xl z-30">
       <div className="flex flex-col gap-3">
-        <p className="font-bold text-lg md:text-xl pb-1 text-teal-700">
+        <p className="font-bold text-lg md:text-xl pb-1 text-[var(--form-heading)]">
           Filter Products
         </p>
         <form onSubmit={handleSubmit}>
@@ -34,7 +34,7 @@ export default function FilterCard({
               <select
                 onChange={handleCategoryChange}
                 value={filterCategoryId}
-                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-600"
+                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--form-heading)]"
               >
                 <option value="">Select a category</option>
                 {categories?.map((categ) => (
@@ -50,7 +50,7 @@ export default function FilterCard({
                 value={minPrice}
                 onChange={handleMinPriceChange}
                 type="number"
-                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-600"
+                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--form-heading)]"
               />
             </div>
             <div className="flex flex-col gap-1">
@@ -63,7 +63,7 @@ export default function FilterCard({
               />
             </div>
             <div className="flex flex-col mt-2 gap-1">
-              <button className="w-full px-4 py-2 text-white bg-teal-600 rounded-md hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-600">
+              <button className="w-full px-4 py-2 text-white bg-[var(--btn-bg)] rounded-md hover:bg-[var(--btn-bg-sec)] focus:outline-none focus:ring-2 focus:ring-[var(--btn-bg)]">
                 Apply
               </button>
               {filterApplied && (
