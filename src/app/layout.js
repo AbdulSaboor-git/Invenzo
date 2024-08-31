@@ -9,11 +9,15 @@ const inter = Inter({ subsets: ["latin"] });
 export default function RootLayout({ children }) {
   useEffect(() => {
     const theme = JSON.parse(localStorage.getItem("theme"));
+    const scheme = localStorage.getItem("colorScheme");
     if (theme !== null) {
       document.documentElement.setAttribute(
         "data-theme",
         theme ? "light" : "dark"
       );
+    }
+    if (scheme !== null) {
+      document.documentElement.setAttribute("color-scheme", scheme);
     }
   }, []);
 
