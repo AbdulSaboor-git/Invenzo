@@ -11,8 +11,10 @@ export default function Preferences({ CloseForm, userId }) {
   const [dateAdd, set_dateAdd] = useState(true);
   const [dateUpdate, set_dateUpdate] = useState(true);
   const [theme, set_theme] = useState(true);
+  const [colorScheme, setColorScheme] = useState("green"); // Default color scheme
   const [tempPreferences, setTempPreferences] = useState({});
   const [tempTheme, setTempTheme] = useState(true);
+  const [tempColorScheme, setTempColorScheme] = useState("green"); // Temp color scheme
   const dispatch = useDispatch();
 
   const showMessage = (msg, state) => {
@@ -31,6 +33,7 @@ export default function Preferences({ CloseForm, userId }) {
     const savedPreferences =
       JSON.parse(localStorage.getItem(`preferences_${userId}`)) || {};
     const savedTheme = localStorage.getItem("theme");
+    const savedColorScheme = localStorage.getItem("colorScheme");
 
     // Set preferences state
     set_add_edit_del(savedPreferences.add_edit_del ?? true);
@@ -46,6 +49,12 @@ export default function Preferences({ CloseForm, userId }) {
       setTempTheme(JSON.parse(savedTheme));
     } else {
       set_theme(true); // Default to light theme if no saved theme
+    }
+
+    // Set color scheme state
+    if (savedColorScheme !== null) {
+      setColorScheme(savedColorScheme);
+      setTempColorScheme(savedColorScheme);
     }
 
     return () => {
@@ -81,10 +90,12 @@ export default function Preferences({ CloseForm, userId }) {
     };
     localStorage.setItem(`preferences_${userId}`, JSON.stringify(preferences));
     localStorage.setItem("theme", JSON.stringify(theme));
+    localStorage.setItem("colorScheme", colorScheme);
     document.documentElement.setAttribute(
       "data-theme",
       theme ? "light" : "dark"
     );
+    document.documentElement.setAttribute("color-scheme", colorScheme);
     showMessage("Preferences saved", true);
   };
 
@@ -95,6 +106,7 @@ export default function Preferences({ CloseForm, userId }) {
     set_dateAdd(tempPreferences.dateAdd);
     set_dateUpdate(tempPreferences.dateUpdate);
     set_theme(tempTheme);
+    setColorScheme(tempColorScheme);
     CloseForm();
   };
 
@@ -102,13 +114,15 @@ export default function Preferences({ CloseForm, userId }) {
     setter((prevValue) => !prevValue);
   };
 
+  const colorOptions = ["green", "blue", "purple", "orange"];
+
   return (
     <div className="flex fixed z-[200] top-0 flex-col p-5 w-screen h-screen items-center justify-center bg-[#00000040] backdrop-blur-[2px]">
-      <div className="pt-4 md:pt-4 p-7 border-[10px] border-transparent md:p-10 mx-10 z-40 w-full max-w-[400px] md:max-w-[450px] overflow-auto hidden_scroll_bar bg-[var(--form-bg)] rounded-lg shadow-lg shadow-[var(--shaddow)] text-[var(--text-prim)]">
-        <div className="flex w-full justify-end">
+      <div className="pt-6 md:pt-6 p-10 md:p-11 mx-10 z-40 w-full max-w-[400px] md:max-w-[450px] overflow-auto hidden_scroll_bar border border-gray-300 bg-[var(--form-bg)] rounded-lg shadow-lg shadow-[var(--shaddow)] text-[var(--text-prim)]">
+        <div className="flex w-full justify-end ">
           <button
             onClick={CloseForm}
-            className="mr-[-25px] mt-[-10px] md:mr-[-35px] text-[var(--text-sec)] flex justify-center items-center size-6 rounded-full hover:bg-red-500 hover:text-white transition-all duration-200"
+            className="mr-[-25px] mt-[-10px]  md:mr-[-30px] text-[var(--text-sec)] flex justify-center items-center size-6 rounded-full hover:bg-red-500 hover:text-white transition-all duration-200"
           >
             <MdClose size={16} />
           </button>
@@ -117,7 +131,7 @@ export default function Preferences({ CloseForm, userId }) {
           Preferences
         </p>
         <div className="flex flex-col gap-4 text-sm md:text-base">
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-1.5">
             <h1 className="font-semibold mb-2">General</h1>
             {generalOptions.map((op, index) => (
               <div
@@ -145,7 +159,7 @@ export default function Preferences({ CloseForm, userId }) {
 
           <hr className="h-[1px] border-none bg-[#c1c1c1a6]" />
 
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-1.5">
             <h1 className="font-semibold mb-2">Product Details</h1>
             {productOptions.map((op, index) => (
               <div
@@ -173,47 +187,65 @@ export default function Preferences({ CloseForm, userId }) {
 
           <hr className="h-[1px] border-none bg-[#c1c1c1a6]" />
 
-          <div className="flex justify-between items-center">
-            <h1 className="font-semibold">Theme</h1>
-            <label className="relative inline-flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                checked={theme}
-                onChange={() => toggleSwitch(set_theme)}
-                className="sr-only peer"
-              />
-              <div
-                style={{
-                  boxShadow: theme
-                    ? "0 0 13px 2px #deee00"
-                    : "0 0 13px 2px #ffffff",
-                }}
-                className="w-10 h-6 peer-focus:outline-none rounded-full peer bg-[#686868] peer-checked:bg-blue-500"
-              ></div>
-              <span className="absolute left-1 w-[18px] h-6 top-1 rounded-full transition-transform peer-checked:translate-x-full">
-                {theme ? (
-                  <MdSunny className="text-yellow-300" size={16} />
-                ) : (
-                  <FaMoon className="text-white" size={16} />
-                )}
-              </span>
-            </label>
+          <div className="flex justify-between items-center gap-1">
+            <h1 className="font-semibold mb-2">Theme</h1>
+            <div className="flex justify-between items-center">
+              <label className="relative inline-flex items-center mr-0.5 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={theme}
+                  onChange={() => toggleSwitch(set_theme)}
+                  className="sr-only peer"
+                />
+                <div
+                  style={{
+                    boxShadow: theme
+                      ? "0 0 13px 2px #deee00"
+                      : "0 0 13px 2px #ffffff",
+                  }}
+                  className="w-10 h-6 peer-focus:outline-none rounded-full peer bg-[#686868] peer-checked:bg-blue-500"
+                ></div>
+                <span className="absolute left-1 w-[18px] h-6 top-1 rounded-full transition-transform peer-checked:translate-x-full">
+                  {theme ? (
+                    <MdSunny className="text-yellow-300" size={16} />
+                  ) : (
+                    <FaMoon className="text-white" size={16} />
+                  )}
+                </span>
+              </label>
+            </div>
           </div>
 
-          <div className="flex justify-end gap-3 mt-6">
-            <button
-              onClick={cancelChanges}
-              className="px-5 py-2 text-sm font-medium  text-[var(--text-prim)]  rounded-full hover:text-[#afafaf]"
+          <hr className="h-[1px] border-none bg-[#c1c1c1a6]" />
+
+          <div className="flex justify-between items-center gap-1">
+            <h1 className="font-semibold mb-2">Color Scheme</h1>
+            <select
+              className="px-4 py-1 text-[var(--text-prim)] border border-[var(--prod-card-details-border)] rounded-md"
+              value={colorScheme}
+              onChange={(e) => setColorScheme(e.target.value)}
             >
-              Cancel
-            </button>
-            <button
-              onClick={savePreferences}
-              className="px-5 py-2 text-sm font-medium -mr-1.5 text-white bg-[var(--btn-bg)] rounded-full hover:bg-[var(--btn-bg-sec)]"
-            >
-              Save
-            </button>
+              {colorOptions.map((color) => (
+                <option key={color} value={color}>
+                  {color.charAt(0).toUpperCase() + color.slice(1)}
+                </option>
+              ))}
+            </select>
           </div>
+        </div>
+        <div className="flex w-full mt-6 gap-3 justify-end">
+          <button
+            onClick={cancelChanges}
+            className="px-5 py-1.5 bg-red-500 hover:bg-red-600 text-white  rounded-full"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={savePreferences}
+            className="px-5 py-1.5 bg-[var(--btn-bg)] hover:bg-[var(--btn-bg-sec)] text-white rounded-full"
+          >
+            Save
+          </button>
         </div>
       </div>
     </div>

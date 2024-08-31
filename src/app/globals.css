@@ -2,11 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+:root[color-scheme="green"] {
   --background-prim: #c8f6f6;
-  --background-sec: #00a5a5; /* Dark Teal */
-  --background-sec-transparent: #019f9f6a; /* Dark Teal */
-  --prod-card-border: #019f9f3b; /* Dark Teal */
+  --background-sec: #00a5a5;
+  --background-sec-transparent: #019f9f6a;
+  --prod-card-border: #019f9f3b;
   --text-prim: #404040;
   --text-sec: #626262;
   --form-bg: #d3e9e9;
@@ -33,11 +33,11 @@
   --prod-card-details-border: #209d958b;
 }
 
-[data-theme="dark"] {
-  --background-prim: #005d5d; /* Darker Teal for dark mode */
+[data-theme="dark"][color-scheme="green"] {
+  --background-prim: #005d5d;
   --background-sec: #001c1c;
-  --background-sec-transparent: #001b1bc2; /* Dark Teal */
-  --prod-card-border: #001b1b14; /* Dark Teal */
+  --background-sec-transparent: #001b1bc2;
+  --prod-card-border: #001b1b14;
   --text-prim: #f5f5f5;
   --text-sec: #e1e1e1;
   --btn-bg: #0c8278;
@@ -62,6 +62,192 @@
   --prod-card-details: #437d798d;
   --prod-card-details-sec: #376e6c9b;
   --prod-card-details-border: #d1d5d58d;
+}
+
+:root[color-scheme="blue"] {
+  --background-prim: #e0f7fc; /* Very light blue */
+  --background-sec: #00a3e0; /* Vibrant blue */
+  --background-sec-transparent: #00a3e06a; /* Vibrant blue with transparency */
+  --prod-card-border: #00a3e03b; /* Light blue border with transparency */
+  --text-prim: #404040; /* Dark gray for primary text */
+  --text-sec: #626262; /* Medium gray for secondary text */
+  --form-bg: #d8f1f9; /* Light blue for form background */
+  --form-heading: #0f77aa; /* Medium blue for form headings */
+  --input-field: #ffffff; /* White for input fields */
+  --shaddow: #00000040; /* Black shadow with transparency */
+  --btn-bg: #0095d1; /* Medium blue for primary buttons */
+  --btn-bg-sec: #007bb3; /* Slightly darker blue for secondary buttons */
+  --btn-alt: #005a8d; /* Dark blue for alternate buttons */
+  --btn-alt-sec: #004a75; /* Darker blue for alternate secondary buttons */
+  --btn-alt-2: #003a5f; /* Even darker blue for alternate buttons */
+  --btn-alt-2-sec: #002f4d; /* Darkest blue for alternate secondary buttons */
+  --searchbar: #ffffff; /* White for search bar background */
+  --btn-icons: #002f4d; /* Dark blue for button icons */
+  --btn-icons-sec: #003a5f; /* Slightly lighter dark blue for secondary icons */
+  --loader-prim: #003a5f84; /* Dark blue with transparency for loaders */
+  --loader-sec: #004e6f; /* Slightly lighter dark blue for secondary loaders */
+  --text-alt: #e2faff; /* Very light blue for alternate text */
+  --text-alt-2: #c9e9f2; /* Light blue for secondary alternate text */
+  --text-alt-3: #00a3e0; /* Vibrant blue for tertiary alternate text */
+  --prod-card: #ffffff; /* White for product cards */
+  --prod-card-details: #e2faff; /* Very light blue for product card details */
+  --prod-card-details-sec: #d8f0f7; /* Slightly darker light blue for secondary details */
+  --prod-card-details-border: #00a3e08b; /* Light blue border with transparency */
+}
+
+[data-theme="dark"][color-scheme="blue"] {
+  --background-prim: #005f87; /* Dark blue */
+  --background-sec: #001f2d; /* Very dark blue */
+  --background-sec-transparent: #001f2dc2; /* Very dark blue with transparency */
+  --prod-card-border: #001f2d14; /* Very dark blue border with transparency */
+  --text-prim: #f5f5f5; /* Light gray for primary text */
+  --text-sec: #e1e1e1; /* Slightly darker light gray for secondary text */
+  --btn-bg: #007bb3; /* Darker medium blue for primary buttons */
+  --btn-bg-sec: #006598; /* Slightly darker blue for secondary buttons */
+  --btn-alt: #b3e1f6; /* Light blue for alternate buttons */
+  --btn-alt-sec: #89cce6; /* Slightly darker light blue for secondary alternate buttons */
+  --btn-alt-2: #006598; /* Darker blue for alternate buttons */
+  --btn-alt-2-sec: #005380; /* Even darker blue for alternate secondary buttons */
+  --form-bg: #074764; /* Dark blue with a hint of teal for form background */
+  --form-heading: #b3e1f6; /* Light blue for form headings */
+  --input-field: #457687; /* Medium dark blue for input fields */
+  --shaddow: #ffffff8f; /* White shadow with transparency */
+  --searchbar: #457687; /* Medium dark blue for search bar background */
+  --btn-icons: #b3e1f6; /* Light blue for button icons */
+  --btn-icons-sec: #85c0da; /* Slightly darker light blue for secondary icons */
+  --loader-prim: #85c0daad; /* Light blue with transparency for loaders */
+  --loader-sec: #e1f7fc; /* Very light blue for secondary loaders */
+  --text-alt: #164559; /* Dark blue-green for alternate text */
+  --text-alt-2: #165166; /* Slightly darker dark blue-green for secondary alternate text */
+  --text-alt-3: #66c2e9; /* Light blue for tertiary alternate text */
+  --prod-card: #205c74c6; /* Dark blue with transparency for product cards */
+  --prod-card-details: #407a8c8d; /* Medium dark blue for product card details */
+  --prod-card-details-sec: #365e6e9b; /* Darker medium blue for secondary details */
+  --prod-card-details-border: #b3e1f68d; /* Light blue border with transparency */
+}
+
+:root[color-scheme="purple"] {
+  --background-prim: #f3e5f5;
+  --background-sec: #9c27b0;
+  --background-sec-transparent: #9c27b06a;
+  --prod-card-border: #9c27b03b;
+  --text-prim: #333333;
+  --text-sec: #555555;
+  --form-bg: #e1bee7;
+  --form-heading: #7b1fa2;
+  --input-field: #ffffff;
+  --shaddow: #00000040;
+  --btn-bg: #8e24aa;
+  --btn-bg-sec: #7b1fa2;
+  --btn-alt: #6a1b9a;
+  --btn-alt-sec: #4a148c;
+  --btn-alt-2: #3d0e62;
+  --btn-alt-2-sec: #2a0a4d;
+  --searchbar: #ffffff;
+  --btn-icons: #2a0a4d;
+  --btn-icons-sec: #4a148c;
+  --loader-prim: #2a0a4d84;
+  --loader-sec: #4a148c;
+  --text-alt: #f3e5f5;
+  --text-alt-2: #e1bee7;
+  --text-alt-3: #9c27b0;
+  --prod-card: #ffffff;
+  --prod-card-details: #f3e5f5;
+  --prod-card-details-sec: #e1bee7;
+  --prod-card-details-border: #9c27b08b;
+}
+
+[data-theme="dark"][color-scheme="purple"] {
+  --background-prim: #330e61;
+  --background-sec: #100821;
+  --background-sec-transparent: #100821c2;
+  --prod-card-border: #1e0f3d14;
+  --text-prim: #f5f5f5;
+  --text-sec: #e1e1e1;
+  --btn-bg: #7b1fa2;
+  --btn-bg-sec: #6a1b9a;
+  --btn-alt: #b39ddb;
+  --btn-alt-sec: #d1c4e9;
+  --btn-alt-2: #6a1b9a;
+  --btn-alt-2-sec: #7b1fa2;
+  --form-bg: #2c003e;
+  --form-heading: #b39ddb;
+  --input-field: #4a148c;
+  --shaddow: #ffffff8f;
+  --searchbar: #4a148c;
+  --btn-icons: #b39ddb;
+  --btn-icons-sec: #9c27b0;
+  --loader-prim: #9c27b0ad;
+  --loader-sec: #d1c4e9;
+  --text-alt: #6a1b9a;
+  --text-alt-2: #7b1fa2;
+  --text-alt-3: #d1c4e9;
+  --prod-card: #2c003ec6;
+  --prod-card-details: #551f979b;
+  --prod-card-details-sec: #4a148c9b;
+  --prod-card-details-border: #b39ddb8d;
+}
+
+:root[color-scheme="orange"] {
+  --background-prim: #fff8e1;
+  --background-sec: #ff9800;
+  --background-sec-transparent: #ff98006a;
+  --prod-card-border: #ff98003b;
+  --text-prim: #404040;
+  --text-sec: #626262;
+  --form-bg: #fbe9e7;
+  --form-heading: #e65100;
+  --input-field: #ffffff;
+  --shaddow: #00000040;
+  --btn-bg: #fb8c00;
+  --btn-bg-sec: #f57c00;
+  --btn-alt: #e65100;
+  --btn-alt-sec: #d84315;
+  --btn-alt-2: #bf360c;
+  --btn-alt-2-sec: #ab260c;
+  --searchbar: #ffffff;
+  --btn-icons: #bf360c;
+  --btn-icons-sec: #e65100;
+  --loader-prim: #bf360c84;
+  --loader-sec: #e65100;
+  --text-alt: #fff8e1;
+  --text-alt-2: #fbe9e7;
+  --text-alt-3: #ff9800;
+  --prod-card: #ffffff;
+  --prod-card-details: #fff8e1;
+  --prod-card-details-sec: #fbe9e7;
+  --prod-card-details-border: #ff98008b;
+}
+
+[data-theme="dark"][color-scheme="orange"] {
+  --background-prim: #ff6f00;
+  --background-sec: #1b110f;
+  --background-sec-transparent: #1b110fc2;
+  --prod-card-border: #3e272314;
+  --text-prim: #f5f5f5;
+  --text-sec: #e1e1e1;
+  --btn-bg: #f57c00;
+  --btn-bg-sec: #fb8c00;
+  --btn-alt: #fbe9e7;
+  --btn-alt-sec: #fbc02d;
+  --btn-alt-2: #f57c00;
+  --btn-alt-2-sec: #fb8c00;
+  --form-bg: #4e342e;
+  --form-heading: #fbe9e7;
+  --input-field: #bf360c;
+  --shaddow: #ffffff8f;
+  --searchbar: #bf360c;
+  --btn-icons: #fbe9e7;
+  --btn-icons-sec: #e65100;
+  --loader-prim: #e65100ad;
+  --loader-sec: #fbe9e7;
+  --text-alt: #bf360c;
+  --text-alt-2: #e65100;
+  --text-alt-3: #fbc02d;
+  --prod-card: #3e2723c6;
+  --prod-card-details: #5d4037;
+  --prod-card-details-sec: #4e342e9b;
+  --prod-card-details-border: #fbe9e78d;
 }
 
 body {
