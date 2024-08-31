@@ -5,7 +5,7 @@ export default function Left_side({ buttons, openPreferences }) {
       {buttons.map((btn, index) => (
         <button
           onClick={btn.clickEvent}
-          className="bg-[#008e8e] hover:bg-[#007c7c] hover:scale-x-[1.01]  transition-transform duration-200 ease-in-out   text-white text-sm text-left py-4 px-6 rounded-xl shadow-sm shadow-[#000000cd]"
+          className="bg-[var(--btn-alt-2)] hover:bg-[var(--btn-alt-2-sec)] hover:scale-x-[1.01]    text-white text-sm text-left py-4 px-6 rounded-xl shadow-sm shadow-[#00000062]"
           key={index}
         >
           <div className="flex gap-4 items-center justify-start">

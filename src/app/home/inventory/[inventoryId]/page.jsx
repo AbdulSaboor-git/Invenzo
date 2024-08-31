@@ -25,7 +25,7 @@ import { setProducts } from "@/redux/products";
 import { setCategories } from "@/redux/categories";
 import Confirmation_dialogue from "@/components/confirmation_dialogue";
 import Preferences from "@/components/preferences";
-import UserProfile from "@/app/home/inventory/[inventoryId]/components/user_profile";
+import UserProfile from "@/components/user_profile";
 
 export default function Inventory({ params }) {
   const dispatch = useDispatch();
@@ -415,24 +415,26 @@ export default function Inventory({ params }) {
           user={user}
         />
       )}
-      {role !== "viewer" && savedPreferences.add_edit_del === true && (
-        <div className="flex flex-col gap-2 fixed bottom-[25px] items-center justify-center transition-all right-6 md:hidden">
-          <div
-            className={`transition-all duration-300 ${
-              showScrollToTop
-                ? showAddItemBtn
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-100 translate-y-12"
-                : "opacity-0 translate-y-0"
-            }`}
+      <div className="flex flex-col gap-2 fixed bottom-[25px] items-center justify-center transition-all right-6 md:hidden">
+        <div
+          className={`transition-all duration-300 ${
+            showScrollToTop
+              ? showAddItemBtn
+                ? "opacity-100 translate-y-0"
+                : `opacity-100 ${
+                    role !== "viewer" ? "translate-y-12" : "translate-y-0"
+                  } `
+              : "opacity-0 translate-y-0"
+          }`}
+        >
+          <button
+            onClick={scrollToTop}
+            className="rounded-full size-[30px] text-base text-[var(--text-alt)] bg-[var(--btn-alt)] z-50 flex items-center justify-center hover:bg-[var(--btn-alt-sec)] hover:scale-[1.05] transition-transform duration-200 ease-in-out shadow-sm shadow-[#000000cd]"
           >
-            <button
-              onClick={scrollToTop}
-              className="rounded-full size-[30px] text-base bg-teal-800 z-50 flex items-center justify-center hover:bg-teal-900 hover:scale-[1.05] transition-transform duration-200 ease-in-out shadow-sm shadow-[#000000cd]"
-            >
-              <MdArrowUpward />
-            </button>
-          </div>
+            <MdArrowUpward />
+          </button>
+        </div>
+        {role !== "viewer" && savedPreferences.add_edit_del === true && (
           <div
             className={`transition-all duration-300 ${
               showAddItemBtn
@@ -442,13 +444,13 @@ export default function Inventory({ params }) {
           >
             <button
               onClick={open_AddItemForm}
-              className="rounded-full size-[40px] text-2xl text-white bg-teal-600 z-50 flex items-center justify-center hover:bg-teal-700 hover:scale-[1.05] transition-transform duration-200 ease-in-out shadow-sm shadow-[#000000cd]"
+              className="rounded-full size-[40px] text-2xl text-white bg-[var(--btn-bg)] z-50 flex items-center justify-center hover:bg-[var(--btn-bg-sec)] hover:scale-[1.05] transition-transform duration-200 ease-in-out shadow-sm shadow-[#000000cd]"
             >
               <MdAdd />
             </button>
           </div>
-        </div>
-      )}
+        )}
+      </div>
       {isDialogOpen && (
         <Confirmation_dialogue
           isOpen={isDialogOpen}

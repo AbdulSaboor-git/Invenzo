@@ -3,50 +3,80 @@
 @tailwind utilities;
 
 :root {
-  --background-prim: #daffff;
+  --background-prim: #c8f6f6;
   --background-sec: #00a5a5; /* Dark Teal */
-  --background-sec-transparent: #1eb1b175; /* Dark Teal */
+  --background-sec-transparent: #019f9f6a; /* Dark Teal */
+  --prod-card-border: #019f9f3b; /* Dark Teal */
   --text-prim: #404040;
   --text-sec: #626262;
-  --form-bg: #dfeaea;
+  --form-bg: #d3e9e9;
   --form-heading: #0f766e;
   --input-field: #fff;
   --shaddow: #00000040;
   --btn-bg: #0d9488;
   --btn-bg-sec: #0c8278;
+  --btn-alt: #134e4a;
+  --btn-alt-sec: #126a64;
+  --btn-alt-2: #0a4a46;
+  --btn-alt-2-sec: #0b5855;
   --searchbar: #fff;
   --btn-icons: #042f2e;
   --btn-icons-sec: #053c3b;
   --loader-prim: #042f2e84;
   --loader-sec: #053f3e;
+  --text-alt: #e2fdfb;
+  --text-alt-2: #c9dfdd;
+  --text-alt-3: #20a59c;
+  --prod-card: #fff;
+  --prod-card-details: #e2fdfb;
+  --prod-card-details-sec: #d8efee;
+  --prod-card-details-border: #209d958b;
 }
 
 [data-theme="dark"] {
+  --background-prim: #005d5d; /* Darker Teal for dark mode */
   --background-sec: #001c1c;
-  --background-prim: #006767; /* Darker Teal for dark mode */
-  --background-sec-transparent: #002525c2; /* Dark Teal */
-  --text-prim: #eeeeee;
-  --text-sec: #d9d9d9;
-  --form-bg: #0a4f4f;
+  --background-sec-transparent: #001b1bc2; /* Dark Teal */
+  --prod-card-border: #001b1b14; /* Dark Teal */
+  --text-prim: #f5f5f5;
+  --text-sec: #e1e1e1;
+  --btn-bg: #0c8278;
+  --btn-bg-sec: #0d6e66;
+  --btn-alt: #d4f9f6;
+  --btn-alt-sec: #ace8e3;
+  --btn-alt-2: #0c8278;
+  --btn-alt-2-sec: #0d6e66;
+  --form-bg: #073e3e;
   --form-heading: #d4f9f6;
   --input-field: #457b77;
   --shaddow: #ffffff8f;
   --searchbar: #457b77;
   --btn-icons: #d4f9f6;
-  --btn-icons-sec: #abe4df;
+  --btn-icons-sec: #95c5c1;
   --loader-prim: #9ecac9ae;
   --loader-sec: #efffff;
+  --text-alt: #175853;
+  --text-alt-2: #175a54;
+  --text-alt-3: #8fe9e2;
+  --prod-card: #204f4fc6;
+  --prod-card-details: #437d798d;
+  --prod-card-details-sec: #376e6c9b;
+  --prod-card-details-border: #d1d5d58d;
 }
 
 body {
   color: var(--text-prim); /* This applies Tailwind's text color */
   background: linear-gradient(
     to bottom,
-    var(--background-sec) 5%,
+    var(--background-sec) 50%,
     var(--background-prim) 90%
   );
   background-attachment: fixed;
   user-select: none;
+}
+
+button {
+  transition: all 0.23s ease-in-out;
 }
 
 select,

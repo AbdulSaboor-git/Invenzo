@@ -115,14 +115,14 @@ export default function Header({
                 </button>
               </div>
               <div
-                className={` md:hidden fixed top-0 left-[-10px] w-[230px] h-full rounded-e-[30px] sidebar bg-white transition-transform duration-300 ease-in-out ${
+                className={` md:hidden fixed top-0 left-[-10px] w-[230px] h-full rounded-e-[30px] sidebar bg-[var(--form-bg)] text-[var(--text-prim)] border-r  border-gray-300 transition-transform duration-300 ease-in-out ${
                   isOpen ? "translate-x-0" : "-translate-x-[240px]"
                 }`}
                 style={{ boxShadow: "0 0 20px -5px #404040" }}
               >
                 <button
                   onClick={closeSidebar}
-                  className="absolute top-4 right-4  text-gray-600"
+                  className="absolute top-4 right-4  text-[var(--text-sec)]"
                 >
                   <MdClose style={{ fontSize: "1rem" }} />
                 </button>
@@ -130,14 +130,14 @@ export default function Header({
                 <div className="flex flex-col items-start py-6">
                   <div
                     onClick={openProfile}
-                    className="cursor-pointer flex flex-col justify-center items-center text-[#404040] font-[500] text-[12px] gap-1 ml-6"
+                    className="cursor-pointer flex flex-col justify-center items-center  font-[500] text-[12px] gap-1 ml-6"
                   >
                     <img
                       className="w-[60px] h-[60px] object-cover hover:scale-[1.03] transition-all rounded-full"
                       src={userProfilePicture || defaultProfilePictureLink}
                       alt="avatar"
                     />
-                    <p className="max-w-[120px] max-h-[40px] overflow-hidden">
+                    <p className="max-w-[120px] max-h-[40px] overflow-hidden text-[var(--text-sec)]">
                       {username}
                     </p>
                   </div>
@@ -145,15 +145,13 @@ export default function Header({
                     <div className="flex flex-col pt-8">
                       {Buttons.map(
                         (btn, index) =>
-                          btn.btn_name !== "Add Product" &&
-                          btn.btn_name !== "Preferences" && (
+                          btn.btn_name !== "Add Product" && (
                             <button
                               onClick={btn.clickEvent}
-                              className={`hover:bg-[#dff9f9]  transition-transform duration-200 ease-in-out ${
-                                btn.btn_name === "Logout"
-                                  ? "text-[#c30000]"
-                                  : "text-[#404040]"
-                              } text-[11px] px-6 py-[10px]  shadow-[#00000066]`}
+                              className={`hover:bg-[var(--text-alt-2)]  transition-transform duration-200 ease-in-out ${
+                                btn.btn_name === "Logout" &&
+                                "text-[#fc6060] font-semibold"
+                              } text-[11px] px-6 py-[10px]`}
                               key={index}
                             >
                               <div className="flex gap-3 items-center justify-start">
@@ -164,15 +162,10 @@ export default function Header({
                           )
                       )}
                     </div>
-                    <div className="flex flex-col absolute w-[190px] bottom-4 gap-1 text-[#404040] ml-6">
-                      <hr className="h-[1px] border-none bg-gray-300" />
-                      <div className="flex justify-between w-[190px] text-[12px] px-2">
-                        <p onClick={openPreferences} className="cursor-pointer">
-                          Preferences
-                        </p>
-                        <button onClick={openPreferences}>
-                          {<MdSettings className="text-base" />}
-                        </button>
+                    <div className="flex flex-col absolute w-[190px] bottom-2 gap-1.5  ml-6">
+                      <hr className="h-[1px] border-none bg-[#afafaf99]" />
+                      <div className="flex justify-center w-[190px] text-[12px] px-2">
+                        <img className="h-[40px]" src={logoLink} alt="logo" />
                       </div>
                     </div>
                   </div>

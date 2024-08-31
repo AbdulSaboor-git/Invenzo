@@ -21,7 +21,7 @@ import {
 } from "react-icons/md";
 import Preferences from "@/components/preferences";
 import LoaderSmall from "@/components/loader_small";
-import UserProfile from "@/app/home/inventory/[inventoryId]/components/user_profile";
+import UserProfile from "@/components/user_profile";
 
 export default function HomePage() {
   const [ButtonId, setButtonId] = useState(null);

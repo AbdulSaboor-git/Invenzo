@@ -158,26 +158,26 @@ export default function Manage_Moderators({
   }
 
   return (
-    <div className="flex fixed z-[200] top-0 flex-col p-5 w-screen h-screen items-center justify-center bg-[#00000040] backdrop-blur-[2px] ">
-      <div className="pt-4 md:pt-4 p-7 border-[10px] border-transparent  md:p-10 mx-10 z-40 w-full max-w-[400px] md:max-w-[450px] overflow-auto hidden_scroll_bar bg-[#dfeaea] rounded-xl shadow-lg shadow-[#00000040] text-[#404040]">
+    <div className="flex fixed z-[200] top-0 flex-col p-5 w-screen h-screen items-center justify-center bg-[#00000040] backdrop-blur-[2px]">
+      <div className="pt-6 md:pt-6 p-10 md:p-11 mx-10 z-40 w-full max-w-[400px] md:max-w-[450px] overflow-auto hidden_scroll_bar border border-gray-300 bg-[var(--form-bg)] rounded-lg shadow-lg shadow-[var(--shaddow)] text-[var(--text-prim)]">
         <div className="flex w-full justify-end ">
           <button
             onClick={CloseForm}
-            className="mr-[-25px] mt-[-10px] md:mr-[-35px] text-gray-600 flex justify-center items-center size-6 rounded-full hover:bg-red-500 hover:text-white transition-all duration-200"
+            className="mr-[-25px] mt-[-10px]  md:mr-[-30px] text-[var(--text-sec)] flex justify-center items-center size-6 rounded-full hover:bg-red-500 hover:text-white transition-all duration-200"
           >
             <MdClose size={16} />
           </button>
         </div>
-        <p className="font-bold text-lg md:text-xl pb-4 text-teal-700">
+        <p className="font-bold text-lg md:text-xl pb-4 text-[var(--form-heading)]">
           Manage Moderators
         </p>
         <div className="flex flex-col text-sm md:text-base gap-3 font-semibold">
-          <div className="flex justify-between items-center text-white bg-teal-600 rounded-full p-1">
+          <div className="flex justify-between items-center text-white bg-[var(--btn-bg)] rounded-full p-1">
             <button
               onClick={add_clicked}
-              className={`py-1 px-3 ${
+              className={`py-1 px-3 duration-75 ${
                 add_M
-                  ? `bg-white text-teal-700`
+                  ? `bg-white text-[var(--btn-bg)]`
                   : `hover:scale-[1.05] text-white`
               }  rounded-full w-full`}
             >
@@ -185,9 +185,9 @@ export default function Manage_Moderators({
             </button>
             <button
               onClick={remove_clicked}
-              className={`py-1 px-3 ${
+              className={`py-1 px-3 duration-75 ${
                 remove_M
-                  ? `bg-white text-teal-700`
+                  ? `bg-white text-[var(--btn-bg)]`
                   : `hover:scale-[1.05] text-white`
               }  rounded-full w-full`}
             >
@@ -200,13 +200,13 @@ export default function Manage_Moderators({
                 <div className="flex gap-2 items-center">
                   <label>Moderator&apos;s First Name</label>
                   <MdInfoOutline
-                    className="text-[#949494]"
+                    className="text-[var(--shaddow)]"
                     onMouseEnter={showInfoBox}
                     onMouseLeave={hideInfoBox}
                     onClick={showInfoBox}
                   />
                   {infoBox_visible && (
-                    <div className="absolute rounded-md px-2 py-[2px] border text-[#7d7d7d] border-[#a0a0a094] bg-white shadow-md shadow-[#0004] ml-[154px] mb-7 text-[10px]">
+                    <div className="absolute rounded-md px-2 py-[2px] border text-[#717171] border-[#a0a0a094] bg-white shadow-md shadow-[#0004] ml-[154px] mb-7 text-[10px]">
                       Case Sensitive
                     </div>
                   )}
@@ -214,7 +214,7 @@ export default function Manage_Moderators({
                 <input
                   type="text"
                   id="name"
-                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-600"
+                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--btn-bg)]"
                   required
                 />
               </div>
@@ -223,7 +223,7 @@ export default function Manage_Moderators({
                 <input
                   id="email"
                   type="email"
-                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-600"
+                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--btn-bg)]"
                   required
                 />
               </div>
@@ -231,7 +231,7 @@ export default function Manage_Moderators({
                 <button
                   disabled={loading}
                   onClick={handleAddModerator}
-                  className={`py-2.5 bg-teal-600 w-3/5 rounded-full text-white hover:bg-teal-700 transition-all duration-200 text-sm font-semibold ${
+                  className={`py-2.5 bg-[var(--btn-bg)] w-3/5 rounded-full text-white hover:bg-[var(--btn-bg-sec)] transition-all duration-200 text-sm font-semibold ${
                     loading && "cursor-not-allowed"
                   }`}
                 >
@@ -245,7 +245,7 @@ export default function Manage_Moderators({
               <div className="flex flex-col gap-1">
                 <p>Select a Moderator</p>
                 <select
-                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-600"
+                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--btn-bg)]"
                   required
                 >
                   <option value="">Select a Moderator</option>
@@ -265,7 +265,7 @@ export default function Manage_Moderators({
                 <button
                   disabled={loading}
                   onClick={openDialog}
-                  className={`py-2.5 bg-teal-600 w-3/5 rounded-full text-white hover:bg-teal-700 transition-all duration-200 text-sm font-semibold ${
+                  className={`py-2.5 bg-[var(--btn-bg)] w-3/5 rounded-full text-white hover:bg-[var(--btn-bg-sec)] transition-all duration-200 text-sm font-semibold ${
                     loading && "cursor-not-allowed"
                   }`}
                 >

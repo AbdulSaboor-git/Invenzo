@@ -81,23 +81,23 @@ export default function Login() {
       <div className="max-w-[1400px] w-full">
         <Header user={user} />
         <div className="flex w-full items-center justify-center">
-          <div className="w-full max-w-[360px] bg-[#ffffff95] p-8 py-14 m-10 rounded shadow-md">
-            <h2 className="text-2xl font-bold mb-6 text-center text-teal-900">
-              Login
+          <div className="w-full max-w-[360px] bg-[#ffffff47] p-8 py-14 m-10 rounded shadow-md">
+            <h2 className="text-2xl font-bold mb-6 text-center text-[var(--btn-alt)]">
+              LOGIN
             </h2>
-            <form onSubmit={handleLogin}>
-              <div className="mb-4">
-                <label
-                  className="block text-gray-700 text-sm font-bold mb-2"
-                  htmlFor="email"
-                >
+            <form
+              onSubmit={handleLogin}
+              className="flex flex-col gap-5 text-[var(--text-prim)]  text-sm font-bold "
+            >
+              <div>
+                <label className="block mb-2" htmlFor="email">
                   Email
                 </label>
                 <input
                   spellCheck="false"
                   autoComplete="false"
                   autoCorrect="false"
-                  className="shadow text-sm appearance-none border rounded w-full py-2 px-3 text-[#404040] leading-tight focus:outline-none focus:shadow-outline"
+                  className="shadow text-sm font-normal appearance-none border rounded w-full py-2 px-3 text-[var(--text-sec)] placeholder:text-[var(--text-sec)] leading-tight focus:outline-none focus:shadow-outline"
                   id="email"
                   type="email"
                   placeholder="Email"
@@ -106,15 +106,12 @@ export default function Login() {
                   required
                 />
               </div>
-              <div className="mb-6">
-                <label
-                  className="block text-gray-700 text-sm font-bold mb-2"
-                  htmlFor="password"
-                >
+              <div>
+                <label className="block mb-2" htmlFor="password">
                   Password
                 </label>
                 <input
-                  className="shadow text-sm appearance-none border rounded w-full py-2 px-3 text-[#404040] leading-tight focus:outline-none focus:shadow-outline"
+                  className="shadow text-sm font-normal appearance-none border rounded w-full py-2 px-3 text-[var(--text-sec)] placeholder:text-[var(--text-sec)] leading-tight focus:outline-none focus:shadow-outline"
                   id="password"
                   type="password"
                   placeholder="**********"
@@ -131,7 +128,7 @@ export default function Login() {
               <div className="flex items-center justify-center mt-8">
                 <button
                   disabled={loading}
-                  className={`bg-teal-900 w-24 text-center hover:bg-teal-800 rounded-full text-white font-semibold py-2 px-5 focus:outline-none focus:shadow-outline ${
+                  className={`bg-[var(--btn-alt)] transition-all w-24 text-center hover:bg-[var(--btn-alt-sec)] rounded-full text-[var(--text-alt)] font-semibold py-2 px-5 focus:outline-none focus:shadow-outline ${
                     loading ? "cursor-not-allowed" : "cursor-pointer"
                   }`}
                   type="submit"

@@ -10,44 +10,46 @@ export default function Members({ CloseForm, moderators, inv, user }) {
     };
   }, []);
   return (
-    <div className="flex fixed z-[200] top-0 flex-col p-5 w-screen h-screen items-center justify-center bg-[#00000040] backdrop-blur-[2px] ">
-      <div className="pt-4  md:pt-4 p-7 md:p-10 mx-10 z-40 w-full max-w-[420px] h-[350px] md:h-[380px] md:max-w-[470px] overflow-auto hidden_scroll_bar bg-[#dfeaea] rounded-xl shadow-lg shadow-[#00000040] text-[#404040]">
-        <div className="flex w-full justify-end sticky top-0">
+    <div className="flex fixed z-[200] top-0 flex-col p-5 w-screen h-screen items-center justify-center bg-[#00000040] backdrop-blur-[2px]">
+      <div className="pt-6 md:pt-6 p-10 md:p-11 mx-10 z-40 w-full max-w-[460px] md:max-w-[480px] overflow-auto hidden_scroll_bar border border-gray-300 bg-[var(--form-bg)] rounded-lg shadow-lg shadow-[var(--shaddow)] text-[var(--text-prim)]">
+        <div className="flex w-full justify-end ">
           <button
             onClick={CloseForm}
-            className="mr-[-15px] md:mr-[-25px] text-gray-500 flex justify-center items-center size-6  rounded-full hover:bg-red-500 hover:text-white transition-all duration-200"
+            className="mr-[-25px] mt-[-10px]  md:mr-[-30px] text-[var(--text-sec)] flex justify-center items-center size-6 rounded-full hover:bg-red-500 hover:text-white transition-all duration-200"
           >
             <MdClose size={16} />
           </button>
         </div>
-        <h1 className="font-bold text-lg md:text-xl pb-4 text-teal-700">
+        <p className="font-bold text-lg md:text-xl pb-4 text-[var(--form-heading)]">
           Inventory Members
-        </h1>
-        <div className="flex flex-col gap-4 shadow-inner shadow-black p-6 h-[230px] md:h-[250px] bg-[#fff] overflow-auto hidden_scroll_bar">
+        </p>
+        <div className="flex flex-col gap-4 shadow-inner shadow-black p-6 h-[230px] md:h-[250px] bg-[var(--text-alt)] overflow-auto hidden_scroll_bar">
           <div className="flex flex-col text-sm md:text-base">
-            <h2 className="font-bold text-base md:text-lg pb-4 text-teal-700  mb-[-10px] ">
+            <h2 className="font-bold text-base md:text-lg pb-4   mb-[-10px] ">
               Admin:
             </h2>
-            <p className="ml-4">
+            <p className="ml-4 text-[var(--text-sec)]">
               {inv?.admin?.firstName} {inv?.admin?.lastName} -{" "}
-              <span className="text-teal-800">
+              <span className="text-[var(--form-heading)]">
                 {inv?.admin?.email}
                 {user.id === inv?.admin?.id && (
-                  <span className="text-[#999] text-xs"> (You)</span>
+                  <span className="text-[#9e9e9e] text-xs"> (You)</span>
                 )}
               </span>
             </p>
           </div>
           <div className="flex flex-col text-sm md:text-base">
-            <h2 className="font-bold text-base md:text-lg pb-4 text-teal-700  mb-[-10px] ">
+            <h2 className="font-bold text-base md:text-lg pb-4   mb-[-10px] ">
               Moderators:
             </h2>
             {moderators?.map((mod) => (
-              <p className="ml-4" key={mod.id}>
+              <p className="ml-4 text-[var(--text-sec)]" key={mod.id}>
                 {mod.user.firstName} {mod.user.lastName} -{" "}
-                <span className="text-teal-800">{mod.user.email} </span>
+                <span className="text-[var(--form-heading)]">
+                  {mod.user.email}{" "}
+                </span>
                 {user.id === mod.user.id && (
-                  <span className="text-[#999] text-xs">(You)</span>
+                  <span className="text-[#9e9e9e] text-xs">(You)</span>
                 )}
               </p>
             ))}

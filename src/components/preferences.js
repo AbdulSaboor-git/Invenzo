@@ -128,13 +128,13 @@ export default function Preferences({ CloseForm, userId }) {
                 <div
                   onClick={() => toggleSwitch(op.setter)}
                   className={`relative w-10 h-5 transition duration-200 ease-linear rounded-full ${
-                    op.value ? "bg-teal-600" : "bg-[#bdbdbd]"
+                    op.value ? "bg-[var(--btn-bg)]" : "bg-[#bdbdbd]"
                   } cursor-pointer`}
                 >
                   <span
                     className={`absolute left-0 bg-white border-2 rounded-full h-5 w-5 transition transform ${
                       op.value
-                        ? "translate-x-full border-teal-600"
+                        ? "translate-x-full border-[var(--btn-bg)]"
                         : "border-[#bdbdbd]"
                     }`}
                   />
@@ -156,13 +156,13 @@ export default function Preferences({ CloseForm, userId }) {
                 <div
                   onClick={() => toggleSwitch(op.setter)}
                   className={`relative w-10 h-5 transition duration-200 ease-linear rounded-full ${
-                    op.value ? "bg-teal-600" : "bg-[#bdbdbd]"
+                    op.value ? "bg-[var(--btn-bg)]" : "bg-[#bdbdbd]"
                   } cursor-pointer`}
                 >
                   <span
                     className={`absolute left-0 bg-white border-2 rounded-full h-5 w-5 transition transform ${
                       op.value
-                        ? "translate-x-full border-teal-600"
+                        ? "translate-x-full border-[var(--btn-bg)]"
                         : "border-[#bdbdbd]"
                     }`}
                   />
@@ -203,13 +203,13 @@ export default function Preferences({ CloseForm, userId }) {
           <div className="flex justify-end gap-3 mt-6">
             <button
               onClick={cancelChanges}
-              className="px-4 py-2 text-sm font-medium transition-all text-[var(--text-sec)] rounded-lg hover:text-[var(--shaddow)]"
+              className="px-5 py-2 text-sm font-medium  text-[var(--text-prim)]  rounded-full hover:text-[#afafaf]"
             >
               Cancel
             </button>
             <button
               onClick={savePreferences}
-              className="px-4 py-2 text-sm font-medium transition-all text-white bg-[var(--btn-bg)] rounded-lg hover:bg-[var(--btn-bg-sec)]"
+              className="px-5 py-2 text-sm font-medium -mr-1.5 text-white bg-[var(--btn-bg)] rounded-full hover:bg-[var(--btn-bg-sec)]"
             >
               Save
             </button>

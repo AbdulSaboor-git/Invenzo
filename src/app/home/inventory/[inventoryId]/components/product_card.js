@@ -23,7 +23,7 @@ export default function ProductCard({
   }
   return (
     <div
-      className="w-full bg-white rounded-xl p-4 text-[#424242] shadow-sm shadow-[#00000061] hover:scale-[1.005] transition-transform duration-200 ease-in-out cursor-pointer"
+      className="w-full bg-[var(--prod-card)] border border-[var(--prod-card-border)] rounded-xl p-4 text-[var(--text-prim)] shadow-sm shadow-[#00000061] hover:scale-[1.005] transition-transform duration-200 ease-in-out cursor-pointer"
       onClick={() => toggleProductDetails(prod.id)}
     >
       <div className="flex justify-between">
@@ -46,20 +46,20 @@ export default function ProductCard({
           </div>
         )}
       </div>
-      <p className="text-[13px] text-[#626262]">Rs. {prod.salePrice}</p>
+      <p className="text-[13px] text-[var(--text-sec)]">Rs. {prod.salePrice}</p>
       {prod.govtSalePrice !== null && prod.govtSalePrice !== 0 && (
-        <p className="text-[#626262] text-[13px]">
+        <p className="text-[var(--text-sec)] text-[13px]">
           Rs. {prod.govtSalePrice} (Govt)
         </p>
       )}
       <div className="flex justify-center ">
         {isExpanded && (
           <div
-            className="m-3 p-7 md:px-10 w-full max-w-[600px] rounded-3xl shadow-sm bg-[#dbeded] hover:bg-[#cde4e4] transition-colors duration-200 ease-in-out"
+            className="m-3 p-7 md:px-10 w-full max-w-[600px] rounded-3xl shadow-sm bg-[var(--prod-card-details)] hover:bg-[var(--prod-card-details-sec)] transition-colors duration-200 ease-in-out"
             style={{ boxShadow: "0 0 10px -2px #00000096" }}
             onClick={handleTableClick}
           >
-            <p className="font-bold py-2 text-center text-teal-800 text-base md:text-[18px]">
+            <p className="font-bold py-2 text-center text-[var(--form-heading)] text-base md:text-[18px]">
               {prod.name}
             </p>
             <table className="w-full text-center text-[12px] md:text-[14px] ">
@@ -68,55 +68,55 @@ export default function ProductCard({
                   <td className="border border-[#0079796c] p-1 font-semibold min-w-[130px]">
                     Name
                   </td>
-                  <td className="border border-[#0079796c] p-1 min-w-[130px]">
+                  <td className="border border-[var(--text-alt-3)] p-1 min-w-[130px]">
                     {prod.name}
                   </td>
                 </tr> */}
                 {savedPreferences.categ && (
                   <tr>
-                    <td className="border border-[#0079796c] text-teal-800 p-1 font-semibold">
+                    <td className="border border-[var(--prod-card-details-border)]  p-1 font-semibold">
                       Category
                     </td>
-                    <td className="border border-[#0079796c] p-1">
+                    <td className="border border-[var(--prod-card-details-border)] p-1">
                       {prod.category.name}
                     </td>
                   </tr>
                 )}
                 {savedPreferences.pp && (
                   <tr>
-                    <td className="border border-[#0079796c] text-teal-800 p-1 font-semibold">
+                    <td className="border border-[var(--prod-card-details-border)] p-1 font-semibold">
                       Purchase Price
                     </td>
-                    <td className="border border-[#0079796c] p-1">
+                    <td className="border border-[var(--prod-card-details-border)] p-1">
                       Rs. {prod.purchasePrice}
                     </td>
                   </tr>
                 )}
 
                 <tr>
-                  <td className="border border-[#0079796c] text-teal-800 p-1 font-semibold">
+                  <td className="border border-[var(--prod-card-details-border)]  p-1 font-semibold">
                     Sale Price
                   </td>
-                  <td className="border border-[#0079796c] p-1">
+                  <td className="border border-[var(--prod-card-details-border)] p-1">
                     Rs. {prod.salePrice}
                   </td>
                 </tr>
                 {prod.govtSalePrice !== null && prod.govtSalePrice !== 0 && (
                   <tr>
-                    <td className="border border-[#0079796c] text-teal-800 p-1 font-semibold">
+                    <td className="border border-[var(--prod-card-details-border)]  p-1 font-semibold">
                       Govt. Sale Price
                     </td>
-                    <td className="border border-[#0079796c] p-1">
+                    <td className="border border-[var(--prod-card-details-border)] p-1">
                       Rs. {prod.govtSalePrice}
                     </td>
                   </tr>
                 )}
                 {savedPreferences.dateAdd === true && (
                   <tr>
-                    <td className="border border-[#0079796c] text-teal-800 p-1 font-semibold">
+                    <td className="border border-[var(--prod-card-details-border)] p-1 font-semibold">
                       Date Added
                     </td>
-                    <td className="border border-[#0079796c] p-1 min-w-[140px]">
+                    <td className="border border-[var(--prod-card-details-border)] p-1 min-w-[140px]">
                       {new Date(prod.createdAt).toLocaleString("en-GB", {
                         hour12: true,
                         timeZone: "Asia/Karachi",
@@ -126,10 +126,10 @@ export default function ProductCard({
                 )}
                 {savedPreferences.dateUpdate === true && (
                   <tr>
-                    <td className="border border-[#0079796c] text-teal-800 p-1 font-semibold">
+                    <td className="border border-[var(--prod-card-details-border)]  p-1 font-semibold">
                       Date Updated
                     </td>
-                    <td className="border border-[#0079796c] p-1">
+                    <td className="border border-[var(--prod-card-details-border)] p-1">
                       {new Date(prod.updatedAt).toLocaleString("en-GB", {
                         hour12: true,
                         timeZone: "Asia/Karachi",

@@ -24,9 +24,9 @@ export default function UserProfile({ CloseForm, user, logout }) {
   }, []);
 
   return (
-    <div className="flex fixed z-[200] top-0 flex-col p-5 w-screen h-screen items-center justify-center bg-[#00000040] backdrop-blur-[2px] ">
+    <div className="flex fixed z-[200] top-0 flex-col  p-5 w-screen h-screen items-center justify-center bg-[#00000040] backdrop-blur-[2px] ">
       <div
-        className={`pt-4 pb-10 md:py-4 text-[var(--text-prim)]  md:pb-12 px-10 md:px-14 mx-10 z-40 w-full max-w-[420px] md:max-w-[470px] overflow-auto hidden_scroll_bar bg-[var(--form-bg)] rounded-3xl shadow-lg shadow-[var(--shaddow)]`}
+        className={`pt-4 pb-10 md:py-4 text-[var(--text-prim)] border border-gray-300 md:pb-12 px-10 md:px-14 mx-10 z-40 w-full max-w-[420px] md:max-w-[470px] overflow-auto hidden_scroll_bar bg-[var(--form-bg)] rounded-3xl shadow-lg shadow-[var(--shaddow)]`}
       >
         <div className="flex w-full justify-end sticky top-0 ">
           <button

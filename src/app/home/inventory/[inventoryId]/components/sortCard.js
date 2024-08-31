@@ -53,11 +53,11 @@ export default function Notification({ setSortValues, sortId, sortOrder }) {
   }, [sortId, sortOrder]);
 
   return (
-    <div className="sortCard absolute top-9 right-10 md:right-6  text-xs  border border-gray-300 text-gray-600 w-auto bg-white shadow-md shadow-[#00000052] rounded-xl z-30">
+    <div className="sortCard absolute top-9 right-10 md:right-6  text-xs  border border-gray-300 text-[var(--text-prim)] w-auto bg-[var(--form-bg)] shadow-md shadow-[var(--shaddow)] rounded-xl z-30">
       <div
         onClick={() => setSortValues("name", "asc")}
-        className={`flex items-center justify-center gap-3 p-2 px-6 hover:bg-[#dbeded] rounded-xl ${
-          one && "text-teal-600"
+        className={`flex items-center justify-center gap-3 p-2 px-6 hover:bg-[var(--text-alt-2)] rounded-xl ${
+          one && "text-[var(--text-alt-3)] font-semibold "
         }`}
       >
         Name
@@ -65,8 +65,8 @@ export default function Notification({ setSortValues, sortId, sortOrder }) {
       </div>
       <div
         onClick={() => setSortValues("name", "desc")}
-        className={`flex items-center justify-center gap-3 p-2 px-6 hover:bg-[#dbeded] rounded-xl ${
-          two && "text-teal-600"
+        className={`flex items-center justify-center gap-3 p-2 px-6 hover:bg-[var(--text-alt-2)] rounded-xl ${
+          two && "text-[var(--text-alt-3)] font-semibold "
         }`}
       >
         Name
@@ -74,8 +74,8 @@ export default function Notification({ setSortValues, sortId, sortOrder }) {
       </div>
       <div
         onClick={() => setSortValues("salePrice", "desc")}
-        className={`flex items-center justify-center gap-3 p-2 px-6 hover:bg-[#dbeded] rounded-xl ${
-          four && "text-teal-600"
+        className={`flex items-center justify-center gap-3 p-2 px-6 hover:bg-[var(--text-alt-2)] rounded-xl ${
+          four && "text-[var(--text-alt-3)] font-semibold "
         }`}
       >
         Price
@@ -83,8 +83,8 @@ export default function Notification({ setSortValues, sortId, sortOrder }) {
       </div>
       <div
         onClick={() => setSortValues("salePrice", "asc")}
-        className={`flex items-center justify-center gap-3 p-2 px-6 hover:bg-[#dbeded] rounded-xl ${
-          three && "text-teal-600"
+        className={`flex items-center justify-center gap-3 p-2 px-6 hover:bg-[var(--text-alt-2)] rounded-xl ${
+          three && "text-[var(--text-alt-3)] font-semibold "
         }`}
       >
         Price
@@ -92,16 +92,16 @@ export default function Notification({ setSortValues, sortId, sortOrder }) {
       </div>
       <div
         onClick={() => setSortValues("createdAt", "desc")}
-        className={`flex items-center justify-center gap-3 p-2 px-6 hover:bg-[#dbeded] rounded-xl ${
-          five && "text-teal-600"
+        className={`flex items-center justify-center gap-3 p-2 px-6 hover:bg-[var(--text-alt-2)] rounded-xl ${
+          five && "text-[var(--text-alt-3)] font-semibold "
         }`}
       >
         Recently Added
       </div>
       <div
         onClick={() => setSortValues("updatedAt", "desc")}
-        className={`flex items-center justify-center gap-3 p-2 px-6 hover:bg-[#dbeded] rounded-xl ${
-          six && "text-teal-600"
+        className={`flex items-center justify-center gap-3 p-2 px-6 hover:bg-[var(--text-alt-2)] rounded-xl ${
+          six && "text-[var(--text-alt-3)] font-semibold "
         }`}
       >
         Recently Updated

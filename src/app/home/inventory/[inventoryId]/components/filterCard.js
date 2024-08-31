@@ -63,7 +63,7 @@ export default function FilterCard({
               />
             </div>
             <div className="flex flex-col mt-2 gap-1">
-              <button className="w-full px-4 py-2 text-white bg-[var(--btn-bg)] rounded-md hover:bg-[var(--btn-bg-sec)] focus:outline-none focus:ring-2 focus:ring-[var(--btn-bg)]">
+              <button className="w-full px-4 py-2.5 text-white bg-[var(--btn-bg)] rounded-md hover:bg-[var(--btn-bg-sec)] focus:outline-none focus:ring-2 focus:ring-[var(--btn-bg)]">
                 Apply
               </button>
               {filterApplied && (

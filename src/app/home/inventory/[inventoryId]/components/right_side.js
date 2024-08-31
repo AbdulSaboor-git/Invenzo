@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { MdClose } from "react-icons/md";
+import { MdClose, MdError, MdWarning } from "react-icons/md";
 import { FaFilter, FaSort } from "react-icons/fa";
 import Product_card from "./product_card";
 import Sort_card from "./sortCard";
@@ -274,7 +274,7 @@ export default function RightSide({
           />
           {searchValue && (
             <MdClose
-              className="absolute right-0 rounded-e-full top-1/2 transform -translate-y-1/2  p-[11px] text-[40px] cursor-pointer  text-gray-600"
+              className="absolute right-0 rounded-e-full top-1/2 transform -translate-y-1/2  p-[11px] text-[40px] cursor-pointer  text-[var(--text-sec)]"
               onClick={clearSearch}
             />
           )}
@@ -326,12 +326,13 @@ export default function RightSide({
         {loadingData ? (
           <LoaderSmall />
         ) : networkError ? (
-          <div className="text-gray-300 text-xs pl-2 text-center">
+          <div className="flex justify-center items-center gap-2 text-[var(--text-sec)] text-xs pl-2 text-center">
+            <MdWarning />{" "}
             <p>{"Please check your network connection and try again"}</p>
           </div>
         ) : !PRODUCTS?.length ? (
           <div className="text-gray-300 text-xs pl-2 text-center">
-            <p>{"(Empty)"}</p>
+            {/* <p>{"(Empty)"}</p> */}
           </div>
         ) : (
           PRODUCTS.filter((prod) => {

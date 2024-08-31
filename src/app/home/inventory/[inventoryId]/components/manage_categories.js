@@ -166,26 +166,26 @@ export default function ManageCategories({
   };
 
   return (
-    <div className="flex fixed z-[200] top-0 flex-col p-5 w-screen h-screen items-center justify-center bg-[#00000040] backdrop-blur-[2px] ">
-      <div className="pt-4 md:pt-4 p-7 border-[10px] border-transparent  md:p-10 mx-10 z-40 w-full max-w-[400px] md:max-w-[450px] overflow-auto hidden_scroll_bar bg-[#dfeaea] rounded-xl shadow-lg shadow-[#00000040] text-[#404040]">
+    <div className="flex fixed z-[200] top-0 flex-col p-5 w-screen h-screen items-center justify-center bg-[#00000040] backdrop-blur-[2px]">
+      <div className="pt-6 md:pt-6 p-10 md:p-11 mx-10 z-40 w-full max-w-[400px] md:max-w-[450px] overflow-auto hidden_scroll_bar border border-gray-300 bg-[var(--form-bg)] rounded-lg shadow-lg shadow-[var(--shaddow)] text-[var(--text-prim)]">
         <div className="flex w-full justify-end ">
           <button
             onClick={CloseForm}
-            className="mr-[-25px] mt-[-10px] md:mr-[-35px] text-gray-600 flex justify-center items-center size-6 rounded-full hover:bg-red-500 hover:text-white transition-all duration-200"
+            className="mr-[-25px] mt-[-10px]  md:mr-[-30px] text-[var(--text-sec)] flex justify-center items-center size-6 rounded-full hover:bg-red-500 hover:text-white transition-all duration-200"
           >
             <MdClose size={16} />
           </button>
         </div>
-        <p className="font-bold text-lg md:text-xl pb-4 text-teal-700">
+        <p className="font-bold text-lg md:text-xl pb-4 text-[var(--form-heading)]">
           Manage Categories
         </p>
         <div className="flex flex-col text-sm md:text-base gap-3 font-semibold">
-          <div className="flex justify-between items-center text-white bg-teal-600 rounded-full p-1">
+          <div className="flex justify-between items-center text-white bg-[var(--btn-bg)] rounded-full p-1">
             <button
               onClick={handleAddClick}
-              className={`py-1 px-3 ${
+              className={`py-1 px-3 duration-75 ${
                 isAdding
-                  ? `bg-white text-teal-700`
+                  ? `bg-white text-[var(--btn-bg)]`
                   : `hover:scale-[1.05] text-white`
               } rounded-full w-full`}
             >
@@ -193,9 +193,9 @@ export default function ManageCategories({
             </button>
             <button
               onClick={handleEditClick}
-              className={`py-1 px-3 ${
+              className={`py-1 px-3 duration-75 ${
                 isEditing
-                  ? `bg-white text-teal-700`
+                  ? `bg-white text-[var(--btn-bg)]`
                   : `hover:scale-[1.05] text-white`
               } rounded-full w-full`}
             >
@@ -203,13 +203,13 @@ export default function ManageCategories({
             </button>
             <button
               onClick={handleRemoveClick}
-              className={`py-1 px-3 ${
+              className={`py-1 px-3 duration-75 ${
                 isRemoving
-                  ? `bg-white text-teal-700`
+                  ? `bg-white text-[var(--btn-bg)]`
                   : `hover:scale-[1.05] text-white`
               } rounded-full w-full`}
             >
-              Remove
+              Delete
             </button>
           </div>
           {isAdding && (
@@ -221,14 +221,14 @@ export default function ManageCategories({
                   value={categoryName}
                   onChange={(e) => setCategoryName(e.target.value)}
                   maxLength={30}
-                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-600"
+                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--btn-bg)]"
                 />
               </div>
               <div className="pt-2 flex justify-center">
                 <button
                   disabled={loading}
                   onClick={handleAddCategory}
-                  className={`py-2.5 bg-teal-600 w-3/5 rounded-full text-white hover:bg-teal-700 transition-all duration-200 text-sm font-semibold ${
+                  className={`py-2.5 bg-[var(--btn-bg)] w-3/5 rounded-full text-white hover:bg-[var(--btn-bg-sec)]  text-sm font-semibold ${
                     loading && "cursor-not-allowed"
                   }`}
                 >
@@ -244,7 +244,7 @@ export default function ManageCategories({
                 <select
                   onChange={(e) => setSelectedCategoryId(e.target.value)}
                   value={selectedCategoryId}
-                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-600"
+                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--btn-bg)]"
                 >
                   <option value="">Choose Category</option>
                   {categories?.map((category) => (
@@ -261,14 +261,14 @@ export default function ManageCategories({
                   value={newCategoryName}
                   onChange={(e) => setNewCategoryName(e.target.value)}
                   maxLength={30}
-                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-600"
+                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--btn-bg)]"
                 />
               </div>
               <div className="pt-2 flex justify-center">
                 <button
                   disabled={loading}
                   onClick={handleEditCategory}
-                  className={`py-2.5 bg-teal-600 w-3/5 rounded-full text-white hover:bg-teal-700 transition-all duration-200 text-sm font-semibold ${
+                  className={`py-2.5 bg-[var(--btn-bg)] w-3/5 rounded-full text-white hover:bg-[var(--btn-bg-sec)]  text-sm font-semibold ${
                     loading && "cursor-not-allowed"
                   }`}
                 >
@@ -284,7 +284,7 @@ export default function ManageCategories({
                 <select
                   onChange={(e) => setSelectedCategoryId(e.target.value)}
                   value={selectedCategoryId}
-                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-600"
+                  className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--btn-bg)]"
                 >
                   <option value="">Choose Category</option>
                   {categories?.map((category) => (
@@ -298,7 +298,7 @@ export default function ManageCategories({
                 <button
                   disabled={loading}
                   onClick={openDialog}
-                  className={`py-2.5 bg-teal-600 w-3/5 rounded-full text-white hover:bg-teal-700 transition-all duration-200 text-sm font-semibold ${
+                  className={`py-2.5 bg-[var(--btn-bg)] w-3/5 rounded-full text-white hover:bg-[var(--btn-bg-sec)]  text-sm font-semibold ${
                     loading && "cursor-not-allowed"
                   }`}
                 >
