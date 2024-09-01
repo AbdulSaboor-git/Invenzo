@@ -68,26 +68,26 @@
 
 :root[color-scheme="blue"] {
   --background-prim: #e0f7fc; /* Very light blue */
-  --background-sec: #00a3e0; /* Vibrant blue */
+  --background-sec: #21aee1; /* Vibrant blue */
   --background-sec-transparent: #00a3e06a; /* Vibrant blue with transparency */
   --prod-card-border: #00a3e03b; /* Light blue border with transparency */
   --text-prim: #404040; /* Dark gray for primary text */
   --text-sec: #626262; /* Medium gray for secondary text */
-  --form-bg: #d8f1f9; /* Light blue for form background */
-  --form-heading: #0f77aa; /* Medium blue for form headings */
+  --form-bg: #e0ecf0; /* Light blue for form background */
+  --form-heading: #0a73a3; /* Medium blue for form headings */
   --input-field: #ffffff; /* White for input fields */
   --shaddow: #00000040; /* Black shadow with transparency */
-  --btn-bg: #0095d1; /* Medium blue for primary buttons */
-  --btn-bg-sec: #007bb3; /* Slightly darker blue for secondary buttons */
+  --btn-bg: #168bba; /* Medium blue for primary buttons */
+  --btn-bg-sec: #0a73a3; /* Slightly darker blue for secondary buttons */
   --btn-alt: #005a8d; /* Dark blue for alternate buttons */
   --btn-alt-sec: #004a75; /* Darker blue for alternate secondary buttons */
   --btn-alt-2: #003a5f; /* Even darker blue for alternate buttons */
   --btn-alt-2-sec: #002f4d; /* Darkest blue for alternate secondary buttons */
   --searchbar: #ffffff; /* White for search bar background */
   --btn-icons: #002f4d; /* Dark blue for button icons */
-  --btn-icons-sec: #003a5f; /* Slightly lighter dark blue for secondary icons */
+  --btn-icons-sec: #09456b; /* Slightly lighter dark blue for secondary icons */
   --loader-prim: #003a5f84; /* Dark blue with transparency for loaders */
-  --loader-sec: #004e6f; /* Slightly lighter dark blue for secondary loaders */
+  --loader-sec: #024967; /* Slightly lighter dark blue for secondary loaders */
   --text-alt: #e2faff; /* Very light blue for alternate text */
   --text-alt-2: #c9e9f2; /* Light blue for secondary alternate text */
   --text-alt-3: #00a3e0; /* Vibrant blue for tertiary alternate text */
@@ -99,163 +99,163 @@
 }
 
 [data-theme="dark"][color-scheme="blue"] {
-  --background-prim: #005f87; /* Dark blue */
-  --background-sec: #001f2d; /* Very dark blue */
-  --background-sec-transparent: #001f2dc2; /* Very dark blue with transparency */
-  --prod-card-border: #001f2d14; /* Very dark blue border with transparency */
-  --text-prim: #f5f5f5; /* Light gray for primary text */
-  --text-sec: #e1e1e1; /* Slightly darker light gray for secondary text */
-  --btn-bg: #007bb3; /* Darker medium blue for primary buttons */
-  --btn-bg-sec: #006598; /* Slightly darker blue for secondary buttons */
-  --btn-alt: #b3e1f6; /* Light blue for alternate buttons */
-  --btn-alt-sec: #89cce6; /* Slightly darker light blue for secondary alternate buttons */
-  --btn-alt-2: #006598; /* Darker blue for alternate buttons */
-  --btn-alt-2-sec: #005380; /* Even darker blue for alternate secondary buttons */
-  --form-bg: #074764; /* Dark blue with a hint of teal for form background */
-  --form-heading: #b3e1f6; /* Light blue for form headings */
-  --input-field: #457687; /* Medium dark blue for input fields */
-  --shaddow: #ffffff8f; /* White shadow with transparency */
-  --searchbar: #457687; /* Medium dark blue for search bar background */
-  --btn-icons: #b3e1f6; /* Light blue for button icons */
-  --btn-icons-sec: #85c0da; /* Slightly darker light blue for secondary icons */
-  --loader-prim: #85c0daad; /* Light blue with transparency for loaders */
-  --loader-sec: #e1f7fc; /* Very light blue for secondary loaders */
-  --text-alt: #164559; /* Dark blue-green for alternate text */
-  --text-alt-2: #165166; /* Slightly darker dark blue-green for secondary alternate text */
-  --text-alt-3: #66c2e9;
-  --text-alt-4: #e1e1e1;
-  --prod-card: #205c74c6; /* Dark blue with transparency for product cards */
-  --prod-card-details: #407a8c8d; /* Medium dark blue for product card details */
-  --prod-card-details-sec: #365e6e9b; /* Darker medium blue for secondary details */
-  --prod-card-details-border: #b3e1f68d; /* Light blue border with transparency */
+  --background-prim: #0a3a53;
+  --background-sec: #001624;
+  --background-sec-transparent: #001624c2;
+  --prod-card-border: #0016241a;
+  --text-prim: #eaeaea;
+  --text-sec: #dfdfdf;
+  --btn-bg: #126986;
+  --btn-bg-sec: #155f78;
+  --btn-alt: #8abfd9;
+  --btn-alt-sec: #6fa8c2;
+  --btn-alt-2: #005774;
+  --btn-alt-2-sec: #00465d;
+  --form-bg: #053246;
+  --form-heading: #8abfd9;
+  --input-field: #305a6b;
+  --shaddow: #ffffff80;
+  --searchbar: #305a6b;
+  --btn-icons: #c9e0eb;
+  --btn-icons-sec: #90b1be;
+  --loader-prim: #6798ab99;
+  --loader-sec: #cde7f3;
+  --text-alt: #113542;
+  --text-alt-2: #134151;
+  --text-alt-3: #5db0d6;
+  --text-alt-4: #e4e4e4;
+  --prod-card: #1c4f6a9f;
+  --prod-card-details: #356b84a3;
+  --prod-card-details-sec: #2b5b6e99;
+  --prod-card-details-border: #8abfd699;
 }
 
 :root[color-scheme="purple"] {
-  --background-prim: #f3e5f5;
-  --background-sec: #9c27b0;
-  --background-sec-transparent: #9c27b06a;
-  --prod-card-border: #9c27b03b;
-  --text-prim: #333333;
-  --text-sec: #555555;
-  --form-bg: #e1bee7;
-  --form-heading: #7b1fa2;
+  --background-prim: #f4f0f7;
+  --background-sec: #c7a6f0;
+  --background-sec-transparent: #be9ee66a;
+  --prod-card-border: #967bb63b;
+  --text-prim: #403e44;
+  --text-sec: #5b5862;
+  --form-bg: #e5dded;
+  --form-heading: #745c8e;
   --input-field: #ffffff;
   --shaddow: #00000040;
-  --btn-bg: #8e24aa;
-  --btn-bg-sec: #7b1fa2;
-  --btn-alt: #6a1b9a;
-  --btn-alt-sec: #4a148c;
-  --btn-alt-2: #3d0e62;
-  --btn-alt-2-sec: #2a0a4d;
+  --btn-bg: #7c6690;
+  --btn-bg-sec: #6b577c;
+  --btn-alt: #543d69;
+  --btn-alt-sec: #473159;
+  --btn-alt-2: #3b2748;
+  --btn-alt-2-sec: #2f1f39;
   --searchbar: #ffffff;
-  --btn-icons: #2a0a4d;
-  --btn-icons-sec: #4a148c;
-  --loader-prim: #2a0a4d84;
-  --loader-sec: #4a148c;
-  --text-alt: #f3e5f5;
-  --text-alt-2: #e1bee7;
-  --text-alt-3: #9c27b0;
-  --text-alt-4: #87209a;
+  --btn-icons: #2f1f39;
+  --btn-icons-sec: #503462;
+  --loader-prim: #3b274884;
+  --loader-sec: #4c355e;
+  --text-alt: #f1eaf7;
+  --text-alt-2: #ded1e3;
+  --text-alt-3: #967bb6;
+  --text-alt-4: #846a9e;
   --prod-card: #ffffff;
-  --prod-card-details: #f3e5f5;
-  --prod-card-details-sec: #e1bee7;
-  --prod-card-details-border: #9c27b08b;
+  --prod-card-details: #e7d9eee1;
+  --prod-card-details-sec: #ebd1f3d4;
+  --prod-card-details-border: #967bb68b;
 }
 
 [data-theme="dark"][color-scheme="purple"] {
-  --background-prim: #330e61;
-  --background-sec: #100821;
-  --background-sec-transparent: #100821c2;
-  --prod-card-border: #1e0f3d14;
-  --text-prim: #f5f5f5;
+  --background-prim: #3d2842;
+  --background-sec: #180b20;
+  --background-sec-transparent: #180b20a8;
+  --prod-card-border: #3e2a43;
+  --text-prim: #f0f0f0;
   --text-sec: #e1e1e1;
-  --btn-bg: #7b1fa2;
-  --btn-bg-sec: #6a1b9a;
-  --btn-alt: #b39ddb;
-  --btn-alt-sec: #d1c4e9;
-  --btn-alt-2: #6a1b9a;
-  --btn-alt-2-sec: #7b1fa2;
-  --form-bg: #2c003e;
-  --form-heading: #b39ddb;
-  --input-field: #4a148c;
-  --shaddow: #ffffff8f;
-  --searchbar: #4a148c;
-  --btn-icons: #b39ddb;
-  --btn-icons-sec: #9c27b0;
-  --loader-prim: #9c27b0ad;
-  --loader-sec: #d1c4e9;
-  --text-alt: #6a1b9a;
-  --text-alt-2: #7b1fa2;
-  --text-alt-3: #d1c4e9;
+  --btn-bg: #644d7a;
+  --btn-bg-sec: #543c67;
+  --btn-alt: #9d8098;
+  --btn-alt-sec: #7f687b;
+  --btn-alt-2: #422b45;
+  --btn-alt-2-sec: #36213a;
+  --form-bg: #28192e;
+  --form-heading: #cfc7d5;
+  --input-field: #49304d;
+  --shaddow: #ffffff66;
+  --searchbar: #49304d;
+  --btn-icons: #cfc7d5;
+  --btn-icons-sec: #b590b3;
+  --loader-prim: #a57ea1a1;
+  --loader-sec: #bca9bd;
+  --text-alt: #1c0f22;
+  --text-alt-2: #341e37;
+  --text-alt-3: #bb7ab4;
   --text-alt-4: #e1e1e1;
-  --prod-card: #2c003ec6;
-  --prod-card-details: #551f979b;
-  --prod-card-details-sec: #4a148c9b;
-  --prod-card-details-border: #b39ddb8d;
+  --prod-card: #4d315da9;
+  --prod-card-details: #67466fa5;
+  --prod-card-details-sec: #62446aa5;
+  --prod-card-details-border: #a47aa0b1;
 }
 
 :root[color-scheme="orange"] {
-  --background-prim: #fff8e1;
-  --background-sec: #ff9800;
-  --background-sec-transparent: #ff98006a;
-  --prod-card-border: #ff98003b;
-  --text-prim: #404040;
+  --background-prim: #ffeddc;
+  --background-sec: #edad4e;
+  --background-sec-transparent: #edad4e6a;
+  --prod-card-border: #ff9e3d3b;
+  --text-prim: #3c3c3c;
   --text-sec: #626262;
-  --form-bg: #fbe9e7;
-  --form-heading: #e65100;
+  --form-bg: #ffe6d9;
+  --form-heading: #cc5e00;
   --input-field: #ffffff;
   --shaddow: #00000040;
-  --btn-bg: #fb8c00;
-  --btn-bg-sec: #f57c00;
-  --btn-alt: #e65100;
-  --btn-alt-sec: #d84315;
-  --btn-alt-2: #bf360c;
-  --btn-alt-2-sec: #ab260c;
+  --btn-bg: #ff7b00;
+  --btn-bg-sec: #e66a00;
+  --btn-alt: #f9a23e;
+  --btn-alt-sec: #f38b3d;
+  --btn-alt-2: #e66a00;
+  --btn-alt-2-sec: #cc5e00;
   --searchbar: #ffffff;
-  --btn-icons: #bf360c;
-  --btn-icons-sec: #e65100;
-  --loader-prim: #bf360c84;
-  --loader-sec: #e65100;
-  --text-alt: #fff8e1;
-  --text-alt-2: #fbe9e7;
-  --text-alt-3: #ff9800;
-  --text-alt-4: #ea8d00;
+  --btn-icons: #5f3510;
+  --btn-icons-sec: #854b18;
+  --loader-prim: #5d4128c3;
+  --loader-sec: #352416;
+  --text-alt: #fef5f1;
+  --text-alt-2: #f0dbc6;
+  --text-alt-3: #ff9e3d;
+  --text-alt-4: #f38b3d;
   --prod-card: #ffffff;
-  --prod-card-details: #fff8e1;
-  --prod-card-details-sec: #fbe9e7;
-  --prod-card-details-border: #ff98008b;
+  --prod-card-details: #ebdbcb;
+  --prod-card-details-sec: #e5d3c3;
+  --prod-card-details-border: #ff9e3d8a;
 }
 
 [data-theme="dark"][color-scheme="orange"] {
-  --background-prim: #ff6f00;
-  --background-sec: #1b110f;
-  --background-sec-transparent: #1b110fc2;
-  --prod-card-border: #3e272314;
-  --text-prim: #f5f5f5;
-  --text-sec: #e1e1e1;
-  --btn-bg: #f57c00;
-  --btn-bg-sec: #fb8c00;
-  --btn-alt: #fbe9e7;
-  --btn-alt-sec: #fbc02d;
-  --btn-alt-2: #f57c00;
-  --btn-alt-2-sec: #fb8c00;
-  --form-bg: #4e342e;
-  --form-heading: #fbe9e7;
-  --input-field: #bf360c;
-  --shaddow: #ffffff8f;
-  --searchbar: #bf360c;
-  --btn-icons: #fbe9e7;
-  --btn-icons-sec: #e65100;
-  --loader-prim: #e65100ad;
-  --loader-sec: #fbe9e7;
-  --text-alt: #bf360c;
-  --text-alt-2: #e65100;
-  --text-alt-3: #fbc02d;
-  --text-alt-4: #e1e1e1;
-  --prod-card: #3e2723c6;
-  --prod-card-details: #5d4037;
-  --prod-card-details-sec: #4e342e9b;
-  --prod-card-details-border: #fbe9e78d;
+  --background-prim: #a74605; /* Deep brownish orange */
+  --background-sec: #201301; /* Very dark brownish orange */
+  --background-sec-transparent: #201301c2; /* Transparent very dark brownish orange */
+  --prod-card-border: #2e1a0014; /* Very dark brownish orange border */
+  --text-prim: #f7f5f3; /* Light cream for primary text */
+  --text-sec: #e0e0e0; /* Light beige for secondary text */
+  --btn-bg: #e67e22; /* Medium orange for primary buttons */
+  --btn-bg-sec: #cc5200; /* Slightly darker orange for secondary buttons */
+  --btn-alt: #f1a84d; /* Light orange for alternate buttons */
+  --btn-alt-sec: #d98b3f; /* Slightly darker light orange for alternate secondary buttons */
+  --btn-alt-2: #cc5200; /* Darker orange for additional buttons */
+  --btn-alt-2-sec: #a94d00; /* Darker secondary orange for buttons */
+  --form-bg: #382212; /* Dark brownish orange for form background */
+  --form-heading: #eebb7c; /* Light orange for form headings */
+  --input-field: #593416; /* Dark brownish orange for input fields */
+  --shaddow: #ffffff40; /* Light shadow with transparency */
+  --searchbar: #593416; /* Dark brownish orange for search bar */
+  --btn-icons: #ecdcc8; /* Light orange for button icons */
+  --btn-icons-sec: #d5a16e; /* Slightly darker light orange for secondary icons */
+  --loader-prim: #dfb488a2; /* Dark orange with transparency for loaders */
+  --loader-sec: #e2cfbefe; /* Light cream for secondary loaders */
+  --text-alt: #604120; /* Deep orange for alternate text */
+  --text-alt-2: #4b2f1d; /* Slightly lighter deep orange for secondary alternate text */
+  --text-alt-3: #f1a84d; /* Light orange for tertiary alternate text */
+  --text-alt-4: #eaeaea; /* Light beige for additional alternate text */
+  --prod-card: #633829ad; /* Dark brownish orange with transparency for product cards */
+  --prod-card-details: #8e5e3f8d; /* Medium brownish orange for product card details */
+  --prod-card-details-sec: #82583c8d; /* Darker medium brownish orange for secondary details */
+  --prod-card-details-border: #f1a84d8a; /* Light orange with transparency for product card details border */
 }
 
 body {
