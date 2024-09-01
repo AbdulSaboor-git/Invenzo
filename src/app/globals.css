@@ -109,8 +109,8 @@
   --btn-bg-sec: #155f78;
   --btn-alt: #8abfd9;
   --btn-alt-sec: #6fa8c2;
-  --btn-alt-2: #005774;
-  --btn-alt-2-sec: #00465d;
+  --btn-alt-2: #126986;
+  --btn-alt-2-sec: #155f78;
   --form-bg: #053246;
   --form-heading: #8abfd9;
   --input-field: #305a6b;
@@ -173,8 +173,8 @@
   --btn-bg-sec: #543c67;
   --btn-alt: #9d8098;
   --btn-alt-sec: #7f687b;
-  --btn-alt-2: #422b45;
-  --btn-alt-2-sec: #36213a;
+  --btn-alt-2: #644d7a;
+  --btn-alt-2-sec: #543c67;
   --form-bg: #28192e;
   --form-heading: #cfc7d5;
   --input-field: #49304d;
@@ -237,8 +237,8 @@
   --btn-bg-sec: #cc5200; /* Slightly darker orange for secondary buttons */
   --btn-alt: #f1a84d; /* Light orange for alternate buttons */
   --btn-alt-sec: #d98b3f; /* Slightly darker light orange for alternate secondary buttons */
-  --btn-alt-2: #cc5200; /* Darker orange for additional buttons */
-  --btn-alt-2-sec: #a94d00; /* Darker secondary orange for buttons */
+  --btn-alt-2: #e67e22; /* Darker orange for additional buttons */
+  --btn-alt-2-sec: #cc5200; /* Darker secondary orange for buttons */
   --form-bg: #382212; /* Dark brownish orange for form background */
   --form-heading: #eebb7c; /* Light orange for form headings */
   --input-field: #593416; /* Dark brownish orange for input fields */
