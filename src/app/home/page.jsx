@@ -252,7 +252,7 @@ export default function HomePage() {
             </button>
           ))}
         </div>
-        <div className="flex flex-wrap w-full max-w-[1200px] justify-center items-center text-center py-8 px-4 gap-8">
+        <div className="flex flex-wrap w-full max-w-[1200px] justify-center items-start text-center py-8 px-4 gap-8">
           <div
             className="w-full max-w-[520px] px-6 py-8 rounded-2xl bg-[var(--btn-bg)]"
             style={{ boxShadow: "inset 0 0 14px 6px var(--btn-icons-sec)" }}
