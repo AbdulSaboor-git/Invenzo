@@ -27,6 +27,7 @@
   --text-alt: #e2fdfb;
   --text-alt-2: #c9dfdd;
   --text-alt-3: #20a59c;
+  --text-alt-4: #1b9189;
   --prod-card: #fff;
   --prod-card-details: #e2fdfb;
   --prod-card-details-sec: #d8efee;
@@ -58,6 +59,7 @@
   --text-alt: #175853;
   --text-alt-2: #175a54;
   --text-alt-3: #8fe9e2;
+  --text-alt-4: #e1e1e1;
   --prod-card: #204f4fc6;
   --prod-card-details: #437d798d;
   --prod-card-details-sec: #376e6c9b;
@@ -89,6 +91,7 @@
   --text-alt: #e2faff; /* Very light blue for alternate text */
   --text-alt-2: #c9e9f2; /* Light blue for secondary alternate text */
   --text-alt-3: #00a3e0; /* Vibrant blue for tertiary alternate text */
+  --text-alt-4: #028fc3; /* Vibrant blue for tertiary alternate text */
   --prod-card: #ffffff; /* White for product cards */
   --prod-card-details: #e2faff; /* Very light blue for product card details */
   --prod-card-details-sec: #d8f0f7; /* Slightly darker light blue for secondary details */
@@ -119,7 +122,8 @@
   --loader-sec: #e1f7fc; /* Very light blue for secondary loaders */
   --text-alt: #164559; /* Dark blue-green for alternate text */
   --text-alt-2: #165166; /* Slightly darker dark blue-green for secondary alternate text */
-  --text-alt-3: #66c2e9; /* Light blue for tertiary alternate text */
+  --text-alt-3: #66c2e9;
+  --text-alt-4: #e1e1e1;
   --prod-card: #205c74c6; /* Dark blue with transparency for product cards */
   --prod-card-details: #407a8c8d; /* Medium dark blue for product card details */
   --prod-card-details-sec: #365e6e9b; /* Darker medium blue for secondary details */
@@ -151,6 +155,7 @@
   --text-alt: #f3e5f5;
   --text-alt-2: #e1bee7;
   --text-alt-3: #9c27b0;
+  --text-alt-4: #87209a;
   --prod-card: #ffffff;
   --prod-card-details: #f3e5f5;
   --prod-card-details-sec: #e1bee7;
@@ -182,6 +187,7 @@
   --text-alt: #6a1b9a;
   --text-alt-2: #7b1fa2;
   --text-alt-3: #d1c4e9;
+  --text-alt-4: #e1e1e1;
   --prod-card: #2c003ec6;
   --prod-card-details: #551f979b;
   --prod-card-details-sec: #4a148c9b;
@@ -213,6 +219,7 @@
   --text-alt: #fff8e1;
   --text-alt-2: #fbe9e7;
   --text-alt-3: #ff9800;
+  --text-alt-4: #ea8d00;
   --prod-card: #ffffff;
   --prod-card-details: #fff8e1;
   --prod-card-details-sec: #fbe9e7;
@@ -244,6 +251,7 @@
   --text-alt: #bf360c;
   --text-alt-2: #e65100;
   --text-alt-3: #fbc02d;
+  --text-alt-4: #e1e1e1;
   --prod-card: #3e2723c6;
   --prod-card-details: #5d4037;
   --prod-card-details-sec: #4e342e9b;

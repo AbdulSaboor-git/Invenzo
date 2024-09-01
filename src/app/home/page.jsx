@@ -217,6 +217,11 @@ export default function HomePage() {
       clickEvent: open_AddInventory,
     },
     {
+      btn_name: "Preferences",
+      icon: <MdSettings />,
+      clickEvent: openPreferences,
+    },
+    {
       btn_name: "Logout",
       icon: <MdLogout />,
       clickEvent: logout,
@@ -237,8 +242,7 @@ export default function HomePage() {
           {Buttons.map((btn, index) => (
             <button
               onClick={btn.clickEvent}
-              style={{ boxShadow: "inset 0 0 10px #00443d" }}
-              className="bg-teal-600 hover:bg-teal-700 hover:scale-x-[1.01] text-sm transition-transform duration-200 ease-in-out text-white text-[11px] py-3 px-6 rounded-2xl"
+              className="bg-[var(--btn-alt-2)] hover:bg-[var(--btn-alt-2-sec)]  hover:scale-x-[1.01] text-sm transition-transform duration-200 ease-in-out text-white text-[11px] py-3 px-6 rounded-2xl shadow-sm shadow-[#0000009c] "
               key={index}
             >
               <div className="flex gap-4 items-center justify-start">
@@ -247,21 +251,11 @@ export default function HomePage() {
               </div>
             </button>
           ))}
-          <button
-            onClick={openPreferences}
-            style={{ boxShadow: "inset 0 0 10px #00443d" }}
-            className="bg-teal-600 hover:bg-teal-700 hover:scale-x-[1.01] text-sm transition-transform duration-200 ease-in-out text-white text-[11px] py-3 px-6 rounded-2xl"
-          >
-            <div className="flex gap-4 items-center justify-start">
-              <MdSettings />
-              Preferences
-            </div>
-          </button>
         </div>
         <div className="flex flex-wrap w-full max-w-[1200px] justify-center items-center text-center py-8 px-4 gap-8">
           <div
-            className="w-full max-w-[520px] px-6 py-8 rounded-2xl bg-teal-600"
-            style={{ boxShadow: "inset 0 0 14px 6px #00443d" }}
+            className="w-full max-w-[520px] px-6 py-8 rounded-2xl bg-[var(--btn-bg)]"
+            style={{ boxShadow: "inset 0 0 14px 6px var(--btn-icons-sec)" }}
           >
             <p className="font-bold text-lg md:text-xl pb-3 text-white text-left">
               My Inventories
@@ -270,7 +264,7 @@ export default function HomePage() {
               {loadingInventories ? (
                 <LoaderSmall />
               ) : !myInventories.length ? (
-                <div className="text-gray-300 text-xs">
+                <div className="text-gray-200 text-xs">
                   <p>{"(Empty)"}</p>
                 </div>
               ) : (
@@ -278,11 +272,13 @@ export default function HomePage() {
                   <div
                     onClick={() => handleOpenInventory(inv.id)}
                     key={inv.id}
-                    className={`my-1 relative py-3 px-6 cursor-pointer text-sm md:text-base bg-white text-teal-700 rounded-lg transition-transform duration-200 ease-in-out shadow-md shadow-[#00000044] hover:scale-[1.005]`}
+                    className={`my-1 relative py-3 px-6 cursor-pointer text-sm md:text-base bg-[var(--form-bg)] text-[var(--text-alt-4)] rounded-lg transition-transform duration-200 ease-in-out shadow-md shadow-[#00000044] hover:scale-[1.005]`}
                   >
                     <div
                       className={`absolute right-1 p-2 hover:scale-[1.1] top-2 ${
-                        ButtonId === inv.id ? "text-white" : "text-teal-700"
+                        ButtonId === inv.id
+                          ? "text-white"
+                          : "text-[btn-var(--btn-alt-2)]"
                       } z-10`}
                       onClick={(e) => {
                         e.stopPropagation();
@@ -292,7 +288,7 @@ export default function HomePage() {
                       <MdMoreVert />
                     </div>
                     {ButtonId === inv.id && (
-                      <div className="absolute bg-teal-600 bg-opacity-70 right-2 rounded-s-full top-[6px] md:top-2 px-3 pr-8 flex items-center text-[16px] text-white">
+                      <div className="absolute bg-[var(--btn-bg)] right-2 rounded-s-full top-[6px] md:top-2 px-3 pr-8 flex items-center text-[16px] text-white">
                         <button
                           className="hover:text-green-300 p-2"
                           onClick={(e) => {
@@ -326,8 +322,8 @@ export default function HomePage() {
             />
           )}
           <div
-            className="w-full max-w-[520px] px-6 py-8 rounded-2xl bg-teal-600"
-            style={{ boxShadow: "inset 0 0 14px 6px #00443d" }}
+            className="w-full max-w-[520px] px-6 py-8 rounded-2xl bg-[var(--btn-bg)]"
+            style={{ boxShadow: "inset 0 0 14px 6px var(--btn-icons-sec)" }}
           >
             <p className="font-bold text-lg md:text-xl pb-3 text-white text-left">
               Moderated Inventories
@@ -337,7 +333,7 @@ export default function HomePage() {
               {loadingInventories ? (
                 <LoaderSmall />
               ) : !moderatedInventories.length ? (
-                <div className="text-gray-300 text-xs">
+                <div className="text-gray-200 text-xs">
                   <p>{"(Empty)"}</p>
                 </div>
               ) : (
@@ -345,7 +341,7 @@ export default function HomePage() {
                   <div
                     onClick={() => handleOpenInventory(inv.id)}
                     key={inv.id}
-                    className={`my-1 relative py-3 px-6 text-sm md:text-base cursor-pointer bg-white text-teal-700 rounded-lg transition-transform duration-200 ease-in-out shadow-md shadow-[#00000044] hover:scale-[1.005]`}
+                    className={`my-1 relative py-3 px-6 cursor-pointer text-sm md:text-base bg-[var(--form-bg)] text-[var(--text-alt-4)] rounded-lg transition-transform duration-200 ease-in-out shadow-md shadow-[#00000044] hover:scale-[1.005]`}
                   >
                     {inv.name}
                   </div>
