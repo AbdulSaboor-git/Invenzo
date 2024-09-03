@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { triggerNotification } from "@/redux/notificationThunk";
 
 export default function AddProduct({
+  user,
   CloseForm,
   categories,
   invId,
@@ -27,6 +28,11 @@ export default function AddProduct({
   const [govtSalePrice, setGovtSalePrice] = useState(null);
   const [tags, setTags] = useState("");
   const Dispatch = useDispatch();
+
+  const [testUser, setTestUser] = useState("");
+  useEffect(() => {
+    user?.email === "test@invenzo.com" ? setTestUser(true) : setTestUser(false);
+  }, [user]);
 
   const showMessage = (msg, state) => {
     Dispatch(
@@ -86,7 +92,11 @@ export default function AddProduct({
       setError("Category is required");
       return;
     }
-
+    if (testUser) {
+      showMessage("Unable to add. You are in view-only mode", false);
+      CloseForm();
+      return;
+    }
     setLoading(true);
 
     try {

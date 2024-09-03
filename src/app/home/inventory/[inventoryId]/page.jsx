@@ -359,9 +359,9 @@ export default function Inventory({ params }) {
       {loading && <Loader />}
       <div className="max-w-[1440px] w-full">
         <Header
-          user={user}
           Buttons={Buttons}
           openPreferences={openPreferences}
+          user={user}
           inv={invInfo}
           dockOnTop={true}
           openProfile={openProfile}
@@ -369,6 +369,7 @@ export default function Inventory({ params }) {
 
         <Body
           buttons={Buttons}
+          user={user}
           inventoryId={invId}
           role={role}
           setLoading={setLoading}
@@ -384,6 +385,7 @@ export default function Inventory({ params }) {
 
       {addItemForm_isOpen && (
         <Add_Product_Form
+          user={user}
           CloseForm={close_AddItemForm}
           categories={categories}
           invId={invId}
@@ -392,6 +394,7 @@ export default function Inventory({ params }) {
       )}
       {manageCategories_isOpen && (
         <Manage_Categories_Form
+          user={user}
           CloseForm={close_manageCategories}
           inventoryId={invId}
           categories={categories}
@@ -400,6 +403,7 @@ export default function Inventory({ params }) {
       )}
       {manageModerators_isOpen && (
         <Manage_Moderators_Form
+          user={user}
           CloseForm={close_manageModerators}
           moderators={moderators}
           refreshModerators={refreshInvData}

@@ -104,7 +104,7 @@
   --background-sec-transparent: #001624c2;
   --prod-card-border: #0016241a;
   --text-prim: #eaeaea;
-  --text-sec: #dfdfdf;
+  --text-sec: #e1e1e1;
   --btn-bg: #126986;
   --btn-bg-sec: #155f78;
   --btn-alt: #8abfd9;
@@ -132,7 +132,7 @@
 
 :root[color-scheme="purple"] {
   --background-prim: #f4f0f7;
-  --background-sec: #c7a6f0;
+  --background-sec: #cb9bde;
   --background-sec-transparent: #be9ee66a;
   --prod-card-border: #967bb63b;
   --text-prim: #403e44;
@@ -205,8 +205,8 @@
   --form-heading: #cc5e00;
   --input-field: #ffffff;
   --shaddow: #00000040;
-  --btn-bg: #ff7b00;
-  --btn-bg-sec: #e66a00;
+  --btn-bg: #ed7505;
+  --btn-bg-sec: #de6d04;
   --btn-alt: #f9a23e;
   --btn-alt-sec: #f38b3d;
   --btn-alt-2: #e66a00;
@@ -221,13 +221,13 @@
   --text-alt-3: #ff9e3d;
   --text-alt-4: #f38b3d;
   --prod-card: #ffffff;
-  --prod-card-details: #ebdbcb;
-  --prod-card-details-sec: #e5d3c3;
+  --prod-card-details: #f0e8e1;
+  --prod-card-details-sec: #e9e0d9;
   --prod-card-details-border: #ff9e3d8a;
 }
 
 [data-theme="dark"][color-scheme="orange"] {
-  --background-prim: #a74605; /* Deep brownish orange */
+  --background-prim: #652900; /* Deep brownish orange */
   --background-sec: #201301; /* Very dark brownish orange */
   --background-sec-transparent: #201301c2; /* Transparent very dark brownish orange */
   --prod-card-border: #2e1a0014; /* Very dark brownish orange border */

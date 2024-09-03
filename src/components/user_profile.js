@@ -9,7 +9,7 @@ import {
 
 export default function UserProfile({ CloseForm, user, logout }) {
   const [showPassword, setShowPassword] = useState(false);
-  const username = user?.firstName + " " + user?.lastName;
+  const username = user?.firstName + " " + (user?.lastName || "");
   const profilePic = user?.profilePicture;
   const email = user?.email;
   const password = user?.password;

@@ -9,6 +9,7 @@ export default function EditProduct({
   invId,
   onSuccess,
   product,
+  user,
 }) {
   useEffect(() => {
     document.body.classList.add("no-scroll");
@@ -41,6 +42,11 @@ export default function EditProduct({
       })
     );
   };
+
+  const [testUser, setTestUser] = useState("");
+  useEffect(() => {
+    user?.email === "test@invenzo.com" ? setTestUser(true) : setTestUser(false);
+  }, [user]);
 
   function showInfoBox() {
     setInfoBox_visible(true);
@@ -88,6 +94,12 @@ export default function EditProduct({
     }
     if (!categoryId) {
       setError("Category is required");
+      return;
+    }
+
+    if (testUser) {
+      showMessage("Unable to edit. You are in view-only mode", false);
+      CloseForm();
       return;
     }
 

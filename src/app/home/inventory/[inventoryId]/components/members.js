@@ -29,7 +29,7 @@ export default function Members({ CloseForm, moderators, inv, user }) {
               Admin:
             </h2>
             <p className="ml-4 text-[var(--text-sec)]">
-              {inv?.admin?.firstName} {inv?.admin?.lastName} -{" "}
+              {inv?.admin?.firstName} {inv?.admin?.lastName || ""} -{" "}
               <span className="text-[var(--form-heading)]">
                 {inv?.admin?.email}
                 {user.id === inv?.admin?.id && (
@@ -44,7 +44,7 @@ export default function Members({ CloseForm, moderators, inv, user }) {
             </h2>
             {moderators?.map((mod) => (
               <p className="ml-4 text-[var(--text-sec)]" key={mod.id}>
-                {mod.user.firstName} {mod.user.lastName} -{" "}
+                {mod.user.firstName} {mod.user.lastName || ""} -{" "}
                 <span className="text-[var(--form-heading)]">
                   {mod.user.email}{" "}
                 </span>

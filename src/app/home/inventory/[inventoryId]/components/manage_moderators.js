@@ -10,6 +10,7 @@ export default function Manage_Moderators({
   refreshModerators,
   inventoryId,
   adminEmail,
+  user,
 }) {
   const [loading, setLoading] = useState(false);
   const [infoBox_visible, setInfoBox_visible] = useState(false);
@@ -23,6 +24,11 @@ export default function Manage_Moderators({
       })
     );
   };
+
+  const [testUser, setTestUser] = useState("");
+  useEffect(() => {
+    user?.email === "test@invenzo.com" ? setTestUser(true) : setTestUser(false);
+  }, [user]);
 
   function showInfoBox() {
     setInfoBox_visible(true);
@@ -85,6 +91,11 @@ export default function Manage_Moderators({
       return;
     }
 
+    if (testUser) {
+      showMessage("Unable to add. You are in view-only mode", false);
+      return;
+    }
+
     setLoading(true);
 
     fetch(`/api/inventory/${inventoryId}/moderators`, {
@@ -123,6 +134,12 @@ export default function Manage_Moderators({
       showMessage("Please select a moderator to delete", false);
       return;
     }
+
+    if (testUser) {
+      showMessage("Unable to remove. You are in view-only mode", false);
+      return;
+    }
+
     setLoading(true);
     fetch(`/api/inventory/${inventoryId}/moderators`, {
       method: "DELETE",
@@ -253,7 +270,7 @@ export default function Manage_Moderators({
                     <option key={moderator.id} value={moderator.id}>
                       {moderator.user.firstName +
                         " " +
-                        moderator.user.lastName +
+                        (moderator.user.lastName || "") +
                         " - (" +
                         moderator.user.email +
                         ")"}

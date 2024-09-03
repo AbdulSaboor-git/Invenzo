@@ -10,6 +10,7 @@ export default function Body({
   buttons,
   inventoryId,
   role,
+  user,
   setLoading,
   categories,
   products,
@@ -24,6 +25,10 @@ export default function Body({
   const [prod, setProd] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   // const [loading, setLoading] = useState(false);
+  const [testUser, setTestUser] = useState("");
+  useEffect(() => {
+    user?.email === "test@invenzo.com" ? setTestUser(true) : setTestUser(false);
+  }, [user]);
 
   const openDialog = (e) => {
     e.stopPropagation();
@@ -57,6 +62,10 @@ export default function Body({
   };
 
   const handleDeleteClick = async (id) => {
+    if (testUser) {
+      showMessage("Unable to delete. You are in view-only mode", false);
+      return;
+    }
     try {
       setLoading(true);
       const response = await fetch(`/api/inventory/${inventoryId}`, {
@@ -114,6 +123,7 @@ export default function Body({
           invId={inventoryId}
           onSuccess={onEdit}
           product={prod}
+          user={user}
         />
       )}
       {isDialogOpen && (

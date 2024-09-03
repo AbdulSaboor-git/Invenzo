@@ -8,6 +8,7 @@ export default function ManageCategories({
   CloseForm,
   inventoryId,
   categories,
+  user,
   fetchInvData,
 }) {
   useEffect(() => {
@@ -35,6 +36,12 @@ export default function ManageCategories({
       })
     );
   };
+
+  const [testUser, setTestUser] = useState("");
+  useEffect(() => {
+    user?.email === "test@invenzo.com" ? setTestUser(true) : setTestUser(false);
+  }, [user]);
+
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const openDialog = (e) => {
@@ -69,6 +76,10 @@ export default function ManageCategories({
       showMessage("Category name cannot be empty", false);
       return;
     }
+    if (testUser) {
+      showMessage("Unable to add. You are in view-only mode", false);
+      return;
+    }
     setLoading(true);
     try {
       const res = await fetch(`/api/inventory/${inventoryId}/category`, {
@@ -100,6 +111,10 @@ export default function ManageCategories({
     }
     if (!selectedCategoryId) {
       showMessage("Please select a category to edit", false);
+      return;
+    }
+    if (testUser) {
+      showMessage("Unable to edit. You are in view-only mode", false);
       return;
     }
     setLoading(true);
@@ -140,6 +155,12 @@ export default function ManageCategories({
       showMessage("Please select a category to delete", false);
       return;
     }
+
+    if (testUser) {
+      showMessage("Unable to delete. You are in view-only mode", false);
+      return;
+    }
+
     setLoading(true);
 
     try {

@@ -37,6 +37,11 @@ export default function HomePage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [profileIsOpen, setProfileIsOpen] = useState(false);
 
+  const [testUser, setTestUser] = useState("");
+  useEffect(() => {
+    user?.email === "test@invenzo.com" ? setTestUser(true) : setTestUser(false);
+  }, [user]);
+
   const [preferences_isOpen, set_preferences_IsOpen] = useState(false);
   useEffect(() => {
     if (typeof window !== "undefined" && user) {
@@ -186,6 +191,10 @@ export default function HomePage() {
   };
 
   const handleDeleteClick = async (id) => {
+    if (testUser) {
+      showMessage("Unable to delete. You are in view-only mode", false);
+      return;
+    }
     try {
       setLoading(true);
       const response = await fetch("/api/inventory", {
@@ -365,6 +374,7 @@ export default function HomePage() {
       {editInv && (
         <EditInventory
           CloseForm={close_Editorm}
+          user={user}
           inv={editInv}
           onSuccess={onEdit}
         />

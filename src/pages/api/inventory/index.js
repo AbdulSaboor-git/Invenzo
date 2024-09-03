@@ -141,7 +141,7 @@ const GET = async (req, res) => {
     if (adminId) {
       inventories = await prisma.inventory.findMany({
         where: { adminId: parseInt(adminId) },
-        orderBy: { createdAt: "desc" },
+        orderBy: { createdAt: "asc" },
       });
     } else if (moderatorId) {
       inventories = await prisma.inventory.findMany({
@@ -152,7 +152,7 @@ const GET = async (req, res) => {
             },
           },
         },
-        orderBy: { createdAt: "desc" },
+        orderBy: { createdAt: "asc" },
       });
     }
 

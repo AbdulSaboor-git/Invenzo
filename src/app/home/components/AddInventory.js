@@ -9,6 +9,11 @@ export default function Add_Inventory({ CloseForm, user, onSuccess }) {
   const [error, setError] = useState("");
   const Dispatch = useDispatch();
 
+  const [testUser, setTestUser] = useState("");
+  useEffect(() => {
+    user?.email === "test@invenzo.com" ? setTestUser(true) : setTestUser(false);
+  }, [user]);
+
   const showMessage = (msg, state) => {
     Dispatch(
       triggerNotification({
@@ -31,6 +36,13 @@ export default function Add_Inventory({ CloseForm, user, onSuccess }) {
 
   const addInventory = async (e) => {
     e.preventDefault();
+
+    if (testUser) {
+      showMessage("Unable to add. You are in view-only mode", false);
+      CloseForm();
+      return;
+    }
+
     setLoading(true);
     setError("");
 

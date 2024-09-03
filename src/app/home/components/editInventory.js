@@ -3,11 +3,17 @@ import { MdClose } from "react-icons/md";
 import { useDispatch } from "react-redux";
 import { triggerNotification } from "@/redux/notificationThunk";
 
-export default function Edit_Inventory({ CloseForm, inv, onSuccess }) {
+export default function Edit_Inventory({ CloseForm, user, inv, onSuccess }) {
   const Dispatch = useDispatch();
   const [inventoryName, setInventoryName] = useState(inv.name || "");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const [testUser, setTestUser] = useState("");
+  useEffect(() => {
+    user?.email === "test@invenzo.com" ? setTestUser(true) : setTestUser(false);
+  }, [user]);
+
   const showMessage = (msg, state) => {
     Dispatch(
       triggerNotification({
@@ -29,6 +35,13 @@ export default function Edit_Inventory({ CloseForm, inv, onSuccess }) {
 
   const editInventory = async (e) => {
     e.preventDefault();
+
+    if (testUser) {
+      showMessage("Unable to edit. You are in view-only mode", false);
+      CloseForm();
+      return;
+    }
+
     setLoading(true);
     setError("");
     try {

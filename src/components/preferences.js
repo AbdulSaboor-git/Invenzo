@@ -97,6 +97,7 @@ export default function Preferences({ CloseForm, userId }) {
     );
     document.documentElement.setAttribute("color-scheme", colorScheme);
     showMessage("Preferences saved", true);
+    CloseForm();
   };
 
   const cancelChanges = () => {
