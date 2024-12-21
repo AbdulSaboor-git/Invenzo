@@ -209,22 +209,23 @@ export default function EditProduct({
               max={999999999}
             />
           </div>
-
-          <div className="flex flex-col">
-            <label className="mb-1 font-semibold ">
-              Govt. Sale Price
-              <span className="font-light text-[var(--text-sec)] ml-2">
-                (optional)
-              </span>
-            </label>
-            <input
-              type="number"
-              value={govtSalePrice || ""}
-              onChange={handleGovtSalePriceChange}
-              max={999999999}
-              className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--form-heading)]"
-            />
-          </div>
+          {!testUser && (
+            <div className="flex flex-col">
+              <label className="mb-1 font-semibold ">
+                Govt. Sale Price
+                <span className="font-light text-[var(--text-sec)] ml-2">
+                  (optional)
+                </span>
+              </label>
+              <input
+                type="number"
+                value={govtSalePrice || ""}
+                onChange={handleGovtSalePriceChange}
+                max={999999999}
+                className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[var(--form-heading)]"
+              />
+            </div>
+          )}
 
           <div className="flex flex-col">
             <div className="flex gap-2 items-center mb-1">
