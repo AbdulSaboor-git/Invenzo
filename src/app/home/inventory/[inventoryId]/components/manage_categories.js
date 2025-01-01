@@ -188,11 +188,13 @@ export default function ManageCategories({
 
   return (
     <div className="flex fixed z-[200] top-0 flex-col p-5 w-screen h-screen items-center justify-center  bg-black bg-opacity-50 backdrop-blur-sm">
-<div
+      <div
         className={`pt-6 md:pt-6 p-10 md:p-11 mx-10 z-40 w-full max-w-[400px] md:max-w-[450px] overflow-auto hidden_scroll_bar border border-gray-300 bg-[var(--form-bg)] rounded-lg shadow-lg shadow-[var(--shaddow)] text-[var(--text-prim)] transition-all duration-300 ${
-          isEditing ? 'h-[380px]' : 'h-[310px]'
+          isEditing ? "h-[380px]" : "h-[310px]"
         }`}
-      >        <div className="flex w-full justify-end ">
+      >
+        {" "}
+        <div className="flex w-full justify-end ">
           <button
             onClick={CloseForm}
             className="mr-[-25px] mt-[-10px]  md:mr-[-30px] text-[var(--text-sec)] flex justify-center items-center size-6 rounded-full hover:bg-red-500 hover:text-white transition-all duration-300"

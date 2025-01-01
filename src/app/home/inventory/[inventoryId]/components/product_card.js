@@ -52,95 +52,94 @@ export default function ProductCard({
           Rs. {prod.govtSalePrice} (Govt)
         </p>
       )}
-      <div className="flex justify-center ">
-        {isExpanded && (
-          <div
-            className="m-3 p-7 md:px-10 w-full max-w-[600px] rounded-3xl shadow-sm bg-[var(--prod-card-details)] hover:bg-[var(--prod-card-details-sec)] transition-colors duration-200 ease-in-out"
-            style={{ boxShadow: "0 0 10px -2px #00000096" }}
-            onClick={handleTableClick}
-          >
-            <p className="font-bold py-2 text-center text-[var(--form-heading)] text-base md:text-[18px]">
-              {prod.name}
-            </p>
-            <table className="w-full text-center text-[12px] md:text-[14px] ">
-              <tbody>
-                {/* <tr>
-                  <td className="border border-[#0079796c] p-1 font-semibold min-w-[130px]">
-                    Name
-                  </td>
-                  <td className="border border-[var(--text-alt-3)] p-1 min-w-[130px]">
-                    {prod.name}
-                  </td>
-                </tr> */}
-                {savedPreferences.categ && (
-                  <tr>
-                    <td className="border border-[var(--prod-card-details-border)]  p-1 font-semibold">
-                      Category
-                    </td>
-                    <td className="border border-[var(--prod-card-details-border)] p-1">
-                      {prod.category.name}
-                    </td>
-                  </tr>
-                )}
-                {savedPreferences.pp && (
-                  <tr>
-                    <td className="border border-[var(--prod-card-details-border)] p-1 font-semibold">
-                      Purchase Price
-                    </td>
-                    <td className="border border-[var(--prod-card-details-border)] p-1">
-                      Rs. {prod.purchasePrice}
-                    </td>
-                  </tr>
-                )}
-
+      <div
+        className={`flex justify-center transition-all duration-300
+        ${
+          isExpanded
+            ? "opacity-100 max-h-screen"
+            : "opacity-0 max-h-0 pointer-events-none"
+        }`}
+      >
+        <div
+          className={`m-3 p-7 max-h-fit md:px-10 w-full max-w-[600px] rounded-3xl shadow-sm bg-[var(--prod-card-details)] hover:bg-[var(--prod-card-details-sec)] transition-all duration-300 ease-in-out
+             ${isExpanded ? "max-h-screen mt-4" : "max-h-0 -mt-10"}
+            `}
+          style={{ boxShadow: "0 0 10px -2px #00000096" }}
+          onClick={handleTableClick}
+        >
+          <p className="font-bold py-2 text-center text-[var(--form-heading)] text-base md:text-[18px]">
+            {prod.name}
+          </p>
+          <table className="w-full text-center text-[12px] md:text-[14px] ">
+            <tbody>
+              {savedPreferences.categ && (
                 <tr>
                   <td className="border border-[var(--prod-card-details-border)]  p-1 font-semibold">
-                    Sale Price
+                    Category
                   </td>
                   <td className="border border-[var(--prod-card-details-border)] p-1">
-                    Rs. {prod.salePrice}
+                    {prod.category.name}
                   </td>
                 </tr>
-                {prod.govtSalePrice !== null && prod.govtSalePrice !== 0 && (
-                  <tr>
-                    <td className="border border-[var(--prod-card-details-border)]  p-1 font-semibold">
-                      Govt. Sale Price
-                    </td>
-                    <td className="border border-[var(--prod-card-details-border)] p-1">
-                      Rs. {prod.govtSalePrice}
-                    </td>
-                  </tr>
-                )}
-                {savedPreferences.dateAdd === true && (
-                  <tr>
-                    <td className="border border-[var(--prod-card-details-border)] p-1 font-semibold">
-                      Date Added
-                    </td>
-                    <td className="border border-[var(--prod-card-details-border)] p-1 min-w-[140px]">
-                      {new Date(prod.createdAt).toLocaleString("en-GB", {
-                        hour12: true,
-                        timeZone: "Asia/Karachi",
-                      })}
-                    </td>
-                  </tr>
-                )}
-                {savedPreferences.dateUpdate === true && (
-                  <tr>
-                    <td className="border border-[var(--prod-card-details-border)]  p-1 font-semibold">
-                      Date Updated
-                    </td>
-                    <td className="border border-[var(--prod-card-details-border)] p-1">
-                      {new Date(prod.updatedAt).toLocaleString("en-GB", {
-                        hour12: true,
-                        timeZone: "Asia/Karachi",
-                      })}
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        )}
+              )}
+              {savedPreferences.pp && (
+                <tr>
+                  <td className="border border-[var(--prod-card-details-border)] p-1 font-semibold">
+                    Purchase Price
+                  </td>
+                  <td className="border border-[var(--prod-card-details-border)] p-1">
+                    Rs. {prod.purchasePrice}
+                  </td>
+                </tr>
+              )}
+
+              <tr>
+                <td className="border border-[var(--prod-card-details-border)]  p-1 font-semibold">
+                  Sale Price
+                </td>
+                <td className="border border-[var(--prod-card-details-border)] p-1">
+                  Rs. {prod.salePrice}
+                </td>
+              </tr>
+              {prod.govtSalePrice !== null && prod.govtSalePrice !== 0 && (
+                <tr>
+                  <td className="border border-[var(--prod-card-details-border)]  p-1 font-semibold">
+                    Govt. Sale Price
+                  </td>
+                  <td className="border border-[var(--prod-card-details-border)] p-1">
+                    Rs. {prod.govtSalePrice}
+                  </td>
+                </tr>
+              )}
+              {savedPreferences.dateAdd === true && (
+                <tr>
+                  <td className="border border-[var(--prod-card-details-border)] p-1 font-semibold">
+                    Date Added
+                  </td>
+                  <td className="border border-[var(--prod-card-details-border)] p-1 min-w-[140px]">
+                    {new Date(prod.createdAt).toLocaleString("en-GB", {
+                      hour12: true,
+                      timeZone: "Asia/Karachi",
+                    })}
+                  </td>
+                </tr>
+              )}
+              {savedPreferences.dateUpdate === true && (
+                <tr>
+                  <td className="border border-[var(--prod-card-details-border)]  p-1 font-semibold">
+                    Date Updated
+                  </td>
+                  <td className="border border-[var(--prod-card-details-border)] p-1">
+                    {new Date(prod.updatedAt).toLocaleString("en-GB", {
+                      hour12: true,
+                      timeZone: "Asia/Karachi",
+                    })}
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
