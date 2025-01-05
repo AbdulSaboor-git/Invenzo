@@ -61,7 +61,7 @@ export default function ProductCard({
         }`}
       >
         <div
-          className={`m-3 p-7 max-h-fit md:px-10 w-full max-w-[600px] rounded-3xl shadow-sm bg-[var(--prod-card-details)] hover:bg-[var(--prod-card-details-sec)] transition-all duration-300 ease-in-out
+          className={`m-3 p-7 overflow-hidden max-h-fit md:px-10 w-full max-w-[600px] rounded-3xl shadow-sm bg-[var(--prod-card-details)] hover:bg-[var(--prod-card-details-sec)] transition-all duration-300 ease-in-out
              ${isExpanded ? "max-h-screen mt-4" : "max-h-0 -mt-10"}
             `}
           style={{ boxShadow: "0 0 10px -2px #00000096" }}
