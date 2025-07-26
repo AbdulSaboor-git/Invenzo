@@ -6,6 +6,14 @@ import { useEffect } from "react";
 
 const inter = Inter({ subsets: ["latin"] });
 
+export const metadata = {
+  title: "Invenzo - Inventory Management",
+  description: "",
+  icons: {
+    icon: "/icons/invenzo-128.ico",
+  },
+};
+
 export default function RootLayout({ children }) {
   useEffect(() => {
     const theme = JSON.parse(localStorage.getItem("theme"));
