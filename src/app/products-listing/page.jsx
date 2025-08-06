@@ -2,7 +2,13 @@
 import React, { useEffect, useState } from "react";
 import Header2 from "../../components/header2";
 import { HiOutlineSwitchVertical } from "react-icons/hi";
-import { MdDelete, MdEdit, MdSync, MdVisibility } from "react-icons/md";
+import {
+  MdClose,
+  MdDelete,
+  MdEdit,
+  MdSync,
+  MdVisibility,
+} from "react-icons/md";
 import { FiArrowUp, FiArrowDown } from "react-icons/fi";
 import { toast } from "sonner";
 
@@ -211,7 +217,7 @@ export default function ProductsListing() {
     <div className="flex w-full flex-col items-center justify-center ">
       <Header2 />
       <div className="w-full max-w-7xl place-self-center">
-        <div className="flex flex-col md:flex-row md:justify-between items-center shadow px-6 py-4 gap-3 sticky top-2 md:top-12 bg-white z-10">
+        <div className="flex flex-col md:flex-row md:justify-between items-center shadow px-6 py-4 gap-3 sticky top-2 md:top-12 bg-white z-40">
           <div className="w-full ">
             {loadingData ? (
               <div className="h-7 bg-gray-200 rounded w-52 place-self-center md:place-self-auto animate-pulse"></div>
@@ -221,14 +227,24 @@ export default function ProductsListing() {
               </h2>
             )}
           </div>
-          <div className="flex w-full items-stretch justify-end gap-4 bg-white">
-            <input
-              type="text"
-              placeholder="Search by name, category, or tag..."
-              className="border border-gray-200 rounded-lg px-3 py-2 w-full md:max-w-80 text-sm outline-none focus:border-green-300"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
+          <div className="flex w-full items-stretch justify-end gap-3 bg-white">
+            <div className="relative w-full text-gray-500 md:max-w-80">
+              <input
+                type="text"
+                placeholder="Search by name, category, or tag..."
+                className="border border-gray-200 rounded-lg px-3 py-2 pr-7 w-full text-sm outline-none focus:border-green-300"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              {searchQuery && (
+                <div
+                  className="absolute inset-y-0 right-0 h-full p-2 flex items-center cursor-pointer "
+                  onClick={() => setSearchQuery("")}
+                >
+                  <MdClose />
+                </div>
+              )}
+            </div>
             <button
               onClick={fetchAndStoreData}
               className={`flex gap-2 items-center justify-center text-sm font-semibold px-3 py-1.5 rounded-md border transition-all duration-300 ${
@@ -462,7 +478,7 @@ export default function ProductsListing() {
                   <input
                     id="edit-name"
                     type="text"
-                    className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 max-w-[220px] md:max-w-[350px]"
+                    className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 max-w-[200px] sm:max-w-[350px]"
                     value={editForm.name}
                     onChange={(e) =>
                       setEditForm({ ...editForm, name: e.target.value })
@@ -480,7 +496,7 @@ export default function ProductsListing() {
                   </label>
                   <select
                     id="edit-category"
-                    className="w-full mt-1 px-4 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-300 max-w-[220px] md:max-w-[350px]"
+                    className="w-full mt-1 px-4 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-300 max-w-[200px] sm:max-w-[350px]"
                     value={editForm.categoryId}
                     onChange={(e) =>
                       setEditForm({ ...editForm, categoryId: e.target.value })
@@ -501,13 +517,13 @@ export default function ProductsListing() {
                     htmlFor="edit-purchase-price"
                     className="block  font-medium text-gray-700"
                   >
-                    Purchase Price
+                    P. Price
                   </label>
                   <input
                     id="edit-purchase-price"
                     type="number"
                     min={0}
-                    className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 max-w-[220px] md:max-w-[350px]"
+                    className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 max-w-[200px] sm:max-w-[350px]"
                     value={editForm.purchasePrice}
                     onChange={(e) =>
                       setEditForm({
@@ -524,13 +540,13 @@ export default function ProductsListing() {
                     htmlFor="edit-sale-price"
                     className="block  font-medium text-gray-700"
                   >
-                    Sale Price
+                    S. Price
                   </label>
                   <input
                     id="edit-sale-price"
                     type="number"
                     min={0}
-                    className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 max-w-[220px] md:max-w-[350px]"
+                    className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 max-w-[200px] sm:max-w-[350px]"
                     value={editForm.salePrice}
                     onChange={(e) =>
                       setEditForm({ ...editForm, salePrice: e.target.value })
@@ -544,14 +560,15 @@ export default function ProductsListing() {
                     htmlFor="edit-govt-sale-price"
                     className="block  font-medium text-gray-700"
                   >
-                    Govt. Sale Price
+                    G. S. Price
                   </label>
                   <input
                     id="edit-govt-sale-price"
                     type="number"
                     min={0}
-                    className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300  max-w-[220px] md:max-w-[350px]"
+                    className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300  max-w-[200px] sm:max-w-[350px]"
                     value={editForm.govtSalePrice}
+                    placeholder="Govt. Sale Price"
                     onChange={(e) =>
                       setEditForm({
                         ...editForm,
@@ -573,9 +590,9 @@ export default function ProductsListing() {
                     id="edit-tags"
                     type="text"
                     maxLength={200}
-                    className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 max-w-[220px] md:max-w-[350px] "
+                    className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 max-w-[200px] sm:max-w-[350px] "
                     value={editForm.tags}
-                    placeholder="space-separated, optional"
+                    placeholder="space-separated"
                     onChange={(e) =>
                       setEditForm({ ...editForm, tags: e.target.value })
                     }
