@@ -276,63 +276,63 @@ export default function ProductsListing() {
             <table className="min-w-full divide-y divide-gray-200 bg-white text-sm text-left overflow-hidden">
               <thead className="bg-gray-100 text-gray-700 text-sm font-semibold uppercase tracking-wide">
                 <tr>
-                  <th className="px-6 py-4">#</th>
+                  <th className="px-1 py-1 md:px-6 md:py-4">#</th>
                   <th
-                    className="px-6 py-4 cursor-pointer"
+                    className="px-1 py-1 md:px-6 md:py-4cursor-pointer"
                     onClick={() => toggleSort("name")}
                   >
                     Name {renderSortIcon("name")}
                   </th>
                   <th
-                    className="px-6 py-4 cursor-pointer"
+                    className="px-1 py-1 md:px-6 md:py-4cursor-pointer"
                     onClick={() => toggleSort("categoryId")}
                   >
                     Category {renderSortIcon("categoryId")}
                   </th>
                   <th
-                    className="px-6 py-4 cursor-pointer"
+                    className="px-1 py-1 md:px-6 md:py-4cursor-pointer"
                     onClick={() => toggleSort("purchasePrice")}
                   >
                     Purchase Price {renderSortIcon("purchasePrice")}
                   </th>
                   <th
-                    className="px-6 py-4 cursor-pointer"
+                    className="px-1 py-1 md:px-6 md:py-4cursor-pointer"
                     onClick={() => toggleSort("salePrice")}
                   >
                     Sale Price {renderSortIcon("salePrice")}
                   </th>
                   <th
-                    className="px-6 py-4 cursor-pointer"
+                    className="px-1 py-1 md:px-6 md:py-4cursor-pointer"
                     onClick={() => toggleSort("govtSalePrice")}
                   >
                     Govt. Sale Price {renderSortIcon("govtSalePrice")}
                   </th>
-                  <th className="px-6 py-4">Actions</th>
+                  <th className="px-1 py-1 md:px-6 md:py-4">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 text-gray-800">
                 {loadingData ? (
                   Array.from({ length: 10 }).map((_, index) => (
                     <tr key={index} className="animate-pulse ">
-                      <td className="px-6 py-4">
+                      <td className="px-1 py-1 md:px-6 md:py-4">
                         <div className="h-4 bg-gray-200 rounded w-4" />
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-1 py-1 md:px-6 md:py-4">
                         <div className="h-4 bg-gray-200 rounded w-32" />
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-1 py-1 md:px-6 md:py-4">
                         <div className="h-4 bg-gray-200 rounded w-24" />
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-1 py-1 md:px-6 md:py-4">
                         <div className="h-4 bg-gray-200 rounded w-20" />
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-1 py-1 md:px-6 md:py-4">
                         <div className="h-4 bg-gray-200 rounded w-20" />
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-1 py-1 md:px-6 md:py-4">
                         <div className="h-4 bg-gray-200 rounded w-24" />
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-1 py-1 md:px-6 md:py-4">
                         <div className="h-4 bg-gray-200 rounded w-16" />
                       </td>
                     </tr>
@@ -347,21 +347,27 @@ export default function ProductsListing() {
                         key={product.id}
                         className="hover:bg-gray-50 transition"
                       >
-                        <td className="px-6 py-4 text-gray-500">{index + 1}</td>
-                        <td className="px-6 py-4 font-medium">
+                        <td className="px-1 py-1 md:px-6 md:py-4text-gray-500">
+                          {index + 1}
+                        </td>
+                        <td className="px-1 py-1 md:px-6 md:py-4font-medium">
                           {product.name}
                         </td>
-                        <td className="px-6 py-4">{category?.name || "—"}</td>
-                        <td className="px-6 py-4">
+                        <td className="px-1 py-1 md:px-6 md:py-4">
+                          {category?.name || "—"}
+                        </td>
+                        <td className="px-1 py-1 md:px-6 md:py-4">
                           Rs.{product.purchasePrice}
                         </td>
-                        <td className="px-6 py-4">Rs.{product.salePrice}</td>
-                        <td className="px-6 py-4">
+                        <td className="px-1 py-1 md:px-6 md:py-4">
+                          Rs.{product.salePrice}
+                        </td>
+                        <td className="px-1 py-1 md:px-6 md:py-4">
                           {product.govtSalePrice != null
                             ? `Rs.${product.govtSalePrice}`
                             : "—"}
                         </td>
-                        <td className="px-6 py-4 flex items-center gap-6">
+                        <td className="px-1 py-1 md:px-6 md:py-4 flex items-center gap-2 md:gap-6">
                           <button
                             onClick={() => setSelectedProduct(product)}
                             title="View"
