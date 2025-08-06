@@ -75,26 +75,26 @@ export default function Header2() {
     <div className="w-full px-4 md:px-6 py-3 sticky top-0 z-50 bg-white grid grid-cols-2 gap-5">
       <div className="flex items-center gap-4">
         <MdOutlineMenu
-          className="text-2xl md:text-3xl cursor-pointer text-gray-600 "
+          className="text-3xl cursor-pointer text-gray-600 "
           onClick={handleMenuClick}
         />
         <div className="h-full">
           <img
             src="invenzo_logo.png"
             alt="logo"
-            className="h-full  aspect-auto object-contain max-h-10"
+            className="h-full aspect-auto object-contain max-h-12"
           />
         </div>
       </div>
 
-      <div className="flex items-center justify-end gap-3 md:gap-5 text-xl md:text-2xl">
+      <div className="flex items-center justify-end gap-3 md:gap-5 text-2xl">
         <button className="">
           <MdOutlineSettings />
         </button>
         <button className="">
           <MdOutlineNotifications />
         </button>
-        <div className="h-8 md:h-10 aspect-square border-2 border-white bg-orange-500 rounded-full"></div>
+        <div className="h-9 md:h-10 aspect-square border-2 border-white bg-orange-500 rounded-full"></div>
       </div>
 
       {/* sidebar */}
