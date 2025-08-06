@@ -115,7 +115,7 @@ export default function Header2() {
           {buttons.map((button, index) => (
             <button
               key={index}
-              className="flex items-center gap-4 px-3 py-2  md:px-4 md:py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
+              className="flex items-center gap-4 px-3 py-3  md:px-4 md:py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
               onClick={button.onclick}
             >
               <span className="text-lg md:text-xl">{button.icon}</span>
