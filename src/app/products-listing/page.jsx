@@ -17,11 +17,23 @@ export default function ProductsListing() {
   const [refreshing, setRefreshing] = useState(false);
   const [refreshFailed, setRefreshFailed] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedProductForDelete, setSelectedProductForDelete] =
+    useState(null);
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const [sortConfig, setSortConfig] = useState({
     key: "name",
     direction: "asc",
   });
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [editProduct, setEditProduct] = useState(null);
+  const [editForm, setEditForm] = useState({
+    name: "",
+    categoryId: "",
+    purchasePrice: "",
+    salePrice: "",
+    govtSalePrice: "",
+    tags: "",
+  });
 
   const localStorageKey = `inventoryData_${invId}`;
 
@@ -36,9 +48,10 @@ export default function ProductsListing() {
       const data = await response.json();
       const { products, categories, inv } = data;
 
-      const toStore = { products, categories, inv };
-      localStorage.setItem(localStorageKey, JSON.stringify(toStore));
-
+      localStorage.setItem(
+        localStorageKey,
+        JSON.stringify({ products, categories, inv })
+      );
       setProducts(products);
       setCategories(categories);
       set_invInfo(inv);
@@ -103,6 +116,54 @@ export default function ProductsListing() {
     );
   };
 
+  const handleEdit = (product) => {
+    setEditProduct(product);
+    setEditForm({
+      name: product.name,
+      categoryId: product.categoryId.toString(),
+      purchasePrice: product.purchasePrice.toString(),
+      salePrice: product.salePrice.toString(),
+      govtSalePrice: product.govtSalePrice?.toString() || "",
+      tags: product.tags || "",
+    });
+  };
+
+  const handleUpdate = async () => {
+    try {
+      const response = await fetch(`/api/inventory/${invId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: editProduct.id,
+          name: editForm.name.trim(),
+          description: "",
+          categoryId: parseInt(editForm.categoryId, 10),
+          purchasePrice: parseFloat(editForm.purchasePrice),
+          salePrice: parseFloat(editForm.salePrice),
+          govtSalePrice: editForm.govtSalePrice
+            ? parseFloat(editForm.govtSalePrice)
+            : null,
+          tags: editForm.tags.trim(),
+        }),
+      });
+
+      if (!response.ok) throw new Error("Update failed");
+      toast.success("Product updated");
+      setEditProduct(null);
+      await fetchAndStoreData();
+    } catch (err) {
+      console.error(err);
+      toast.error("Update failed");
+    }
+  };
+
+  const isSaveDisabled =
+    !editForm.name.trim() ||
+    !editForm.categoryId ||
+    parseFloat(editForm.purchasePrice) < 0 ||
+    parseFloat(editForm.salePrice) < 0 ||
+    (editForm.govtSalePrice && parseFloat(editForm.govtSalePrice) < 0);
+
   const sortedProducts = [...products]
     .filter((product) => {
       const category =
@@ -121,12 +182,36 @@ export default function ProductsListing() {
       return 0;
     });
 
+  const handleDelete = async () => {
+    try {
+      const response = await fetch(`/api/inventory/${invId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id: selectedProductForDelete.id }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to delete product");
+      }
+
+      toast.success("Product deleted successfully");
+      setSelectedProductForDelete(null);
+      setConfirmDelete(false);
+      await fetchAndStoreData(); // refresh product list from DB
+    } catch (error) {
+      console.error("Delete failed:", error);
+      toast.error(error.message || "Failed to delete product");
+    }
+  };
+
   return (
     <div className="flex w-full flex-col items-center justify-center ">
       <Header2 />
-
       <div className="w-full max-w-7xl place-self-center">
-        <div className="flex flex-col md:flex-row md:justify-between items-center shadow px-6 py-4 gap-3 sticky top-2 md:top-12 bg-white">
+        <div className="flex flex-col md:flex-row md:justify-between items-center shadow px-6 py-4 gap-3 sticky top-2 md:top-12 bg-white z-10">
           <div className="w-full ">
             {loadingData ? (
               <div className="h-7 bg-gray-200 rounded w-52 place-self-center md:place-self-auto animate-pulse"></div>
@@ -136,7 +221,7 @@ export default function ProductsListing() {
               </h2>
             )}
           </div>
-          <div className="flex w-full items-stretch justify-end gap-4">
+          <div className="flex w-full items-stretch justify-end gap-4 bg-white">
             <input
               type="text"
               placeholder="Search by name, category, or tag..."
@@ -199,7 +284,7 @@ export default function ProductsListing() {
               <tbody className="divide-y divide-gray-100 text-gray-800">
                 {loadingData ? (
                   Array.from({ length: 10 }).map((_, index) => (
-                    <tr key={index} className="animate-pulse">
+                    <tr key={index} className="animate-pulse ">
                       <td className="px-6 py-4">
                         <div className="h-4 bg-gray-200 rounded w-4" />
                       </td>
@@ -254,10 +339,21 @@ export default function ProductsListing() {
                           >
                             <MdVisibility className="text-gray-500" size={16} />
                           </button>
-                          <button title="Edit" className="text-green-500">
+                          <button
+                            title="Edit"
+                            className="text-green-500"
+                            onClick={() => handleEdit(product)}
+                          >
                             <MdEdit size={16} />
                           </button>
-                          <button title="Delete" className="text-red-500">
+                          <button
+                            title="Delete"
+                            className="text-red-500"
+                            onClick={() => {
+                              setSelectedProductForDelete(product);
+                              setConfirmDelete(true);
+                            }}
+                          >
                             <MdDelete size={16} />
                           </button>
                         </td>
@@ -335,6 +431,203 @@ export default function ProductsListing() {
             </div>
           )}
         </div>
+        {editProduct && (
+          <div className="fixed inset-0 text-sm  bg-black bg-opacity-40 flex items-center justify-center z-50 px-4 sm:px-6">
+            <div
+              className="bg-white max-h-[90%] hidden_scroll_bar overflow-auto rounded-xl shadow-2xl w-full max-w-md sm:max-w-lg p-6 relative"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close Button */}
+              <button
+                className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl"
+                onClick={() => setEditProduct(null)}
+                aria-label="Close edit form"
+              >
+                ✕
+              </button>
+
+              <h3 className="text-2xl font-semibold text-center mb-6 text-gray-800">
+                Edit Product
+              </h3>
+
+              <div className="space-y-2">
+                {/* Name */}
+                <div className="flex items-center gap-2 w-full justify-between">
+                  <label
+                    htmlFor="edit-name"
+                    className="block  font-medium text-gray-700"
+                  >
+                    Name
+                  </label>
+                  <input
+                    id="edit-name"
+                    type="text"
+                    className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 max-w-[220px] md:max-w-[350px]"
+                    value={editForm.name}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, name: e.target.value })
+                    }
+                  />
+                </div>
+
+                {/* Category */}
+                <div className="flex items-center gap-2 w-full justify-between">
+                  <label
+                    htmlFor="edit-category"
+                    className="block  font-medium text-gray-700"
+                  >
+                    Category
+                  </label>
+                  <select
+                    id="edit-category"
+                    className="w-full mt-1 px-4 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-300 max-w-[220px] md:max-w-[350px]"
+                    value={editForm.categoryId}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, categoryId: e.target.value })
+                    }
+                  >
+                    <option value="">Select category</option>
+                    {categories.map((cat) => (
+                      <option key={cat.id} value={cat.id}>
+                        {cat.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Purchase Price */}
+                <div className="flex items-center gap-2 w-full justify-between">
+                  <label
+                    htmlFor="edit-purchase-price"
+                    className="block  font-medium text-gray-700"
+                  >
+                    Purchase Price
+                  </label>
+                  <input
+                    id="edit-purchase-price"
+                    type="number"
+                    min={0}
+                    className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 max-w-[220px] md:max-w-[350px]"
+                    value={editForm.purchasePrice}
+                    onChange={(e) =>
+                      setEditForm({
+                        ...editForm,
+                        purchasePrice: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+
+                {/* Sale Price */}
+                <div className="flex items-center gap-2 w-full justify-between">
+                  <label
+                    htmlFor="edit-sale-price"
+                    className="block  font-medium text-gray-700"
+                  >
+                    Sale Price
+                  </label>
+                  <input
+                    id="edit-sale-price"
+                    type="number"
+                    min={0}
+                    className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 max-w-[220px] md:max-w-[350px]"
+                    value={editForm.salePrice}
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, salePrice: e.target.value })
+                    }
+                  />
+                </div>
+
+                {/* Govt. Sale Price */}
+                <div className="flex items-center gap-2 w-full justify-between">
+                  <label
+                    htmlFor="edit-govt-sale-price"
+                    className="block  font-medium text-gray-700"
+                  >
+                    Govt. Sale Price
+                  </label>
+                  <input
+                    id="edit-govt-sale-price"
+                    type="number"
+                    min={0}
+                    className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300  max-w-[220px] md:max-w-[350px]"
+                    value={editForm.govtSalePrice}
+                    onChange={(e) =>
+                      setEditForm({
+                        ...editForm,
+                        govtSalePrice: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+
+                {/* Tags */}
+                <div className="flex items-center justify-between gap-2 w-full">
+                  <label
+                    htmlFor="edit-tags"
+                    className="block  font-medium text-gray-700"
+                  >
+                    Tags
+                  </label>
+                  <input
+                    id="edit-tags"
+                    type="text"
+                    maxLength={200}
+                    className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 max-w-[220px] md:max-w-[350px] "
+                    value={editForm.tags}
+                    placeholder="space-separated, optional"
+                    onChange={(e) =>
+                      setEditForm({ ...editForm, tags: e.target.value })
+                    }
+                  />
+                </div>
+
+                {/* Save Button */}
+                <button
+                  disabled={isSaveDisabled}
+                  onClick={handleUpdate}
+                  className={`w-full py-3 px-6 rounded-lg text-white font-semibold transition-colors ${
+                    isSaveDisabled
+                      ? "bg-green-500 cursor-not-allowed bg-opacity-50"
+                      : "bg-green-500 hover:bg-green-600"
+                  }`}
+                >
+                  Save Changes
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+        {confirmDelete && (
+          <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 px-4">
+            <div className="bg-white rounded-lg p-6 shadow-xl max-w-sm w-full">
+              <h3 className="text-lg font-semibold text-red-700 mb-4">
+                Confirm Deletion
+              </h3>
+              <p className="text-gray-700 mb-6">
+                Are you sure you want to delete{" "}
+                <span className="font-semibold">
+                  {selectedProductForDelete?.name}
+                </span>
+                ?
+              </p>
+              <div className="flex justify-end gap-4">
+                <button
+                  onClick={() => setConfirmDelete(false)}
+                  className="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded text-black"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDelete}
+                  className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded text-white"
+                >
+                  Yes, Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

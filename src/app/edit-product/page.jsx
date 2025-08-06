@@ -188,7 +188,7 @@ export default function AddProductPage() {
               value={tags}
               onChange={handleTagsChange}
               maxLength={200}
-              placeholder="Tags (space-separated, optional)"
+              placeholder="e.g. apple red phone"
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
             />
           </div>
@@ -261,7 +261,7 @@ export default function AddProductPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-4 px-6 rounded-lg transition-colors duration-200"
+            className="w-full bg-cyan-600 hover:bg-cyan-700 text-white font-semibold py-4 px-6 rounded-lg transition-colors duration-200"
           >
             {loading ? (
               <div className="border-2 border-gray-200 border-t-transparent animate-spin rounded-full w-6 h-6 mx-auto" />
