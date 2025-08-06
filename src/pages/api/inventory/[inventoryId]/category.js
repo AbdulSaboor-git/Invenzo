@@ -84,7 +84,11 @@ async function handleGet(req, res, inventoryId) {
     return res.status(200).json(categories);
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: "Internal Server Error" });
+    return res
+      .status(500)
+      .json({
+        message: "Internal Server Error. Please check your network connection",
+      });
   }
 }
 

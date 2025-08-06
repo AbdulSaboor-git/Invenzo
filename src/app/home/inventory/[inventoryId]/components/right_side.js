@@ -353,6 +353,7 @@ export default function RightSide({
               handleDeleteClick={handleDeleteClick}
               setProd={setProd}
               userId={userId}
+              categories={categories}
             />
           ))
         )}

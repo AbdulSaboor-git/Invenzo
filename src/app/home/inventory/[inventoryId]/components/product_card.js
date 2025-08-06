@@ -10,6 +10,7 @@ export default function ProductCard({
   handleDeleteClick,
   setProd,
   userId,
+  categories,
 }) {
   const handleTableClick = (e) => {
     e.stopPropagation();
@@ -21,6 +22,7 @@ export default function ProductCard({
       localStorage.getItem(`preferences_${userId}`)
     );
   }
+  const category = categories.find((cat) => cat.id === prod.categoryId);
   return (
     <div
       className="w-full bg-[var(--prod-card)] border border-[var(--prod-card-border)] rounded-xl p-4 text-[var(--text-prim)] shadow-sm shadow-[#00000061] hover:scale-[1.005] transition-transform duration-200 ease-in-out cursor-pointer"
@@ -78,7 +80,7 @@ export default function ProductCard({
                     Category
                   </td>
                   <td className="border border-[var(--prod-card-details-border)] p-1">
-                    {prod.category.name}
+                    {category?.name}
                   </td>
                 </tr>
               )}

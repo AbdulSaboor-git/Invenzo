@@ -259,14 +259,15 @@
 }
 
 body {
-  color: var(--text-prim); /* This applies Tailwind's text color */
+  /* color: var(--text-prim); 
   background: linear-gradient(
     to bottom,
     var(--background-sec) 50%,
     var(--background-prim) 90%
   );
-  background-attachment: fixed;
+  background-attachment: fixed;*/
   user-select: none;
+  background: #ffffff;
 }
 
 button {

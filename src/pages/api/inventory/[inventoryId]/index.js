@@ -69,7 +69,12 @@ async function handleGet(req, res, inventoryId) {
     // Check if inventory exists
     const inv = await prisma.inventory.findUnique({
       where: { id },
-      include: { admin: true },
+      select: {
+        id: true,
+        name: true,
+        adminId: true,
+      },
+      // include: { admin: true },
     });
 
     if (!inv) {
@@ -95,26 +100,45 @@ async function handleGet(req, res, inventoryId) {
     // Fetch products, categories, and moderators
     const products = await prisma.product.findMany({
       where: { inventoryId: id },
-      include: { category: true }, // Include the related category data
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        categoryId: true,
+        purchasePrice: true,
+        salePrice: true,
+        govtSalePrice: true,
+        createdAt: true,
+        updatedAt: true,
+        tags: true,
+      },
+      orderBy: { name: "asc" },
     });
 
     const categories = await prisma.category.findMany({
       where: { inventoryId: id },
+      select: {
+        id: true,
+        name: true,
+      },
+      orderBy: { name: "asc" },
     });
 
     const moderators = await prisma.moderator.findMany({
       where: { inventoryId: id },
-      include: { user: true }, // Include the related user data
+      include: {
+        user: true,
+      }, // Include the related user data
       orderBy: { userId: "asc" },
     });
 
     // Sort categories and products alphabetically
-    categories.sort((a, b) =>
-      a.name.localeCompare(b.name, undefined, { sensitivity: "base" })
-    );
-    products.sort((a, b) =>
-      a.name.localeCompare(b.name, undefined, { sensitivity: "base" })
-    );
+    // categories.sort((a, b) =>
+    //   a.name.localeCompare(b.name, undefined, { sensitivity: "base" })
+    // );
+    // products.sort((a, b) =>
+    //   a.name.localeCompare(b.name, undefined, { sensitivity: "base" })
+    // );
 
     return res.status(200).json({ products, categories, moderators, inv });
   } catch (error) {
