@@ -23,6 +23,7 @@ export default function ProductsListing() {
   const [refreshing, setRefreshing] = useState(false);
   const [refreshFailed, setRefreshFailed] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [loadingForAddEdit, setLoadingForAddEdit] = useState(false);
   const [selectedProductForDelete, setSelectedProductForDelete] =
     useState(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -61,7 +62,6 @@ export default function ProductsListing() {
       setProducts(products);
       setCategories(categories);
       set_invInfo(inv);
-      toast.success("Data refreshed.");
     } catch (err) {
       console.error("Fetch error:", err);
       toast.error("Failed to refresh. Showing cached data.");
@@ -69,6 +69,13 @@ export default function ProductsListing() {
     } finally {
       setLoadingData(false);
       setRefreshing(false);
+    }
+  };
+
+  const RefreshData = async () => {
+    await fetchAndStoreData();
+    if (!refreshFailed) {
+      toast.success("Data refreshed.");
     }
   };
 
@@ -136,6 +143,7 @@ export default function ProductsListing() {
 
   const handleUpdate = async () => {
     try {
+      setLoadingForAddEdit(true);
       const response = await fetch(`/api/inventory/${invId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -160,6 +168,8 @@ export default function ProductsListing() {
     } catch (err) {
       console.error(err);
       toast.error("Update failed");
+    } finally {
+      setLoadingForAddEdit(false);
     }
   };
 
@@ -190,6 +200,7 @@ export default function ProductsListing() {
 
   const handleDelete = async () => {
     try {
+      setLoadingForAddEdit(true);
       const response = await fetch(`/api/inventory/${invId}`, {
         method: "DELETE",
         headers: {
@@ -210,6 +221,8 @@ export default function ProductsListing() {
     } catch (error) {
       console.error("Delete failed:", error);
       toast.error(error.message || "Failed to delete product");
+    } finally {
+      setLoadingForAddEdit(false);
     }
   };
 
@@ -259,7 +272,7 @@ export default function ProductsListing() {
               )}
             </div>
             <button
-              onClick={fetchAndStoreData}
+              onClick={RefreshData}
               className={`flex gap-2 items-center justify-center text-sm font-semibold px-3 py-1.5 rounded-md border transition-all duration-300 ${
                 refreshFailed
                   ? "bg-red-100 hover:bg-red-200 text-red-800 border-red-300"
@@ -488,6 +501,7 @@ export default function ProductsListing() {
             <button
               className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl"
               onClick={() => setEditProduct(null)}
+              disabled={loadingForAddEdit}
               aria-label="Close edit form"
             >
               ✕
@@ -632,15 +646,19 @@ export default function ProductsListing() {
 
               {/* Save Button */}
               <button
-                disabled={isSaveDisabled}
+                disabled={isSaveDisabled || loadingForAddEdit}
                 onClick={handleUpdate}
-                className={`w-full py-3 px-6 rounded-lg text-white font-semibold transition-colors ${
+                className={`w-full py-4 px-6 rounded-lg text-white font-semibold transition-colors ${
                   isSaveDisabled
                     ? "bg-green-500 cursor-not-allowed bg-opacity-50"
                     : "bg-green-500 hover:bg-green-600"
                 }`}
               >
-                Save Changes
+                {loadingForAddEdit ? (
+                  <div className="border-2 border-gray-200 border-t-transparent animate-spin rounded-full w-5 h-5 mx-auto" />
+                ) : (
+                  "Save Changes"
+                )}
               </button>
             </div>
           </div>
@@ -665,6 +683,7 @@ export default function ProductsListing() {
             </p>
             <div className="flex justify-end gap-4">
               <button
+                disabled={loadingForAddEdit}
                 onClick={() => setConfirmDelete(false)}
                 className="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded text-black"
               >
@@ -672,9 +691,14 @@ export default function ProductsListing() {
               </button>
               <button
                 onClick={handleDelete}
-                className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded text-white"
+                disabled={loadingForAddEdit}
+                className="px-4 py-2 w-32 bg-red-600 hover:bg-red-700 rounded text-white"
               >
-                Yes, Delete
+                {loadingForAddEdit ? (
+                  <div className="border-2 border-gray-200 border-t-transparent animate-spin rounded-full w-4 h-4 mx-auto" />
+                ) : (
+                  "Yes, Delete"
+                )}
               </button>
             </div>
           </div>

@@ -115,7 +115,7 @@ export default function AddProductPage() {
         localStorageKey,
         JSON.stringify({ products, categories, inv })
       );
-      toast.success("Data synced successfully");
+      // toast.success("Data synced successfully");
     } catch (error) {
       console.error("Error submitting product:", error);
       toast.error("Something went wrong");
