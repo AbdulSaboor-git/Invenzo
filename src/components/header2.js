@@ -67,7 +67,7 @@ export default function Header2() {
   }, [sidebarOpen]);
 
   return (
-    <div className="w-full px-4 md:px-6 py-3 sticky top-0 z-50 bg-white grid grid-cols-[2fr_1fr] gap-5">
+    <div className="w-full px-4 md:px-6 py-3 sticky top-0 z-50 bg-white grid grid-cols-[2fr_1.3fr] gap-6">
       <div className="flex items-center gap-4">
         <MdOutlineMenu
           className="text-3xl cursor-pointer text-gray-600 "
@@ -77,7 +77,7 @@ export default function Header2() {
           <img
             src="invenzo_logo.png"
             alt="logo"
-            className="h-full aspect-auto object-contain  max-h-10 md:max-h-12 "
+            className="h-full aspect-auto object-contain  max-h-10 md:max-h-12"
           />
         </div>
       </div>
@@ -108,14 +108,14 @@ export default function Header2() {
           <img
             src="invenzo_logo.png"
             alt="logo"
-            className="h-8 md:h-12 aspect-auto"
+            className="h-9 md:h-12 aspect-auto"
           />
         </div>
         <div className="flex flex-col">
           {buttons.map((button, index) => (
             <button
               key={index}
-              className="flex items-center gap-4 px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
+              className="flex items-center gap-4 px-3 py-2  md:px-4 md:py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
               onClick={button.onclick}
             >
               <span className="text-lg md:text-xl">{button.icon}</span>
