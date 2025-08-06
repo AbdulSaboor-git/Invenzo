@@ -276,63 +276,63 @@ export default function ProductsListing() {
             <table className="min-w-full divide-y divide-gray-200 bg-white text-sm text-left overflow-hidden">
               <thead className="bg-gray-100 text-gray-700 text-sm font-semibold uppercase tracking-wide">
                 <tr>
-                  <th className="px-3 py-2 md:px-6 md:py-4 text-center">#</th>
+                  <th className="px-3 py-3 md:px-6 md:py-4 text-center">#</th>
                   <th
-                    className=" px-3 py-2 md:px-6 md:py-4 cursor-pointer"
+                    className=" px-3 py-3 md:px-6 md:py-4 cursor-pointer"
                     onClick={() => toggleSort("name")}
                   >
                     Name {renderSortIcon("name")}
                   </th>
                   <th
-                    className="px-3 py-2 md:px-6 md:py-4 cursor-pointer"
+                    className="px-3 py-3 md:px-6 md:py-4 cursor-pointer"
                     onClick={() => toggleSort("salePrice")}
                   >
                     S. Price {renderSortIcon("salePrice")}
                   </th>
                   <th
-                    className="px-3 py-2 md:px-6 md:py-4 cursor-pointer"
+                    className="px-3 py-3 md:px-6 md:py-4 cursor-pointer"
                     onClick={() => toggleSort("purchasePrice")}
                   >
                     P. Price {renderSortIcon("purchasePrice")}
                   </th>
                   <th
-                    className=" px-3 py-2 md:px-6 md:py-4 cursor-pointer"
+                    className=" px-3 py-3 md:px-6 md:py-4 cursor-pointer"
                     onClick={() => toggleSort("categoryId")}
                   >
                     Category {renderSortIcon("categoryId")}
                   </th>
                   <th
-                    className="px-3 py-2 md:px-6 md:py-4 cursor-pointer"
+                    className="px-3 py-3 md:px-6 md:py-4 cursor-pointer"
                     onClick={() => toggleSort("govtSalePrice")}
                   >
                     Updated At {renderSortIcon("updatedAt")}
                   </th>
-                  <th className="px-3 py-2 md:px-6 md:py-4">Actions</th>
+                  <th className="px-3 py-3 md:px-6 md:py-4">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 text-gray-800">
                 {loadingData ? (
                   Array.from({ length: 10 }).map((_, index) => (
                     <tr key={index} className="animate-pulse ">
-                      <td className="px-3 py-2 md:px-6 md:py-4">
+                      <td className="px-3 py-4 md:px-6 md:py-4">
                         <div className="h-4 bg-gray-200 rounded w-4" />
                       </td>
-                      <td className="px-3 py-2 md:px-6 md:py-4">
+                      <td className="px-3 py-4 min-w-[150px] md:px-6 md:py-4">
                         <div className="h-4 bg-gray-200 rounded w-32" />
                       </td>
-                      <td className="px-3 py-2 md:px-6 md:py-4">
+                      <td className="px-3 py-4 min-w-[110px] md:px-6 md:py-4">
                         <div className="h-4 bg-gray-200 rounded w-20" />
                       </td>
-                      <td className="px-3 py-2 md:px-6 md:py-4">
+                      <td className="px-3 py-4 md:px-6 min-w-[110px] md:py-4">
                         <div className="h-4 bg-gray-200 rounded w-20" />
                       </td>
-                      <td className="px-3 py-2 md:px-6 md:py-4">
+                      <td className="px-3 py-4 min-w-[130px] md:px-6 md:py-4">
                         <div className="h-4 bg-gray-200 rounded w-24" />
                       </td>
-                      <td className="px-3 py-2 md:px-6 md:py-4">
+                      <td className="px-3 py-4 min-w-[140px] md:px-6 md:py-4">
                         <div className="h-4 bg-gray-200 rounded w-24" />
                       </td>
-                      <td className="px-3 py-2 md:px-6 md:py-4">
+                      <td className="px-3 py-4 md:px-6 md:py-4">
                         <div className="h-4 bg-gray-200 rounded w-16" />
                       </td>
                     </tr>
@@ -345,12 +345,15 @@ export default function ProductsListing() {
                     return (
                       <tr
                         key={product.id}
-                        className="hover:bg-gray-50 transition"
+                        className="hover:bg-gray-50 transition "
                       >
                         <td className="px-3 py-2 md:px-6 md:py-4 text-gray-500 text-center">
                           {index + 1}
                         </td>
-                        <td className="px-3 min-w-[150px] max-w-[280px] py-2 md:px-6 md:py-4 font-medium">
+                        <td
+                          className="px-3 min-w-[150px] max-w-[280px] py-2 md:px-6 md:py-4 font-medium cursor-pointer"
+                          onClick={() => setSelectedProduct(product)}
+                        >
                           {product.name}
                         </td>
                         <td className="px-3  min-w-[110px] py-2 md:px-6 md:py-4">
@@ -365,10 +368,11 @@ export default function ProductsListing() {
                         <td className="px-3 py-2 min-w-[140px] md:px-6 md:py-4">
                           {new Date(product.updatedAt).toLocaleString()}
                         </td>
-                        <td className="px-3 py-2  md:px-6 md:py-4 flex items-center gap-2 md:gap-6">
+                        <td className="px-3 py-2 md:px-6 md:py-4 flex translate-y-1/2 -mt-1 md:translate-y-0 md:-mt-0 gap-4 md:gap-6">
                           <button
                             onClick={() => setSelectedProduct(product)}
                             title="View"
+                            className=""
                           >
                             <MdVisibility className="text-gray-500" size={16} />
                           </button>
@@ -606,7 +610,7 @@ export default function ProductsListing() {
               </div>
 
               {/* Tags */}
-              <div className="flex items-center justify-between gap-2 w-full">
+              <div className="flex pb-6 sm:pb-8 items-center justify-between gap-2 w-full">
                 <label
                   htmlFor="edit-tags"
                   className="block  font-medium text-gray-700"
@@ -617,7 +621,7 @@ export default function ProductsListing() {
                   id="edit-tags"
                   type="text"
                   maxLength={200}
-                  className="w-full mt-1 mb-6 sm:mb-8 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 max-w-[200px] sm:max-w-[350px] "
+                  className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 max-w-[200px] sm:max-w-[350px] "
                   value={editForm.tags}
                   placeholder="space-separated"
                   onChange={(e) =>
