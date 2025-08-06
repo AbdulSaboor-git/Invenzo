@@ -1,15 +1,12 @@
 "use client";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   MdAdd,
   MdCategory,
   MdCreditCard,
   MdDashboard,
   MdInventory,
-  MdMenu,
-  MdMenuOpen,
-  MdNotifications,
   MdOutlineMenu,
   MdOutlineMenuOpen,
   MdOutlineNotifications,
@@ -61,6 +58,19 @@ export default function Header2() {
     },
   ];
 
+  useEffect(() => {
+    if (sidebarOpen) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+
+    // Clean up just in case
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, [sidebarOpen]);
+
   return (
     <div className="w-full px-4 md:px-6 py-3 sticky top-0 z-50 bg-white grid grid-cols-2 gap-5">
       <div className="flex items-center gap-4">
@@ -88,6 +98,12 @@ export default function Header2() {
       </div>
 
       {/* sidebar */}
+      <div
+        className={`fixed w-full h-full bg-black opacity-0 pointer-events-none ${
+          sidebarOpen && "opacity-40 pointer-events-auto"
+        } transition-all duration-300 `}
+        onClick={() => setSidebarOpen(false)}
+      />
       <div
         className={`fixed left-0 w-[60%] max-w-[400px] h-full bg-white shadow-lg shadow-black/30 z-50 flex flex-col gap-12 p-3 md:p-4 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"

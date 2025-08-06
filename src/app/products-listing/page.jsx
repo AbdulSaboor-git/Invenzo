@@ -213,6 +213,19 @@ export default function ProductsListing() {
     }
   };
 
+  useEffect(() => {
+    if (editProduct || confirmDelete) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+
+    // Clean up just in case
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, [editProduct, confirmDelete]);
+
   return (
     <div className="flex w-full flex-col items-center justify-center ">
       <Header2 />
@@ -447,10 +460,10 @@ export default function ProductsListing() {
             </div>
           )}
         </div>
-        {editProduct && (
-          <div className="fixed inset-0 text-sm  bg-black bg-opacity-40 flex items-center justify-center z-50 px-4 sm:px-6">
+        {/* edit product */}
+          <div className={`fixed inset-0 text-sm  bg-black bg-opacity-40 flex items-center justify-center z-50 px-4 sm:px-6 transition-all duration-300 ${editProduct ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}>
             <div
-              className="bg-white max-h-[90%] hidden_scroll_bar overflow-auto rounded-xl shadow-2xl w-full max-w-md sm:max-w-lg p-6 relative"
+              className="bg-white max-h-[90%] hidden_scroll_bar overflow-auto rounded-xl shadow-2xl w-full max-w-md sm:max-w-lg py-10 px-6 sm:py-12 sm:px-10  relative"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Close Button */}
@@ -590,7 +603,7 @@ export default function ProductsListing() {
                     id="edit-tags"
                     type="text"
                     maxLength={200}
-                    className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 max-w-[200px] sm:max-w-[350px] "
+                    className="w-full mt-1 mb-6 sm:mb-8 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 max-w-[200px] sm:max-w-[350px] "
                     value={editForm.tags}
                     placeholder="space-separated"
                     onChange={(e) =>
@@ -614,9 +627,7 @@ export default function ProductsListing() {
               </div>
             </div>
           </div>
-        )}
-        {confirmDelete && (
-          <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 px-4">
+          <div className={`fixed inset-0 text-sm  bg-black bg-opacity-40 flex items-center justify-center z-50 px-4 sm:px-6 transition-all duration-300 ${confirmDelete ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}>
             <div className="bg-white rounded-lg p-6 shadow-xl max-w-sm w-full">
               <h3 className="text-lg font-semibold text-red-700 mb-4">
                 Confirm Deletion
@@ -644,7 +655,6 @@ export default function ProductsListing() {
               </div>
             </div>
           </div>
-        )}
       </div>
     </div>
   );
