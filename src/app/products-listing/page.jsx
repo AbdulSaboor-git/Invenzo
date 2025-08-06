@@ -126,7 +126,7 @@ export default function ProductsListing() {
       <Header2 />
 
       <div className="w-full max-w-7xl place-self-center">
-        <div className="flex flex-col md:flex-row md:justify-between items-center shadow px-6 py-4 gap-3 sticky top-10 md:top-12 bg-white">
+        <div className="flex flex-col md:flex-row md:justify-between items-center shadow px-6 py-4 gap-3 sticky top-2 md:top-12 bg-white">
           <div className="w-full ">
             {loadingData ? (
               <div className="h-7 bg-gray-200 rounded w-52 place-self-center md:place-self-auto animate-pulse"></div>
@@ -277,7 +277,7 @@ export default function ProductsListing() {
 
           {selectedProduct && (
             <div
-              className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50"
+              className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 px-6"
               onClick={() => setSelectedProduct(null)}
             >
               <div
@@ -296,7 +296,8 @@ export default function ProductsListing() {
                     <strong>Name:</strong> {selectedProduct.name}
                   </p>
                   <p>
-                    <strong>Description:</strong> {selectedProduct.description}
+                    <strong>Description:</strong>{" "}
+                    {selectedProduct.description || "—"}
                   </p>
                   <p>
                     <strong>Category:</strong>{" "}

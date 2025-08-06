@@ -62,8 +62,8 @@ export default function Header2() {
   ];
 
   return (
-    <div className="w-full px-6 py-3 sticky top-0 z-10 bg-white grid grid-cols-2 gap-5">
-      <div className="flex items-center gap-2 md:gap-4">
+    <div className="w-full px-4 md:px-6 py-3 sticky top-0 z-10 bg-white grid grid-cols-2 gap-5">
+      <div className="flex items-center gap-4">
         <MdOutlineMenu
           className="text-2xl md:text-3xl cursor-pointer text-gray-600 "
           onClick={handleMenuClick}

@@ -16,6 +16,7 @@ export default function AddProductPage() {
   const [categoryId, setCategoryId] = useState("");
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [syncing, setSyncing] = useState(false);
 
   const invId = 52;
   const userId = 6;
@@ -88,6 +89,7 @@ export default function AddProductPage() {
       if (!res.ok) throw new Error("Failed to add product");
 
       toast.success("Product added successfully");
+      setLoading(false);
 
       // Reset fields
       setName("");
@@ -99,21 +101,26 @@ export default function AddProductPage() {
       setCategoryId("");
 
       // Refetch products from DB
+      setSyncing(true);
       const productRes = await fetch(
         `/api/inventory/${invId}?userId=${userId}`
       );
-      if (!productRes.ok) throw new Error("Failed to refresh product list");
+      if (!productRes.ok) {
+        toast.error("Failed to sync data");
+        throw new Error("Failed to refresh product list");
+      }
       const { products, categories, inv } = await productRes.json();
 
       localStorage.setItem(
         localStorageKey,
         JSON.stringify({ products, categories, inv })
       );
+      toast.success("Data synced successfully");
     } catch (error) {
       console.error("Error submitting product:", error);
       toast.error("Something went wrong");
     } finally {
-      setLoading(false);
+      setSyncing(false);
     }
   };
 
@@ -139,10 +146,13 @@ export default function AddProductPage() {
     <div className="min-h-screen w-full md:bg-gray-100">
       <Header2 />
       <div className="w-full place-self-center max-w-2xl px-8 py-10 md:px-12 md:py-16 bg-white md:shadow-lg md:mt-6 md:rounded-xl">
-        <h1 className="text-2xl md:text-3xl font-semibold text-gray-800 mb-8 text-center">
+        <h1 className="text-xl md:text-3xl font-semibold text-gray-800 mb-8 text-center">
           Add New Product
         </h1>
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-5 text-sm md:text-base"
+        >
           {/* Product Name */}
           <div>
             <label className="block mb-1 font-medium text-gray-700">
