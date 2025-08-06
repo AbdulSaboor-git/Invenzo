@@ -303,7 +303,7 @@ export default function ProductsListing() {
                   </th>
                   <th
                     className="px-3 py-3 md:px-6 md:py-4 cursor-pointer"
-                    onClick={() => toggleSort("govtSalePrice")}
+                    onClick={() => toggleSort("updatedAt")}
                   >
                     Updated At {renderSortIcon("updatedAt")}
                   </th>
