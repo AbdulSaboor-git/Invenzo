@@ -51,11 +51,6 @@ export default function Header2() {
       label: "Sales",
       onclick: () => handleButtonClick("Sales"),
     },
-    {
-      icon: <MdSettings />,
-      label: "Settings",
-      onclick: () => handleButtonClick("Settings"),
-    },
   ];
 
   useEffect(() => {
@@ -72,17 +67,17 @@ export default function Header2() {
   }, [sidebarOpen]);
 
   return (
-    <div className="w-full px-4 md:px-6 py-3 sticky top-0 z-50 bg-white grid grid-cols-2 gap-5">
+    <div className="w-full px-4 md:px-6 py-3 sticky top-0 z-50 bg-white grid grid-cols-[2fr_1fr] gap-5">
       <div className="flex items-center gap-4">
         <MdOutlineMenu
           className="text-3xl cursor-pointer text-gray-600 "
           onClick={handleMenuClick}
         />
-        <div className="h-full">
+        <div className="flex items-center justify-center h-full">
           <img
             src="invenzo_logo.png"
             alt="logo"
-            className="h-full aspect-auto object-contain max-h-12"
+            className="h-full aspect-auto object-contain  max-h-10 md:max-h-12 "
           />
         </div>
       </div>
@@ -113,11 +108,7 @@ export default function Header2() {
           <img
             src="invenzo_logo.png"
             alt="logo"
-            className="h-8 md:h-10 aspect-auto"
-          />
-          <MdOutlineMenuOpen
-            className="text-2xl md:text-3xl cursor-pointer text-gray-600"
-            onClick={handleMenuClick}
+            className="h-8 md:h-12 aspect-auto"
           />
         </div>
         <div className="flex flex-col">
