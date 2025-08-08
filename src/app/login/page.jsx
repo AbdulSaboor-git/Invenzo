@@ -5,7 +5,6 @@ import { useDispatch } from "react-redux";
 import { setUser } from "@/redux/userSlice";
 import Footer from "@/components/footer";
 import useAuthUser from "@/hooks/authUser";
-import { triggerNotification } from "@/redux/notificationThunk";
 import { toast } from "sonner";
 
 export default function Login() {
@@ -22,15 +21,6 @@ export default function Login() {
       router.push("/inventory");
     }
   }, [user, userLoading, router]);
-
-  const showMessage = (msg, state) => {
-    dispatch(
-      triggerNotification({
-        msg: msg,
-        success: state,
-      })
-    );
-  };
 
   // const handleSignUpClick = () => {
   //   router.push("/sign-up");
@@ -58,8 +48,10 @@ export default function Login() {
 
       // Handle successful login (e.g., store token, user info, redirect user)
       // Set the cookies
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
+      if (typeof window !== "undefined") {
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+      }
       toast.success("Logged in successfully");
       dispatch(setUser(data.user)); // Store user in Redux
       router.push("/inventory"); // Redirect to a different page after successful login

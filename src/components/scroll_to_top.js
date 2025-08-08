@@ -48,7 +48,7 @@ export default function ScrollToTop({}) {
             cx="28"
             cy="28"
             r="25"
-            stroke={"#08bcc7"}
+            stroke={"#b5e761"}
             strokeWidth="3"
             fill="none"
           />
@@ -56,7 +56,7 @@ export default function ScrollToTop({}) {
             cx="28"
             cy="28"
             r="25"
-            stroke={"#f87e47"}
+            stroke={"#08bcc7"}
             strokeWidth="3.2"
             fill="none"
             strokeDasharray={2 * Math.PI * 25}
@@ -72,7 +72,7 @@ export default function ScrollToTop({}) {
         </svg>
 
         {/* Arrow icon */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#b5e761] rounded-full text-base p-4">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#f87e47] rounded-full text-base p-4">
           <FaArrowUp className="bounce" />
         </div>
       </div>

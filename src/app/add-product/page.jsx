@@ -58,12 +58,14 @@ export default function AddProductPage() {
       setCategories(data);
 
       // Update localStorage
-      const local = localStorage.getItem(localStorageKey);
-      const parsed = local ? JSON.parse(local) : {};
-      localStorage.setItem(
-        localStorageKey,
-        JSON.stringify({ ...parsed, categories: data, inventory: inventory })
-      );
+      if (typeof window !== "undefined") {
+        const local = localStorage.getItem(localStorageKey);
+        const parsed = local ? JSON.parse(local) : {};
+        localStorage.setItem(
+          localStorageKey,
+          JSON.stringify({ ...parsed, categories: data, inventory: inventory })
+        );
+      }
     } catch (error) {
       console.error("Error fetching categories:", error);
       toast.error(error.message || "Failed to fetch categories");
@@ -76,24 +78,26 @@ export default function AddProductPage() {
 
   const loadFromLocalStorage = () => {
     try {
-      const localData = localStorage.getItem(localStorageKey);
-      const parsed = JSON.parse(localData);
-      if (
-        !parsed ||
-        !Array.isArray(parsed.products) ||
-        !Array.isArray(parsed.categories) ||
-        typeof parsed.inventory !== "object" ||
-        parsed.inventory == null
-      ) {
-        if (parsed.inventory == null) {
-          console.log(parsed.inventory);
-        } else if (typeof parsed.inventory !== "object")
-          console.log("inv not obj");
-        return false;
+      if (typeof window !== "undefined") {
+        const localData = localStorage.getItem(localStorageKey);
+        const parsed = JSON.parse(localData);
+        if (
+          !parsed ||
+          !Array.isArray(parsed.products) ||
+          !Array.isArray(parsed.categories) ||
+          typeof parsed.inventory !== "object" ||
+          parsed.inventory == null
+        ) {
+          if (parsed.inventory == null) {
+            console.log(parsed.inventory);
+          } else if (typeof parsed.inventory !== "object")
+            console.log("inv not obj");
+          return false;
+        }
+        setCategories(parsed.categories);
+        setInventory(parsed.inventory);
+        return true;
       }
-      setCategories(parsed.categories);
-      setInventory(parsed.inventory);
-      return true;
     } catch (err) {
       console.error("Invalid localStorage data:", err);
       return false;
@@ -165,10 +169,12 @@ export default function AddProductPage() {
           throw new Error("Failed to refresh product list");
         }
         const { products, categories } = await productRes.json();
-        localStorage.setItem(
-          localStorageKey,
-          JSON.stringify({ products, categories, inventory })
-        );
+        if (typeof window !== "undefined") {
+          localStorage.setItem(
+            localStorageKey,
+            JSON.stringify({ products, categories, inventory })
+          );
+        }
       } catch (error) {
         console.log("Error syncing data:", error);
       }

@@ -32,7 +32,8 @@ export default function Inventory({ params }) {
   const router = useRouter();
   const [addItemForm_isOpen, setAddForm_isOpen] = useState(false);
   const [members_isOpen, set_Members_isOpen] = useState(false);
-  const invId = params.inventoryId;
+  const { inventoryId } = React.use(params);
+  const invId = inventoryId;
   let role = "viewer";
   const { user, userLoading, logout } = useAuthUser();
   // const products = useSelector((state) => state.products);

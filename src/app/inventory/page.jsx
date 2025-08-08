@@ -82,10 +82,12 @@ export default function Inventory() {
       const data = await response.json();
       const { products, categories } = data;
 
-      localStorage.setItem(
-        localStorageKey,
-        JSON.stringify({ products, categories, inventory })
-      );
+      if (typeof window !== "undefined") {
+        localStorage.setItem(
+          localStorageKey,
+          JSON.stringify({ products, categories, inventory })
+        );
+      }
       setProducts(products);
       setCategories(categories);
     } catch (err) {
@@ -111,30 +113,32 @@ export default function Inventory() {
 
   const loadFromLocalStorage = () => {
     try {
-      const cached = localStorage.getItem(localStorageKey);
-      if (!cached) {
-        return false;
-      }
+      if (typeof window !== "undefined") {
+        const cached = localStorage.getItem(localStorageKey);
+        if (!cached) {
+          return false;
+        }
 
-      const parsed = JSON.parse(cached);
-      if (
-        !parsed ||
-        !Array.isArray(parsed.products) ||
-        !Array.isArray(parsed.categories) ||
-        typeof parsed.inventory !== "object" ||
-        parsed.inventory == null
-      ) {
-        if (parsed.inventory == null) {
-          console.log(parsed.inventory);
-        } else if (typeof parsed.inventory !== "object")
-          console.log("inv not obj");
-        return false;
+        const parsed = JSON.parse(cached);
+        if (
+          !parsed ||
+          !Array.isArray(parsed.products) ||
+          !Array.isArray(parsed.categories) ||
+          typeof parsed.inventory !== "object" ||
+          parsed.inventory == null
+        ) {
+          if (parsed.inventory == null) {
+            console.log(parsed.inventory);
+          } else if (typeof parsed.inventory !== "object")
+            console.log("inv not obj");
+          return false;
+        }
+        console.log(parsed.products);
+        setProducts(parsed.products);
+        setCategories(parsed.categories);
+        setInventory(parsed.inventory);
+        return true;
       }
-      console.log(parsed.products);
-      setProducts(parsed.products);
-      setCategories(parsed.categories);
-      setInventory(parsed.inventory);
-      return true;
     } catch {
       return false;
     }
@@ -271,14 +275,17 @@ export default function Inventory() {
             </div>
             <button
               onClick={RefreshData}
-              className={`flex gap-2 items-center justify-center text-sm font-semibold px-3 py-1.5 rounded-md border transition-all duration-300 ${
+              disabled={refreshing || loadingInventory || userLoading}
+              className={`flex gap-2 items-center justify-center text-sm font-semibold px-3 py-1.5 rounded-md border transition-all duration-300 disabled:cursor-not-allowed disabled:bg-green-200 shadow shadow-black/40 disabled:shadow-none ${
                 refreshFailed
                   ? "bg-red-100 hover:bg-red-200 text-red-800 border-red-300"
                   : "bg-green-100 hover:bg-green-200 text-green-800 border-green-300"
               }`}
             >
               <span className="hidden md:inline">Refresh</span>
-              <MdSync className={`${refreshing && "animate-spin"}`} />
+              <MdSync
+                className={`scale-x-[-1] ${refreshing && "animate-spin "} `}
+              />
             </button>
           </div>
         </div>
