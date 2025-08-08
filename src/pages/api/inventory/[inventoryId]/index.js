@@ -10,9 +10,9 @@ export default async function handler(req, res) {
     case "POST":
       return handlePost(req, res, inventoryId);
     case "PATCH":
-      return handlePatch(req, res, inventoryId);
+      return handlePatch(req, res);
     case "DELETE":
-      return handleDelete(req, res, inventoryId);
+      return handleDelete(req, res);
     default:
       res.setHeader("Allow", ["GET", "PATCH", "DELETE"]);
       return res.status(405).end(`Method ${method} Not Allowed`);
@@ -64,14 +64,13 @@ async function handleGet(req, res, inventoryId) {
       return res.status(400).json({ message: "User ID is required" });
     }
 
-    console.log("User ID:", userId, "Inventory ID:", id); // Log to verify values
+    // console.log("User ID:", userId, "Inventory ID:", id);
 
     // Check if inventory exists
     const inv = await prisma.inventory.findUnique({
       where: { id },
       select: {
         id: true,
-        name: true,
         adminId: true,
       },
       // include: { admin: true },
@@ -84,14 +83,14 @@ async function handleGet(req, res, inventoryId) {
     // Check if the user is either the admin or a moderator of the inventory
     const isAdmin = inv.adminId === parseInt(userId, 10);
 
-    const isModerator = await prisma.moderator.findFirst({
-      where: {
-        inventoryId: id,
-        userId: parseInt(userId, 10),
-      },
-    });
+    // const isModerator = await prisma.moderator.findFirst({
+    //   where: {
+    //     inventoryId: id,
+    //     userId: parseInt(userId, 10),
+    //   },
+    // });
 
-    if (!isAdmin && !isModerator) {
+    if (!isAdmin) {
       return res
         .status(403)
         .json({ message: "User is not authorized to access this inventory" });
@@ -124,23 +123,15 @@ async function handleGet(req, res, inventoryId) {
       orderBy: { name: "asc" },
     });
 
-    const moderators = await prisma.moderator.findMany({
-      where: { inventoryId: id },
-      include: {
-        user: true,
-      }, // Include the related user data
-      orderBy: { userId: "asc" },
-    });
+    // const moderators = await prisma.moderator.findMany({
+    //   where: { inventoryId: id },
+    //   include: {
+    //     user: true,
+    //   }, // Include the related user data
+    //   orderBy: { userId: "asc" },
+    // });
 
-    // Sort categories and products alphabetically
-    // categories.sort((a, b) =>
-    //   a.name.localeCompare(b.name, undefined, { sensitivity: "base" })
-    // );
-    // products.sort((a, b) =>
-    //   a.name.localeCompare(b.name, undefined, { sensitivity: "base" })
-    // );
-
-    return res.status(200).json({ products, categories, moderators, inv });
+    return res.status(200).json({ products, categories });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: "Internal Server Error" });
@@ -148,7 +139,7 @@ async function handleGet(req, res, inventoryId) {
 }
 
 // Define PATCH and DELETE functions similarly if needed
-async function handlePatch(req, res, inventoryId) {
+async function handlePatch(req, res) {
   const {
     id,
     name,
@@ -162,7 +153,7 @@ async function handlePatch(req, res, inventoryId) {
 
   try {
     const updatedProduct = await prisma.product.update({
-      where: { id: id }, // Ensure this matches the product ID
+      where: { id: id },
       data: {
         name: name,
         description: description,
@@ -180,7 +171,7 @@ async function handlePatch(req, res, inventoryId) {
   }
 }
 
-async function handleDelete(req, res, inventoryId) {
+async function handleDelete(req, res) {
   const { id } = req.body;
 
   try {
@@ -189,6 +180,7 @@ async function handleDelete(req, res, inventoryId) {
     });
 
     if (!existingProduct) {
+      console.log("Product not found");
       return res.status(404).json({ error: "Product not found", errorCode: 3 });
     }
 

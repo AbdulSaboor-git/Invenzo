@@ -1,29 +1,44 @@
 "use client";
+import useAuthUser from "@/hooks/authUser";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
+import { FaUsers } from "react-icons/fa";
 import {
   MdAdd,
   MdCategory,
   MdCreditCard,
   MdDashboard,
   MdInventory,
+  MdLogout,
   MdOutlineMenu,
-  MdOutlineMenuOpen,
   MdOutlineNotifications,
-  MdOutlineSettings,
   MdSettings,
 } from "react-icons/md";
+import { toast } from "sonner";
 
 export default function Header2() {
+  const { user, userLoading, logout } = useAuthUser();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    if (!user && !userLoading) {
+      router.replace("/login");
+      toast.error("Please login to continue");
+    }
+  }, [user, userLoading]);
+
   const handleMenuClick = () => {
     setSidebarOpen(!sidebarOpen);
   };
+  const defaultProfilePictureLink =
+    "https://lh3.googleusercontent.com/pw/AP1GczM2cnSQPHG8oKKskeSFKCFjs3z_NG31Tt4bQPqb4Fp-Qdteh0m-84BjSvDgQTkscceDPu1eD1Rs2OxUSd0InRuqnowixs1x8kqSVIcu_7BbkBi4XFK13ZqIeq56OxPw0bzq0hoUgYtTHteuYB1cTI-K=w883-h883-s-no-gm";
 
   const handleButtonClick = (name) => {
     router.push(`/${name.toLowerCase().replace(/\s+/g, "-")}`);
   };
+
+  const handleSettingsClick = () => {};
 
   const buttons = [
     {
@@ -33,8 +48,8 @@ export default function Header2() {
     },
     {
       icon: <MdInventory />,
-      label: "Products Listing",
-      onclick: () => handleButtonClick("Products Listing"),
+      label: "Inventory",
+      onclick: () => handleButtonClick("Inventory"),
     },
     {
       icon: <MdAdd />,
@@ -47,9 +62,19 @@ export default function Header2() {
       onclick: () => handleButtonClick("Categories"),
     },
     {
+      icon: <FaUsers />,
+      label: "Cashiers",
+      onclick: () => handleButtonClick("Cashiers"),
+    },
+    {
       icon: <MdCreditCard />,
       label: "Sales",
       onclick: () => handleButtonClick("Sales"),
+    },
+    {
+      icon: <MdSettings />,
+      label: "Settings",
+      onclick: () => handleSettingsClick(),
     },
   ];
 
@@ -60,7 +85,6 @@ export default function Header2() {
       document.body.classList.remove("overflow-hidden");
     }
 
-    // Clean up just in case
     return () => {
       document.body.classList.remove("overflow-hidden");
     };
@@ -77,6 +101,7 @@ export default function Header2() {
           <img
             src="invenzo_logo.png"
             alt="logo"
+            draggable={false}
             className="h-full aspect-auto object-contain  max-h-10 md:max-h-12"
           />
         </div>
@@ -84,12 +109,24 @@ export default function Header2() {
 
       <div className="flex items-center justify-end gap-3 md:gap-5 text-2xl">
         <button className="">
-          <MdOutlineSettings />
-        </button>
-        <button className="">
           <MdOutlineNotifications />
         </button>
-        <div className="h-9 md:h-10 aspect-square border-2 border-white bg-orange-500 rounded-full"></div>
+        <div className="h-10 md:h-14 cursor-pointer aspect-square rounded-full overflow-hidden">
+          <img
+            src={user?.profilePicture || defaultProfilePictureLink}
+            draggable={false}
+            alt="user"
+            className={`w-full aspect-square object-cover rounded-full ${
+              userLoading && "animate-pulse"
+            }`}
+          />
+        </div>
+        <button
+          onClick={logout}
+          className="rounded-lg flex items-center gap-2 bg-red-500 hover:bg-red-600 transition text-sm text-white px-2 md:px-4 py-2"
+        >
+          <span className="hidden md:block">Logout</span> <MdLogout />
+        </button>
       </div>
 
       {/* sidebar */}

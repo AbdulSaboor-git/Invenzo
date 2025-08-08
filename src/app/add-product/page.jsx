@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import Header2 from "@/components/header2";
 import { toast } from "sonner";
+import useAuthUser from "@/hooks/authUser";
+import { useRouter } from "next/navigation";
 
 export default function AddProductPage() {
-  const router = useRouter();
+  const { user, userLoading } = useAuthUser();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [tags, setTags] = useState("");
@@ -16,52 +17,106 @@ export default function AddProductPage() {
   const [categoryId, setCategoryId] = useState("");
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [loadingCategories, setLoadingCategories] = useState(false);
   const [syncing, setSyncing] = useState(false);
+  const [inventory, setInventory] = useState(null);
+  const [fetchedInv, setFetchedInv] = useState(false);
+  const [loadingInventory, setLoadingInventory] = useState(false);
+  const router = useRouter();
 
-  const invId = 52;
-  const userId = 6;
-  const localStorageKey = `inventoryData_${invId}`;
+  const localStorageKey = user?.id ? `inventoryData_${user.id}` : null;
 
-  // Load categories from localStorage (or fetch from DB)
-  useEffect(() => {
-    const localData = localStorage.getItem(localStorageKey);
-    if (localData) {
-      try {
-        const parsed = JSON.parse(localData);
-        if (parsed?.categories?.length) {
-          setCategories(parsed.categories);
-          return;
-        }
-      } catch (err) {
-        console.error("Invalid localStorage data:", err);
+  const fetchInventory = async () => {
+    if (!user || userLoading) return;
+    try {
+      setLoadingInventory(true);
+      const response = await fetch(`/api/inventory?adminId=${user?.id}`);
+      if (!response.ok) throw new Error("Failed to fetch from server");
+      const data = await response.json();
+      toast.success("fet");
+      setInventory(data.inventory);
+    } catch (error) {
+      console.error("Error fetching inventories:", error);
+    } finally {
+      setLoadingInventory(false);
+    }
+  };
+
+  const fetchCategories = async () => {
+    if (!user?.id || inventory === null || loadingInventory) {
+      return;
+    }
+    try {
+      setLoadingCategories(true);
+      const res = await fetch(`/api/inventory/${inventory.id}/category`);
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Unknown error");
       }
+      const data = await res.json();
+      toast.success("fet2");
+      setCategories(data);
+
+      // Update localStorage
+      const local = localStorage.getItem(localStorageKey);
+      const parsed = local ? JSON.parse(local) : {};
+      localStorage.setItem(
+        localStorageKey,
+        JSON.stringify({ ...parsed, categories: data, inventory: inventory })
+      );
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      toast.error(error.message || "Failed to fetch categories");
+    } finally {
+      setLoadingCategories(false);
+    }
+  };
+
+  // Load categories and inv from localStorage
+
+  const loadFromLocalStorage = () => {
+    try {
+      const localData = localStorage.getItem(localStorageKey);
+      const parsed = JSON.parse(localData);
+      if (
+        !parsed ||
+        !Array.isArray(parsed.products) ||
+        !Array.isArray(parsed.categories) ||
+        typeof parsed.inventory !== "object" ||
+        parsed.inventory == null
+      ) {
+        if (parsed.inventory == null) {
+          console.log(parsed.inventory);
+        } else if (typeof parsed.inventory !== "object")
+          console.log("inv not obj");
+        return false;
+      }
+      setCategories(parsed.categories);
+      setInventory(parsed.inventory);
+      return true;
+    } catch (err) {
+      console.error("Invalid localStorage data:", err);
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    if (userLoading || !user?.id) {
+      return;
     }
 
-    const fetchCategories = async () => {
-      try {
-        const res = await fetch(`/api/inventory/${invId}/category`);
-        if (!res.ok) {
-          const errorData = await res.json();
-          throw new Error(errorData.message || "Unknown error");
-        }
-        const data = await res.json();
-        setCategories(data);
+    const hasLocal = loadFromLocalStorage();
+    if (!hasLocal) {
+      setFetchedInv(true);
+      fetchInventory();
+    } else {
+      setLoadingCategories(false);
+    }
+  }, [user, userLoading]);
 
-        // Update localStorage
-        const local = localStorage.getItem(localStorageKey);
-        const parsed = local ? JSON.parse(local) : {};
-        localStorage.setItem(
-          localStorageKey,
-          JSON.stringify({ ...parsed, categories: data })
-        );
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-        toast.error(error.message || "Failed to fetch categories");
-      }
-    };
-
-    fetchCategories();
-  }, [invId]);
+  useEffect(() => {
+    if (inventory && !loadingInventory && fetchedInv) fetchCategories();
+  }, [inventory, loadingInventory, fetchedInv]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -72,7 +127,7 @@ export default function AddProductPage() {
     try {
       setLoading(true);
 
-      const res = await fetch(`/api/inventory/${invId}?userId=${userId}`, {
+      const res = await fetch(`/api/inventory/${inventory.id}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -101,24 +156,25 @@ export default function AddProductPage() {
       setCategoryId("");
 
       // Refetch products from DB
-      setSyncing(true);
-      const productRes = await fetch(
-        `/api/inventory/${invId}?userId=${userId}`
-      );
-      if (!productRes.ok) {
-        toast.error("Failed to sync data");
-        throw new Error("Failed to refresh product list");
+      try {
+        setSyncing(true);
+        const productRes = await fetch(
+          `/api/inventory/${inventory.id}?userId=${user.id}`
+        );
+        if (!productRes.ok) {
+          throw new Error("Failed to refresh product list");
+        }
+        const { products, categories } = await productRes.json();
+        localStorage.setItem(
+          localStorageKey,
+          JSON.stringify({ products, categories, inventory })
+        );
+      } catch (error) {
+        console.log("Error syncing data:", error);
       }
-      const { products, categories, inv } = await productRes.json();
-
-      localStorage.setItem(
-        localStorageKey,
-        JSON.stringify({ products, categories, inv })
-      );
-      // toast.success("Data synced successfully");
     } catch (error) {
       console.error("Error submitting product:", error);
-      toast.error("Something went wrong");
+      toast.error("Error adding product");
     } finally {
       setSyncing(false);
     }
@@ -142,9 +198,25 @@ export default function AddProductPage() {
   const handleSalePriceChange = (e) => setSalePrice(e.target.value);
   const handleGovtSalePriceChange = (e) => setGovtSalePrice(e.target.value);
 
+  useEffect(() => {
+    if (!user && !userLoading && !loadingInventory && !inventory) {
+      router.replace("/inventory");
+      toast.error("Create an inventory first to add products");
+    }
+  }, [loadingInventory, inventory]);
+
   return (
     <div className="min-h-screen w-full md:bg-gray-100">
       <Header2 />
+      <div className="w-full flex  justify-center md:justify-start shadow px-3 md:px-6 py-4 gap-3 sticky top-3 md:top-16 bg-white z-40">
+        {userLoading || loadingInventory || !inventory ? (
+          <div className="h-7 bg-gray-200 rounded w-52 place-self-center md:place-self-auto animate-pulse"></div>
+        ) : (
+          <h2 className="text-lg md:text-xl font-bold w-full text-gray-800 text-center md:text-left">
+            {inventory?.name}
+          </h2>
+        )}
+      </div>
       <div className="w-full place-self-center max-w-2xl px-8 py-10 md:px-12 md:py-16 bg-white md:shadow-lg md:mt-6 md:rounded-xl">
         <h1 className="text-xl md:text-3xl font-semibold text-gray-800 mb-8 text-center">
           Add New Product
@@ -260,8 +332,14 @@ export default function AddProductPage() {
           {/* Submit Button */}
           <button
             type="submit"
-            disabled={loading}
-            className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-4 px-6 rounded-lg transition-colors duration-200"
+            disabled={
+              loading ||
+              syncing ||
+              userLoading ||
+              loadingInventory ||
+              loadingCategories
+            }
+            className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-4 px-6 rounded-lg transition-colors duration-200 disabled:hover:bg-green-600 disabled:cursor-not-allowed"
           >
             {loading ? (
               <div className="border-2 border-gray-200 border-t-transparent animate-spin rounded-full w-6 h-6 mx-auto" />

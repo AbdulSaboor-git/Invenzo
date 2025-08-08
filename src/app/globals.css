@@ -415,3 +415,131 @@ input {
 .hidden {
   display: none;
 }
+
+@keyframes flicker {
+  0%,
+  100% {
+    opacity: 1;
+    scale: 1;
+  } /* Start and end at full opacity */
+  50% {
+    opacity: 0.6;
+    scale: 0.8;
+  } /* Dip to lower opacity in the middle */
+}
+
+.animate-flicker {
+  animation: flicker 0.7s ease-in-out infinite;
+}
+
+.hover-flicker:hover {
+  animation: flicker 0.7s ease-in-out;
+}
+
+.group-hover-flicker {
+  animation: none; /* Ensure no animation by default */
+}
+
+.group:hover .group-hover-flicker {
+  animation: flicker 0.7s ease-in-out; /* Run animation once on group hover */
+}
+
+@keyframes shake {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  16.6% {
+    transform: rotate(10deg);
+  }
+  33.3% {
+    transform: rotate(-10deg);
+  }
+  50% {
+    transform: rotate(10deg);
+  }
+  66.6% {
+    transform: rotate(-10deg);
+  }
+  83.3% {
+    transform: rotate(10deg);
+  }
+}
+
+.hover-shake:hover {
+  animation: shake 0.7s ease-in-out;
+}
+
+.group-hover-shake {
+  animation: none;
+}
+
+.group:hover .group-hover-shake {
+  animation: shake 0.7s ease-in-out;
+}
+
+@keyframes shake-rotate-five {
+  0% {
+    transform: rotate(0deg);
+  }
+  5% {
+    transform: rotate(15deg);
+  }
+  10% {
+    transform: rotate(-15deg);
+  }
+  15% {
+    transform: rotate(15deg);
+  }
+  20% {
+    transform: rotate(-15deg);
+  }
+  25% {
+    transform: rotate(15deg);
+  }
+  30% {
+    transform: rotate(-15deg);
+  }
+  35% {
+    transform: rotate(15deg);
+  }
+  40% {
+    transform: rotate(-15deg);
+  }
+  45% {
+    transform: rotate(0deg);
+  }
+
+  /* Pause */
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.shake {
+  animation: shake-rotate-five 3s infinite;
+}
+
+@keyframes bounce {
+  0% {
+    transform: translateY(-3px);
+  }
+  50% {
+    transform: translateY(3px);
+  }
+  100% {
+    transform: translateY(-3px);
+  }
+}
+
+.bounce {
+  animation: bounce 2s infinite ease-in-out;
+}
+
+.scrollbar-hide {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

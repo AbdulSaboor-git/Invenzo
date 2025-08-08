@@ -135,31 +135,38 @@ const DELETE = async (req, res) => {
 
 const GET = async (req, res) => {
   try {
-    const { adminId, moderatorId } = req.query;
+    const { adminId } = req.query;
 
-    let inventories = [];
-    if (adminId) {
-      inventories = await prisma.inventory.findMany({
-        where: { adminId: parseInt(adminId) },
-        orderBy: { createdAt: "asc" },
-      });
-    } else if (moderatorId) {
-      inventories = await prisma.inventory.findMany({
-        where: {
-          moderators: {
-            some: {
-              userId: parseInt(moderatorId),
-            },
-          },
-        },
-        orderBy: { createdAt: "asc" },
-      });
+    // Validate adminId
+    if (!adminId) {
+      return res.status(400).json({ error: "adminId is required" });
     }
 
-    const data = { inventories, status: 200 };
-    res.status(200).json(data);
+    const parsedAdminId = parseInt(adminId);
+    if (isNaN(parsedAdminId)) {
+      return res.status(400).json({ error: "adminId must be a valid number" });
+    }
+
+    // Query the inventory
+    const inventory = await prisma.inventory.findFirst({
+      where: { adminId: parsedAdminId },
+      orderBy: {
+        createdAt: "asc",
+      },
+      take: 1,
+    });
+
+    // Handle case where no inventory is found
+    if (!inventory) {
+      return res
+        .status(404)
+        .json({ error: "Inventory not found for the provided adminId" });
+    }
+
+    // Return the inventory data
+    return res.status(200).json({ inventory });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error("Error fetching inventory:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 };

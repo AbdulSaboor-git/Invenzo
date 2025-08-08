@@ -3,11 +3,10 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/redux/userSlice";
-import Header from "@/components/header";
 import Footer from "@/components/footer";
 import useAuthUser from "@/hooks/authUser";
-import Loader from "@/components/loader";
 import { triggerNotification } from "@/redux/notificationThunk";
+import { toast } from "sonner";
 
 export default function Login() {
   const router = useRouter();
@@ -20,13 +19,9 @@ export default function Login() {
 
   useEffect(() => {
     if (!userLoading && user) {
-      router.push("/home");
+      router.push("/inventory");
     }
   }, [user, userLoading, router]);
-
-  if (userLoading || user) {
-    return <Loader />;
-  }
 
   const showMessage = (msg, state) => {
     dispatch(
@@ -57,7 +52,7 @@ export default function Login() {
       const data = await response.json();
 
       if (!response.ok) {
-        showMessage(data.error || "Login failed", false);
+        toast.error(data.error || "Login failed", false);
         throw new Error(data.error || "Login failed");
       }
 
@@ -65,9 +60,9 @@ export default function Login() {
       // Set the cookies
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
-
+      toast.success("Logged in successfully");
       dispatch(setUser(data.user)); // Store user in Redux
-      router.push("/user"); // Redirect to a different page after successful login
+      router.push("/inventory"); // Redirect to a different page after successful login
     } catch (err) {
       console.log(err);
       setError(err.message);
@@ -79,7 +74,14 @@ export default function Login() {
   return (
     <div className="flex min-h-screen flex-col items-center">
       <div className="max-w-[1400px] w-full">
-        <Header user={user} />
+        <div className="sticky top-0 bg-white shadow h-full px-4 md:px-6 py-3">
+          <img
+            src="invenzo_logo.png"
+            draggable={false}
+            alt="logo"
+            className="h-full aspect-auto object-contain  max-h-10 md:max-h-12"
+          />
+        </div>
         <div className="flex w-full items-center justify-center">
           <div className="w-full max-w-[360px] bg-[#ffffff47] p-8 py-14 m-10 rounded shadow-md">
             <h2 className="text-2xl font-bold mb-6 text-center text-[var(--btn-alt)]">

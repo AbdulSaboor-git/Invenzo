@@ -296,7 +296,7 @@ export default function Inventory({ params }) {
   if (userLoading || !user) {
     return <Loader />;
   }
-  if (user.id === invInfo?.admin?.id) {
+  if (user.id === invInfo?.adminId) {
     role = "admin";
   } else {
     role = "viewer";
