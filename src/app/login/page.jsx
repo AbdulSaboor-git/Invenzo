@@ -1,11 +1,9 @@
 "use client";
-export const dynamic = "force-dynamic";
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/redux/userSlice";
-import Footer from "@/components/footer";
 import useAuthUser from "@/hooks/authUser";
 import { toast } from "sonner";
 
@@ -148,7 +146,6 @@ export default function Login() {
             </div> */}
           </div>
         </div>
-        <Footer />
       </div>
     </div>
   );
