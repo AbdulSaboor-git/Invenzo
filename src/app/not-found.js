@@ -1,4 +1,5 @@
 import Header2 from "@/components/header2";
+import Link from "next/link";
 import React from "react";
 
 export default function NotFound() {
@@ -12,14 +13,15 @@ export default function NotFound() {
             Page Not Found
           </h2>
           <p className="text-gray-500 mb-6">
-            Sorry, the page you're looking for doesn't exist or has been moved.
+            Sorry, the page you&apos;re looking for doesn&apos;t exist or has
+            been moved.
           </p>
-          <a
+          <Link
             href="/"
             className="inline-block bg-black text-white font-medium py-2 px-6 rounded-lg hover:bg-gray-800 transition"
           >
             Go Home
-          </a>
+          </Link>
         </div>
       </div>
     </main>
