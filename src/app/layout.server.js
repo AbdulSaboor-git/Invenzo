@@ -3,6 +3,6 @@ export const metadata = {
   title: "Invenzo - Inventory Management",
   description: "",
   icons: {
-    icon: "/public/icons/invenzo-512.ico",
+    icon: "/public/icons/invenzo_icon.png",
   },
 };

@@ -123,7 +123,7 @@ export default function Header2() {
         </div>
         <button
           onClick={logout}
-          className="rounded-lg flex items-center gap-2 bg-red-500 hover:bg-red-600 transition text-sm text-white px-2 md:px-4 py-2 shadow shadow-black/40"
+          className="rounded-lg flex items-center gap-2 bg-red-500 hover:bg-red-600 transition text-sm text-white px-2 md:px-4 py-2 "
         >
           <span className="hidden md:block">Logout</span> <MdLogout />
         </button>

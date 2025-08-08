@@ -229,7 +229,7 @@ export default function AddProductPage() {
         </h1>
         <form
           onSubmit={handleSubmit}
-          className="space-y-5 text-sm md:text-base"
+          className="space-y-3 text-sm md:text-base"
         >
           {/* Product Name */}
           <div>
@@ -322,7 +322,7 @@ export default function AddProductPage() {
           </div>
 
           {/* Govt Sale Price */}
-          <div>
+          <div className="pb-6">
             <label className="block mb-1 font-medium text-gray-700">
               Govt. Sale Price
             </label>
