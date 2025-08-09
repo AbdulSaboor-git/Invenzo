@@ -278,13 +278,13 @@ export default function Inventory() {
                 <tr>
                   <th className="px-3 py-3 md:px-6 md:py-4 text-center">#</th>
                   <th
-                    className=" px-3 py-3 min-w-[150px] md:px-6 md:py-4 cursor-pointer"
+                    className=" px-3 py-3 min-w-[170px] md:px-6 md:py-4 cursor-pointer"
                     onClick={() => toggleSort("name")}
                   >
                     Name {renderSortIcon("name")}
                   </th>
                   <th
-                    className="px-3 py-3 min-w-[170px] md:px-6 md:py-4 cursor-pointer"
+                    className="px-3 py-3 min-w-[110px] md:px-6 md:py-4 cursor-pointer"
                     onClick={() => toggleSort("salePrice")}
                   >
                     S. Price {renderSortIcon("salePrice")}
