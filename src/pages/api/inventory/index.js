@@ -142,28 +142,82 @@ const GET = async (req, res) => {
       return res.status(400).json({ error: "adminId is required" });
     }
 
-    const parsedAdminId = parseInt(adminId);
+    const parsedAdminId = parseInt(adminId, 10);
     if (isNaN(parsedAdminId)) {
       return res.status(400).json({ error: "adminId must be a valid number" });
     }
 
-    // Query the inventory
-    const inventory = await prisma.inventory.findFirst({
+    // Try to find existing inventory
+    let inventory = await prisma.inventory.findFirst({
       where: { adminId: parsedAdminId },
-      orderBy: {
-        createdAt: "asc",
-      },
+      orderBy: { createdAt: "asc" },
       take: 1,
     });
 
-    // Handle case where no inventory is found
+    // If no inventory exists, create one + a default category and 3 sample products
     if (!inventory) {
-      return res
-        .status(404)
-        .json({ error: "Inventory not found for the provided adminId" });
+      const createdInv = await prisma.$transaction(async (tx) => {
+        // 1) create inventory
+        const newInv = await tx.inventory.create({
+          data: {
+            name: "Get Started",
+            adminId: parsedAdminId,
+            profilePicture: null,
+          },
+        });
+
+        // 2) create a default category
+        const newCategory = await tx.category.create({
+          data: {
+            name: "General",
+            inventoryId: newInv.id,
+          },
+        });
+
+        // 3) create sample products for that category
+        await tx.product.createMany({
+          data: [
+            {
+              name: "Sample Product 1",
+              description: "This is a sample product.",
+              purchasePrice: 10,
+              salePrice: 15,
+              govtSalePrice: null,
+              categoryId: newCategory.id,
+              inventoryId: newInv.id,
+              tags: "sample test",
+            },
+            {
+              name: "Sample Product 2",
+              description: "Another sample product.",
+              purchasePrice: 20,
+              salePrice: 25,
+              govtSalePrice: null,
+              categoryId: newCategory.id,
+              inventoryId: newInv.id,
+              tags: "sample test",
+            },
+            {
+              name: "Sample Product 3",
+              description: "Yet another sample product.",
+              purchasePrice: 30,
+              salePrice: 40,
+              govtSalePrice: null,
+              categoryId: newCategory.id,
+              inventoryId: newInv.id,
+              tags: "sample test",
+            },
+          ],
+          skipDuplicates: true,
+        });
+
+        return newInv;
+      });
+
+      inventory = createdInv;
     }
 
-    // Return the inventory data
+    // Return inventory (either existing or newly created)
     return res.status(200).json({ inventory });
   } catch (error) {
     console.error("Error fetching inventory:", error);

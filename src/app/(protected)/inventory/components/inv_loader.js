@@ -6,7 +6,7 @@ export default function InvLoader() {
       <td className="px-3 py-4 md:px-6 md:py-4">
         <div className="h-4 bg-gray-200 rounded w-4" />
       </td>
-      <td className="px-3 py-4 min-w-[150px] md:px-6 md:py-4">
+      <td className="px-3 py-4 min-w-[170px] md:px-6 md:py-4">
         <div className="h-4 bg-gray-200 rounded w-32" />
       </td>
       <td className="px-3 py-4 min-w-[110px] md:px-6 md:py-4">

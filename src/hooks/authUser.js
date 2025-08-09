@@ -1,37 +1,41 @@
 "use client";
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setUser } from "@/redux/userSlice";
-import { useRouter } from "next/navigation";
+import { setUser, setUserLoading, logoutUser } from "@/redux/userSlice";
 
 export default function useAuthUser() {
-  const loggedInUser = useSelector((state) => state.user);
-  const [userLoading, setUserLoading] = useState(true);
+  const { user, userLoading } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (!user && typeof window !== "undefined") {
+      dispatch(setUserLoading(true));
       try {
-        const userCookie = localStorage.getItem("user");
-        if (userCookie) {
-          const parsedUser = JSON.parse(userCookie);
-          dispatch(setUser(parsedUser));
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+          dispatch(setUser(JSON.parse(storedUser)));
+        } else {
+          dispatch(setUser(null));
         }
       } catch (error) {
         console.error("Error parsing user data from localStorage", error);
+        dispatch(setUser(null));
       } finally {
-        setUserLoading(false);
+        dispatch(setUserLoading(false));
       }
+    } else {
+      // Already in Redux, no need to load again
+      dispatch(setUserLoading(false));
     }
-  }, [dispatch]);
+  }, [dispatch, user]);
 
   const logout = useCallback(() => {
     if (typeof window !== "undefined") {
       localStorage.removeItem("user");
       localStorage.removeItem("token");
-      dispatch(setUser(null));
+      dispatch(logoutUser());
     }
   }, [dispatch]);
 
-  return { user: loggedInUser, userLoading, logout };
+  return { user, userLoading, logout };
 }

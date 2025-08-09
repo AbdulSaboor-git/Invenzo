@@ -1,27 +1,21 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { HiOutlineSwitchVertical } from "react-icons/hi";
-import {
-  MdClose,
-  MdDelete,
-  MdEdit,
-  MdSync,
-  MdVisibility,
-} from "react-icons/md";
+
+import { IoSync } from "react-icons/io5";
+import { MdClose, MdDelete, MdEdit, MdVisibility } from "react-icons/md";
 import { FiArrowUp, FiArrowDown } from "react-icons/fi";
 import { toast } from "sonner";
 import ScrollToTop from "@/components/scroll_to_top";
 import useAuthUser from "@/hooks/authUser";
-import { useRouter } from "next/navigation";
 import InvLoader from "./components/inv_loader";
 import ViewProduct from "./components/view_product";
 import EditProduct from "./components/edit_product";
 import DeleteProduct from "./components/delete_product";
-import Header2 from "@/components/header2";
+import Header from "@/components/header";
 
 export default function Inventory() {
-  const router = useRouter();
-  const { user, userLoading } = useAuthUser();
+  const { user } = useAuthUser();
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loadingData, setLoadingData] = useState(true);
@@ -42,23 +36,17 @@ export default function Inventory() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [editProduct, setEditProduct] = useState(null);
 
-  // useEffect(() => {
-  //   setInventory({
-  //     id: 69,
-  //     name: "SGS",
-  //   });
-  // }, []);
-
   const localStorageKey = user?.id ? `inventoryData_${user.id}` : null;
 
   const fetchInventory = async () => {
-    if (!user || userLoading) return;
+    if (!user) return;
     try {
       setLoadingInventory(true);
       const response = await fetch(`/api/inventory?adminId=${user?.id}`);
       if (!response.ok) throw new Error("Failed to fetch from server");
       const data = await response.json();
       setInventory(data.inventory);
+      console.log(data.inventory);
     } catch (error) {
       console.error("Error fetching inventories:", error);
     } finally {
@@ -67,7 +55,7 @@ export default function Inventory() {
   };
 
   const fetchAndStoreData = async () => {
-    if (!user?.id || inventory === null || loadingInventory) {
+    if (!user?.id || !inventory || loadingInventory) {
       return;
     }
     try {
@@ -145,7 +133,7 @@ export default function Inventory() {
   };
 
   useEffect(() => {
-    if (userLoading || !user?.id) {
+    if (!user?.id) {
       return;
     }
 
@@ -156,11 +144,17 @@ export default function Inventory() {
     } else {
       setLoadingData(false);
     }
-  }, [user, userLoading]);
+  }, [user]);
 
   useEffect(() => {
     if (inventory && !loadingInventory && fetchedInv) fetchAndStoreData();
   }, [inventory, loadingInventory, fetchedInv]);
+
+  useEffect(() => {
+    if (!loadingInventory && !inventory) {
+      setLoadingData(false);
+    }
+  }, [loadingInventory, inventory]);
 
   const toggleSort = (key) => {
     setSortConfig((prev) => ({
@@ -230,29 +224,19 @@ export default function Inventory() {
     };
   }, [editProduct, showDeleteConfirmationDialogue, selectedProduct]);
 
-  useEffect(() => {
-    if (!loadingInventory && inventory == null) {
-      setLoadingData(false);
-    }
-  }, [user, userLoading, loadingInventory, inventory]);
-
   return (
     <div className="flex w-full flex-col items-center justify-center ">
-      <Header2 />
+      <Header />
       <ScrollToTop />
       <div className="w-full max-w-7xl place-self-center">
         <div className="flex flex-col md:flex-row md:justify-between items-center shadow px-3 md:px-6 py-4 gap-3 sticky top-3 md:top-16 bg-white z-40">
           <div className="w-full flex  justify-center md:justify-start ">
-            {userLoading || loadingInventory || !inventory ? (
+            {loadingInventory || !inventory ? (
               <div className="h-7 bg-gray-200 rounded w-52 place-self-center md:place-self-auto animate-pulse"></div>
-            ) : inventory ? (
+            ) : (
               <h2 className="text-lg md:text-xl font-bold w-full text-gray-800 text-center md:text-left">
                 {inventory?.name}
               </h2>
-            ) : (
-              <button className="bg-green-100 hover:bg-green-200 transition text-green-800 border border-green-300 px-6 py-3 rounded-lg ">
-                Create Your First Inventory
-              </button>
             )}
           </div>
           <div className="flex w-full items-stretch justify-end gap-3 bg-white">
@@ -275,7 +259,7 @@ export default function Inventory() {
             </div>
             <button
               onClick={RefreshData}
-              disabled={refreshing || loadingInventory || userLoading}
+              disabled={refreshing || loadingInventory}
               className={`flex gap-2 items-center justify-center text-sm font-semibold px-3 py-1.5 rounded-md border transition-all duration-300 disabled:cursor-not-allowed disabled:bg-green-200  disabled:shadow-none ${
                 refreshFailed
                   ? "bg-red-100 hover:bg-red-200 text-red-800 border-red-300"
@@ -283,9 +267,7 @@ export default function Inventory() {
               }`}
             >
               <span className="hidden md:inline">Refresh</span>
-              <MdSync
-                className={`scale-x-[-1] ${refreshing && "animate-spin "} `}
-              />
+              <IoSync className={` ${refreshing && "animate-spin "} `} />
             </button>
           </div>
         </div>
@@ -302,7 +284,7 @@ export default function Inventory() {
                     Name {renderSortIcon("name")}
                   </th>
                   <th
-                    className="px-3 py-3 min-w-[110px] md:px-6 md:py-4 cursor-pointer"
+                    className="px-3 py-3 min-w-[170px] md:px-6 md:py-4 cursor-pointer"
                     onClick={() => toggleSort("salePrice")}
                   >
                     S. Price {renderSortIcon("salePrice")}
@@ -329,10 +311,7 @@ export default function Inventory() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 text-gray-800">
-                {loadingData ||
-                loadingInventory ||
-                userLoading ||
-                !inventory ? (
+                {loadingData || loadingInventory || !inventory ? (
                   Array.from({ length: 10 }).map((_, index) => (
                     <InvLoader key={index} />
                   ))
@@ -350,7 +329,7 @@ export default function Inventory() {
                           {index + 1}
                         </td>
                         <td
-                          className="px-3 min-w-[150px] max-w-[280px] py-2 md:px-6 md:py-4 font-medium cursor-pointer"
+                          className="px-3 min-w-[170px] max-w-[280px] py-2 md:px-6 md:py-4 font-medium cursor-pointer"
                           onClick={() => setSelectedProduct(product)}
                         >
                           {product.name}
@@ -367,24 +346,24 @@ export default function Inventory() {
                         <td className="px-3 py-2 min-w-[140px] md:px-6 md:py-4">
                           {new Date(product.updatedAt).toLocaleString()}
                         </td>
-                        <td className="px-3 py-2 md:px-6 md:py-4 flex translate-y-1/2 -mt-1 md:translate-y-0 md:-mt-0 gap-4 md:gap-6">
+                        <td className="px-3 py-2 md:px-6 md:py-4 flex translate-y-1/2 -mt-1 md:translate-y-0 md:-mt-0 gap-2 md:gap-4">
                           <button
                             onClick={() => setSelectedProduct(product)}
                             title="View"
-                            className=""
+                            className="px-1"
                           >
                             <MdVisibility className="text-gray-500" size={16} />
                           </button>
                           <button
                             title="Edit"
-                            className="text-green-500"
+                            className="text-green-500 px-1"
                             onClick={() => handleEdit(product)}
                           >
                             <MdEdit size={16} />
                           </button>
                           <button
                             title="Delete"
-                            className="text-red-500"
+                            className="text-red-500 px-1"
                             onClick={() => {
                               setSelectedProductForDelete(product);
                               setShowDeleteConfirmationDialogue(true);

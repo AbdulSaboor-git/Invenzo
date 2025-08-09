@@ -13,8 +13,7 @@ export default function UserProfile({ CloseForm, user, logout }) {
   const profilePic = user?.profilePicture;
   const email = user?.email;
   const password = user?.password;
-  const defaultProfilePictureLink =
-    "https://lh3.googleusercontent.com/pw/AP1GczM2cnSQPHG8oKKskeSFKCFjs3z_NG31Tt4bQPqb4Fp-Qdteh0m-84BjSvDgQTkscceDPu1eD1Rs2OxUSd0InRuqnowixs1x8kqSVIcu_7BbkBi4XFK13ZqIeq56OxPw0bzq0hoUgYtTHteuYB1cTI-K=w883-h883-s-no-gm";
+  const defaultProfilePictureLink = "default.png";
 
   useEffect(() => {
     document.body.classList.add("no-scroll");
@@ -57,7 +56,7 @@ export default function UserProfile({ CloseForm, user, logout }) {
               <p className="font-bold text-base md:text-lg">Email Address</p>
               <p className="ml-4 text-[var(--text-sec)] ">{email}</p>
             </div>
-            <div>
+            {/* <div>
               <p className="font-bold text-base md:text-lg">Password</p>
               <div className="ml-4 text-[var(--text-sec)]  flex items-center">
                 <span className="mr-2">
@@ -70,7 +69,7 @@ export default function UserProfile({ CloseForm, user, logout }) {
                   {showPassword ? <MdVisibilityOff /> : <MdVisibility />}
                 </button>
               </div>
-            </div>
+            </div> */}
           </div>
           <button
             onClick={logout}

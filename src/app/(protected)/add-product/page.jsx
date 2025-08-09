@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Header2 from "@/components/header2";
+import Header from "@/components/header";
 import { toast } from "sonner";
 import useAuthUser from "@/hooks/authUser";
 import { useRouter } from "next/navigation";
 
 export default function AddProductPage() {
-  const { user, userLoading } = useAuthUser();
+  const { user } = useAuthUser();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [tags, setTags] = useState("");
@@ -27,7 +27,7 @@ export default function AddProductPage() {
   const localStorageKey = user?.id ? `inventoryData_${user.id}` : null;
 
   const fetchInventory = async () => {
-    if (!user || userLoading) return;
+    if (!user) return;
     try {
       setLoadingInventory(true);
       const response = await fetch(`/api/inventory?adminId=${user?.id}`);
@@ -105,7 +105,7 @@ export default function AddProductPage() {
   };
 
   useEffect(() => {
-    if (userLoading || !user?.id) {
+    if (!user?.id) {
       return;
     }
 
@@ -116,7 +116,7 @@ export default function AddProductPage() {
     } else {
       setLoadingCategories(false);
     }
-  }, [user, userLoading]);
+  }, [user]);
 
   useEffect(() => {
     if (inventory && !loadingInventory && fetchedInv) fetchCategories();
@@ -204,18 +204,11 @@ export default function AddProductPage() {
   const handleSalePriceChange = (e) => setSalePrice(e.target.value);
   const handleGovtSalePriceChange = (e) => setGovtSalePrice(e.target.value);
 
-  useEffect(() => {
-    if (!user && !userLoading && !loadingInventory && !inventory) {
-      router.replace("/inventory");
-      toast.error("Create an inventory first to add products");
-    }
-  }, [loadingInventory, inventory]);
-
   return (
     <div className="min-h-screen w-full md:bg-gray-100">
-      <Header2 />
+      <Header />
       <div className="w-full flex  justify-center md:justify-start shadow px-3 md:px-6 py-4 gap-3 sticky top-3 md:top-16 bg-white z-40">
-        {userLoading || loadingInventory || !inventory ? (
+        {loadingInventory || !inventory ? (
           <div className="h-7 bg-gray-200 rounded w-52 place-self-center md:place-self-auto animate-pulse"></div>
         ) : (
           <h2 className="text-lg md:text-xl font-bold w-full text-gray-800 text-center md:text-left">
@@ -339,13 +332,9 @@ export default function AddProductPage() {
           <button
             type="submit"
             disabled={
-              loading ||
-              syncing ||
-              userLoading ||
-              loadingInventory ||
-              loadingCategories
+              loading || syncing || loadingInventory || loadingCategories
             }
-            className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-4 px-6 rounded-lg transition-colors duration-200 disabled:hover:bg-green-600 disabled:cursor-not-allowed"
+            className="w-full text-base bg-green-500 hover:bg-green-600 text-white font-semibold py-4 px-6 rounded-lg transition-colors duration-200 disabled:hover:bg-green-600 disabled:cursor-not-allowed"
           >
             {loading ? (
               <div className="border-2 border-gray-200 border-t-transparent animate-spin rounded-full w-6 h-6 mx-auto" />

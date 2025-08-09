@@ -1,11 +1,11 @@
-import Header2 from "@/components/header2";
+import Header from "@/components/header";
 import Link from "next/link";
 import React from "react";
 
 export default function NotFound() {
   return (
     <main className=" w-full bg-white">
-      <Header2 />
+      <Header />
       <div className="flex min-h-[70vh] flex-col items-center justify-center text-center">
         <div className="max-w-md p-6">
           <h1 className="text-6xl font-bold text-gray-800 mb-4">404</h1>

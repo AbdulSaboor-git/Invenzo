@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FaMoon } from "react-icons/fa";
 import { MdClose, MdSunny } from "react-icons/md";
-import { triggerNotification } from "@/redux/notificationThunk";
-import { useDispatch } from "react-redux";
 
 export default function Preferences({ CloseForm, userId }) {
   const [add_edit_del, set_add_edit_del] = useState(true);
@@ -15,16 +13,6 @@ export default function Preferences({ CloseForm, userId }) {
   const [tempPreferences, setTempPreferences] = useState({});
   const [tempTheme, setTempTheme] = useState(true);
   const [tempColorScheme, setTempColorScheme] = useState("green"); // Temp color scheme
-  const dispatch = useDispatch();
-
-  const showMessage = (msg, state) => {
-    dispatch(
-      triggerNotification({
-        msg: msg,
-        success: state,
-      })
-    );
-  };
 
   useEffect(() => {
     document.body.classList.add("no-scroll");
@@ -96,7 +84,6 @@ export default function Preferences({ CloseForm, userId }) {
       theme ? "light" : "dark"
     );
     document.documentElement.setAttribute("color-scheme", colorScheme);
-    showMessage("Preferences saved", true);
     CloseForm();
   };
 
