@@ -31,8 +31,18 @@ export default function useAuthUser() {
 
   const logout = useCallback(() => {
     if (typeof window !== "undefined") {
+      // Remove all inventoryData_* keys
+      Object.keys(localStorage).forEach((key) => {
+        if (key.startsWith("inventoryData_")) {
+          localStorage.removeItem(key);
+        }
+      });
+
+      // Remove auth data
       localStorage.removeItem("user");
       localStorage.removeItem("token");
+
+      // Reset Redux state
       dispatch(logoutUser());
     }
   }, [dispatch]);
