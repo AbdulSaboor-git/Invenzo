@@ -26,7 +26,7 @@ export default function Header() {
   };
   const defaultProfilePictureLink = "default.png";
 
-  let profilePicture = user.profilePicture || defaultProfilePictureLink;
+  let profilePicture = user?.profilePicture || defaultProfilePictureLink;
 
   const handleButtonClick = (name) => {
     router.push(`/${name.toLowerCase().replace(/\s+/g, "-")}`);
