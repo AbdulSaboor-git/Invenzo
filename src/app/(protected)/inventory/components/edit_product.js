@@ -22,9 +22,12 @@ export default function EditProduct({
 
   const handleUpdate = async () => {
     if (!navigator.onLine) {
-      toast.error("Cannot update. Check your network connection");
+      toast.error(
+        "Network not available. Please check your internet connection."
+      );
       return;
     }
+
     try {
       setLoadingForEdit(true);
       const response = await fetch(`/api/inventory/${inventory?.id}`, {
@@ -89,7 +92,7 @@ export default function EditProduct({
               htmlFor="edit-name"
               className="block  font-medium text-gray-700"
             >
-              Name
+              Name <span className="text-red-500">*</span>
             </label>
             <input
               id="edit-name"
@@ -109,7 +112,7 @@ export default function EditProduct({
               htmlFor="edit-category"
               className="block  font-medium text-gray-700"
             >
-              Category
+              Category <span className="text-red-500">*</span>
             </label>
             <select
               id="edit-category"
@@ -134,7 +137,7 @@ export default function EditProduct({
               htmlFor="edit-purchase-price"
               className="block  font-medium text-gray-700"
             >
-              P. Price
+              P. Price <span className="text-red-500">*</span>
             </label>
             <input
               id="edit-purchase-price"
@@ -158,7 +161,7 @@ export default function EditProduct({
               htmlFor="edit-sale-price"
               className="block  font-medium text-gray-700"
             >
-              S. Price
+              S. Price <span className="text-red-500">*</span>
             </label>
             <input
               id="edit-sale-price"

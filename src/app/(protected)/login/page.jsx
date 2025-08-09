@@ -24,6 +24,13 @@ export default function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
 
+    if (!navigator.onLine) {
+      toast.error(
+        "Network not available. Please check your internet connection."
+      );
+      return;
+    }
+
     setLoading(true);
     try {
       const response = await fetch("/api/user/login", {

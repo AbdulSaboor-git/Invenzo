@@ -13,7 +13,9 @@ export default function DeleteProduct({
 
   const handleDelete = async () => {
     if (!navigator.onLine) {
-      toast.error("Cannot delete. Check your network connection");
+      toast.error(
+        "Network not available. Please check your internet connection."
+      );
       return;
     }
     try {

@@ -124,6 +124,14 @@ export default function AddProductPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!navigator.onLine) {
+      toast.error(
+        "Network not available. Please check your internet connection."
+      );
+      return;
+    }
+
     if (!name || !purchasePrice || !salePrice || !categoryId) {
       return toast.error("Please fill all required fields");
     }
@@ -239,31 +247,6 @@ export default function AddProductPage() {
             />
           </div>
 
-          {/* Description */}
-          <div>
-            <label className="block mb-1 font-medium text-gray-700">
-              Description
-            </label>
-            <input
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-              value={description}
-              onChange={handleDescriptionChange}
-            />
-          </div>
-
-          {/* Tags */}
-          <div>
-            <label className="block mb-1 font-medium text-gray-700">Tags</label>
-            <input
-              type="text"
-              value={tags}
-              onChange={handleTagsChange}
-              maxLength={200}
-              placeholder="Tags (space-separated, optional)"
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-            />
-          </div>
-
           {/* Category */}
           <div>
             <label className="block mb-1 font-medium text-gray-700">
@@ -315,7 +298,7 @@ export default function AddProductPage() {
           </div>
 
           {/* Govt Sale Price */}
-          <div className="pb-6">
+          <div className="">
             <label className="block mb-1 font-medium text-gray-700">
               Govt. Sale Price
             </label>
@@ -324,6 +307,19 @@ export default function AddProductPage() {
               min="0"
               value={govtSalePrice}
               onChange={handleGovtSalePriceChange}
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+            />
+          </div>
+
+          {/* Tags */}
+          <div className="pb-6">
+            <label className="block mb-1 font-medium text-gray-700">Tags</label>
+            <input
+              type="text"
+              value={tags}
+              onChange={handleTagsChange}
+              maxLength={200}
+              placeholder="Tags (space-separated)"
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
             />
           </div>

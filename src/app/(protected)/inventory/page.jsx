@@ -89,6 +89,13 @@ export default function Inventory() {
   };
 
   const RefreshData = async () => {
+    if (!navigator.onLine) {
+      toast.error(
+        "Network not available. Please check your internet connection."
+      );
+      return;
+    }
+
     const loadingToastId = toast.loading("Refreshing...");
 
     try {
@@ -307,7 +314,12 @@ export default function Inventory() {
                   >
                     Updated At {renderSortIcon("updatedAt")}
                   </th>
-                  <th className="px-3 py-3 md:px-6 md:py-4">Actions</th>
+                  <th
+                    className="px-3 py-3 min-w-[140px] md:px-6 md:py-4 cursor-pointer"
+                    onClick={() => toggleSort("createdAt")}
+                  >
+                    Created At {renderSortIcon("createdAt")}
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 text-gray-800">
@@ -323,15 +335,13 @@ export default function Inventory() {
                     return (
                       <tr
                         key={product.id}
-                        className="hover:bg-gray-50 transition "
+                        className="hover:bg-gray-50 transition cursor-pointer "
+                        onClick={() => setSelectedProduct(product)}
                       >
                         <td className="px-3 py-2 md:px-6 md:py-4 text-gray-500 text-center">
                           {index + 1}
                         </td>
-                        <td
-                          className="px-3 min-w-[170px] max-w-[280px] py-2 md:px-6 md:py-4 font-medium cursor-pointer"
-                          onClick={() => setSelectedProduct(product)}
-                        >
+                        <td className="px-3 min-w-[170px] max-w-[280px] py-2 md:px-6 md:py-4 font-medium cursor-pointer">
                           {product.name}
                         </td>
                         <td className="px-3  min-w-[110px] py-2 md:px-6 md:py-4">
@@ -344,33 +354,10 @@ export default function Inventory() {
                           {category?.name || "—"}
                         </td>
                         <td className="px-3 py-2 min-w-[140px] md:px-6 md:py-4">
-                          {new Date(product.updatedAt).toLocaleString()}
+                          {new Date(product.updatedAt).toLocaleDateString()}
                         </td>
-                        <td className="px-3 py-2 md:px-6 md:py-4 flex translate-y-1/2 -mt-1 md:translate-y-0 md:-mt-0 gap-2 md:gap-4">
-                          <button
-                            onClick={() => setSelectedProduct(product)}
-                            title="View"
-                            className="px-1"
-                          >
-                            <MdVisibility className="text-gray-500" size={16} />
-                          </button>
-                          <button
-                            title="Edit"
-                            className="text-green-500 px-1"
-                            onClick={() => handleEdit(product)}
-                          >
-                            <MdEdit size={16} />
-                          </button>
-                          <button
-                            title="Delete"
-                            className="text-red-500 px-1"
-                            onClick={() => {
-                              setSelectedProductForDelete(product);
-                              setShowDeleteConfirmationDialogue(true);
-                            }}
-                          >
-                            <MdDelete size={16} />
-                          </button>
+                        <td className="px-3 py-2 min-w-[140px] md:px-6 md:py-4">
+                          {new Date(product.createdAt).toLocaleDateString()}
                         </td>
                       </tr>
                     );
@@ -390,6 +377,11 @@ export default function Inventory() {
           selectedProduct={selectedProduct}
           categories={categories}
           close={() => setSelectedProduct(null)}
+          editClick={() => handleEdit(selectedProduct)}
+          deleteClick={() => {
+            setSelectedProductForDelete(selectedProduct);
+            setShowDeleteConfirmationDialogue(true);
+          }}
         />
         {/* edit product */}
         <EditProduct

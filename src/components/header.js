@@ -13,16 +13,21 @@ import {
   MdSettings,
 } from "react-icons/md";
 import { toast } from "sonner";
+import UserProfile from "./user_profile";
 
 export default function Header() {
-  const { user, userLoading, logout } = useAuthUser();
+  const { user, logout } = useAuthUser();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
   const router = useRouter();
 
   const handleMenuClick = () => {
     setSidebarOpen(!sidebarOpen);
   };
   const defaultProfilePictureLink = "default.png";
+
+  let profilePicture = user.profilePicture || defaultProfilePictureLink;
+
   const handleButtonClick = (name) => {
     router.push(`/${name.toLowerCase().replace(/\s+/g, "-")}`);
   };
@@ -100,26 +105,19 @@ export default function Header() {
 
       {user && (
         <div className="flex items-center justify-end gap-3 md:gap-5 text-2xl">
-          {/* <button className="">
-          <MdOutlineNotifications />
-        </button> */}
           <div className="h-10 md:h-14 cursor-pointer aspect-square rounded-full overflow-hidden">
             <img
-              src={user.profilePicture || defaultProfilePictureLink}
+              src={profilePicture}
               draggable={false}
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = defaultProfilePictureLink;
+              }}
+              onClick={() => setShowProfile(true)}
               alt="user"
               className={`w-full aspect-square object-cover rounded-full `}
             />
           </div>
-          <button
-            onClick={() => {
-              toast.success("Loged out");
-              logout();
-            }}
-            className="rounded-lg flex items-center gap-2 bg-red-500 hover:bg-red-600 transition text-sm text-white px-2 md:px-4 py-2 "
-          >
-            <span className="hidden md:block">Logout</span> <MdLogout />
-          </button>
         </div>
       )}
 
@@ -155,6 +153,13 @@ export default function Header() {
           ))}
         </div>
       </div>
+      {showProfile && (
+        <UserProfile
+          user={user}
+          logout={logout}
+          CloseForm={() => setShowProfile(false)}
+        />
+      )}
     </div>
   );
 }

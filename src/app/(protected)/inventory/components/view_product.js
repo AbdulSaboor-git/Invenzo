@@ -1,9 +1,16 @@
 import React from "react";
+import { MdDelete, MdEdit } from "react-icons/md";
 
-export default function ViewProduct({ selectedProduct, categories, close }) {
+export default function ViewProduct({
+  selectedProduct,
+  categories,
+  close,
+  editClick,
+  deleteClick,
+}) {
   return (
     <div
-      className={`fixed inset-0 text-sm  bg-black bg-opacity-40 backdrop-blur-[2px] flex items-center justify-center z-50 px-4 sm:px-6 transition-all duration-200 ${
+      className={`fixed inset-0 text-sm bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 px-4 sm:px-6 transition-all duration-300 ease-out ${
         selectedProduct
           ? "opacity-100 pointer-events-auto"
           : "opacity-0 pointer-events-none"
@@ -12,56 +19,91 @@ export default function ViewProduct({ selectedProduct, categories, close }) {
     >
       {selectedProduct && (
         <div
-          className="bg-white rounded-lg shadow-xl max-w-lg w-full p-6 relative"
+          className="bg-white rounded-xl shadow-2xl max-w-lg w-full p-6 md:p-8 relative animate-fadeIn border border-gray-100"
           onClick={(e) => e.stopPropagation()}
         >
+          {/* Close button */}
           <button
-            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
             onClick={close}
+            aria-label="Close"
           >
             ✕
           </button>
-          <h3 className="text-lg font-bold mb-4">Product Details</h3>
-          <div className="text-sm space-y-2">
-            <p>
-              <strong>Name:</strong> {selectedProduct.name}
-            </p>
-            <p>
-              <strong>Description:</strong> {selectedProduct.description || "—"}
-            </p>
-            <p>
-              <strong>Category:</strong>{" "}
-              {categories.find((cat) => cat.id === selectedProduct.categoryId)
-                ?.name || "—"}
-            </p>
-            <p>
-              <strong>Purchase Price:</strong> Rs.
-              {selectedProduct.purchasePrice}
-            </p>
-            <p>
-              <strong>Sale Price:</strong> Rs.
-              {selectedProduct.salePrice}
-            </p>
-            <p>
-              <strong>Govt. Sale Price:</strong>{" "}
-              {selectedProduct.govtSalePrice != null
-                ? `Rs.${selectedProduct.govtSalePrice}`
-                : "—"}
-            </p>
-            <p>
-              <strong>Created At:</strong>{" "}
-              {new Date(selectedProduct.createdAt).toLocaleString()}
-            </p>
-            <p>
-              <strong>Updated At:</strong>{" "}
-              {new Date(selectedProduct.updatedAt).toLocaleString()}
-            </p>
-            <p>
-              <strong>Tags:</strong> {selectedProduct.tags || "—"}
-            </p>
+
+          {/* Header */}
+          <h3 className="text-xl font-semibold text-gray-800 border-b pb-3 mb-5">
+            Product Details
+          </h3>
+
+          {/* Details */}
+          <div className="grid grid-cols-1 gap-y-3 text-gray-700">
+            <Detail label="Name" value={selectedProduct.name} />
+            <Detail
+              label="Description"
+              value={selectedProduct.description || "—"}
+            />
+            <Detail
+              label="Category"
+              value={
+                categories.find((cat) => cat.id === selectedProduct.categoryId)
+                  ?.name || "—"
+              }
+            />
+            <Detail
+              label="Purchase Price"
+              value={`Rs.${selectedProduct.purchasePrice}`}
+            />
+            <Detail
+              label="Sale Price"
+              value={`Rs.${selectedProduct.salePrice}`}
+            />
+            <Detail
+              label="Govt. Sale Price"
+              value={
+                selectedProduct.govtSalePrice != null
+                  ? `Rs.${selectedProduct.govtSalePrice}`
+                  : "—"
+              }
+            />
+            <Detail
+              label="Created At"
+              value={new Date(selectedProduct.createdAt).toLocaleString()}
+            />
+            <Detail
+              label="Updated At"
+              value={new Date(selectedProduct.updatedAt).toLocaleString()}
+            />
+            <Detail label="Tags" value={selectedProduct.tags || "—"} />
+          </div>
+
+          {/* Action buttons */}
+          <div className="w-full flex items-center gap-3 mt-8 text-sm sm:text-base">
+            <button
+              className="w-full group px-2 sm:px-4 py-2 rounded-lg flex items-center justify-center gap-2 font-medium bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-md transition-all"
+              onClick={editClick}
+            >
+              <MdEdit size={18} className="group-hover-shake" /> Edit
+            </button>
+            <button
+              className="w-full group px-2 sm:px-4 py-2 rounded-lg flex items-center justify-center gap-2 font-medium bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white shadow-md transition-all"
+              onClick={deleteClick}
+            >
+              <MdDelete size={18} className="group-hover-shake" /> Delete
+            </button>
           </div>
         </div>
       )}
     </div>
+  );
+}
+
+// Small reusable component for consistent detail layout
+function Detail({ label, value }) {
+  return (
+    <p>
+      <span className="font-medium text-gray-700">{label}:</span>{" "}
+      <span className="text-gray-600">{value}</span>
+    </p>
   );
 }

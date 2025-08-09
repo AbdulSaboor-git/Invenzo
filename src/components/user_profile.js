@@ -1,18 +1,11 @@
-import React, { useState, useEffect } from "react";
-
-import {
-  MdClose,
-  MdVisibility,
-  MdVisibilityOff,
-  MdLogout,
-} from "react-icons/md";
+import React, { useEffect } from "react";
+import { MdClose, MdLogout } from "react-icons/md";
+import { toast } from "sonner";
 
 export default function UserProfile({ CloseForm, user, logout }) {
-  const [showPassword, setShowPassword] = useState(false);
   const username = user?.firstName + " " + (user?.lastName || "");
   const profilePic = user?.profilePicture;
   const email = user?.email;
-  const password = user?.password;
   const defaultProfilePictureLink = "default.png";
 
   useEffect(() => {
@@ -23,61 +16,64 @@ export default function UserProfile({ CloseForm, user, logout }) {
   }, []);
 
   return (
-    <div className="flex fixed z-[200] top-0 flex-col p-5 w-screen h-screen items-center justify-center  bg-black bg-opacity-50 backdrop-blur-sm">
-      <div
-        className={`pt-4 pb-10 md:py-4 text-[var(--text-prim)] border border-gray-300 md:pb-12 px-10 md:px-14 mx-10 z-40 w-full max-w-[420px] md:max-w-[470px] overflow-auto hidden_scroll_bar bg-[var(--form-bg)] rounded-3xl shadow-lg shadow-[var(--shaddow)]`}
-      >
-        <div className="flex w-full justify-end sticky top-0 ">
-          <button
-            onClick={CloseForm}
-            className="mr-[-27px] md:mr-[-43px] text-[var(--text-sec)] flex justify-center items-center size-6  rounded-full hover:bg-red-500 hover:text-white transition-all duration-200"
-          >
-            <MdClose size={16} />
-          </button>
-        </div>
+    <div className="fixed inset-0 text-sm bg-black bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50 px-4 sm:px-6">
+      <div className="bg-white/90 backdrop-blur-md rounded-xl shadow-2xl max-w-lg w-full p-6 relative border border-gray-200">
+        {/* Close Button */}
+        <button
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+          onClick={CloseForm}
+          aria-label="Close"
+        >
+          ✕
+        </button>
 
-        <h1 className="font-bold text-xl md:text-2xl text-center pb-4 text-[var(--form-heading)]">
+        {/* Heading */}
+        <h1 className="font-bold text-xl md:text-2xl text-center pb-4 text-gray-800">
           User Profile
         </h1>
-        <div>
-          <div className="flex flex-col mt-3 mb-4  items-center justify-center">
+
+        {/* Profile Picture */}
+        <div className="flex flex-col items-center mb-6">
+          <div className="relative group">
             <img
-              className="object-cover w-[100px] h-[100px] md:w-[120px] md:h-[120px] rounded-full transition-all duration-[400ms] hover:scale-[1.5] "
+              className="object-cover w-[110px] h-[110px] md:w-[130px] md:h-[130px] rounded-full border-4 border-white shadow-lg ring-2 ring-gray-200 group-hover:ring-[var(--form-heading)] transition-all duration-300"
               src={profilePic || defaultProfilePictureLink}
               alt="avatar"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = defaultProfilePictureLink;
+              }}
             />
           </div>
-          <div className="flex flex-col gap-2">
-            <div>
-              <p className="font-bold text-base md:text-lg">Name</p>
-              <p className="ml-4 text-[var(--text-sec)] ">{username}</p>
-            </div>
-            <div>
-              <p className="font-bold text-base md:text-lg">Email Address</p>
-              <p className="ml-4 text-[var(--text-sec)] ">{email}</p>
-            </div>
-            {/* <div>
-              <p className="font-bold text-base md:text-lg">Password</p>
-              <div className="ml-4 text-[var(--text-sec)]  flex items-center">
-                <span className="mr-2">
-                  {showPassword ? password : "•".repeat(password.length)}
-                </span>
-                <button
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="text-[var(--text-sec)] hover:text-[var(--form-heading)] transition-all duration-200"
-                >
-                  {showPassword ? <MdVisibilityOff /> : <MdVisibility />}
-                </button>
-              </div>
-            </div> */}
-          </div>
-          <button
-            onClick={logout}
-            className="flex items-center justify-center gap-3 p-3 bg-red-500 hover:bg-red-600 transition-colors rounded-full text-white w-full mt-10 text-base md:text-lg"
-          >
-            Logout <MdLogout size={20} />
-          </button>
         </div>
+
+        {/* User Details */}
+        <div className="space-y-4 text-center">
+          <div>
+            <p className="text-xs uppercase text-gray-500 tracking-wider">
+              Name
+            </p>
+            <p className="text-lg font-medium text-gray-800">{username}</p>
+          </div>
+          <div>
+            <p className="text-xs uppercase text-gray-500 tracking-wider">
+              Email
+            </p>
+            <p className="text-lg font-medium text-gray-800">{email}</p>
+          </div>
+        </div>
+
+        {/* Logout Button */}
+        <button
+          onClick={() => {
+            toast.success("Loged out");
+            logout();
+          }}
+          className="flex items-center justify-center gap-2 p-3 bg-red-500 hover:bg-red-600 transition-colors rounded-lg text-white w-full mt-8 text-base md:text-lg font-medium"
+        >
+          <MdLogout size={20} />
+          Logout
+        </button>
       </div>
     </div>
   );
