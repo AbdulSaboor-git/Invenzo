@@ -9,11 +9,16 @@ export default function UserProfile({ CloseForm, user, logout, showProfile }) {
   const defaultProfilePictureLink = "default.png";
 
   useEffect(() => {
-    document.body.classList.add("no-scroll");
+    if (showProfile) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+
     return () => {
-      document.body.classList.remove("no-scroll");
+      document.body.classList.remove("overflow-hidden");
     };
-  }, []);
+  }, [showProfile]);
 
   return (
     <div
