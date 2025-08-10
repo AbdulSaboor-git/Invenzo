@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { MdLogout } from "react-icons/md";
 import { toast } from "sonner";
 
-export default function UserProfile({ CloseForm, user, logout }) {
+export default function UserProfile({ CloseForm, user, logout, showProfile }) {
   const username = user?.firstName + " " + (user?.lastName || "");
   const profilePic = user?.profilePicture;
   const email = user?.email;
@@ -16,7 +16,15 @@ export default function UserProfile({ CloseForm, user, logout }) {
   }, []);
 
   return (
-    <div className="fixed inset-0 text-sm bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 px-4 sm:px-6">
+    <div
+      className={`fixed inset-0 text-sm bg-black/20 backdrop-blur-sm flex items-center justify-center z-50 px-4 sm:px-6 transition ease-in-out ${
+        showProfile
+          ? "opacity-100 pointer-events-auto"
+          : "opacity-0 pointer-events-none"
+      }`}
+      onClick={close}
+    >
+      {" "}
       <div className="bg-white backdrop-blur-md rounded-xl shadow-2xl max-w-lg w-full p-6 relative ">
         {/* Close Button */}
         <button

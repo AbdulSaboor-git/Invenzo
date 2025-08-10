@@ -376,7 +376,7 @@ export default function Inventory() {
                   disabled={
                     loadingNameChange || loadingData || loadingInventory
                   }
-                  className="text-lg md:text-xl font-bold text-gray-800 text-center md:text-left cursor-pointer"
+                  className="text-lg line-clamp-1 md:text-xl font-bold text-gray-800 text-center md:text-left cursor-pointer"
                   onClick={() => setIsEditingInventoryName(true)}
                 >
                   {inventory?.name}

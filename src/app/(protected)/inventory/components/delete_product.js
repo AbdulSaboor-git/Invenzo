@@ -47,7 +47,7 @@ export default function DeleteProduct({
 
   return (
     <div
-      className={`fixed inset-0 text-sm  bg-black bg-opacity-40 flex items-center justify-center z-50 px-4  backdrop-blur-[2px] sm:px-6 transition-all duration-200 ${
+      className={`fixed inset-0 text-sm  bg-black/20 flex items-center justify-center z-50 px-4  backdrop-blur-[2px] sm:px-6  ${
         showDialogue
           ? "opacity-100 pointer-events-auto"
           : "opacity-0 pointer-events-none"

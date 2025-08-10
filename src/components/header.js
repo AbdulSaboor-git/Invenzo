@@ -123,9 +123,11 @@ export default function Header() {
 
       {/* sidebar */}
       <div
-        className={`fixed w-full h-full bg-black opacity-0 pointer-events-none ${
-          sidebarOpen && "opacity-40 pointer-events-auto"
-        } transition-all duration-300 `}
+        className={`fixed inset-0 text-sm bg-black/20 backdrop-blur-[1px] flex items-center justify-center z-50 px-4 sm:px-6 transition ease-in-out ${
+          sidebarOpen
+            ? "opacity-100 pointer-events-auto"
+            : "opacity-0 pointer-events-none"
+        }`}
         onClick={() => setSidebarOpen(false)}
       />
       <div
@@ -153,13 +155,12 @@ export default function Header() {
           ))}
         </div>
       </div>
-      {showProfile && (
-        <UserProfile
-          user={user}
-          logout={logout}
-          CloseForm={() => setShowProfile(false)}
-        />
-      )}
+      <UserProfile
+        user={user}
+        logout={logout}
+        CloseForm={() => setShowProfile(false)}
+        showProfile={showProfile}
+      />
     </div>
   );
 }

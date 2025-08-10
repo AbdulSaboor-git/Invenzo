@@ -10,7 +10,7 @@ export default function ViewProduct({
 }) {
   return (
     <div
-      className={`fixed inset-0 text-sm bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 px-4 sm:px-6 transition-all duration-300 ease-out ${
+      className={`fixed inset-0 text-sm bg-black/20 backdrop-blur-sm flex items-center justify-center z-50 px-4 sm:px-6 transition ease-in-out ${
         selectedProduct
           ? "opacity-100 pointer-events-auto"
           : "opacity-0 pointer-events-none"
