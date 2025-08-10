@@ -80,13 +80,13 @@ export default function ViewProduct({
           {/* Action buttons */}
           <div className="w-full flex items-center gap-3 mt-8 text-sm sm:text-base">
             <button
-              className="w-full group px-2 sm:px-4 py-2 rounded-lg flex items-center justify-center gap-2 font-medium bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-md transition-all"
+              className="w-full group px-2 sm:px-4 py-2 rounded-lg flex items-center justify-center gap-2 font-medium bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white  transition-all"
               onClick={editClick}
             >
               <MdEdit size={18} className="group-hover-shake" /> Edit
             </button>
             <button
-              className="w-full group px-2 sm:px-4 py-2 rounded-lg flex items-center justify-center gap-2 font-medium bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white shadow-md transition-all"
+              className="w-full group px-2 sm:px-4 py-2 rounded-lg flex items-center justify-center gap-2 font-medium bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white  transition-all"
               onClick={deleteClick}
             >
               <MdDelete size={18} className="group-hover-shake" /> Delete

@@ -403,13 +403,17 @@ export default function Inventory() {
           editForm={editForm}
           fetchNewData={fetchAndStoreData}
           categories={categories}
-          inventory={inventory}
+          inventoryId={inventory?.id}
           setEditForm={setEditForm}
         />
         {/* delete product */}
         <DeleteProduct
-          inventory={inventory}
+          inventoryId={inventory?.id}
           selectedProductForDelete={selectedProductForDelete}
+          cancel={() => {
+            setSelectedProductForDelete(null);
+            setShowDeleteConfirmationDialogue(false);
+          }}
           close={() => {
             setSelectedProductForDelete(null);
             setSelectedProduct(null);

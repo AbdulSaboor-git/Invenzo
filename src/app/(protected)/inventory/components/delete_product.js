@@ -3,9 +3,10 @@ import React, { useState } from "react";
 import { toast } from "sonner";
 
 export default function DeleteProduct({
-  inventory,
+  inventoryId,
   selectedProductForDelete,
   close,
+  cancel,
   fetchNewData,
   showDialogue,
 }) {
@@ -20,7 +21,7 @@ export default function DeleteProduct({
     }
     try {
       setLoadingForDelete(true);
-      const response = await fetch(`/api/inventory/${inventory?.id}`, {
+      const response = await fetch(`/api/inventory/${inventoryId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -66,7 +67,7 @@ export default function DeleteProduct({
         <div className="flex justify-end gap-4">
           <button
             disabled={loadingForDelete}
-            onClick={close}
+            onClick={cancel}
             className="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded text-black disabled:hover:bg-gray-300 disabled:cursor-not-allowed "
           >
             Cancel

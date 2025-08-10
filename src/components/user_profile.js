@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { MdClose, MdLogout } from "react-icons/md";
+import { MdLogout } from "react-icons/md";
 import { toast } from "sonner";
 
 export default function UserProfile({ CloseForm, user, logout }) {

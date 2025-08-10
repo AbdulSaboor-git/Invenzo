@@ -8,7 +8,7 @@ export default function EditProduct({
   editForm,
   close,
   fetchNewData,
-  inventory,
+  inventoryId,
   setEditForm,
 }) {
   const [loadingForEdit, setLoadingForEdit] = useState(false);
@@ -52,7 +52,7 @@ export default function EditProduct({
         return;
       }
 
-      const response = await fetch(`/api/inventory/${inventory?.id}`, {
+      const response = await fetch(`/api/inventory/${inventoryId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
