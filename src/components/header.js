@@ -85,7 +85,7 @@ export default function Header() {
   }, [sidebarOpen]);
 
   return (
-    <div className="w-full px-4 md:px-6 py-3 sticky top-0 z-50 bg-white grid grid-cols-[2fr_1.3fr] gap-6">
+    <div className="w-full px-4 pt-4 pb-3 md:px-6 sticky top-0 z-50 bg-white grid grid-cols-[2fr_1.3fr] gap-6">
       <div className="flex items-center gap-4">
         {user && (
           <MdOutlineMenu
@@ -129,7 +129,7 @@ export default function Header() {
         onClick={() => setSidebarOpen(false)}
       />
       <div
-        className={`fixed left-0 w-[60%] max-w-[400px] h-full bg-white shadow-lg shadow-black/30 z-50 flex flex-col gap-12 p-3 md:p-4 ${
+        className={`fixed left-0 w-[60%] max-w-[400px] h-full bg-white shadow-lg shadow-black/30 z-50 flex flex-col gap-12 px-3 py-5 md:px-4 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         } transition-transform duration-300 ease-in-out`}
       >

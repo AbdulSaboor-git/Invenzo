@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { HiOutlineSwitchVertical } from "react-icons/hi";
 
 import { IoSync } from "react-icons/io5";
-import { MdClose, MdDelete, MdEdit, MdVisibility } from "react-icons/md";
+import { MdClose, MdEdit } from "react-icons/md";
 import { FiArrowUp, FiArrowDown } from "react-icons/fi";
 import { toast } from "sonner";
 import ScrollToTop from "@/components/scroll_to_top";
@@ -35,8 +35,66 @@ export default function Inventory() {
   });
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [editProduct, setEditProduct] = useState(null);
+  const [isEditingInventoryName, setIsEditingInventoryName] = useState(false);
+  const [loadingNameChange, setLoadingNameChange] = useState(false);
+  const [inventoryNameInput, setInventoryNameInput] = useState(
+    inventory?.name || ""
+  );
 
   const localStorageKey = user?.id ? `inventoryData_${user.id}` : null;
+
+  const updateInventoryName = async (newName) => {
+    if (!navigator.onLine) {
+      toast.error(
+        "Network not available. Please check your internet connection."
+      );
+      return;
+    }
+
+    if (!inventory?.id || !user?.id) return;
+
+    try {
+      setLoadingNameChange(true);
+      if (inventory.name == newName.trim()) return;
+      const response = await fetch(`/api/inventory`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: inventory.id, name: newName.trim() }),
+      });
+
+      if (!response.ok) throw new Error("Failed to update inventory name");
+
+      const data = await response.json();
+      setInventory(data.inventory);
+      setInventoryNameInput(data.inventory.name);
+      toast.success("Inventory name updated successfully!");
+
+      // Update local storage
+      if (typeof window !== "undefined") {
+        const cached = localStorage.getItem(localStorageKey);
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          localStorage.setItem(
+            localStorageKey,
+            JSON.stringify({ ...parsed, inventory: data.inventory })
+          );
+        }
+      }
+    } catch (error) {
+      console.error("Error updating inventory name:", error);
+      setInventoryNameInput(inventory?.name);
+      toast.error("Failed to update inventory name.");
+    } finally {
+      setIsEditingInventoryName(false);
+      setLoadingNameChange(false);
+    }
+  };
+
+  useEffect(() => {
+    if (inventory?.name) {
+      setInventoryNameInput(inventory.name);
+    }
+  }, [inventory]);
 
   const fetchInventory = async () => {
     if (!user) return;
@@ -47,6 +105,16 @@ export default function Inventory() {
       const data = await response.json();
       setInventory(data.inventory);
       console.log(data.inventory);
+      if (typeof window !== "undefined") {
+        const cached = localStorage.getItem(localStorageKey);
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          localStorage.setItem(
+            localStorageKey,
+            JSON.stringify({ ...parsed, inventory: data.inventory })
+          );
+        }
+      }
     } catch (error) {
       console.error("Error fetching inventories:", error);
     } finally {
@@ -71,10 +139,23 @@ export default function Inventory() {
       const { products, categories } = data;
 
       if (typeof window !== "undefined") {
-        localStorage.setItem(
-          localStorageKey,
-          JSON.stringify({ products, categories, inventory })
-        );
+        const cached = localStorage.getItem(localStorageKey);
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          localStorage.setItem(
+            localStorageKey,
+            JSON.stringify({
+              ...parsed,
+              products: products,
+              categories: categories,
+            })
+          );
+        } else {
+          localStorage.setItem(
+            localStorageKey,
+            JSON.stringify({ products, categories, inventory })
+          );
+        }
       }
       setProducts(products);
       setCategories(categories);
@@ -97,8 +178,9 @@ export default function Inventory() {
     }
 
     const loadingToastId = toast.loading("Refreshing...");
-
+    setIsEditingInventoryName(false);
     try {
+      await fetchInventory();
       await fetchAndStoreData();
       toast.success("Data refreshed!", { id: loadingToastId });
     } catch (error) {
@@ -250,13 +332,67 @@ export default function Inventory() {
       <ScrollToTop />
       <div className="w-full max-w-7xl place-self-center">
         <div className="flex flex-col md:flex-row md:justify-between items-center shadow px-3 md:px-6 py-4 gap-3 sticky top-3 md:top-16 bg-white z-40">
-          <div className="w-full flex  justify-center md:justify-start ">
+          <div className="w-full flex justify-center md:justify-start">
             {loadingInventory || !inventory ? (
               <div className="h-7 bg-gray-200 rounded w-52 place-self-center md:place-self-auto animate-pulse"></div>
+            ) : isEditingInventoryName ? (
+              <div className="flex items-center gap-2 w-full max-w-md text-sm">
+                <input
+                  type="text"
+                  value={inventoryNameInput}
+                  onChange={(e) => setInventoryNameInput(e.target.value)}
+                  className="border border-gray-200 rounded-lg px-3 py-2 w-full text-sm outline-none focus:border-green-300"
+                  autoFocus
+                />
+                <button
+                  disabled={
+                    loadingNameChange || loadingData || loadingInventory
+                  }
+                  onClick={() => updateInventoryName(inventoryNameInput)}
+                  className="bg-green-100 hover:bg-green-200 text-green-800 font-semibold px-3 py-2 rounded-md border border-green-300 transition"
+                >
+                  {loadingNameChange ? (
+                    <div className="border-2 border-green-800 border-t-transparent animate-spin rounded-full w-4 h-4 mx-auto" />
+                  ) : (
+                    "Save"
+                  )}
+                </button>
+                <button
+                  disabled={
+                    loadingNameChange || loadingData || loadingInventory
+                  }
+                  onClick={() => {
+                    setIsEditingInventoryName(false);
+                    setInventoryNameInput(inventory.name);
+                  }}
+                  className="bg-gray-100 hover:bg-gray-200 text-gray-800 font-semibold px-3 py-2 rounded-md border border-gray-300"
+                >
+                  Cancel
+                </button>
+              </div>
             ) : (
-              <h2 className="text-lg md:text-xl font-bold w-full text-gray-800 text-center md:text-left">
-                {inventory?.name}
-              </h2>
+              <div className="flex items-center gap-3">
+                <h2
+                  disabled={
+                    loadingNameChange || loadingData || loadingInventory
+                  }
+                  className="text-lg md:text-xl font-bold text-gray-800 text-center md:text-left cursor-pointer"
+                  onClick={() => setIsEditingInventoryName(true)}
+                >
+                  {inventory?.name}
+                </h2>
+                {inventory?.name == "Get Started" && (
+                  <button
+                    onClick={() => setIsEditingInventoryName(true)}
+                    className="flex items-center gap-2 text-gray-500 hover:text-gray-700"
+                    disabled={
+                      loadingNameChange || loadingData || loadingInventory
+                    }
+                  >
+                    <MdEdit size={18} /> (Click to edit)
+                  </button>
+                )}
+              </div>
             )}
           </div>
           <div className="flex w-full items-stretch justify-end gap-3 bg-white">

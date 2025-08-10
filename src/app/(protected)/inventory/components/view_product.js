@@ -74,7 +74,7 @@ export default function ViewProduct({
               label="Updated At"
               value={new Date(selectedProduct.updatedAt).toLocaleString()}
             />
-            <Detail label="Tags" value={selectedProduct.tags || "—"} />
+            {/* <Detail label="Tags" value={selectedProduct.tags || "—"} /> */}
           </div>
 
           {/* Action buttons */}
