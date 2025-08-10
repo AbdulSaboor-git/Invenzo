@@ -123,7 +123,7 @@ export default function Header() {
 
       {/* sidebar */}
       <div
-        className={`fixed inset-0 text-sm bg-black/20 backdrop-blur-[1px] flex items-center justify-center z-50 px-4 sm:px-6 transition ease-in-out ${
+        className={`fixed inset-0 text-sm bg-black/20 backdrop-blur-[1px] flex items-center justify-center z-50 px-4 sm:px-6 transition-all duration-300 ease-in-out ${
           sidebarOpen
             ? "opacity-100 pointer-events-auto"
             : "opacity-0 pointer-events-none"
