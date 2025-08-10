@@ -231,6 +231,19 @@ export default function Inventory() {
     };
   }, [editProduct, showDeleteConfirmationDialogue, selectedProduct]);
 
+  function prodViewClick(product) {
+    setSelectedProduct(product);
+  }
+
+  useEffect(() => {
+    if (selectedProduct) {
+      const updated = products.find((p) => p.id === selectedProduct.id);
+      if (updated) {
+        setSelectedProduct(updated);
+      }
+    }
+  }, [products]);
+
   return (
     <div className="flex w-full flex-col items-center justify-center ">
       <Header />
@@ -336,7 +349,7 @@ export default function Inventory() {
                       <tr
                         key={product.id}
                         className="hover:bg-gray-50 transition cursor-pointer "
-                        onClick={() => setSelectedProduct(product)}
+                        onClick={() => prodViewClick(product)}
                       >
                         <td className="px-3 py-2 md:px-6 md:py-4 text-gray-500 text-center">
                           {index + 1}

@@ -30,6 +30,28 @@ export default function EditProduct({
 
     try {
       setLoadingForEdit(true);
+      const normalize = (val) =>
+        val === null || val === undefined ? "" : String(val).trim();
+      const normalizeNum = (val) =>
+        val === null || val === "" ? null : parseFloat(val);
+
+      const noChanges =
+        normalize(editForm.name) === normalize(editProduct.name) &&
+        normalizeNum(editForm.categoryId) ===
+          normalizeNum(editProduct.categoryId) &&
+        normalizeNum(editForm.purchasePrice) ===
+          normalizeNum(editProduct.purchasePrice) &&
+        normalizeNum(editForm.salePrice) ===
+          normalizeNum(editProduct.salePrice) &&
+        normalizeNum(editForm.govtSalePrice) ===
+          normalizeNum(editProduct.govtSalePrice) &&
+        normalize(editForm.tags) === normalize(editProduct.tags);
+
+      if (noChanges) {
+        // toast.message("Product not changed");
+        return;
+      }
+
       const response = await fetch(`/api/inventory/${inventory?.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
@@ -49,13 +71,14 @@ export default function EditProduct({
 
       if (!response.ok) throw new Error("Update failed");
       toast.success("Product updated");
-      close();
-      await fetchNewData();
+      fetchNewData();
+      setLoadingForEdit(false);
     } catch (err) {
       console.error(err);
       toast.error("Update failed");
     } finally {
       setLoadingForEdit(false);
+      close();
     }
   };
 

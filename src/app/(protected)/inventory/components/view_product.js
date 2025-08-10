@@ -39,10 +39,10 @@ export default function ViewProduct({
           {/* Details */}
           <div className="grid grid-cols-1 gap-y-3 text-gray-700">
             <Detail label="Name" value={selectedProduct.name} />
-            <Detail
+            {/* <Detail
               label="Description"
               value={selectedProduct.description || "—"}
-            />
+            /> */}
             <Detail
               label="Category"
               value={
