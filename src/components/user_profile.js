@@ -16,8 +16,8 @@ export default function UserProfile({ CloseForm, user, logout }) {
   }, []);
 
   return (
-    <div className="fixed inset-0 text-sm bg-black bg-opacity-40 backdrop-blur-sm flex items-center justify-center z-50 px-4 sm:px-6">
-      <div className="bg-white/90 backdrop-blur-md rounded-xl shadow-2xl max-w-lg w-full p-6 relative border border-gray-200">
+    <div className="fixed inset-0 text-sm bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 px-4 sm:px-6">
+      <div className="bg-white backdrop-blur-md rounded-xl shadow-2xl max-w-lg w-full p-6 relative ">
         {/* Close Button */}
         <button
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
@@ -36,7 +36,7 @@ export default function UserProfile({ CloseForm, user, logout }) {
         <div className="flex flex-col items-center mb-6">
           <div className="relative group">
             <img
-              className="object-cover w-[110px] h-[110px] md:w-[130px] md:h-[130px] rounded-full border-4 border-white shadow-lg ring-2 ring-gray-200 group-hover:ring-[var(--form-heading)] transition-all duration-300"
+              className="object-cover w-[110px] h-[110px] md:w-[130px] md:h-[130px] rounded-full border-4 border-white ring-2 ring-gray-200 transition-all duration-300"
               src={profilePic || defaultProfilePictureLink}
               alt="avatar"
               onError={(e) => {
@@ -67,6 +67,7 @@ export default function UserProfile({ CloseForm, user, logout }) {
         <button
           onClick={() => {
             toast.success("Loged out");
+            CloseForm();
             logout();
           }}
           className="flex items-center justify-center gap-2 p-3 bg-red-500 hover:bg-red-600 transition-colors rounded-lg text-white w-full mt-8 text-base md:text-lg font-medium"

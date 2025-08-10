@@ -19,7 +19,7 @@ export default function ViewProduct({
     >
       {selectedProduct && (
         <div
-          className="bg-white rounded-xl shadow-2xl max-w-lg w-full p-6 md:p-8 relative animate-fadeIn border border-gray-100"
+          className="bg-white rounded-xl shadow-2xl max-w-lg w-full p-6 md:p-8 relative border border-gray-100"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Close button */}

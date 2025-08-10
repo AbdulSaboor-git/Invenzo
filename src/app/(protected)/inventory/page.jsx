@@ -412,6 +412,7 @@ export default function Inventory() {
           selectedProductForDelete={selectedProductForDelete}
           close={() => {
             setSelectedProductForDelete(null);
+            setSelectedProduct(null);
             setShowDeleteConfirmationDialogue(false);
           }}
           showDialogue={showDeleteConfirmationDialogue}
