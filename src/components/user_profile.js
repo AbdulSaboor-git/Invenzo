@@ -22,7 +22,6 @@ export default function UserProfile({ CloseForm, user, logout, showProfile }) {
           ? "opacity-100 pointer-events-auto"
           : "opacity-0 pointer-events-none"
       }`}
-      onClick={close}
     >
       {" "}
       <div className="bg-white backdrop-blur-md rounded-xl shadow-2xl max-w-lg w-full p-6 relative ">
