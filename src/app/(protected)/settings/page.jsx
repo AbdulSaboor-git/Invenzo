@@ -41,7 +41,7 @@ export default function SettingsPage() {
     localStorage.setItem(localStorageKey, JSON.stringify(preferences));
     toast.success('Settings saved!');
     // window.history.back();
-    // setTimeout(() => window.location.reload(), 30);
+    window.location.reload();
   };
 
   const cancelChanges = () => {
