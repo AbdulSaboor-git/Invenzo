@@ -344,7 +344,7 @@ export default function Inventory() {
           <div className="w-full flex justify-center md:justify-start">
             {loadingInventory || !inventory ? (
               <div className="h-7 bg-gray-200 rounded w-52 place-self-center md:place-self-auto animate-pulse"></div>
-            ) : isEditingInventoryName ? (
+            ) : isEditingInventoryName && prefs.renamingInventory ? (
               <div className="flex items-center gap-2 w-full max-w-md text-sm">
                 <input
                   type="text"

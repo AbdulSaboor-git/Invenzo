@@ -7,11 +7,12 @@ export default function usePreferences(userId) {
     deleteProduct: true,
     viewPurchasePrice: true,
     viewGovtSalePrice: true,
+    restrictCategory: false,
+    renamingInventory: true,
     viewCategory: true,
     viewDateAdded: true,
     viewDateUpdated: true,
     viewSalesData: true,
-    restrictCategory: false,
     defaultSortOrder: 'name',
   };
 

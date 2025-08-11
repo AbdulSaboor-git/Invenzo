@@ -17,13 +17,14 @@ export default function SettingsPage() {
     addProduct: true,
     editProduct: true,
     deleteProduct: true,
+    restrictCategory: false,
+    renamingInventory: true,
     viewPurchasePrice: true,
     viewGovtSalePrice: true,
     viewDateAdded: true,
     viewDateUpdated: true,
     viewCategory: true,
     viewSalesData: true,
-    restrictCategory: false,
     defaultSortOrder: 'name',
   };
 
@@ -73,12 +74,13 @@ export default function SettingsPage() {
             { key: 'editProduct', label: 'Allow Editing Products' },
             { key: 'deleteProduct', label: 'Allow Deleting Products' },
             { key: 'viewPurchasePrice', label: 'View Purchase Price' },
+            { key: 'restrictCategory', label: 'Restrict Category Management' },
+            { key: 'renamingInventory', label: 'Allow Renaming Inventory' },
             // { key: 'viewGovtSalePrice', label: 'View Govt. Sale Price' },
             { key: 'viewCategory', label: 'View Category' },
             { key: 'viewDateAdded', label: 'View Date Added' },
             { key: 'viewDateUpdated', label: 'View Date Updated' },
             { key: 'viewSalesData', label: 'View Sales Data' },
-            { key: 'restrictCategory', label: 'Restrict Category Management' },
           ].map((item) => (
             <div
               key={item.key}
