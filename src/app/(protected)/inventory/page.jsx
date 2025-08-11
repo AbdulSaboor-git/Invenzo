@@ -1,21 +1,23 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import { HiOutlineSwitchVertical } from "react-icons/hi";
+'use client';
+import React, { useEffect, useState } from 'react';
+import { HiOutlineSwitchVertical } from 'react-icons/hi';
 
-import { IoSync } from "react-icons/io5";
-import { MdClose, MdEdit } from "react-icons/md";
-import { FiArrowUp, FiArrowDown } from "react-icons/fi";
-import { toast } from "sonner";
-import ScrollToTop from "@/components/scroll_to_top";
-import useAuthUser from "@/hooks/authUser";
-import InvLoader from "./components/inv_loader";
-import ViewProduct from "./components/view_product";
-import EditProduct from "./components/edit_product";
-import DeleteProduct from "./components/delete_product";
-import Header from "@/components/header";
+import { IoSync } from 'react-icons/io5';
+import { MdClose, MdEdit } from 'react-icons/md';
+import { FiArrowUp, FiArrowDown } from 'react-icons/fi';
+import { toast } from 'sonner';
+import ScrollToTop from '@/components/scroll_to_top';
+import useAuthUser from '@/hooks/authUser';
+import InvLoader from './components/inv_loader';
+import ViewProduct from './components/view_product';
+import EditProduct from './components/edit_product';
+import DeleteProduct from './components/delete_product';
+import Header from '@/components/header';
+import usePreferences from '@/hooks/usePreferences';
 
 export default function Inventory() {
   const { user } = useAuthUser();
+  const prefs = usePreferences(user?.id);
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loadingData, setLoadingData] = useState(true);
@@ -24,21 +26,21 @@ export default function Inventory() {
   const [fetchedInv, setFetchedInv] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [refreshFailed, setRefreshFailed] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
   const [selectedProductForDelete, setSelectedProductForDelete] =
     useState(null);
   const [showDeleteConfirmationDialogue, setShowDeleteConfirmationDialogue] =
     useState(false);
   const [sortConfig, setSortConfig] = useState({
-    key: "name",
-    direction: "asc",
+    key: 'name',
+    direction: 'asc',
   });
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [editProduct, setEditProduct] = useState(null);
   const [isEditingInventoryName, setIsEditingInventoryName] = useState(false);
   const [loadingNameChange, setLoadingNameChange] = useState(false);
   const [inventoryNameInput, setInventoryNameInput] = useState(
-    inventory?.name || ""
+    inventory?.name || ''
   );
 
   const localStorageKey = user?.id ? `inventoryData_${user.id}` : null;
@@ -46,7 +48,7 @@ export default function Inventory() {
   const updateInventoryName = async (newName) => {
     if (!navigator.onLine) {
       toast.error(
-        "Network not available. Please check your internet connection."
+        'Network not available. Please check your internet connection.'
       );
       return;
     }
@@ -57,20 +59,20 @@ export default function Inventory() {
       setLoadingNameChange(true);
       if (inventory.name == newName.trim()) return;
       const response = await fetch(`/api/inventory`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: inventory.id, name: newName.trim() }),
       });
 
-      if (!response.ok) throw new Error("Failed to update inventory name");
+      if (!response.ok) throw new Error('Failed to update inventory name');
 
       const data = await response.json();
       setInventory(data.inventory);
       setInventoryNameInput(data.inventory.name);
-      toast.success("Inventory name updated successfully!");
+      toast.success('Inventory name updated successfully!');
 
       // Update local storage
-      if (typeof window !== "undefined") {
+      if (typeof window !== 'undefined') {
         const cached = localStorage.getItem(localStorageKey);
         if (cached) {
           const parsed = JSON.parse(cached);
@@ -81,9 +83,9 @@ export default function Inventory() {
         }
       }
     } catch (error) {
-      console.error("Error updating inventory name:", error);
+      console.error('Error updating inventory name:', error);
       setInventoryNameInput(inventory?.name);
-      toast.error("Failed to update inventory name.");
+      toast.error('Failed to update inventory name.');
     } finally {
       setIsEditingInventoryName(false);
       setLoadingNameChange(false);
@@ -101,11 +103,11 @@ export default function Inventory() {
     try {
       setLoadingInventory(true);
       const response = await fetch(`/api/inventory?adminId=${user?.id}`);
-      if (!response.ok) throw new Error("Failed to fetch from server");
+      if (!response.ok) throw new Error('Failed to fetch from server');
       const data = await response.json();
       setInventory(data.inventory);
       console.log(data.inventory);
-      if (typeof window !== "undefined") {
+      if (typeof window !== 'undefined') {
         const cached = localStorage.getItem(localStorageKey);
         if (cached) {
           const parsed = JSON.parse(cached);
@@ -116,7 +118,7 @@ export default function Inventory() {
         }
       }
     } catch (error) {
-      console.error("Error fetching inventories:", error);
+      console.error('Error fetching inventories:', error);
     } finally {
       setLoadingInventory(false);
     }
@@ -133,12 +135,12 @@ export default function Inventory() {
       const response = await fetch(
         `/api/inventory/${inventory?.id}?userId=${user?.id}`
       );
-      if (!response.ok) throw new Error("Failed to fetch from server");
+      if (!response.ok) throw new Error('Failed to fetch from server');
 
       const data = await response.json();
       const { products, categories } = data;
 
-      if (typeof window !== "undefined") {
+      if (typeof window !== 'undefined') {
         const cached = localStorage.getItem(localStorageKey);
         if (cached) {
           const parsed = JSON.parse(cached);
@@ -161,8 +163,8 @@ export default function Inventory() {
       setCategories(categories);
     } catch (err) {
       setRefreshFailed(true);
-      console.error("Fetch error:", err);
-      toast.error("Failed to refresh. Showing cached data.");
+      console.error('Fetch error:', err);
+      toast.error('Failed to refresh. Showing cached data.');
     } finally {
       setLoadingData(false);
       setRefreshing(false);
@@ -172,25 +174,25 @@ export default function Inventory() {
   const RefreshData = async () => {
     if (!navigator.onLine) {
       toast.error(
-        "Network not available. Please check your internet connection."
+        'Network not available. Please check your internet connection.'
       );
       return;
     }
 
-    const loadingToastId = toast.loading("Refreshing...");
+    const loadingToastId = toast.loading('Refreshing...');
     setIsEditingInventoryName(false);
     try {
       await fetchInventory();
       await fetchAndStoreData();
-      toast.success("Data refreshed!", { id: loadingToastId });
+      toast.success('Data refreshed!', { id: loadingToastId });
     } catch (error) {
-      toast.error("Failed to refresh data.", { id: loadingToastId });
+      toast.error('Failed to refresh data.', { id: loadingToastId });
     }
   };
 
   const loadFromLocalStorage = () => {
     try {
-      if (typeof window !== "undefined") {
+      if (typeof window !== 'undefined') {
         const cached = localStorage.getItem(localStorageKey);
         if (!cached) {
           return false;
@@ -201,13 +203,13 @@ export default function Inventory() {
           !parsed ||
           !Array.isArray(parsed.products) ||
           !Array.isArray(parsed.categories) ||
-          typeof parsed.inventory !== "object" ||
+          typeof parsed.inventory !== 'object' ||
           parsed.inventory == null
         ) {
           if (parsed.inventory == null) {
             console.log(parsed.inventory);
-          } else if (typeof parsed.inventory !== "object")
-            console.log("inv not obj");
+          } else if (typeof parsed.inventory !== 'object')
+            console.log('inv not obj');
           return false;
         }
         console.log(parsed.products);
@@ -248,14 +250,21 @@ export default function Inventory() {
   const toggleSort = (key) => {
     setSortConfig((prev) => ({
       key,
-      direction: prev.key === key && prev.direction === "asc" ? "desc" : "asc",
+      direction: prev.key === key && prev.direction === 'asc' ? 'desc' : 'asc',
     }));
   };
+
+  useEffect(() => {
+    setSortConfig({
+      key: prefs.defaultSortOrder,
+      direction: `${prefs.defaultSortOrder == 'createdAt' || prefs.defaultSortOrder == 'updatedAt' ? 'desc' : 'asc'}`,
+    });
+  }, [prefs]);
 
   const renderSortIcon = (key) => {
     if (sortConfig.key !== key)
       return <HiOutlineSwitchVertical size={14} className="inline ml-1" />;
-    return sortConfig.direction === "asc" ? (
+    return sortConfig.direction === 'asc' ? (
       <FiArrowUp size={14} className="inline ml-1" />
     ) : (
       <FiArrowDown size={14} className="inline ml-1" />
@@ -263,12 +272,12 @@ export default function Inventory() {
   };
 
   const [editForm, setEditForm] = useState({
-    name: "",
-    categoryId: "",
-    purchasePrice: "",
-    salePrice: "",
-    govtSalePrice: "",
-    tags: "",
+    name: '',
+    categoryId: '',
+    purchasePrice: '',
+    salePrice: '',
+    govtSalePrice: '',
+    tags: '',
   });
 
   const handleEdit = (product) => {
@@ -278,15 +287,15 @@ export default function Inventory() {
       categoryId: product.categoryId.toString(),
       purchasePrice: product.purchasePrice.toString(),
       salePrice: product.salePrice.toString(),
-      govtSalePrice: product.govtSalePrice?.toString() || "",
-      tags: product.tags || "",
+      govtSalePrice: product.govtSalePrice?.toString() || '',
+      tags: product.tags || '',
     });
   };
 
   const sortedProducts = [...products]
     .filter((product) => {
       const category =
-        categories.find((cat) => cat.id === product.categoryId)?.name || "";
+        categories.find((cat) => cat.id === product.categoryId)?.name || '';
       return (
         product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         product.tags?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -296,20 +305,20 @@ export default function Inventory() {
     .sort((a, b) => {
       const aVal = a[sortConfig.key];
       const bVal = b[sortConfig.key];
-      if (aVal < bVal) return sortConfig.direction === "asc" ? -1 : 1;
-      if (aVal > bVal) return sortConfig.direction === "asc" ? 1 : -1;
+      if (aVal < bVal) return sortConfig.direction === 'asc' ? -1 : 1;
+      if (aVal > bVal) return sortConfig.direction === 'asc' ? 1 : -1;
       return 0;
     });
 
   useEffect(() => {
     if (editProduct || showDeleteConfirmationDialogue || selectedProduct) {
-      document.body.classList.add("overflow-hidden");
+      document.body.classList.add('overflow-hidden');
     } else {
-      document.body.classList.remove("overflow-hidden");
+      document.body.classList.remove('overflow-hidden');
     }
 
     return () => {
-      document.body.classList.remove("overflow-hidden");
+      document.body.classList.remove('overflow-hidden');
     };
   }, [editProduct, showDeleteConfirmationDialogue, selectedProduct]);
 
@@ -354,7 +363,7 @@ export default function Inventory() {
                   {loadingNameChange ? (
                     <div className="border-2 border-green-800 border-t-transparent animate-spin rounded-full w-4 h-4 mx-auto" />
                   ) : (
-                    "Save"
+                    'Save'
                   )}
                 </button>
                 <button
@@ -381,7 +390,7 @@ export default function Inventory() {
                 >
                   {inventory?.name}
                 </h2>
-                {inventory?.name == "Get Started" && (
+                {inventory?.name == 'Get Started' && (
                   <button
                     onClick={() => setIsEditingInventoryName(true)}
                     className="flex items-center gap-2 text-gray-500 hover:text-gray-700"
@@ -407,7 +416,7 @@ export default function Inventory() {
               {searchQuery && (
                 <div
                   className="absolute inset-y-0 right-0 h-full p-2 flex items-center cursor-pointer "
-                  onClick={() => setSearchQuery("")}
+                  onClick={() => setSearchQuery('')}
                 >
                   <MdClose />
                 </div>
@@ -418,12 +427,12 @@ export default function Inventory() {
               disabled={refreshing || loadingInventory}
               className={`flex gap-2 items-center justify-center text-sm font-semibold px-3 py-1.5 rounded-md border transition-all duration-300 disabled:cursor-not-allowed disabled:bg-green-200  disabled:shadow-none ${
                 refreshFailed
-                  ? "bg-red-100 hover:bg-red-200 text-red-800 border-red-300"
-                  : "bg-green-100 hover:bg-green-200 text-green-800 border-green-300"
+                  ? 'bg-red-100 hover:bg-red-200 text-red-800 border-red-300'
+                  : 'bg-green-100 hover:bg-green-200 text-green-800 border-green-300'
               }`}
             >
               <span className="hidden md:inline">Refresh</span>
-              <IoSync className={` ${refreshing && "animate-spin "} `} />
+              <IoSync className={` ${refreshing && 'animate-spin '} `} />
             </button>
           </div>
         </div>
@@ -435,46 +444,54 @@ export default function Inventory() {
                   <th className="px-3 py-3 md:px-6 md:py-4 text-center">#</th>
                   <th
                     className=" px-3 py-3 min-w-[170px] md:px-6 md:py-4 cursor-pointer"
-                    onClick={() => toggleSort("name")}
+                    onClick={() => toggleSort('name')}
                   >
-                    Name {renderSortIcon("name")}
+                    Name {renderSortIcon('name')}
                   </th>
                   <th
                     className="px-3 py-3 min-w-[110px] md:px-6 md:py-4 cursor-pointer"
-                    onClick={() => toggleSort("salePrice")}
+                    onClick={() => toggleSort('salePrice')}
                   >
-                    S. Price {renderSortIcon("salePrice")}
+                    S. Price {renderSortIcon('salePrice')}
                   </th>
-                  <th
-                    className="px-3 py-3 min-w-[110px] md:px-6 md:py-4 cursor-pointer"
-                    onClick={() => toggleSort("purchasePrice")}
-                  >
-                    P. Price {renderSortIcon("purchasePrice")}
-                  </th>
-                  <th
-                    className=" px-3 py-3 min-w-[130px] md:px-6 md:py-4 cursor-pointer"
-                    onClick={() => toggleSort("categoryId")}
-                  >
-                    Category {renderSortIcon("categoryId")}
-                  </th>
-                  <th
-                    className="px-3 py-3 min-w-[140px] md:px-6 md:py-4 cursor-pointer"
-                    onClick={() => toggleSort("updatedAt")}
-                  >
-                    Updated At {renderSortIcon("updatedAt")}
-                  </th>
-                  <th
-                    className="px-3 py-3 min-w-[140px] md:px-6 md:py-4 cursor-pointer"
-                    onClick={() => toggleSort("createdAt")}
-                  >
-                    Created At {renderSortIcon("createdAt")}
-                  </th>
+                  {prefs.viewPurchasePrice && (
+                    <th
+                      className="px-3 py-3 min-w-[110px] md:px-6 md:py-4 cursor-pointer"
+                      onClick={() => toggleSort('purchasePrice')}
+                    >
+                      P. Price {renderSortIcon('purchasePrice')}
+                    </th>
+                  )}
+                  {prefs.viewCategory && (
+                    <th
+                      className=" px-3 py-3 min-w-[130px] md:px-6 md:py-4 cursor-pointer"
+                      onClick={() => toggleSort('categoryId')}
+                    >
+                      Category {renderSortIcon('categoryId')}
+                    </th>
+                  )}
+                  {prefs.viewDateUpdated && (
+                    <th
+                      className="px-3 py-3 min-w-[160px] md:px-6 md:py-4 cursor-pointer"
+                      onClick={() => toggleSort('updatedAt')}
+                    >
+                      Date Updated {renderSortIcon('updatedAt')}
+                    </th>
+                  )}
+                  {prefs.viewDateAdded && (
+                    <th
+                      className="px-3 py-3 min-w-[140px] md:px-6 md:py-4 cursor-pointer"
+                      onClick={() => toggleSort('createdAt')}
+                    >
+                      Date Added {renderSortIcon('createdAt')}
+                    </th>
+                  )}
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 text-gray-800">
                 {loadingData || loadingInventory || !inventory ? (
                   Array.from({ length: 10 }).map((_, index) => (
-                    <InvLoader key={index} />
+                    <InvLoader key={index} prefs={prefs} />
                   ))
                 ) : sortedProducts.length > 0 && user ? (
                   sortedProducts.map((product, index) => {
@@ -496,18 +513,26 @@ export default function Inventory() {
                         <td className="px-3  min-w-[110px] py-2 md:px-6 md:py-4">
                           Rs.{product.salePrice}
                         </td>
-                        <td className="px-3 min-w-[110px] py-2 md:px-6 md:py-4">
-                          Rs.{product.purchasePrice}
-                        </td>
-                        <td className="px-3 py-2 min-w-[130px] max-w-[180px] md:px-6 md:py-4">
-                          {category?.name || "—"}
-                        </td>
-                        <td className="px-3 py-2 min-w-[140px] md:px-6 md:py-4">
-                          {new Date(product.updatedAt).toLocaleDateString()}
-                        </td>
-                        <td className="px-3 py-2 min-w-[140px] md:px-6 md:py-4">
-                          {new Date(product.createdAt).toLocaleDateString()}
-                        </td>
+                        {prefs.viewPurchasePrice && (
+                          <td className="px-3 min-w-[110px] py-2 md:px-6 md:py-4">
+                            Rs.{product.purchasePrice}
+                          </td>
+                        )}
+                        {prefs.viewCategory && (
+                          <td className="px-3 py-2 min-w-[130px] max-w-[180px] md:px-6 md:py-4">
+                            {category?.name || '—'}
+                          </td>
+                        )}
+                        {prefs.viewDateUpdated && (
+                          <td className="px-3 py-2 min-w-[160px] md:px-6 md:py-4">
+                            {new Date(product.updatedAt).toLocaleDateString()}
+                          </td>
+                        )}
+                        {prefs.viewDateAdded && (
+                          <td className="px-3 py-2 min-w-[140px] md:px-6 md:py-4">
+                            {new Date(product.createdAt).toLocaleDateString()}
+                          </td>
+                        )}
                       </tr>
                     );
                   })
@@ -523,6 +548,7 @@ export default function Inventory() {
           </div>
         </div>
         <ViewProduct
+          prefs={prefs}
           selectedProduct={selectedProduct}
           categories={categories}
           close={() => setSelectedProduct(null)}

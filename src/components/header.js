@@ -1,86 +1,91 @@
-"use client";
-import useAuthUser from "@/hooks/authUser";
-import { useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
-import { FaFileInvoice, FaUsers } from "react-icons/fa";
-import { IoAddCircle } from "react-icons/io5";
+'use client';
+import useAuthUser from '@/hooks/authUser';
+import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+import { FaFileInvoice, FaUsers } from 'react-icons/fa';
+import { IoAddCircle } from 'react-icons/io5';
 import {
   MdCategory,
   MdDashboard,
   MdInventory,
-  MdLogout,
   MdOutlineMenu,
   MdSettings,
-} from "react-icons/md";
-import { toast } from "sonner";
-import UserProfile from "./user_profile";
+} from 'react-icons/md';
+import UserProfile from './user_profile';
+import usePreferences from '@/hooks/usePreferences';
 
 export default function Header() {
   const { user, logout } = useAuthUser();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const router = useRouter();
+  const prefs = usePreferences(user?.id);
 
   const handleMenuClick = () => {
     setSidebarOpen(!sidebarOpen);
   };
-  const defaultProfilePictureLink = "default.png";
+  const defaultProfilePictureLink = 'default.png';
 
   let profilePicture = user?.profilePicture || defaultProfilePictureLink;
 
   const handleButtonClick = (name) => {
-    router.push(`/${name.toLowerCase().replace(/\s+/g, "-")}`);
+    router.push(`/${name.toLowerCase().replace(/\s+/g, '-')}`);
   };
-
-  const handleSettingsClick = () => {};
 
   const buttons = [
     {
       icon: <MdDashboard />,
-      label: "Dashboard",
-      onclick: () => handleButtonClick("Dashboard"),
+      label: 'Dashboard',
+      onclick: () => handleButtonClick('Dashboard'),
     },
     {
       icon: <MdInventory />,
-      label: "Inventory",
-      onclick: () => handleButtonClick("Inventory"),
-    },
-    {
-      icon: <IoAddCircle />,
-      label: "Add Product",
-      onclick: () => handleButtonClick("Add Product"),
-    },
-    {
-      icon: <MdCategory />,
-      label: "Categories",
-      onclick: () => handleButtonClick("Categories"),
-    },
-    {
-      icon: <FaUsers />,
-      label: "Cashiers",
-      onclick: () => handleButtonClick("Cashiers"),
-    },
-    {
-      icon: <FaFileInvoice />,
-      label: "Sales",
-      onclick: () => handleButtonClick("Sales"),
-    },
-    {
-      icon: <MdSettings />,
-      label: "Settings",
-      onclick: () => handleSettingsClick(),
+      label: 'Inventory',
+      onclick: () => handleButtonClick('Inventory'),
     },
   ];
 
+  prefs.addProduct &&
+    buttons.push({
+      icon: <IoAddCircle />,
+      label: 'Add Product',
+      onclick: () => handleButtonClick('Add Product'),
+    });
+
+  !prefs.restrictCategory &&
+    buttons.push({
+      icon: <MdCategory />,
+      label: 'Categories',
+      onclick: () => handleButtonClick('Categories'),
+    });
+
+  buttons.push({
+    icon: <FaUsers />,
+    label: 'Cashiers',
+    onclick: () => handleButtonClick('Cashiers'),
+  });
+
+  prefs.viewSalesData &&
+    buttons.push({
+      icon: <FaFileInvoice />,
+      label: 'Sales',
+      onclick: () => handleButtonClick('Sales'),
+    });
+
+  buttons.push({
+    icon: <MdSettings />,
+    label: 'Settings',
+    onclick: () => handleButtonClick('Settings'),
+  });
   useEffect(() => {
     if (sidebarOpen) {
-      document.body.classList.add("overflow-hidden");
+      document.body.classList.add('overflow-hidden');
     } else {
-      document.body.classList.remove("overflow-hidden");
+      document.body.classList.remove('overflow-hidden');
     }
 
     return () => {
-      document.body.classList.remove("overflow-hidden");
+      document.body.classList.remove('overflow-hidden');
     };
   }, [sidebarOpen]);
 
@@ -125,14 +130,14 @@ export default function Header() {
       <div
         className={`fixed inset-0 text-sm bg-black/20 backdrop-blur-[1px] flex items-center justify-center z-50 px-4 sm:px-6 transition-all duration-300 ease-in-out ${
           sidebarOpen
-            ? "opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none"
+            ? 'opacity-100 pointer-events-auto'
+            : 'opacity-0 pointer-events-none'
         }`}
         onClick={() => setSidebarOpen(false)}
       />
       <div
         className={`fixed left-0 w-[60%] max-w-[400px] h-full bg-white shadow-lg shadow-black/30 z-50 flex flex-col gap-12 px-3 py-5 md:px-4 ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         } transition-transform duration-300 ease-in-out`}
       >
         <div className="flex items-center justify-between gap-4">

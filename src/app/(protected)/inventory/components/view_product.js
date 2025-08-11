@@ -1,5 +1,6 @@
-import React from "react";
-import { MdDelete, MdEdit } from "react-icons/md";
+/* eslint-disable react/prop-types */
+import React from 'react';
+import { MdDelete, MdEdit } from 'react-icons/md';
 
 export default function ViewProduct({
   selectedProduct,
@@ -7,13 +8,14 @@ export default function ViewProduct({
   close,
   editClick,
   deleteClick,
+  prefs,
 }) {
   return (
     <div
       className={`fixed inset-0 text-sm bg-black/20 backdrop-blur-sm flex items-center justify-center z-50 px-4 sm:px-6 transition ease-in-out ${
         selectedProduct
-          ? "opacity-100 pointer-events-auto"
-          : "opacity-0 pointer-events-none"
+          ? 'opacity-100 pointer-events-auto'
+          : 'opacity-0 pointer-events-none'
       }`}
       onClick={close}
     >
@@ -47,7 +49,7 @@ export default function ViewProduct({
               label="Category"
               value={
                 categories.find((cat) => cat.id === selectedProduct.categoryId)
-                  ?.name || "—"
+                  ?.name || '—'
               }
             />
             <Detail
@@ -63,7 +65,7 @@ export default function ViewProduct({
               value={
                 selectedProduct.govtSalePrice != null
                   ? `Rs.${selectedProduct.govtSalePrice}`
-                  : "—"
+                  : '—'
               }
             />
             <Detail
@@ -79,18 +81,22 @@ export default function ViewProduct({
 
           {/* Action buttons */}
           <div className="w-full flex items-center gap-3 mt-8 text-sm sm:text-base">
-            <button
-              className="w-full group px-2 sm:px-4 py-2 rounded-lg flex items-center justify-center gap-2 font-medium bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white  transition-all"
-              onClick={editClick}
-            >
-              <MdEdit size={18} className="group-hover-shake" /> Edit
-            </button>
-            <button
-              className="w-full group px-2 sm:px-4 py-2 rounded-lg flex items-center justify-center gap-2 font-medium bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white  transition-all"
-              onClick={deleteClick}
-            >
-              <MdDelete size={18} className="group-hover-shake" /> Delete
-            </button>
+            {prefs.editProduct && (
+              <button
+                className="w-full group px-2 sm:px-4 py-2 rounded-lg flex items-center justify-center gap-2 font-medium bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white  transition-all"
+                onClick={editClick}
+              >
+                <MdEdit size={18} className="group-hover-shake" /> Edit
+              </button>
+            )}
+            {prefs.deleteProduct && (
+              <button
+                className="w-full group px-2 sm:px-4 py-2 rounded-lg flex items-center justify-center gap-2 font-medium bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white  transition-all"
+                onClick={deleteClick}
+              >
+                <MdDelete size={18} className="group-hover-shake" /> Delete
+              </button>
+            )}
           </div>
         </div>
       )}
@@ -102,7 +108,7 @@ export default function ViewProduct({
 function Detail({ label, value }) {
   return (
     <p>
-      <span className="font-medium text-gray-700">{label}:</span>{" "}
+      <span className="font-medium text-gray-700">{label}:</span>{' '}
       <span className="text-gray-600">{value}</span>
     </p>
   );

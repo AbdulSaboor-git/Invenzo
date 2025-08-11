@@ -1,27 +1,29 @@
-import React, { useEffect, useState } from "react";
-import { FaMoon } from "react-icons/fa";
-import { MdClose, MdSunny } from "react-icons/md";
+import useAuthUser from '@/hooks/authUser';
+import React, { useEffect, useState } from 'react';
+import { FaMoon } from 'react-icons/fa';
+import { MdClose, MdSunny } from 'react-icons/md';
 
-export default function Preferences({ CloseForm, userId }) {
+export default function Preferences() {
+  const { user, logout } = useAuthUser();
   const [add_edit_del, set_add_edit_del] = useState(true);
   const [pp, set_pp] = useState(true);
   const [categ, set_categ] = useState(true);
   const [dateAdd, set_dateAdd] = useState(true);
   const [dateUpdate, set_dateUpdate] = useState(true);
   const [theme, set_theme] = useState(true);
-  const [colorScheme, setColorScheme] = useState("green"); // Default color scheme
+  const [colorScheme, setColorScheme] = useState('green'); // Default color scheme
   const [tempPreferences, setTempPreferences] = useState({});
   const [tempTheme, setTempTheme] = useState(true);
-  const [tempColorScheme, setTempColorScheme] = useState("green"); // Temp color scheme
+  const [tempColorScheme, setTempColorScheme] = useState('green'); // Temp color scheme
 
   useEffect(() => {
-    document.body.classList.add("no-scroll");
+    document.body.classList.add('no-scroll');
 
     // Retrieve and parse saved preferences
     const savedPreferences =
       JSON.parse(localStorage.getItem(`preferences_${userId}`)) || {};
-    const savedTheme = localStorage.getItem("theme");
-    const savedColorScheme = localStorage.getItem("colorScheme");
+    const savedTheme = localStorage.getItem('theme');
+    const savedColorScheme = localStorage.getItem('colorScheme');
 
     // Set preferences state
     set_add_edit_del(savedPreferences.add_edit_del ?? true);
@@ -46,23 +48,23 @@ export default function Preferences({ CloseForm, userId }) {
     }
 
     return () => {
-      document.body.classList.remove("no-scroll");
+      document.body.classList.remove('no-scroll');
     };
   }, [userId]);
 
   const generalOptions = [
     {
-      name: "Allow Add, Edit and Delete Products",
+      name: 'Allow Add, Edit and Delete Products',
       value: add_edit_del,
       setter: set_add_edit_del,
     },
   ];
   const productOptions = [
-    { name: "Show Purchase Price", value: pp, setter: set_pp },
-    { name: "Show Category", value: categ, setter: set_categ },
-    { name: "Show Date Added", value: dateAdd, setter: set_dateAdd },
+    { name: 'Show Purchase Price', value: pp, setter: set_pp },
+    { name: 'Show Category', value: categ, setter: set_categ },
+    { name: 'Show Date Added', value: dateAdd, setter: set_dateAdd },
     {
-      name: "Show Date Updated",
+      name: 'Show Date Updated',
       value: dateUpdate,
       setter: set_dateUpdate,
     },
@@ -77,13 +79,13 @@ export default function Preferences({ CloseForm, userId }) {
       dateUpdate,
     };
     localStorage.setItem(`preferences_${userId}`, JSON.stringify(preferences));
-    localStorage.setItem("theme", JSON.stringify(theme));
-    localStorage.setItem("colorScheme", colorScheme);
+    localStorage.setItem('theme', JSON.stringify(theme));
+    localStorage.setItem('colorScheme', colorScheme);
     document.documentElement.setAttribute(
-      "data-theme",
-      theme ? "light" : "dark"
+      'data-theme',
+      theme ? 'light' : 'dark'
     );
-    document.documentElement.setAttribute("color-scheme", colorScheme);
+    document.documentElement.setAttribute('color-scheme', colorScheme);
     CloseForm();
   };
 
@@ -102,7 +104,7 @@ export default function Preferences({ CloseForm, userId }) {
     setter((prevValue) => !prevValue);
   };
 
-  const colorOptions = ["green", "blue", "purple", "orange"];
+  const colorOptions = ['green', 'blue', 'purple', 'orange'];
 
   return (
     <div className="flex fixed z-[200] top-0 flex-col p-5 w-screen h-screen items-center justify-center  bg-black bg-opacity-50 backdrop-blur-sm">
@@ -130,14 +132,14 @@ export default function Preferences({ CloseForm, userId }) {
                 <div
                   onClick={() => toggleSwitch(op.setter)}
                   className={`relative w-10 h-5 transition duration-200 ease-linear rounded-full ${
-                    op.value ? "bg-[var(--btn-bg)]" : "bg-[#bdbdbd]"
+                    op.value ? 'bg-[var(--btn-bg)]' : 'bg-[#bdbdbd]'
                   } cursor-pointer`}
                 >
                   <span
                     className={`absolute left-0 bg-white border-2 rounded-full h-5 w-5 transition transform ${
                       op.value
-                        ? "translate-x-full border-[var(--btn-bg)]"
-                        : "border-[#bdbdbd]"
+                        ? 'translate-x-full border-[var(--btn-bg)]'
+                        : 'border-[#bdbdbd]'
                     }`}
                   />
                 </div>
@@ -158,14 +160,14 @@ export default function Preferences({ CloseForm, userId }) {
                 <div
                   onClick={() => toggleSwitch(op.setter)}
                   className={`relative w-10 h-5 transition duration-200 ease-linear rounded-full ${
-                    op.value ? "bg-[var(--btn-bg)]" : "bg-[#bdbdbd]"
+                    op.value ? 'bg-[var(--btn-bg)]' : 'bg-[#bdbdbd]'
                   } cursor-pointer`}
                 >
                   <span
                     className={`absolute left-0 bg-white border-2 rounded-full h-5 w-5 transition transform ${
                       op.value
-                        ? "translate-x-full border-[var(--btn-bg)]"
-                        : "border-[#bdbdbd]"
+                        ? 'translate-x-full border-[var(--btn-bg)]'
+                        : 'border-[#bdbdbd]'
                     }`}
                   />
                 </div>
@@ -188,8 +190,8 @@ export default function Preferences({ CloseForm, userId }) {
                 <div
                   style={{
                     boxShadow: theme
-                      ? "0 0 13px 2px #deee00"
-                      : "0 0 13px 2px #ffffff",
+                      ? '0 0 13px 2px #deee00'
+                      : '0 0 13px 2px #ffffff',
                   }}
                   className="w-10 h-6 peer-focus:outline-none rounded-full peer bg-[#686868] peer-checked:bg-blue-500"
                 ></div>
