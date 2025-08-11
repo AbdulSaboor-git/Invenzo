@@ -7,6 +7,11 @@ import { toast } from 'sonner';
 export default function SettingsPage() {
   const { user, logout } = useAuthUser();
   const localStorageKey = `inventoryData_preferences_${user.id}`;
+  const [reloadKey, setReloadKey] = useState(true);
+
+  const triggerReload = () => {
+    setReloadKey(!reloadKey);
+  };
 
   const defaultPrefs = {
     addProduct: true,
@@ -40,8 +45,7 @@ export default function SettingsPage() {
   const savePreferences = () => {
     localStorage.setItem(localStorageKey, JSON.stringify(preferences));
     toast.success('Settings saved!');
-    // window.history.back();
-    window.location.reload();
+    triggerReload();
   };
 
   const cancelChanges = () => {
@@ -58,7 +62,7 @@ export default function SettingsPage() {
 
   return (
     <div className="min-h-screen md:bg-gray-100 md:pb-6">
-      <Header />
+      <Header key={reloadKey} />
       <div className="w-full md:max-w-2xl place-self-center bg-white md:shadow-lg md:rounded-2xl md:mt-6 p-8">
         <h1 className="text-2xl font-bold mb-6 text-gray-800">Settings</h1>
 
