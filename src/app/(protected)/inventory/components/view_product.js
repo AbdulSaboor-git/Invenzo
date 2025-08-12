@@ -45,59 +45,72 @@ export default function ViewProduct({
               label="Description"
               value={selectedProduct.description || "—"}
             /> */}
-            <Detail
-              label="Category"
-              value={
-                categories.find((cat) => cat.id === selectedProduct.categoryId)
-                  ?.name || '—'
-              }
-            />
-            <Detail
-              label="Purchase Price"
-              value={`Rs.${selectedProduct.purchasePrice}`}
-            />
+            {prefs.viewCategory && (
+              <Detail
+                label="Category"
+                value={
+                  categories.find(
+                    (cat) => cat.id === selectedProduct.categoryId
+                  )?.name || '—'
+                }
+              />
+            )}
+            {prefs.viewPurchasePrice && (
+              <Detail
+                label="Purchase Price"
+                value={`Rs.${selectedProduct.purchasePrice}`}
+              />
+            )}
             <Detail
               label="Sale Price"
               value={`Rs.${selectedProduct.salePrice}`}
             />
-            <Detail
-              label="Govt. Sale Price"
-              value={
-                selectedProduct.govtSalePrice != null
-                  ? `Rs.${selectedProduct.govtSalePrice}`
-                  : '—'
-              }
-            />
-            <Detail
-              label="Created At"
-              value={new Date(selectedProduct.createdAt).toLocaleString()}
-            />
-            <Detail
-              label="Updated At"
-              value={new Date(selectedProduct.updatedAt).toLocaleString()}
-            />
+            {prefs.viewGovtSalePrice && (
+              <Detail
+                label="Govt. Sale Price"
+                value={
+                  selectedProduct.govtSalePrice != null
+                    ? `Rs.${selectedProduct.govtSalePrice}`
+                    : '—'
+                }
+              />
+            )}
+            {prefs.viewDateAdded && (
+              <Detail
+                label="Created At"
+                value={new Date(selectedProduct.createdAt).toLocaleString()}
+              />
+            )}
+            {prefs.viewDateUpdated && (
+              <Detail
+                label="Updated At"
+                value={new Date(selectedProduct.updatedAt).toLocaleString()}
+              />
+            )}
             {/* <Detail label="Tags" value={selectedProduct.tags || "—"} /> */}
           </div>
 
           {/* Action buttons */}
-          <div className="w-full flex items-center gap-3 mt-8 text-sm sm:text-base">
-            {prefs.editProduct && (
-              <button
-                className="w-full group px-2 sm:px-4 py-2 rounded-lg flex items-center justify-center gap-2 font-medium bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white  transition-all"
-                onClick={editClick}
-              >
-                <MdEdit size={18} className="group-hover-shake" /> Edit
-              </button>
-            )}
-            {prefs.deleteProduct && (
-              <button
-                className="w-full group px-2 sm:px-4 py-2 rounded-lg flex items-center justify-center gap-2 font-medium bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white  transition-all"
-                onClick={deleteClick}
-              >
-                <MdDelete size={18} className="group-hover-shake" /> Delete
-              </button>
-            )}
-          </div>
+          {prefs.editProduct && prefs.deleteProduct && (
+            <div className="w-full flex items-center gap-3 mt-8 text-sm sm:text-base">
+              {prefs.editProduct && (
+                <button
+                  className="w-full group px-2 sm:px-4 py-2 rounded-lg flex items-center justify-center gap-2 font-medium bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white  transition-all"
+                  onClick={editClick}
+                >
+                  <MdEdit size={18} className="group-hover-shake" /> Edit
+                </button>
+              )}
+              {prefs.deleteProduct && (
+                <button
+                  className="w-full group px-2 sm:px-4 py-2 rounded-lg flex items-center justify-center gap-2 font-medium bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white  transition-all"
+                  onClick={deleteClick}
+                >
+                  <MdDelete size={18} className="group-hover-shake" /> Delete
+                </button>
+              )}
+            </div>
+          )}
         </div>
       )}
     </div>

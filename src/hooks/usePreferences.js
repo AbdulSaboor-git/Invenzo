@@ -2,18 +2,25 @@ import { useState, useEffect } from 'react';
 
 export default function usePreferences(userId) {
   const defaultPrefs = {
+    // general
     addProduct: true,
     editProduct: true,
     deleteProduct: true,
-    viewPurchasePrice: true,
-    viewGovtSalePrice: true,
     restrictCategory: false,
     renamingInventory: true,
+    viewSalesData: true,
+    // inventory display
+    viewPurchasePriceColumn: true,
+    viewDateAddedColumn: true,
+    viewDateUpdatedColumn: true,
+    viewCategoryColumn: true,
+    defaultSortOrder: 'name',
+    // product data
     viewCategory: true,
+    viewPurchasePrice: true,
+    viewGovtSalePrice: true,
     viewDateAdded: true,
     viewDateUpdated: true,
-    viewSalesData: true,
-    defaultSortOrder: 'name',
   };
 
   const [prefs, setPrefs] = useState(defaultPrefs);

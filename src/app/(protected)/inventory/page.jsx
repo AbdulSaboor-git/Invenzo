@@ -454,7 +454,7 @@ export default function Inventory() {
                   >
                     S. Price {renderSortIcon('salePrice')}
                   </th>
-                  {prefs.viewPurchasePrice && (
+                  {prefs.viewPurchasePriceColumn && (
                     <th
                       className="px-3 py-3 min-w-[110px] md:px-6 md:py-4 cursor-pointer"
                       onClick={() => toggleSort('purchasePrice')}
@@ -462,7 +462,7 @@ export default function Inventory() {
                       P. Price {renderSortIcon('purchasePrice')}
                     </th>
                   )}
-                  {prefs.viewCategory && (
+                  {prefs.viewCategoryColumn && (
                     <th
                       className=" px-3 py-3 min-w-[130px] md:px-6 md:py-4 cursor-pointer"
                       onClick={() => toggleSort('categoryId')}
@@ -470,7 +470,7 @@ export default function Inventory() {
                       Category {renderSortIcon('categoryId')}
                     </th>
                   )}
-                  {prefs.viewDateUpdated && (
+                  {prefs.viewDateUpdatedColumn && (
                     <th
                       className="px-3 py-3 min-w-[160px] md:px-6 md:py-4 cursor-pointer"
                       onClick={() => toggleSort('updatedAt')}
@@ -478,7 +478,7 @@ export default function Inventory() {
                       Date Updated {renderSortIcon('updatedAt')}
                     </th>
                   )}
-                  {prefs.viewDateAdded && (
+                  {prefs.viewDateAddedColumn && (
                     <th
                       className="px-3 py-3 min-w-[140px] md:px-6 md:py-4 cursor-pointer"
                       onClick={() => toggleSort('createdAt')}
@@ -513,22 +513,22 @@ export default function Inventory() {
                         <td className="px-3  min-w-[110px] py-2 md:px-6 md:py-4">
                           Rs.{product.salePrice}
                         </td>
-                        {prefs.viewPurchasePrice && (
+                        {prefs.viewPurchasePriceColumn && (
                           <td className="px-3 min-w-[110px] py-2 md:px-6 md:py-4">
                             Rs.{product.purchasePrice}
                           </td>
                         )}
-                        {prefs.viewCategory && (
+                        {prefs.viewCategoryColumn && (
                           <td className="px-3 py-2 min-w-[130px] max-w-[180px] md:px-6 md:py-4">
                             {category?.name || '—'}
                           </td>
                         )}
-                        {prefs.viewDateUpdated && (
+                        {prefs.viewDateUpdatedColumn && (
                           <td className="px-3 py-2 min-w-[160px] md:px-6 md:py-4">
                             {new Date(product.updatedAt).toLocaleDateString()}
                           </td>
                         )}
-                        {prefs.viewDateAdded && (
+                        {prefs.viewDateAddedColumn && (
                           <td className="px-3 py-2 min-w-[140px] md:px-6 md:py-4">
                             {new Date(product.createdAt).toLocaleDateString()}
                           </td>

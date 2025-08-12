@@ -5,7 +5,7 @@ import Header from '@/components/header';
 import { toast } from 'sonner';
 
 export default function SettingsPage() {
-  const { user, logout } = useAuthUser();
+  const { user } = useAuthUser();
   const localStorageKey = `inventoryData_preferences_${user.id}`;
   const [reloadKey, setReloadKey] = useState(true);
 
@@ -14,18 +14,25 @@ export default function SettingsPage() {
   };
 
   const defaultPrefs = {
+    // general
     addProduct: true,
     editProduct: true,
     deleteProduct: true,
     restrictCategory: false,
     renamingInventory: true,
+    viewSalesData: true,
+    // inventory display
+    viewPurchasePriceColumn: true,
+    viewDateAddedColumn: true,
+    viewDateUpdatedColumn: true,
+    viewCategoryColumn: true,
+    defaultSortOrder: 'name',
+    // product data
+    viewCategory: true,
     viewPurchasePrice: true,
     viewGovtSalePrice: true,
     viewDateAdded: true,
     viewDateUpdated: true,
-    viewCategory: true,
-    viewSalesData: true,
-    defaultSortOrder: 'name',
   };
 
   const [preferences, setPreferences] = useState(defaultPrefs);
@@ -45,6 +52,7 @@ export default function SettingsPage() {
 
   const savePreferences = () => {
     localStorage.setItem(localStorageKey, JSON.stringify(preferences));
+    setTempPreferences(preferences);
     toast.success('Settings saved!');
     triggerReload();
   };
@@ -55,101 +63,163 @@ export default function SettingsPage() {
 
   const sortOptions = [
     { value: 'name', label: 'Name' },
-    { value: 'purchasePrice', label: 'Purchase Price' },
     { value: 'salePrice', label: 'Sales Price' },
-    { value: 'createdAt', label: 'Date Added' },
-    { value: 'updatedAt', label: 'Date Updated' },
   ];
 
+  if (preferences.viewPurchasePriceColumn)
+    sortOptions.push({ value: 'purchasePrice', label: 'Purchase Price' });
+  if (preferences.viewDateUpdatedColumn)
+    sortOptions.push({ value: 'updatedAt', label: 'Date Updated' });
+  if (preferences.viewDateAddedColumn)
+    sortOptions.push({ value: 'createdAt', label: 'Date Added' });
+
   return (
-    <div className="min-h-screen md:bg-gray-100 md:pb-6">
+    <div className="min-h-screen bg-gray-50">
       <Header key={reloadKey} />
-      <div className="w-full md:max-w-2xl place-self-center bg-white md:shadow-lg md:rounded-2xl md:mt-6 p-8">
-        <h1 className="text-2xl font-bold mb-6 text-gray-800">Settings</h1>
+      <div className="max-w-3xl mx-auto p-4 md:p-6">
+        <div className="bg-white rounded-xl shadow-sm p-6 md:p-8">
+          <h1 className="text-2xl font-semibold text-gray-800 mb-6">
+            Settings
+          </h1>
 
-        <div className="space-y-6">
-          {/* Toggles */}
-          {[
-            { key: 'addProduct', label: 'Allow Adding Products' },
-            { key: 'editProduct', label: 'Allow Editing Products' },
-            { key: 'deleteProduct', label: 'Allow Deleting Products' },
-            { key: 'viewPurchasePrice', label: 'View Purchase Price' },
-            { key: 'restrictCategory', label: 'Restrict Category Management' },
-            { key: 'renamingInventory', label: 'Allow Renaming Inventory' },
-            // { key: 'viewGovtSalePrice', label: 'View Govt. Sale Price' },
-            { key: 'viewCategory', label: 'View Category' },
-            { key: 'viewDateAdded', label: 'View Date Added' },
-            { key: 'viewDateUpdated', label: 'View Date Updated' },
-            { key: 'viewSalesData', label: 'View Sales Data' },
-          ].map((item) => (
-            <div
-              key={item.key}
-              className="flex justify-between items-center border-b pb-3"
-            >
-              <span className="text-gray-700">{item.label}</span>
-              <button
-                onClick={() => togglePref(item.key)}
-                className={`w-12 h-6 rounded-full transition-colors duration-300 ${
-                  preferences[item.key] ? 'bg-green-500' : 'bg-gray-300'
-                } relative`}
+          {/* Sections */}
+          <SettingsSection title="General">
+            {[
+              { key: 'addProduct', label: 'Allow Adding Products' },
+              { key: 'editProduct', label: 'Allow Editing Products' },
+              { key: 'deleteProduct', label: 'Allow Deleting Products' },
+              {
+                key: 'restrictCategory',
+                label: 'Restrict Category Management',
+              },
+              { key: 'renamingInventory', label: 'Allow Renaming Inventory' },
+              { key: 'viewSalesData', label: 'View Sales Data' },
+            ].map((item) => (
+              <ToggleRow
+                key={item.key}
+                label={item.label}
+                value={preferences[item.key]}
+                onChange={() => togglePref(item.key)}
+              />
+            ))}
+          </SettingsSection>
+
+          <SettingsSection title="Inventory Display">
+            {[
+              {
+                key: 'viewPurchasePriceColumn',
+                label: 'View Purchase Price Column',
+              },
+              { key: 'viewCategoryColumn', label: 'View Category Column' },
+              { key: 'viewDateAddedColumn', label: 'View Date Added Column' },
+              {
+                key: 'viewDateUpdatedColumn',
+                label: 'View Date Updated Column',
+              },
+            ].map((item) => (
+              <ToggleRow
+                key={item.key}
+                label={item.label}
+                value={preferences[item.key]}
+                onChange={() => {
+                  setPreferences((prev) => ({
+                    ...prev,
+                    defaultSortOrder: 'name',
+                  }));
+                  togglePref(item.key);
+                }}
+              />
+            ))}
+
+            {/* Sort dropdown */}
+            <div className="flex justify-between items-center  px-4 py-3">
+              <span className="text-gray-700">Default Sort Order</span>
+              <select
+                value={preferences.defaultSortOrder}
+                onChange={(e) =>
+                  setPreferences((prev) => ({
+                    ...prev,
+                    defaultSortOrder: e.target.value,
+                  }))
+                }
+                className="border border-gray-300 min-w-[150px] rounded-lg px-3 py-2 text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
               >
-                <span
-                  className={`block w-5 h-5 bg-white rounded-full shadow-md transform transition-transform duration-300 absolute top-0.5 ${
-                    preferences[item.key] ? 'translate-x-6' : 'translate-x-0.5'
-                  }`}
-                ></span>
-              </button>
+                {sortOptions.map((opt) => (
+                  <option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </option>
+                ))}
+              </select>
             </div>
-          ))}
+          </SettingsSection>
 
-          {/* Dropdown */}
-          <div className="flex justify-between items-center border-b pb-3">
-            <span className="text-gray-700">Default Sort Order</span>
-            <select
-              value={preferences.defaultSortOrder}
-              onChange={(e) =>
-                setPreferences((prev) => ({
-                  ...prev,
-                  defaultSortOrder: e.target.value,
-                }))
-              }
-              className="border border-gray-300 rounded-md px-3 py-1 text-gray-700"
+          <SettingsSection title="Product Details">
+            {[
+              { key: 'viewCategory', label: 'View Category' },
+              { key: 'viewPurchasePrice', label: 'View Purchase Price' },
+              { key: 'viewGovtSalePrice', label: 'View Govt. Sale Price' },
+              { key: 'viewDateAdded', label: 'View Date Added' },
+              { key: 'viewDateUpdated', label: 'View Date Updated' },
+            ].map((item) => (
+              <ToggleRow
+                key={item.key}
+                label={item.label}
+                value={preferences[item.key]}
+                onChange={() => togglePref(item.key)}
+              />
+            ))}
+          </SettingsSection>
+
+          {/* Actions */}
+          <div className="flex justify-end gap-3 mt-6">
+            <button
+              onClick={cancelChanges}
+              className="px-5 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 transition"
             >
-              {sortOptions.map((opt) => (
-                <option key={opt.value} value={opt.value}>
-                  {opt.label}
-                </option>
-              ))}
-            </select>
+              Cancel
+            </button>
+            <button
+              onClick={savePreferences}
+              className="px-5 py-2 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 transition"
+            >
+              Save
+            </button>
           </div>
         </div>
-
-        {/* Actions */}
-        <div className="flex justify-end gap-4 mt-8">
-          <button
-            onClick={cancelChanges}
-            className="px-5 py-2 bg-gray-200 hover:bg-gray-300 rounded-full text-gray-800"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={savePreferences}
-            className="px-5 py-2 bg-green-500 hover:bg-green-600 text-white rounded-full"
-          >
-            Save
-          </button>
-        </div>
-
-        {/* Logout */}
-        {/* <div className="mt-8 border-t pt-4">
-          <button
-            onClick={logout}
-            className="w-full px-5 py-2 bg-red-500 hover:bg-red-600 text-white rounded-full"
-          >
-            Logout
-          </button>
-        </div> */}
       </div>
+    </div>
+  );
+}
+
+function SettingsSection({ title, children }) {
+  return (
+    <div className="mb-8">
+      <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-4">
+        {title}
+      </h2>
+      <div className="bg-gray-50 rounded-lg divide-y divide-gray-200">
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function ToggleRow({ label, value, onChange }) {
+  return (
+    <div className="flex justify-between items-center px-4 py-3">
+      <span className="text-gray-700">{label}</span>
+      <button
+        onClick={onChange}
+        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+          value ? 'bg-emerald-600' : 'bg-gray-300'
+        }`}
+      >
+        <span
+          className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition-transform ${
+            value ? 'translate-x-5' : 'translate-x-1'
+          }`}
+        />
+      </button>
     </div>
   );
 }
