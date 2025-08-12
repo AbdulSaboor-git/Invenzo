@@ -28,7 +28,7 @@ export default function RefreshButton({ loading, failedtoRefresh, onClick }) {
         }
         const progress = Math.min((time - startTime) / 500, 1); // 0.5s ease
         const easedProgress = 1 - Math.pow(1 - progress, 3); // cubic ease-out
-        setRotation(startRotation + easedProgress * 90); // finish ~quarter turn
+        // setRotation(startRotation + easedProgress * 90); // finish ~quarter turn
         if (progress < 1) {
           animRef.current = requestAnimationFrame(easeOut);
         }
