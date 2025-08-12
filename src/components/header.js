@@ -14,7 +14,7 @@ import {
 import UserProfile from './user_profile';
 import usePreferences from '@/hooks/usePreferences';
 
-export default function Header() {
+export default function Header({ className }) {
   const { user, logout } = useAuthUser();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
@@ -90,7 +90,9 @@ export default function Header() {
   }, [sidebarOpen]);
 
   return (
-    <div className="w-full px-4 pt-4 pb-3 md:px-6 sticky top-0 z-50 bg-white grid grid-cols-[2fr_1.3fr] gap-6">
+    <div
+      className={` ${className} w-full px-4 pt-4 pb-3 md:px-6 sticky top-0 z-50 bg-white grid grid-cols-[2fr_1.3fr] gap-6`}
+    >
       <div className="flex items-center gap-4">
         {user && (
           <MdOutlineMenu
