@@ -126,7 +126,11 @@ export default function SettingsPage() {
         <div className="flex min-h-[80vh] flex-col items-center justify-center text-center p-6">
           <div className="bg-white rounded-xl shadow p-6 md:p-8 w-full max-w-sm border border-gray-200">
             <div className="w-full text-4xl mb-4 text-gray-500">
-              {isPasswordCorrect ? '🔓' : '🔒'}
+              {isPasswordCorrect ? (
+                <IoLockOpen className="place-self-center" />
+              ) : (
+                <IoLockClosed className="place-self-center" />
+              )}
             </div>
             <h1 className="text-xl font-semibold text-gray-800 mb-4 text-center">
               Enter Password to Access Settings
