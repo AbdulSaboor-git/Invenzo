@@ -142,7 +142,7 @@ export default function SettingsPage() {
                     defaultSortOrder: e.target.value,
                   }))
                 }
-                className="border border-gray-300 min-w-[150px] rounded-lg px-3 py-2 text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="border border-gray-300 min-w-[150px] rounded-lg px-3 py-2 text-gray-700 bg-white focus:outline-none md:focus:ring-2 md:focus:ring-emerald-500"
               >
                 {sortOptions.map((opt) => (
                   <option key={opt.value} value={opt.value}>
@@ -210,7 +210,7 @@ function ToggleRow({ label, value, onChange }) {
       <span className="text-gray-700">{label}</span>
       <button
         onClick={onChange}
-        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none md:focus:ring-2 md:focus:ring-offset-2 ${
           value ? 'bg-emerald-600' : 'bg-gray-300'
         }`}
       >
