@@ -6,7 +6,7 @@ export default function usePreferences(userId) {
     addProduct: true,
     editProduct: true,
     deleteProduct: true,
-    restrictCategory: false,
+    allowCategoryManagement: true,
     renamingInventory: true,
     viewSalesData: true,
     // inventory display
@@ -21,6 +21,8 @@ export default function usePreferences(userId) {
     viewGovtSalePrice: true,
     viewDateAdded: true,
     viewDateUpdated: true,
+    //security
+    requireSettingsPassword: true,
   };
 
   const [prefs, setPrefs] = useState(defaultPrefs);

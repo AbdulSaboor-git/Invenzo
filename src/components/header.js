@@ -52,7 +52,7 @@ export default function Header({ className }) {
       onclick: () => handleButtonClick('Add Product'),
     });
 
-  !prefs.restrictCategory &&
+  prefs.allowCategoryManagement &&
     buttons.push({
       icon: <MdCategory />,
       label: 'Categories',

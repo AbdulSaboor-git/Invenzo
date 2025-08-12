@@ -3,11 +3,20 @@ import React, { useEffect, useState } from 'react';
 import useAuthUser from '@/hooks/authUser';
 import Header from '@/components/header';
 import { toast } from 'sonner';
+import { MdLock, MdLockOpen, MdLockOutline } from 'react-icons/md';
+import { FaLock } from 'react-icons/fa';
+import { FiLock } from 'react-icons/fi';
+import { HiLockClosed } from 'react-icons/hi';
+import { IoLockClosed, IoLockOpen } from 'react-icons/io5';
 
 export default function SettingsPage() {
   const { user } = useAuthUser();
   const localStorageKey = `inventoryData_preferences_${user.id}`;
   const [reloadKey, setReloadKey] = useState(true);
+  const [authenticated, setAuthenticated] = useState(false);
+  const [isPasswordCorrect, setIsPasswordCorrect] = useState(false);
+  const [passwordInput, setPasswordInput] = useState('');
+  const [authLoading, setAuthLoading] = useState(false);
 
   const triggerReload = () => {
     setReloadKey(!reloadKey);
@@ -18,7 +27,7 @@ export default function SettingsPage() {
     addProduct: true,
     editProduct: true,
     deleteProduct: true,
-    restrictCategory: false,
+    allowCategoryManagement: true,
     renamingInventory: true,
     viewSalesData: true,
     // inventory display
@@ -33,6 +42,8 @@ export default function SettingsPage() {
     viewGovtSalePrice: true,
     viewDateAdded: true,
     viewDateUpdated: true,
+    // security
+    requireSettingsPassword: true,
   };
 
   const [preferences, setPreferences] = useState(defaultPrefs);
@@ -61,6 +72,40 @@ export default function SettingsPage() {
     setPreferences(tempPreferences);
   };
 
+  const handleAuthSubmit = async (e) => {
+    e.preventDefault();
+    if (!navigator.onLine) {
+      toast.error(
+        'Network not available. Please check your internet connection.'
+      );
+      return;
+    }
+    setAuthLoading(true);
+    try {
+      const response = await fetch('/api/user/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: user.email, password: passwordInput }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        toast.error('Incorrect password');
+        return;
+      }
+
+      setTimeout(setAuthenticated, 2000, true);
+      setPasswordInput('');
+      setIsPasswordCorrect(true);
+      toast.success('Access granted');
+    } catch (err) {
+      toast.error('Authentication failed');
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
   const sortOptions = [
     { value: 'name', label: 'Name' },
     { value: 'salePrice', label: 'Sales Price' },
@@ -72,6 +117,52 @@ export default function SettingsPage() {
     sortOptions.push({ value: 'updatedAt', label: 'Date Updated' });
   if (preferences.viewDateAddedColumn)
     sortOptions.push({ value: 'createdAt', label: 'Date Added' });
+
+  // If password protection enabled & not authenticated, show lock screen
+  if (tempPreferences.requireSettingsPassword && !authenticated) {
+    return (
+      <div className="flex flex-col items-center  bg-gray-50">
+        <Header />
+        <div className="flex min-h-[70vh] flex-col items-center justify-center text-center ">
+          <div className="bg-white rounded-xl shadow-sm p-6 md:p-8 w-full max-w-sm border border-gray-200">
+            <div className="w-full text-4xl mb-4 text-gray-500">
+              {isPasswordCorrect ? (
+                <IoLockOpen className="place-self-center" />
+              ) : (
+                <IoLockClosed className="place-self-center" />
+              )}
+            </div>
+            <h1 className="text-xl font-semibold text-gray-800 mb-4 text-center">
+              Enter Password to Access Settings
+            </h1>
+            <form onSubmit={handleAuthSubmit} className="flex flex-col gap-4">
+              <input
+                type="password"
+                placeholder="••••••••"
+                className="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                value={passwordInput}
+                onChange={(e) => setPasswordInput(e.target.value)}
+                required
+              />
+              <button
+                type="submit"
+                disabled={authLoading || isPasswordCorrect}
+                className={`px-4 py-2 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 transition disabled:cursor-not-allowed ${
+                  authLoading ? 'opacity-70 cursor-not-allowed' : ''
+                }`}
+              >
+                {authLoading
+                  ? 'Checking...'
+                  : isPasswordCorrect
+                    ? 'Unlocked'
+                    : 'Unlock Settings'}
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -89,11 +180,11 @@ export default function SettingsPage() {
               { key: 'editProduct', label: 'Allow Editing Products' },
               { key: 'deleteProduct', label: 'Allow Deleting Products' },
               {
-                key: 'restrictCategory',
-                label: 'Restrict Category Management',
+                key: 'allowCategoryManagement',
+                label: 'Allow Category Management',
               },
               { key: 'renamingInventory', label: 'Allow Renaming Inventory' },
-              { key: 'viewSalesData', label: 'View Sales Data' },
+              { key: 'viewSalesData', label: 'Allow Viewing Sales Data' },
             ].map((item) => (
               <ToggleRow
                 key={item.key}
@@ -160,6 +251,22 @@ export default function SettingsPage() {
               { key: 'viewGovtSalePrice', label: 'View Govt. Sale Price' },
               { key: 'viewDateAdded', label: 'View Date Added' },
               { key: 'viewDateUpdated', label: 'View Date Updated' },
+            ].map((item) => (
+              <ToggleRow
+                key={item.key}
+                label={item.label}
+                value={preferences[item.key]}
+                onChange={() => togglePref(item.key)}
+              />
+            ))}
+          </SettingsSection>
+
+          <SettingsSection title="Security">
+            {[
+              {
+                key: 'requireSettingsPassword',
+                label: 'Lock Settings',
+              },
             ].map((item) => (
               <ToggleRow
                 key={item.key}
