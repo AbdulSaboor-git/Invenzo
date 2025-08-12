@@ -14,6 +14,7 @@ import EditProduct from './components/edit_product';
 import DeleteProduct from './components/delete_product';
 import Header from '@/components/header';
 import usePreferences from '@/hooks/usePreferences';
+import RefreshButton from './components/refresh_btn';
 
 export default function Inventory() {
   const { user } = useAuthUser();
@@ -422,18 +423,11 @@ export default function Inventory() {
                 </div>
               )}
             </div>
-            <button
+            <RefreshButton
+              failedtoRefresh={refreshFailed}
+              loading={loadingInventory || refreshing}
               onClick={RefreshData}
-              disabled={refreshing || loadingInventory}
-              className={`flex gap-2 items-center justify-center text-sm font-semibold px-3 py-1.5 rounded-md border transition-all duration-300 disabled:cursor-not-allowed disabled:bg-green-200  disabled:shadow-none ${
-                refreshFailed
-                  ? 'bg-red-100 hover:bg-red-200 text-red-800 border-red-300'
-                  : 'bg-green-100 hover:bg-green-200 text-green-800 border-green-300'
-              }`}
-            >
-              <span className="hidden md:inline">Refresh</span>
-              <IoSync className={` ${refreshing && 'animate-spin '} `} />
-            </button>
+            />
           </div>
         </div>
         <div className="bg-white  md:p-6">
