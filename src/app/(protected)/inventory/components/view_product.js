@@ -91,7 +91,7 @@ export default function ViewProduct({
           </div>
 
           {/* Action buttons */}
-          {prefs.editProduct && prefs.deleteProduct && (
+          {(prefs.editProduct || prefs.deleteProduct) && (
             <div className="w-full flex items-center gap-3 mt-8 text-sm sm:text-base">
               {prefs.editProduct && (
                 <button

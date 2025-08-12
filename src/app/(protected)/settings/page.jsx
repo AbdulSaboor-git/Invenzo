@@ -3,10 +3,6 @@ import React, { useEffect, useState } from 'react';
 import useAuthUser from '@/hooks/authUser';
 import Header from '@/components/header';
 import { toast } from 'sonner';
-import { MdLock, MdLockOpen, MdLockOutline } from 'react-icons/md';
-import { FaLock } from 'react-icons/fa';
-import { FiLock } from 'react-icons/fi';
-import { HiLockClosed } from 'react-icons/hi';
 import { IoLockClosed, IoLockOpen } from 'react-icons/io5';
 
 export default function SettingsPage() {
@@ -121,7 +117,7 @@ export default function SettingsPage() {
   // If password protection enabled & not authenticated, show lock screen
   if (tempPreferences.requireSettingsPassword && !authenticated) {
     return (
-      <div className="flex flex-col items-center ">
+      <div className="flex flex-col items-center">
         <Header className={'shadow'} />
         <div className="flex min-h-[80vh] flex-col items-center justify-center text-center p-6">
           <div className="bg-white rounded-xl shadow p-6 md:p-8 w-full max-w-sm border border-gray-200">
