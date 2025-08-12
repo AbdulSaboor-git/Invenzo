@@ -121,10 +121,10 @@ export default function SettingsPage() {
   // If password protection enabled & not authenticated, show lock screen
   if (tempPreferences.requireSettingsPassword && !authenticated) {
     return (
-      <div className="flex flex-col items-center  bg-gray-50">
-        <Header />
-        <div className="flex min-h-[70vh] flex-col items-center justify-center text-center ">
-          <div className="bg-white rounded-xl shadow-sm p-6 md:p-8 w-full max-w-sm border border-gray-200">
+      <div className="flex flex-col items-center ">
+        <Header className={'shadow'} />
+        <div className="flex min-h-[80vh] flex-col items-center justify-center text-center p-6">
+          <div className="bg-white rounded-xl shadow p-6 md:p-8 w-full max-w-sm border border-gray-200">
             <div className="w-full text-4xl mb-4 text-gray-500">
               {isPasswordCorrect ? (
                 <IoLockOpen className="place-self-center" />
