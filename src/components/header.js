@@ -3,7 +3,7 @@ import useAuthUser from '@/hooks/authUser';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { FaFileInvoice, FaUsers } from 'react-icons/fa';
-import { IoAddCircle } from 'react-icons/io5';
+import { IoAddCircle, IoLockClosed } from 'react-icons/io5';
 import {
   MdCategory,
   MdDashboard,
@@ -74,7 +74,7 @@ export default function Header({ className }) {
 
   buttons.push({
     icon: <MdSettings />,
-    label: 'Settings',
+    label: `Settings ${prefs.requireSettingsPassword ? '🔒' : ''}`,
     onclick: () => handleButtonClick('Settings'),
   });
   useEffect(() => {
