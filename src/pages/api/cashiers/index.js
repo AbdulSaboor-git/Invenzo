@@ -1,0 +1,183 @@
+import prisma from '@/lib/prisma';
+
+export default async function handler(req, res) {
+  const { method } = req;
+
+  try {
+    switch (method) {
+      case 'GET':
+        return await handleGetCashiers(req, res);
+
+      case 'POST':
+        return await handleAddCashier(req, res);
+
+      case 'PUT':
+        return await handleEditCashier(req, res);
+
+      case 'PATCH':
+        return await handleResetPassword(req, res);
+
+      case 'DELETE':
+        return await handleDeleteCashier(req, res);
+
+      default:
+        return res.status(405).json({ error: 'Method not allowed' });
+    }
+  } catch (err) {
+    console.error('Cashiers API error:', err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
+/**
+ * GET – Fetch cashiers (excluding admin)
+ */
+async function handleGetCashiers(req, res) {
+  const { userId } = req.query;
+  if (!userId) {
+    return res.status(400).json({ error: 'Missing userId' });
+  }
+
+  const inventory = await prisma.inventory.findUnique({
+    where: { adminId: Number(userId) },
+  });
+
+  if (!inventory) {
+    return res.status(404).json({ error: 'Inventory not found' });
+  }
+
+  const cashiers = await prisma.cashier.findMany({
+    where: {
+      inventoryId: inventory.id,
+      userId: { not: Number(userId) }, // exclude admin
+    },
+    include: {
+      User: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+          createdAt: true,
+          updatedAt: true,
+        },
+      },
+      Inventory: { select: { id: true, name: true } },
+    },
+    orderBy: { id: 'asc' },
+  });
+
+  return res.json({ cashiers });
+}
+
+/**
+ * POST – Add cashier
+ */
+async function handleAddCashier(req, res) {
+  const { userId, firstName, lastName } = req.body;
+  if (!userId || !firstName)
+    return res.status(400).json({ error: 'Missing data' });
+
+  const inventory = await prisma.inventory.findUnique({
+    where: { adminId: Number(userId) },
+  });
+  if (!inventory) return res.status(404).json({ error: 'Inventory not found' });
+
+  const email = `${firstName.replace(/\s+/g, '').toLowerCase()}.cashier@invenzo.com`;
+
+  const existingUser = await prisma.user.findFirst({
+    where: { email: email.toLowerCase() },
+  });
+  if (existingUser)
+    return res.status(400).json({ error: 'Cashier email already exists' });
+
+  const plainPassword = `${firstName.toLowerCase()}.inv`.toLowerCase();
+
+  const user = await prisma.user.create({
+    data: {
+      firstName,
+      lastName: lastName || '',
+      email: email.toLowerCase(),
+      password: plainPassword,
+      role: 'cashier',
+    },
+  });
+
+  const cashier = await prisma.cashier.create({
+    data: {
+      inventoryId: inventory.id,
+      userId: user.id,
+    },
+  });
+
+  return res.status(201).json({ cashier });
+}
+
+/**
+ * PUT – Edit cashier name
+ */
+async function handleEditCashier(req, res) {
+  const { cashierId, firstName, lastName } = req.body;
+  if (!cashierId || !firstName)
+    return res.status(400).json({ error: 'Missing data' });
+
+  const cashier = await prisma.cashier.update({
+    where: { id: Number(cashierId) },
+    data: {
+      User: {
+        update: {
+          firstName,
+          lastName: lastName || '',
+        },
+      },
+    },
+    include: { User: true, Inventory: true },
+  });
+
+  return res.json({ cashier });
+}
+
+/**
+ * PATCH – Reset cashier password
+ */
+async function handleResetPassword(req, res) {
+  const { cashierId } = req.body;
+  if (!cashierId) return res.status(400).json({ error: 'Missing data' });
+
+  const cashier = await prisma.cashier.findUnique({
+    where: { id: Number(cashierId) },
+    include: { User: true },
+  });
+  if (!cashier) return res.status(404).json({ error: 'Cashier not found' });
+
+  const plainPassword =
+    `${cashier.User.firstName.toLowerCase()}.inv`.toLowerCase();
+
+  await prisma.user.update({
+    where: { id: cashier.userId },
+    data: { password: plainPassword },
+  });
+
+  return res.json({
+    message: 'Password reset successfully',
+    plainPassword,
+  });
+}
+
+/**
+ * DELETE – Remove cashier
+ */
+async function handleDeleteCashier(req, res) {
+  const { cashierId } = req.body;
+  if (!cashierId) return res.status(400).json({ error: 'Missing data' });
+
+  const cashier = await prisma.cashier.findUnique({
+    where: { id: Number(cashierId) },
+  });
+  if (!cashier) return res.status(404).json({ error: 'Cashier not found' });
+
+  await prisma.cashier.delete({ where: { id: Number(cashierId) } });
+  await prisma.user.delete({ where: { id: cashier.userId } });
+
+  return res.json({ message: 'Cashier deleted successfully' });
+}

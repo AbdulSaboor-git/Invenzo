@@ -19,6 +19,7 @@ model User {
   lastLogin      DateTime?
   profilePicture String?
   isActive       Boolean    @default(true)
+  role           String?
   Cashier        Cashier?
   Inventories    Inventory?
 }

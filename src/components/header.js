@@ -59,11 +59,11 @@ export default function Header({ className }) {
       onclick: () => handleButtonClick('Categories'),
     });
 
-  // buttons.push({
-  //   icon: <FaUsers />,
-  //   label: 'Cashiers',
-  //   onclick: () => handleButtonClick('Cashiers'),
-  // });
+  buttons.push({
+    icon: <FaUsers />,
+    label: 'Cashiers',
+    onclick: () => handleButtonClick('Cashiers'),
+  });
 
   prefs.viewSalesData &&
     buttons.push({
