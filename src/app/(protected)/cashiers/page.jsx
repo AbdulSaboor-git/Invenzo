@@ -74,9 +74,9 @@ export default function CashiersPage() {
     <div className="flex flex-col items-center w-full">
       <Header className={'shadow'} />
       <div className="px-5 py-6 w-full">
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex justify-between gap-6 items-center mb-4">
           <h1 className="text-xl font-bold">Cashiers</h1>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center justify-end gap-3">
             {lastUpdated && (
               <span className="text-sm text-gray-500">
                 Last Updated: {new Date(lastUpdated).toLocaleString()}

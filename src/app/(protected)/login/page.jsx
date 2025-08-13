@@ -1,23 +1,23 @@
-"use client";
+'use client';
 
-import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { useDispatch } from "react-redux";
-import { setUser } from "@/redux/userSlice";
-import useAuthUser from "@/hooks/authUser";
-import { toast } from "sonner";
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useDispatch } from 'react-redux';
+import { setUser } from '@/redux/userSlice';
+import useAuthUser from '@/hooks/authUser';
+import { toast } from 'sonner';
 
 export default function Login() {
   const router = useRouter();
   const dispatch = useDispatch();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const { user, userLoading } = useAuthUser();
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!userLoading && user) {
-      router.push("/inventory");
+      router.push('/inventory');
     }
   }, [user, userLoading, router]);
 
@@ -26,17 +26,17 @@ export default function Login() {
 
     if (!navigator.onLine) {
       toast.error(
-        "Network not available. Please check your internet connection."
+        'Network not available. Please check your internet connection.'
       );
       return;
     }
 
     setLoading(true);
     try {
-      const response = await fetch("/api/user/login", {
-        method: "POST",
+      const response = await fetch('/api/user/login', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({ email, password }),
       });
@@ -44,19 +44,19 @@ export default function Login() {
       const data = await response.json();
 
       if (!response.ok) {
-        toast.error(data.error || "Login failed");
-        throw new Error(data.error || "Login failed");
+        toast.error(data.error || 'Login failed');
+        throw new Error(data.error || 'Login failed');
       }
 
       // Handle successful login (e.g., store token, user info, redirect user)
       // Set the cookies
-      if (typeof window !== "undefined") {
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("user", JSON.stringify(data.user));
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.user));
       }
-      toast.success("Logged in successfully");
+      toast.success('Logged in successfully');
       dispatch(setUser(data.user)); // Store user in Redux
-      router.push("/inventory"); // Redirect to a different page after successful login
+      router.push('/inventory'); // Redirect to a different page after successful login
     } catch (err) {
       console.log(err);
     } finally {
@@ -111,7 +111,7 @@ export default function Login() {
                 type="email"
                 placeholder="you@example.com"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value.trim())}
                 required
               />
             </div>
@@ -135,11 +135,11 @@ export default function Login() {
               <button
                 disabled={loading}
                 className={`w-full rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 transition-all duration-200 shadow-sm ${
-                  loading ? "opacity-70 cursor-not-allowed" : ""
+                  loading ? 'opacity-70 cursor-not-allowed' : ''
                 }`}
                 type="submit"
               >
-                {loading ? "Signing in..." : "Login"}
+                {loading ? 'Signing in...' : 'Login'}
               </button>
             </div>
           </form>

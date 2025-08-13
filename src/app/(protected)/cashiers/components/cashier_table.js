@@ -30,6 +30,7 @@ export default function CashierTable({ cashiers, loading, onChange, adminId }) {
               <th className="px-3 py-3">Inventory</th>
               <th className="px-3 py-3">Date Added</th>
               <th className="px-3 py-3">Last Modified</th>
+              <th className="px-3 py-3">Last Login</th>
               <th className="px-3 py-3 text-right">Actions</th>
             </tr>
           </thead>
@@ -54,6 +55,11 @@ export default function CashierTable({ cashiers, loading, onChange, adminId }) {
                   </td>
                   <td className="px-3 py-2">
                     {new Date(c.User.updatedAt).toLocaleDateString()}
+                  </td>
+                  <td className="px-3 py-2">
+                    {c.User.lastLogin
+                      ? new Date(c.User.lastLogin).toLocaleString()
+                      : '-'}
                   </td>
                   <td className="px-3 py-2 text-right flex gap-2 justify-end">
                     <button

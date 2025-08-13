@@ -3,6 +3,10 @@ import { toast } from 'sonner';
 
 export default function ResetPasswordPopup({ cashier, onClose }) {
   const [loading, setLoading] = useState(false);
+  const password = `${cashier.User.firstName}.inv`
+    .trim()
+    .replace(/\s+/g, '')
+    .toLowerCase();
 
   const handleReset = async () => {
     setLoading(true);
@@ -12,6 +16,7 @@ export default function ResetPasswordPopup({ cashier, onClose }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           cashierId: cashier.id,
+          password: password,
         }),
       });
 
@@ -35,8 +40,7 @@ export default function ResetPasswordPopup({ cashier, onClose }) {
       <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
         <h2 className="text-lg font-semibold mb-4">Reset Password</h2>
         <p className="text-gray-600 mb-4">
-          This will reset the password to{' '}
-          <strong>{cashier.User.firstName}.inv</strong>
+          This will reset the password to <strong>{password}</strong>
         </p>
         <div className="flex justify-end gap-3">
           <button onClick={onClose} className="px-4 py-2 border rounded">

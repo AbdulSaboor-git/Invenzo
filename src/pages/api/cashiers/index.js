@@ -57,6 +57,7 @@ async function handleGetCashiers(req, res) {
           id: true,
           firstName: true,
           lastName: true,
+          lastLogin: true,
           email: true,
           createdAt: true,
           updatedAt: true,
@@ -141,7 +142,7 @@ async function handleEditCashier(req, res) {
  * PATCH – Reset cashier password
  */
 async function handleResetPassword(req, res) {
-  const { cashierId } = req.body;
+  const { cashierId, password } = req.body;
   if (!cashierId) return res.status(400).json({ error: 'Missing data' });
 
   const cashier = await prisma.cashier.findUnique({
@@ -150,17 +151,14 @@ async function handleResetPassword(req, res) {
   });
   if (!cashier) return res.status(404).json({ error: 'Cashier not found' });
 
-  const plainPassword =
-    `${cashier.User.firstName.toLowerCase()}.inv`.toLowerCase();
-
   await prisma.user.update({
     where: { id: cashier.userId },
-    data: { password: plainPassword },
+    data: { password: password },
   });
 
   return res.json({
     message: 'Password reset successfully',
-    plainPassword,
+    password,
   });
 }
 
