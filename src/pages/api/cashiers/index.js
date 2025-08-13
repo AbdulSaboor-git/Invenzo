@@ -15,6 +15,9 @@ export default async function handler(req, res) {
         return await handleEditCashier(req, res);
 
       case 'PATCH':
+        if (req.body.oldPassword && req.body.newPassword) {
+          return await handleUpdatePassword(req, res);
+        }
         return await handleResetPassword(req, res);
 
       case 'DELETE':
@@ -178,4 +181,36 @@ async function handleDeleteCashier(req, res) {
   await prisma.user.delete({ where: { id: cashier.userId } });
 
   return res.json({ message: 'Cashier deleted successfully' });
+}
+
+/**
+ * PATCH – Update cashier password (requires old & new password)
+ */
+async function handleUpdatePassword(req, res) {
+  const { cashierId, oldPassword, newPassword } = req.body;
+
+  if (!cashierId || !oldPassword || !newPassword) {
+    return res.status(400).json({ error: 'Missing required data' });
+  }
+
+  const cashier = await prisma.cashier.findUnique({
+    where: { id: Number(cashierId) },
+    include: { User: true },
+  });
+
+  if (!cashier) {
+    return res.status(404).json({ error: 'Cashier not found' });
+  }
+
+  // In production, compare hashed passwords (bcrypt.compare)
+  if (cashier.User.password !== oldPassword) {
+    return res.status(400).json({ error: 'Old password is incorrect' });
+  }
+
+  await prisma.user.update({
+    where: { id: cashier.userId },
+    data: { password: newPassword },
+  });
+
+  return res.json({ message: 'Password updated successfully' });
 }

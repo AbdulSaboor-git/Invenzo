@@ -278,7 +278,7 @@ export default function EditProduct({
           <button
             disabled={isSaveDisabled || loadingForEdit}
             onClick={handleUpdate}
-            className={`w-full bg-green-500 hover:bg-green-600 py-4 px-6 rounded-lg text-white font-semibold transition-colors disabled:hover:bg-green-600 disabled:cursor-not-allowed
+            className={`w-full bg-green-500 hover:bg-green-600 py-4 px-6 rounded-lg text-white font-semibold transition-colors disabled:hover:bg-green-500 disabled:cursor-not-allowed
             `}
           >
             {loadingForEdit ? (

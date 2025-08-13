@@ -4,7 +4,9 @@ import useAuthUser from '@/hooks/authUser';
 import { useEffect, useState } from 'react';
 import CashierTable from './components/cashier_table';
 import RefreshButton from '../inventory/components/refresh_btn';
+import AddCashierPopup from './components/add_cashier';
 import { toast } from 'sonner';
+import { MdAdd } from 'react-icons/md';
 
 export default function CashiersPage() {
   const { user } = useAuthUser();
@@ -13,6 +15,8 @@ export default function CashiersPage() {
   const [lastUpdated, setLastUpdated] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
   const [refreshFailed, setRefreshFailed] = useState(false);
+
+  const [showAddPopup, setShowAddPopup] = useState(false);
 
   const localKey = `inventoryData_cashiers_${user?.id}`;
 
@@ -72,23 +76,36 @@ export default function CashiersPage() {
 
   return (
     <div className="flex flex-col items-center w-full">
-      <Header className={'shadow'} />
-      <div className="px-5 py-6 w-full">
-        <div className="flex justify-between gap-6 items-center mb-4">
-          <h1 className="text-xl font-bold">Cashiers</h1>
-          <div className="flex items-center justify-end gap-3">
+      <Header />
+      <div className="w-full">
+        <div className="flex flex-col md:flex-row md:justify-between items-center shadow px-3 md:px-6 py-4 gap-3 sticky top-3 md:top-[68px] bg-white z-40">
+          <div className="w-full flex justify-center md:justify-start">
+            <h2 className="text-lg line-clamp-1 md:text-xl font-bold text-gray-800 text-center md:text-left cursor-pointer">
+              Cashiers
+            </h2>
+          </div>
+          <div className="flex w-full items-stretch justify-end gap-3 bg-white">
             {lastUpdated && (
-              <span className="text-sm text-gray-500">
+              <span className="text-sm place-content-center hidden sm:block text-gray-500">
                 Last Updated: {new Date(lastUpdated).toLocaleString()}
               </span>
             )}
             <RefreshButton
+              className="aspect-square md:aspect-auto"
               failedtoRefresh={refreshFailed}
               loading={loading || refreshing}
               onClick={RefreshData}
             />
+            <button
+              onClick={() => setShowAddPopup(true)}
+              disabled={refreshing || loading}
+              className="flex items-center gap-2 px-3 sm:px-4 sm:py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg shadow-sm transition-colors disabled:hover:bg-green-500 disabled:cursor-not-allowed"
+            >
+              <MdAdd /> <span className="hidden sm:block"> Add Cashier</span>
+            </button>
           </div>
         </div>
+
         <CashierTable
           cashiers={cashiers}
           loading={refreshing}
@@ -96,6 +113,15 @@ export default function CashiersPage() {
           adminId={user?.id}
         />
       </div>
+
+      {/* Add Cashier Popup */}
+      {showAddPopup && (
+        <AddCashierPopup
+          adminId={user?.id}
+          onClose={() => setShowAddPopup(false)}
+          onSuccess={fetchData}
+        />
+      )}
     </div>
   );
 }

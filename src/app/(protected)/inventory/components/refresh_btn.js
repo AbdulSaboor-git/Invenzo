@@ -1,7 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { IoSync } from 'react-icons/io5';
 
-export default function RefreshButton({ loading, failedtoRefresh, onClick }) {
+export default function RefreshButton({
+  className,
+  loading,
+  failedtoRefresh,
+  onClick,
+}) {
   const [rotation, setRotation] = useState(0);
   const animRef = useRef(null);
 
@@ -42,7 +47,7 @@ export default function RefreshButton({ loading, failedtoRefresh, onClick }) {
     <button
       onClick={onClick}
       disabled={isSpinning}
-      className={`flex gap-2 items-center justify-center text-sm font-semibold px-3 py-1.5 rounded-md border transition-all duration-300 disabled:cursor-not-allowed disabled:bg-green-200 disabled:shadow-none ${
+      className={` ${className} flex gap-2 items-center justify-center text-sm font-semibold px-3 py-1.5 rounded-md border transition-all duration-300 disabled:cursor-not-allowed disabled:bg-green-200 disabled:shadow-none ${
         failedtoRefresh
           ? 'bg-red-100 hover:bg-red-200 text-red-800 border-red-300'
           : 'bg-green-100 hover:bg-green-200 text-green-800 border-green-300'

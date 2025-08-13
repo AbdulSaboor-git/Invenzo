@@ -471,7 +471,7 @@ export default function Inventory() {
                       className="px-3 py-3 min-w-[160px] md:px-6 md:py-4 cursor-pointer"
                       onClick={() => toggleSort('updatedAt')}
                     >
-                      Date Updated {renderSortIcon('updatedAt')}
+                      Last Modified {renderSortIcon('updatedAt')}
                     </th>
                   )}
                   {prefs.viewDateAddedColumn && (
@@ -559,7 +559,11 @@ export default function Inventory() {
           editProduct={editProduct}
           close={() => setEditProduct(null)}
           editForm={editForm}
-          fetchNewData={fetchAndStoreData}
+          fetchNewData={() => {
+            fetchAndStoreData();
+            setEditProduct(null);
+            setSelectedProduct(null);
+          }}
           categories={categories}
           inventoryId={inventory?.id}
           setEditForm={setEditForm}
