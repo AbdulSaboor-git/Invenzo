@@ -70,7 +70,7 @@ export default function ViewProduct({
                 label="Govt. Sale Price"
                 value={
                   selectedProduct.govtSalePrice != null
-                    ? `Rs.${selectedProduct.govtSalePrice}`
+                    ? `Rs.${selectedProduct.govtSalePrice}/${selectedProduct.unit}`
                     : '—'
                 }
               />

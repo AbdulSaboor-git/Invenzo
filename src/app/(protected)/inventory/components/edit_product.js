@@ -1,6 +1,6 @@
-"use client";
-import React, { useState } from "react";
-import { toast } from "sonner";
+'use client';
+import React, { useState } from 'react';
+import { toast } from 'sonner';
 
 export default function EditProduct({
   editProduct,
@@ -16,6 +16,7 @@ export default function EditProduct({
   const isSaveDisabled =
     !editForm.name.trim() ||
     !editForm.categoryId ||
+    !editForm.unit ||
     parseFloat(editForm.purchasePrice) < 0 ||
     parseFloat(editForm.salePrice) < 0 ||
     (editForm.govtSalePrice && parseFloat(editForm.govtSalePrice) < 0);
@@ -23,7 +24,7 @@ export default function EditProduct({
   const handleUpdate = async () => {
     if (!navigator.onLine) {
       toast.error(
-        "Network not available. Please check your internet connection."
+        'Network not available. Please check your internet connection.'
       );
       return;
     }
@@ -31,9 +32,9 @@ export default function EditProduct({
     try {
       setLoadingForEdit(true);
       const normalize = (val) =>
-        val === null || val === undefined ? "" : String(val).trim();
+        val === null || val === undefined ? '' : String(val).trim();
       const normalizeNum = (val) =>
-        val === null || val === "" ? null : parseFloat(val);
+        val === null || val === '' ? null : parseFloat(val);
 
       const noChanges =
         normalize(editForm.name) === normalize(editProduct.name) &&
@@ -45,6 +46,7 @@ export default function EditProduct({
           normalizeNum(editProduct.salePrice) &&
         normalizeNum(editForm.govtSalePrice) ===
           normalizeNum(editProduct.govtSalePrice) &&
+        normalizeNum(editForm.unit) === normalizeNum(editProduct.unit) &&
         normalize(editForm.tags) === normalize(editProduct.tags);
 
       if (noChanges) {
@@ -53,29 +55,30 @@ export default function EditProduct({
       }
 
       const response = await fetch(`/api/inventory/${inventoryId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           id: editProduct.id,
           name: editForm.name.trim(),
-          description: "",
+          description: '',
           categoryId: parseInt(editForm.categoryId, 10),
           purchasePrice: parseFloat(editForm.purchasePrice),
           salePrice: parseFloat(editForm.salePrice),
           govtSalePrice: editForm.govtSalePrice
             ? parseFloat(editForm.govtSalePrice)
             : null,
+          unit: editForm.unit,
           tags: editForm.tags.trim(),
         }),
       });
 
-      if (!response.ok) throw new Error("Update failed");
-      toast.success("Product updated");
+      if (!response.ok) throw new Error('Update failed');
+      toast.success('Product updated');
       fetchNewData();
       setLoadingForEdit(false);
     } catch (err) {
       console.error(err);
-      toast.error("Update failed");
+      toast.error('Update failed');
     } finally {
       setLoadingForEdit(false);
       close();
@@ -86,8 +89,8 @@ export default function EditProduct({
     <div
       className={`fixed inset-0 text-sm  bg-black/20 flex items-center justify-center z-50 px-4 sm:px-6 transition ease-in-out backdrop-blur-[2px] ${
         editProduct
-          ? "opacity-100 pointer-events-auto"
-          : "opacity-0 pointer-events-none"
+          ? 'opacity-100 pointer-events-auto'
+          : 'opacity-0 pointer-events-none'
       }`}
     >
       <div
@@ -222,6 +225,33 @@ export default function EditProduct({
               }
             />
           </div>
+          {/* Unit */}
+          <div className="flex items-center gap-2 w-full justify-between">
+            <label
+              htmlFor="edit-unit"
+              className="block font-medium text-gray-700"
+            >
+              Unit <span className="text-red-500">*</span>
+            </label>
+            <select
+              id="edit-unit"
+              className="w-full mt-1 px-4 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-300 max-w-[200px] sm:max-w-[350px]"
+              value={editForm.unit || ''}
+              onChange={(e) =>
+                setEditForm({ ...editForm, unit: e.target.value })
+              }
+            >
+              <option value="">Select unit</option>
+              <option value="g">Gram (g)</option>
+              <option value="kg">Kilogram (kg)</option>
+              <option value="ml">Milliliter (ml)</option>
+              <option value="litter">Liter (l)</option>
+              <option value="pc">Piece (pc)</option>
+              <option value="dozen">Dozen</option>
+              <option value="pack">Pack</option>
+              <option value="box">Box</option>
+            </select>
+          </div>
 
           {/* Tags */}
           <div className="flex pb-6 sm:pb-8 items-center justify-between gap-2 w-full">
@@ -254,7 +284,7 @@ export default function EditProduct({
             {loadingForEdit ? (
               <div className="border-2 border-gray-200 border-t-transparent animate-spin rounded-full w-5 h-5 mx-auto" />
             ) : (
-              "Save Changes"
+              'Save Changes'
             )}
           </button>
         </div>

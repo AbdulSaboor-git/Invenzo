@@ -1,20 +1,21 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import Header from "@/components/header";
-import { toast } from "sonner";
-import useAuthUser from "@/hooks/authUser";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from 'react';
+import Header from '@/components/header';
+import { toast } from 'sonner';
+import useAuthUser from '@/hooks/authUser';
+import { useRouter } from 'next/navigation';
 
 export default function AddProductPage() {
   const { user } = useAuthUser();
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [tags, setTags] = useState("");
-  const [purchasePrice, setPurchasePrice] = useState("");
-  const [salePrice, setSalePrice] = useState("");
-  const [govtSalePrice, setGovtSalePrice] = useState("");
-  const [categoryId, setCategoryId] = useState("");
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
+  const [tags, setTags] = useState('');
+  const [purchasePrice, setPurchasePrice] = useState('');
+  const [salePrice, setSalePrice] = useState('');
+  const [govtSalePrice, setGovtSalePrice] = useState('');
+  const [unit, setUnit] = useState('');
+  const [categoryId, setCategoryId] = useState('');
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingCategories, setLoadingCategories] = useState(false);
@@ -31,12 +32,11 @@ export default function AddProductPage() {
     try {
       setLoadingInventory(true);
       const response = await fetch(`/api/inventory?adminId=${user?.id}`);
-      if (!response.ok) throw new Error("Failed to fetch from server");
+      if (!response.ok) throw new Error('Failed to fetch from server');
       const data = await response.json();
-      toast.success("fet");
       setInventory(data.inventory);
     } catch (error) {
-      console.error("Error fetching inventories:", error);
+      console.error('Error fetching inventories:', error);
     } finally {
       setLoadingInventory(false);
     }
@@ -51,14 +51,13 @@ export default function AddProductPage() {
       const res = await fetch(`/api/inventory/${inventory.id}/category`);
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(errorData.message || "Unknown error");
+        throw new Error(errorData.message || 'Unknown error');
       }
       const data = await res.json();
-      toast.success("fet2");
       setCategories(data);
 
       // Update localStorage
-      if (typeof window !== "undefined") {
+      if (typeof window !== 'undefined') {
         const local = localStorage.getItem(localStorageKey);
         const parsed = local ? JSON.parse(local) : {};
         localStorage.setItem(
@@ -67,8 +66,8 @@ export default function AddProductPage() {
         );
       }
     } catch (error) {
-      console.error("Error fetching categories:", error);
-      toast.error(error.message || "Failed to fetch categories");
+      console.error('Error fetching categories:', error);
+      toast.error(error.message || 'Failed to fetch categories');
     } finally {
       setLoadingCategories(false);
     }
@@ -78,20 +77,20 @@ export default function AddProductPage() {
 
   const loadFromLocalStorage = () => {
     try {
-      if (typeof window !== "undefined") {
+      if (typeof window !== 'undefined') {
         const localData = localStorage.getItem(localStorageKey);
         const parsed = JSON.parse(localData);
         if (
           !parsed ||
           !Array.isArray(parsed.products) ||
           !Array.isArray(parsed.categories) ||
-          typeof parsed.inventory !== "object" ||
+          typeof parsed.inventory !== 'object' ||
           parsed.inventory == null
         ) {
           if (parsed.inventory == null) {
             console.log(parsed.inventory);
-          } else if (typeof parsed.inventory !== "object")
-            console.log("inv not obj");
+          } else if (typeof parsed.inventory !== 'object')
+            console.log('inv not obj');
           return false;
         }
         setCategories(parsed.categories);
@@ -99,7 +98,7 @@ export default function AddProductPage() {
         return true;
       }
     } catch (err) {
-      console.error("Invalid localStorage data:", err);
+      console.error('Invalid localStorage data:', err);
       return false;
     }
   };
@@ -127,21 +126,21 @@ export default function AddProductPage() {
 
     if (!navigator.onLine) {
       toast.error(
-        "Network not available. Please check your internet connection."
+        'Network not available. Please check your internet connection.'
       );
       return;
     }
 
     if (!name || !purchasePrice || !salePrice || !categoryId) {
-      return toast.error("Please fill all required fields");
+      return toast.error('Please fill all required fields');
     }
 
     try {
       setLoading(true);
 
       const res = await fetch(`/api/inventory/${inventory.id}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: name.trim(),
           description: description.trim(),
@@ -149,23 +148,25 @@ export default function AddProductPage() {
           purchasePrice: parseFloat(purchasePrice),
           salePrice: parseFloat(salePrice),
           govtSalePrice: govtSalePrice ? parseFloat(govtSalePrice) : null,
+          unit: unit,
           categoryId: parseInt(categoryId),
         }),
       });
 
-      if (!res.ok) throw new Error("Failed to add product");
+      if (!res.ok) throw new Error('Failed to add product');
 
-      toast.success("Product added successfully");
+      toast.success('Product added successfully');
       setLoading(false);
 
       // Reset fields
-      setName("");
-      setDescription("");
-      setTags("");
-      setPurchasePrice("");
-      setSalePrice("");
-      setGovtSalePrice("");
-      setCategoryId("");
+      setName('');
+      setDescription('');
+      setTags('');
+      setPurchasePrice('');
+      setSalePrice('');
+      setGovtSalePrice('');
+      setCategoryId('');
+      setUnit('');
 
       // Refetch products from DB
       try {
@@ -174,21 +175,21 @@ export default function AddProductPage() {
           `/api/inventory/${inventory.id}?userId=${user.id}`
         );
         if (!productRes.ok) {
-          throw new Error("Failed to refresh product list");
+          throw new Error('Failed to refresh product list');
         }
         const { products, categories } = await productRes.json();
-        if (typeof window !== "undefined") {
+        if (typeof window !== 'undefined') {
           localStorage.setItem(
             localStorageKey,
             JSON.stringify({ products, categories, inventory })
           );
         }
       } catch (error) {
-        console.log("Error syncing data:", error);
+        console.log('Error syncing data:', error);
       }
     } catch (error) {
-      console.error("Error submitting product:", error);
-      toast.error("Error adding product");
+      console.error('Error submitting product:', error);
+      toast.error('Error adding product');
     } finally {
       setSyncing(false);
     }
@@ -311,6 +312,26 @@ export default function AddProductPage() {
             />
           </div>
 
+          {/* Unit */}
+          <div>
+            <label className="block mb-1 font-medium text-gray-700">
+              Unit <span className="text-red-500">*</span>
+            </label>
+            <select
+              value={unit}
+              onChange={(e) => setUnit(e.target.value)}
+              required
+              className="w-full px-4 py-2 border rounded-lg bg-white focus:outline-none focus:ring focus:ring-blue-300"
+            >
+              <option value="">Select unit</option>
+              <option value="piece">Piece</option>
+              <option value="kg">Kg</option>
+              <option value="g">Gram</option>
+              <option value="liter">Liter</option>
+              <option value="ml">Milliliter</option>
+            </select>
+          </div>
+
           {/* Tags */}
           <div className="pb-6">
             <label className="block mb-1 font-medium text-gray-700">Tags</label>
@@ -335,7 +356,7 @@ export default function AddProductPage() {
             {loading ? (
               <div className="border-2 border-gray-200 border-t-transparent animate-spin rounded-full w-6 h-6 mx-auto" />
             ) : (
-              "Add Product"
+              'Add Product'
             )}
           </button>
         </form>

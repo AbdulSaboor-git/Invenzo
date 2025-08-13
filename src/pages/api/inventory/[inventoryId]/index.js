@@ -1,20 +1,20 @@
-import prisma from "@/lib/prisma";
+import prisma from '@/lib/prisma';
 
 export default async function handler(req, res) {
   const { method } = req;
   const { inventoryId } = req.query; // Extract inventoryId from query parameters
 
   switch (method) {
-    case "GET":
+    case 'GET':
       return handleGet(req, res, inventoryId);
-    case "POST":
+    case 'POST':
       return handlePost(req, res, inventoryId);
-    case "PATCH":
+    case 'PATCH':
       return handlePatch(req, res);
-    case "DELETE":
+    case 'DELETE':
       return handleDelete(req, res);
     default:
-      res.setHeader("Allow", ["GET", "PATCH", "DELETE"]);
+      res.setHeader('Allow', ['GET', 'PATCH', 'DELETE']);
       return res.status(405).end(`Method ${method} Not Allowed`);
   }
 }
@@ -27,6 +27,7 @@ const handlePost = async (req, res, inventoryId) => {
     salePrice,
     govtSalePrice,
     categoryId,
+    unit,
     tags,
   } = req.body;
 
@@ -38,6 +39,7 @@ const handlePost = async (req, res, inventoryId) => {
         purchasePrice,
         salePrice,
         govtSalePrice,
+        unit,
         categoryId,
         inventoryId: parseInt(inventoryId, 10),
         tags,
@@ -46,7 +48,7 @@ const handlePost = async (req, res, inventoryId) => {
     const data = { product: newProduct, status: 201 };
     res.status(201).json(data);
   } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
@@ -55,13 +57,13 @@ async function handleGet(req, res, inventoryId) {
     // Ensure inventoryId is a valid integer
     const id = parseInt(inventoryId, 10);
     if (isNaN(id) || id <= 0) {
-      return res.status(400).json({ message: "Invalid inventory ID" });
+      return res.status(400).json({ message: 'Invalid inventory ID' });
     }
 
     // Extract userId from request (assuming it's coming from a header or request body)
-    const userId = req.query.userId || req.body.userId || req.headers["userId"];
+    const userId = req.query.userId || req.body.userId || req.headers['userId'];
     if (!userId) {
-      return res.status(400).json({ message: "User ID is required" });
+      return res.status(400).json({ message: 'User ID is required' });
     }
 
     // console.log("User ID:", userId, "Inventory ID:", id);
@@ -77,7 +79,7 @@ async function handleGet(req, res, inventoryId) {
     });
 
     if (!inv) {
-      return res.status(404).json({ message: "Invalid inventory ID" });
+      return res.status(404).json({ message: 'Invalid inventory ID' });
     }
 
     // Check if the user is either the admin or a moderator of the inventory
@@ -93,7 +95,7 @@ async function handleGet(req, res, inventoryId) {
     if (!isAdmin) {
       return res
         .status(403)
-        .json({ message: "User is not authorized to access this inventory" });
+        .json({ message: 'User is not authorized to access this inventory' });
     }
 
     // Fetch products, categories, and moderators
@@ -107,11 +109,12 @@ async function handleGet(req, res, inventoryId) {
         purchasePrice: true,
         salePrice: true,
         govtSalePrice: true,
+        unit: true,
         createdAt: true,
         updatedAt: true,
         tags: true,
       },
-      orderBy: { name: "asc" },
+      orderBy: { name: 'asc' },
     });
 
     const categories = await prisma.category.findMany({
@@ -120,7 +123,7 @@ async function handleGet(req, res, inventoryId) {
         id: true,
         name: true,
       },
-      orderBy: { name: "asc" },
+      orderBy: { name: 'asc' },
     });
 
     // const moderators = await prisma.moderator.findMany({
@@ -134,7 +137,7 @@ async function handleGet(req, res, inventoryId) {
     return res.status(200).json({ products, categories });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: "Internal Server Error" });
+    return res.status(500).json({ message: 'Internal Server Error' });
   }
 }
 
@@ -148,6 +151,7 @@ async function handlePatch(req, res) {
     purchasePrice,
     salePrice,
     govtSalePrice,
+    unit,
     tags,
   } = req.body;
 
@@ -161,13 +165,14 @@ async function handlePatch(req, res) {
         purchasePrice: purchasePrice,
         salePrice: salePrice,
         govtSalePrice: govtSalePrice,
+        unit: unit,
         tags: tags,
       },
     });
     return res.status(200).json(updatedProduct);
   } catch (error) {
-    console.error("Error updating product:", error);
-    return res.status(500).json({ message: "Failed to update product" });
+    console.error('Error updating product:', error);
+    return res.status(500).json({ message: 'Failed to update product' });
   }
 }
 
@@ -180,8 +185,8 @@ async function handleDelete(req, res) {
     });
 
     if (!existingProduct) {
-      console.log("Product not found");
-      return res.status(404).json({ error: "Product not found", errorCode: 3 });
+      console.log('Product not found');
+      return res.status(404).json({ error: 'Product not found', errorCode: 3 });
     }
 
     await prisma.product.delete({
@@ -190,9 +195,9 @@ async function handleDelete(req, res) {
 
     return res
       .status(200)
-      .json({ status: 200, message: "Product deleted successfully" });
+      .json({ status: 200, message: 'Product deleted successfully' });
   } catch (error) {
-    console.error("Delete Error:", error.message, error.stack);
-    return res.status(500).json({ error: "Internal Server Error" });
+    console.error('Delete Error:', error.message, error.stack);
+    return res.status(500).json({ error: 'Internal Server Error' });
   }
 }

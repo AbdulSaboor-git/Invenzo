@@ -278,6 +278,7 @@ export default function Inventory() {
     purchasePrice: '',
     salePrice: '',
     govtSalePrice: '',
+    unit: '',
     tags: '',
   });
 
@@ -289,6 +290,7 @@ export default function Inventory() {
       purchasePrice: product.purchasePrice.toString(),
       salePrice: product.salePrice.toString(),
       govtSalePrice: product.govtSalePrice?.toString() || '',
+      unit: product.unit || '',
       tags: product.tags || '',
     });
   };
@@ -341,7 +343,7 @@ export default function Inventory() {
       <Header />
       <ScrollToTop />
       <div className="w-full max-w-7xl place-self-center">
-        <div className="flex flex-col md:flex-row md:justify-between items-center shadow px-3 md:px-6 py-4 gap-3 sticky top-3 md:top-16 bg-white z-40">
+        <div className="flex flex-col md:flex-row md:justify-between items-center shadow px-3 md:px-6 py-4 gap-3 sticky top-3 md:top-[68px] bg-white z-40">
           <div className="w-full flex justify-center md:justify-start">
             {loadingInventory || !inventory ? (
               <div className="h-7 bg-gray-200 rounded w-52 place-self-center md:place-self-auto animate-pulse"></div>
@@ -502,7 +504,7 @@ export default function Inventory() {
                           {index + 1}
                         </td>
                         <td className="px-3 min-w-[170px] max-w-[280px] py-2 md:px-6 md:py-4 font-medium cursor-pointer">
-                          {product.name}
+                          {product.name + ' 1' + product.unit}
                         </td>
                         <td className="px-3  min-w-[110px] py-2 md:px-6 md:py-4">
                           Rs.{product.salePrice}
