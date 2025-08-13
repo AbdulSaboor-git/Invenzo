@@ -49,6 +49,7 @@ export default async function handler(req, res) {
         id: user.id,
         email: user.email,
         role: user.role,
+        isActive: user.isActive,
         firstName: user.firstName || null,
         lastName: user.lastName || null,
         profilePicture: user.profilePicture,

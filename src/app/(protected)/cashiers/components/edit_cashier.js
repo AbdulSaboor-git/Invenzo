@@ -4,6 +4,7 @@ import { toast } from 'sonner';
 
 export default function EditCashierPopup({ cashier, onClose, onSuccess }) {
   const [name, setName] = useState(cashier.User.firstName || '');
+  const [isActive, setIsActive] = useState(cashier.User.isActive);
   const [loading, setLoading] = useState(false);
 
   const isDisabled = !name.trim() || loading;
@@ -29,6 +30,7 @@ export default function EditCashierPopup({ cashier, onClose, onSuccess }) {
         body: JSON.stringify({
           cashierId: cashier.id,
           firstName: name.trim(),
+          isActive,
         }),
       });
 
@@ -72,21 +74,42 @@ export default function EditCashierPopup({ cashier, onClose, onSuccess }) {
         </h3>
 
         {/* Name Field */}
-        <div className="space-y-2 mb-6">
-          <label
-            htmlFor="cashier-name"
-            className="block font-medium text-gray-700"
-          >
-            Cashier Name <span className="text-red-500">*</span>
-          </label>
-          <input
-            id="cashier-name"
-            type="text"
-            placeholder="Enter cashier name"
-            className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
+        <div className="space-y-4 pb-6">
+          <div>
+            <label
+              htmlFor="cashier-name"
+              className="block font-medium text-gray-700"
+            >
+              Cashier Name <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="cashier-name"
+              type="text"
+              placeholder="Enter cashier name"
+              className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+
+          {/* Active/Inactive Select */}
+          <div>
+            <label
+              htmlFor="cashier-status"
+              className="block font-medium text-gray-700"
+            >
+              Status <span className="text-red-500">*</span>
+            </label>
+            <select
+              id="cashier-status"
+              className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+              value={isActive ? 'true' : 'false'}
+              onChange={(e) => setIsActive(e.target.value === 'true')}
+            >
+              <option value="true">Active</option>
+              <option value="false">Inactive</option>
+            </select>
+          </div>
         </div>
 
         {/* Buttons */}
@@ -101,7 +124,7 @@ export default function EditCashierPopup({ cashier, onClose, onSuccess }) {
           <button
             onClick={handleEdit}
             disabled={isDisabled}
-            className="px-6 py-3 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg transition disabled:hover:bg-green-500 disabled:cursor-not-allowed"
+            className="px-6 py-3 w-24 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg transition disabled:hover:bg-green-500 disabled:cursor-not-allowed"
           >
             {loading ? (
               <div className="border-2 border-green-200 border-t-transparent animate-spin rounded-full w-5 h-5 mx-auto" />

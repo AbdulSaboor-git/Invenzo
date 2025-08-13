@@ -68,9 +68,12 @@ export default function CashierTable({ cashiers, loading, onChange, adminId }) {
               </tr>
             ) : cashiers?.length > 0 ? (
               cashiers?.map((c, index) => (
-                <tr key={c.id} className="hover:bg-gray-50 transition">
+                <tr
+                  key={c.id}
+                  className={`hover:bg-gray-50 ${!c.User.isActive && 'bg-red-100 hover:bg-red-100'} transition`}
+                >
                   <td className="px-3 py-2 text-center">{index + 1}</td>
-                  <td className="px-3 py-2 font-medium min-w-[100px]">
+                  <td className={`px-3 py-2 font-medium min-w-[100px]`}>
                     {c.User.firstName} {c.User.lastName || ''}
                   </td>
                   <td className="px-3 py-2">{c.User.email}</td>
@@ -93,7 +96,7 @@ export default function CashierTable({ cashiers, loading, onChange, adminId }) {
                       onClick={() =>
                         setOpenMenuId(openMenuId === c.id ? null : c.id)
                       }
-                      className="p-2 rounded hover:bg-gray-100"
+                      className="p-2 rounded "
                     >
                       <BsThreeDotsVertical size={18} />
                     </button>

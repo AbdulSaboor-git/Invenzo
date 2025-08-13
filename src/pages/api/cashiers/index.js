@@ -61,6 +61,7 @@ async function handleGetCashiers(req, res) {
           firstName: true,
           lastName: true,
           lastLogin: true,
+          isActive: true,
           email: true,
           createdAt: true,
           updatedAt: true,
@@ -121,7 +122,10 @@ async function handleAddCashier(req, res) {
  * PUT – Edit cashier name
  */
 async function handleEditCashier(req, res) {
-  const { cashierId, firstName, lastName } = req.body;
+  const { cashierId, firstName, lastName, isActive } = req.body;
+  const activeStatus =
+    typeof isActive === 'string' ? isActive === 'true' : !!isActive;
+
   if (!cashierId || !firstName)
     return res.status(400).json({ error: 'Missing data' });
 
@@ -132,6 +136,7 @@ async function handleEditCashier(req, res) {
         update: {
           firstName,
           lastName: lastName || '',
+          isActive: activeStatus,
         },
       },
     },

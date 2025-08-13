@@ -120,7 +120,7 @@ export default function UpdatePasswordPopup({ cashier, onClose, onSuccess }) {
           <button
             onClick={handleUpdatePassword}
             disabled={isDisabled}
-            className="px-6 py-3 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg transition disabled:hover:bg-green-500 disabled:cursor-not-allowed"
+            className="px-6 py-3 w-32 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg transition disabled:hover:bg-green-500 disabled:cursor-not-allowed"
           >
             {loading ? (
               <div className="border-2 border-green-200 border-t-transparent animate-spin rounded-full w-5 h-5 mx-auto" />
