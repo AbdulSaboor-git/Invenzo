@@ -324,11 +324,14 @@ export default function AddProductPage() {
               className="w-full px-4 py-2 border rounded-lg bg-white focus:outline-none focus:ring focus:ring-blue-300"
             >
               <option value="">Select unit</option>
-              <option value="piece">Piece</option>
-              <option value="kg">Kg</option>
-              <option value="g">Gram</option>
-              <option value="liter">Liter</option>
-              <option value="ml">Milliliter</option>
+              <option value="g">Gram (g)</option>
+              <option value="kg">Kilogram (kg)</option>
+              <option value="ml">Milliliter (ml)</option>
+              <option value="litter">Liter (l)</option>
+              <option value="pc">Piece (pc)</option>
+              <option value="dozen">Dozen</option>
+              <option value="pack">Pack</option>
+              <option value="box">Box</option>
             </select>
           </div>
 

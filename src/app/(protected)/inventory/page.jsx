@@ -504,7 +504,7 @@ export default function Inventory() {
                           {index + 1}
                         </td>
                         <td className="px-3 min-w-[170px] max-w-[280px] py-2 md:px-6 md:py-4 font-medium cursor-pointer">
-                          {product.name + ' 1' + product.unit}
+                          {product.name + ' - 1 ' + product.unit}
                         </td>
                         <td className="px-3  min-w-[110px] py-2 md:px-6 md:py-4">
                           Rs.{product.salePrice}

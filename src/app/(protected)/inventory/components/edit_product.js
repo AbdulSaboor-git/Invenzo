@@ -94,7 +94,7 @@ export default function EditProduct({
       }`}
     >
       <div
-        className="bg-white max-h-[90%] hidden_scroll_bar overflow-auto rounded-xl shadow-2xl w-full max-w-md sm:max-w-lg py-10 px-6 sm:py-12 sm:px-10  relative"
+        className="bg-white max-h-[96%] hidden_scroll_bar overflow-auto rounded-xl shadow-2xl w-full max-w-md sm:max-w-lg py-8 px-6 sm:py-8 sm:px-10  relative"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close Button */}
@@ -254,7 +254,7 @@ export default function EditProduct({
           </div>
 
           {/* Tags */}
-          <div className="flex pb-6 sm:pb-8 items-center justify-between gap-2 w-full">
+          <div className="flex pb-6 items-center justify-between gap-2 w-full">
             <label
               htmlFor="edit-tags"
               className="block  font-medium text-gray-700"
