@@ -9,47 +9,50 @@ datasource db {
 }
 
 model User {
-  id             Int         @id @default(autoincrement())
-  email          String      @unique
+  id             Int        @id @default(autoincrement())
+  email          String     @unique
   password       String
-  createdAt      DateTime    @default(now())
-  updatedAt      DateTime    @updatedAt
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
   firstName      String
   lastName       String?
   lastLogin      DateTime?
   profilePicture String?
-  isActive       Boolean     @default(true)
-  Inventories    Inventory[]
-  Moderator      Moderator[]
+  isActive       Boolean    @default(true)
+  Cashier        Cashier?
+  Inventories    Inventory?
 }
 
 model Inventory {
-  id             Int         @id @default(autoincrement())
+  id             Int        @id @default(autoincrement())
   name           String
-  createdAt      DateTime    @default(now())
-  updatedAt      DateTime    @updatedAt
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
   profilePicture String?
-  products       Product[]
+  adminId        Int        @unique(map: "inventory_admin_unique")
+  Cashier        Cashier[]
   categories     Category[]
-  moderators     Moderator[]
-  adminId        Int
-  admin          User        @relation(fields: [adminId], references: [id])
+  admin          User       @relation(fields: [adminId], references: [id])
+  products       Product[]
+  Sale           Sale[]
 }
 
 model Product {
-  id            Int       @id @default(autoincrement())
+  id            Int        @id @default(autoincrement())
   name          String
   description   String?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  categoryId    Int
+  inventoryId   Int
+  govtSalePrice Float?
   purchasePrice Float
   salePrice     Float
-  govtSalePrice Float?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  categoryId    Int
-  category      Category  @relation(fields: [categoryId], references: [id])
-  inventoryId   Int
-  inventory     Inventory @relation(fields: [inventoryId], references: [id])
   tags          String?
+  unit          String?
+  category      Category   @relation(fields: [categoryId], references: [id])
+  inventory     Inventory  @relation(fields: [inventoryId], references: [id])
+  SaleItem      SaleItem[]
 }
 
 model Category {
@@ -61,13 +64,35 @@ model Category {
   inventory   Inventory @relation(fields: [inventoryId], references: [id])
   products    Product[]
 
-  @@unique([name, inventoryId]) // Composite unique constraint
+  @@unique([name, inventoryId])
 }
 
-model Moderator {
-  id          Int       @id @default(autoincrement())
-  userId      Int
-  user        User      @relation(fields: [userId], references: [id])
+model Cashier {
+  id          Int       @id(map: "Moderator_pkey") @default(autoincrement())
+  userId      Int       @unique(map: "cashier_user_unique")
   inventoryId Int
-  inventory   Inventory @relation(fields: [inventoryId], references: [id])
+  Inventory   Inventory @relation(fields: [inventoryId], references: [id], map: "Moderator_inventoryId_fkey")
+  User        User      @relation(fields: [userId], references: [id], map: "Moderator_userId_fkey")
+  Sale        Sale[]
+}
+
+model Sale {
+  id          Int        @id @default(autoincrement())
+  createdAt   DateTime?  @default(now()) @db.Timestamp(6)
+  totalAmount Float
+  cashierId   Int
+  inventoryId Int
+  Cashier     Cashier    @relation(fields: [cashierId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_cashier")
+  Inventory   Inventory  @relation(fields: [inventoryId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_inventory")
+  SaleItem    SaleItem[]
+}
+
+model SaleItem {
+  id        Int     @id @default(autoincrement())
+  saleId    Int
+  productId Int
+  quantity  Float
+  price     Float
+  Product   Product @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_product")
+  Sale      Sale    @relation(fields: [saleId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_sale")
 }

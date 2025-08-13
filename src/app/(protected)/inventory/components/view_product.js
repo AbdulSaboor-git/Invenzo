@@ -58,12 +58,12 @@ export default function ViewProduct({
             {prefs.viewPurchasePrice && (
               <Detail
                 label="Purchase Price"
-                value={`Rs.${selectedProduct.purchasePrice}`}
+                value={`Rs.${selectedProduct.purchasePrice}/${selectedProduct.unit}`}
               />
             )}
             <Detail
               label="Sale Price"
-              value={`Rs.${selectedProduct.salePrice}`}
+              value={`Rs.${selectedProduct.salePrice}/${selectedProduct.unit}`}
             />
             {prefs.viewGovtSalePrice && (
               <Detail
