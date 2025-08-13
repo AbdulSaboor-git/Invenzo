@@ -26,6 +26,7 @@ export default function Inventory() {
   const [loadingInventory, setLoadingInventory] = useState(false);
   const [fetchedInv, setFetchedInv] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState(null);
   const [refreshFailed, setRefreshFailed] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedProductForDelete, setSelectedProductForDelete] =
@@ -140,7 +141,8 @@ export default function Inventory() {
 
       const data = await response.json();
       const { products, categories } = data;
-
+      const timestamp = new Date().toISOString();
+      setLastUpdated(timestamp);
       if (typeof window !== 'undefined') {
         const cached = localStorage.getItem(localStorageKey);
         if (cached) {
@@ -151,6 +153,7 @@ export default function Inventory() {
               ...parsed,
               products: products,
               categories: categories,
+              lastUpdated: timestamp,
             })
           );
         } else {
@@ -217,6 +220,7 @@ export default function Inventory() {
         setProducts(parsed.products);
         setCategories(parsed.categories);
         setInventory(parsed.inventory);
+        setLastUpdated(parsed.lastUpdated);
         return true;
       }
     } catch {
@@ -425,6 +429,11 @@ export default function Inventory() {
                 </div>
               )}
             </div>
+            {lastUpdated && (
+              <span className="text-sm place-content-center hidden sm:block text-gray-500">
+                Last Updated: {new Date(lastUpdated).toLocaleString()}
+              </span>
+            )}
             <RefreshButton
               failedtoRefresh={refreshFailed}
               loading={loadingInventory || refreshing}
