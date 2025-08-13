@@ -439,7 +439,7 @@ export default function Inventory() {
                 <tr>
                   <th className="px-3 py-3 md:px-6 md:py-4 text-center">#</th>
                   <th
-                    className=" px-3 py-3 min-w-[190px] md:px-6 md:py-4 cursor-pointer"
+                    className=" px-3 py-3 min-w-[200px] md:px-6 md:py-4 cursor-pointer"
                     onClick={() => toggleSort('name')}
                   >
                     Name {renderSortIcon('name')}
@@ -503,7 +503,7 @@ export default function Inventory() {
                         <td className="px-3 py-2 md:px-6 md:py-4 text-gray-500 text-center">
                           {index + 1}
                         </td>
-                        <td className="px-3 min-w-[190px] max-w-[280px] py-2 md:px-6 md:py-4 font-medium cursor-pointer">
+                        <td className="px-3 min-w-[200px] max-w-[280px] py-2 md:px-6 md:py-4 font-medium cursor-pointer">
                           {product.name + ' - 1 ' + product.unit}
                         </td>
                         <td className="px-3  min-w-[110px] py-2 md:px-6 md:py-4">
