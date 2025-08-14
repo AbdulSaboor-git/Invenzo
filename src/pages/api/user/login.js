@@ -25,6 +25,10 @@ export default async function handler(req, res) {
       return res.status(401).json({ error: 'User not found' });
     }
 
+    if (!user.isActive) {
+      return res.status(403).json({ error: 'Account is deactivated' });
+    }
+
     // Compare hashed password
     const isPasswordValid = password === user.password ? true : false;
     if (!isPasswordValid) {

@@ -43,6 +43,12 @@ export default function Login() {
 
       const data = await response.json();
 
+      if (response.status === 403) {
+        // User is inactive or forbidden
+        toast.error('Your account has been deactivated.');
+        return;
+      }
+
       if (!response.ok) {
         toast.error(data.error || 'Login failed');
         throw new Error(data.error || 'Login failed');
@@ -53,6 +59,7 @@ export default function Login() {
       if (typeof window !== 'undefined') {
         localStorage.setItem('token', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
+        localStorage.setItem('userFetchedAt', Date.now());
       }
       toast.success('Logged in successfully');
       dispatch(setUser(data.user)); // Store user in Redux
