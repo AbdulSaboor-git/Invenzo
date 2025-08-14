@@ -19,34 +19,31 @@ export default async function handler(req, res) {
   }
 
   try {
+    // Step 1: Find user
     const user = await prisma.user.findUnique({ where: { email } });
-
-    if (!user) {
-      return res.status(401).json({ error: 'User not found' });
+    if (!user || password !== user.password) {
+      return res.status(401).json({ error: 'Invalid email or password' });
     }
 
+    // Step 2: Check active status
     if (!user.isActive) {
       return res.status(403).json({ error: 'Account is deactivated' });
     }
 
-    // Compare hashed password
-    const isPasswordValid = password === user.password ? true : false;
-    if (!isPasswordValid) {
-      return res.status(401).json({ error: 'Invalid email or password' });
-    }
-
+    // Step 3: Update last login (after successful checks)
     await prisma.user.update({
       where: { id: user.id },
       data: { lastLogin: new Date() },
     });
 
-    // Generate JWT
+    // Step 4: Generate JWT
     const token = jwt.sign(
       { userId: user.id, email: user.email },
-      process.env.JWT_SECRET
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
     );
 
-    // Return token and minimal safe user info
+    // Step 5: Return token and safe user info
     res.status(200).json({
       token,
       user: {
@@ -56,7 +53,7 @@ export default async function handler(req, res) {
         isActive: user.isActive,
         firstName: user.firstName || null,
         lastName: user.lastName || null,
-        profilePicture: user.profilePicture,
+        profilePicture: user.profilePicture || null,
       },
     });
   } catch (error) {

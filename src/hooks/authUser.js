@@ -4,7 +4,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setUser, setUserLoading, logoutUser } from '@/redux/userSlice';
 import { toast } from 'sonner';
 
-const THREE_HOURS = 0.2 * 60 * 1000; // 30s for testing
+const THREE_HOURS = 3 * 60 * 60 * 1000;
+
+// ---- Module-level flag to prevent duplicate deactivation toasts ----
+let hasShownDeactivationToast = false;
 
 export default function useAuthUser() {
   const { user, userLoading } = useSelector((state) => state.user);
@@ -28,7 +31,6 @@ export default function useAuthUser() {
     }
 
     dispatch(logoutUser());
-    toast('Logged out');
   }, [dispatch]);
 
   const fetchFreshUser = useCallback(async () => {
@@ -43,7 +45,10 @@ export default function useAuthUser() {
       });
 
       if (res.status === 403) {
-        toast.error('Your account has been deactivated. Logging out...');
+        if (!hasShownDeactivationToast) {
+          hasShownDeactivationToast = true;
+          toast.error('Your account has been deactivated. Logging out...');
+        }
         setTimeout(logout, 3000);
         return;
       }
@@ -54,12 +59,6 @@ export default function useAuthUser() {
 
       const data = await res.json();
       if (data?.user) {
-        if (!data.user.isActive) {
-          toast.error('Your account has been deactivated. Logging out...');
-          setTimeout(logout, 3000);
-          return;
-        }
-
         try {
           localStorage.setItem('user', JSON.stringify(data.user));
           localStorage.setItem('userFetchedAt', String(Date.now()));
@@ -68,7 +67,7 @@ export default function useAuthUser() {
         }
 
         dispatch(setUser(data.user));
-        toast('Fetched fresh user data');
+        // toast('Fetched fresh user data');
       }
     } catch (err) {
       console.error('Error refreshing user:', err);
@@ -98,6 +97,10 @@ export default function useAuthUser() {
         const parsedUser = JSON.parse(storedUser);
 
         if (!parsedUser.isActive) {
+          if (!hasShownDeactivationToast) {
+            hasShownDeactivationToast = true;
+            toast.error('Your account has been deactivated. Logging out...');
+          }
           logout();
           return;
         }

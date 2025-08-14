@@ -6,21 +6,22 @@ import { useDispatch } from 'react-redux';
 import { setUser } from '@/redux/userSlice';
 import useAuthUser from '@/hooks/authUser';
 import { toast } from 'sonner';
+import { useAuthRedirect } from '@/hooks/useAuthRedirect';
 
 export default function Login() {
   const router = useRouter();
   const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { user, userLoading } = useAuthUser();
+  // const { user, userLoading } = useAuthUser();
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (!userLoading && user) {
-      router.push('/inventory');
-    }
-  }, [user, userLoading, router]);
-
+  // useEffect(() => {
+  //   if (!userLoading && user) {
+  //     router.push('/inventory');
+  //   }
+  // }, [user, userLoading, router]);
+  useAuthRedirect();
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -63,7 +64,9 @@ export default function Login() {
       }
       toast.success('Logged in successfully');
       dispatch(setUser(data.user)); // Store user in Redux
-      router.push('/inventory'); // Redirect to a different page after successful login
+      setTimeout(() => {
+        router.push('/inventory');
+      }, 0); // Redirect to a different page after successful login
     } catch (err) {
       console.log(err);
     } finally {
@@ -118,7 +121,7 @@ export default function Login() {
                 type="email"
                 placeholder="you@example.com"
                 value={email}
-                onChange={(e) => setEmail(e.target.value.trim())}
+                onChange={(e) => setEmail(e.target.value.trim().toLowerCase())}
                 required
               />
             </div>
