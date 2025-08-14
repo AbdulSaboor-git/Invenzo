@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setUser, setUserLoading, logoutUser } from '@/redux/userSlice';
 import { toast } from 'sonner';
 
-const THREE_HOURS = 0.1 * 60 * 1000; // 30s for testing
+const THREE_HOURS = 0.2 * 60 * 1000; // 30s for testing
 
 export default function useAuthUser() {
   const { user, userLoading } = useSelector((state) => state.user);

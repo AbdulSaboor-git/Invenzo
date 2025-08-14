@@ -1,11 +1,13 @@
-import Header from "@/components/header";
-import Link from "next/link";
-import React from "react";
+import Header from '@/components/header';
+import useAuthUser from '@/hooks/authUser';
+import Link from 'next/link';
+import React from 'react';
 
 export default function NotFound() {
+  const { user, logout } = useAuthUser();
   return (
     <main className=" w-full bg-white">
-      <Header />
+      <Header user={user} logout={logout} />
       <div className="flex min-h-[70vh] flex-col items-center justify-center text-center">
         <div className="max-w-md p-6">
           <h1 className="text-6xl font-bold text-gray-800 mb-4">404</h1>

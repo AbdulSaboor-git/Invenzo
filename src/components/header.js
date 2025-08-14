@@ -14,8 +14,7 @@ import {
 import UserProfile from './user_profile';
 import usePreferences from '@/hooks/usePreferences';
 
-export default function Header({ className }) {
-  const { user, logout } = useAuthUser();
+export default function Header({ className, user, logout }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const router = useRouter();

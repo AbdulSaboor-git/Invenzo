@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { IoLockClosed, IoLockOpen } from 'react-icons/io5';
 
 export default function SettingsPage() {
-  const { user } = useAuthUser();
+  const { user, logout } = useAuthUser();
   const localStorageKey = `inventoryData_preferences_${user.id}`;
   const [reloadKey, setReloadKey] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
@@ -118,7 +118,7 @@ export default function SettingsPage() {
   if (tempPreferences.requireSettingsPassword && !authenticated) {
     return (
       <div className="flex flex-col items-center">
-        <Header className={'shadow'} />
+        <Header className={'shadow'} user={user} logout={logout} />
         <div className="flex min-h-[80vh] flex-col items-center justify-center text-center p-6">
           <div className="bg-white rounded-xl shadow p-6 md:p-8 w-full max-w-sm border border-gray-200">
             <div className="w-full text-4xl mb-4 text-gray-500">

@@ -1,17 +1,18 @@
-"use client";
+'use client';
 
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import useAuthUser from "@/hooks/authUser";
-import Loading from "../loading";
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+import useAuthUser from '@/hooks/authUser';
+import Loading from '../loading';
 
 export default function ProtectedLayout({ children }) {
-  const { user, userLoading } = useAuthUser();
+  const { user, userLoading, logout } = useAuthUser();
   const router = useRouter();
 
   useEffect(() => {
     if (!userLoading && !user) {
-      router.replace("/login");
+      router.replace('/login');
+      return;
     }
   }, [user, userLoading, router]);
 

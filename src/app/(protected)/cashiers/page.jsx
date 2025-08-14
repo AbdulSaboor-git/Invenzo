@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 import { MdAdd } from 'react-icons/md';
 
 export default function CashiersPage() {
-  const { user } = useAuthUser();
+  const { user, logout } = useAuthUser();
   const [cashiers, setCashiers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [lastUpdated, setLastUpdated] = useState(null);
@@ -76,7 +76,7 @@ export default function CashiersPage() {
 
   return (
     <div className="flex flex-col items-center w-full">
-      <Header />
+      <Header user={user} logout={logout} />
       <div className="w-full">
         <div className="flex flex-col md:flex-row md:justify-between items-center shadow px-3 md:px-6 py-4 gap-3 sticky top-3 md:top-[68px] bg-white z-40">
           <div className="w-full flex justify-center md:justify-start">

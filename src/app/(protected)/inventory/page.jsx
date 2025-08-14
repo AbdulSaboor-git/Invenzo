@@ -17,7 +17,7 @@ import usePreferences from '@/hooks/usePreferences';
 import RefreshButton from './components/refresh_btn';
 
 export default function Inventory() {
-  const { user } = useAuthUser();
+  const { user, logout } = useAuthUser();
   const prefs = usePreferences(user?.id);
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -344,7 +344,7 @@ export default function Inventory() {
 
   return (
     <div className="flex w-full flex-col items-center justify-center ">
-      <Header />
+      <Header user={user} logout={logout} />
       <ScrollToTop />
       <div className="w-full max-w-7xl place-self-center">
         <div className="flex flex-col md:flex-row md:justify-between items-center shadow px-3 md:px-6 py-4 gap-3 sticky top-3 md:top-[68px] bg-white z-40">
