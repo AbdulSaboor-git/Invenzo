@@ -22,6 +22,7 @@ export default function UpdatePasswordPopup({ cashier, onClose, onSuccess }) {
 
     try {
       setLoading(true);
+
       const res = await fetch('/api/cashiers', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },

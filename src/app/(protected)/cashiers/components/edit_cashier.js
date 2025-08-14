@@ -21,9 +21,20 @@ export default function EditCashierPopup({ cashier, onClose, onSuccess }) {
       toast.error('Cashier name is required.');
       return;
     }
-
     try {
       setLoading(true);
+      const normalize = (val) =>
+        val === null || val === undefined ? '' : String(val).trim();
+      const normalizeBool = (val) => Boolean(val === 'true' || val === true);
+
+      const noChanges =
+        normalize(name) === normalize(cashier.User.firstName) &&
+        normalizeBool(isActive) === normalizeBool(cashier.User.isActive);
+
+      if (noChanges) {
+        onClose();
+        return;
+      }
       const res = await fetch('/api/cashiers', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },

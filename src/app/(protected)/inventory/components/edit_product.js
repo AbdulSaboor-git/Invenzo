@@ -46,7 +46,7 @@ export default function EditProduct({
           normalizeNum(editProduct.salePrice) &&
         normalizeNum(editForm.govtSalePrice) ===
           normalizeNum(editProduct.govtSalePrice) &&
-        normalizeNum(editForm.unit) === normalizeNum(editProduct.unit) &&
+        normalize(editForm.unit) === normalize(editProduct.unit) &&
         normalize(editForm.tags) === normalize(editProduct.tags);
 
       if (noChanges) {
