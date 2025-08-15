@@ -3,11 +3,12 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 
 export default function EditCashierPopup({ cashier, onClose, onSuccess }) {
-  const [name, setName] = useState(cashier.User.firstName || '');
+  const [firstName, setFirstName] = useState(cashier.User.firstName || '');
+  const [lastName, setLastName] = useState(cashier.User.lastName || '');
   const [isActive, setIsActive] = useState(cashier.User.isActive);
   const [loading, setLoading] = useState(false);
 
-  const isDisabled = !name.trim() || loading;
+  const isDisabled = !firstName.trim() || loading;
 
   const handleEdit = async () => {
     if (!navigator.onLine) {
@@ -17,7 +18,7 @@ export default function EditCashierPopup({ cashier, onClose, onSuccess }) {
       return;
     }
 
-    if (!name.trim()) {
+    if (!firstName.trim()) {
       toast.error('Cashier name is required.');
       return;
     }
@@ -28,7 +29,8 @@ export default function EditCashierPopup({ cashier, onClose, onSuccess }) {
       const normalizeBool = (val) => Boolean(val === 'true' || val === true);
 
       const noChanges =
-        normalize(name) === normalize(cashier.User.firstName) &&
+        normalize(firstName) === normalize(cashier.User.firstName) &&
+        normalize(lastName) === normalize(cashier.User.lastName) &&
         normalizeBool(isActive) === normalizeBool(cashier.User.isActive);
 
       if (noChanges) {
@@ -40,7 +42,8 @@ export default function EditCashierPopup({ cashier, onClose, onSuccess }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           cashierId: cashier.id,
-          firstName: name.trim(),
+          firstName: firstName.trim(),
+          lastName: lastName.trim(),
           isActive,
         }),
       });
@@ -88,18 +91,34 @@ export default function EditCashierPopup({ cashier, onClose, onSuccess }) {
         <div className="space-y-4 pb-6">
           <div>
             <label
-              htmlFor="cashier-name"
+              htmlFor="first-name"
               className="block font-medium text-gray-700"
             >
-              Cashier Name <span className="text-red-500">*</span>
+              First Name <span className="text-red-500">*</span>
+            </label>
+            <input
+              id="first-name"
+              type="text"
+              placeholder="Enter first name"
+              className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="last-name"
+              className="block font-medium text-gray-700"
+            >
+              Last Name
             </label>
             <input
               id="cashier-name"
               type="text"
-              placeholder="Enter cashier name"
+              placeholder="Enter last name"
               className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
             />
           </div>
 

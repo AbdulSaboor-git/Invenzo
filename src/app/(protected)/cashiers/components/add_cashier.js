@@ -3,10 +3,11 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 
 export default function AddCashierPopup({ adminId, onClose, onSuccess }) {
-  const [name, setName] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const isDisabled = !name.trim() || loading;
+  const isDisabled = !firstName.trim() || loading;
 
   const handleAdd = async () => {
     if (!navigator.onLine) {
@@ -16,12 +17,12 @@ export default function AddCashierPopup({ adminId, onClose, onSuccess }) {
       return;
     }
 
-    if (!name.trim()) {
+    if (!firstName.trim()) {
       toast.error('Cashier name is required.');
       return;
     }
 
-    const cleanName = name.trim().replace(/\s+/g, '');
+    const cleanName = firstName.trim().replace(/\s+/g, '');
     const password = `${cleanName}.inv`.toLowerCase();
 
     try {
@@ -30,7 +31,8 @@ export default function AddCashierPopup({ adminId, onClose, onSuccess }) {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          firstName: name.trim(),
+          firstName: firstName.trim(),
+          lastName: lastName.trim(),
           userId: adminId,
         }),
       });
@@ -74,21 +76,37 @@ export default function AddCashierPopup({ adminId, onClose, onSuccess }) {
         </h3>
 
         {/* Name Field */}
-        <div className="space-y-2 mb-6">
+        <div className="space-y-4 mb-6">
           <div className="flex flex-col items-start gap-2 w-full ">
             <label
-              htmlFor="cashier-name"
+              htmlFor="first-name"
               className="block font-medium text-gray-700"
             >
-              Cashier Name <span className="text-red-500">*</span>
+              First Name <span className="text-red-500">*</span>
             </label>
             <input
-              id="cashier-name"
+              id="first-name"
               type="text"
-              placeholder="Enter cashier name"
+              placeholder="Enter first name"
               className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+            />
+          </div>
+          <div className="flex flex-col items-start gap-2 w-full ">
+            <label
+              htmlFor="last-name"
+              className="block font-medium text-gray-700"
+            >
+              Last Name
+            </label>
+            <input
+              id="last-name"
+              type="text"
+              placeholder="Enter last name"
+              className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
             />
           </div>
         </div>
@@ -105,7 +123,7 @@ export default function AddCashierPopup({ adminId, onClose, onSuccess }) {
           <button
             onClick={handleAdd}
             disabled={isDisabled}
-            className="px-6 py-3 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg transition disabled:hover:bg-green-500 disabled:cursor-not-allowed"
+            className="px-6 py-3 bg-green-500 w-24 hover:bg-green-600 text-white font-semibold rounded-lg transition disabled:hover:bg-green-500 disabled:cursor-not-allowed"
           >
             {loading ? (
               <div className="border-2 border-gray-200 border-t-transparent animate-spin rounded-full w-5 h-5 mx-auto" />
