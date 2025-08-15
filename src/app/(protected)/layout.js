@@ -12,7 +12,7 @@ export default function ProtectedLayout({ children }) {
 
   useEffect(() => {
     if (!userLoading && !user) {
-      // router.replace('/login');
+      router.replace('/login');
       return;
     }
   }, [user, userLoading]);
@@ -22,7 +22,7 @@ export default function ProtectedLayout({ children }) {
   }
 
   if (!user && !userLoading) {
-    return <NotFound />;
+    return <Loading />;
   }
 
   return <>{children}</>;

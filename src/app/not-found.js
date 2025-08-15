@@ -18,6 +18,10 @@ export default function NotFound() {
     }
   }, [user, userLoading, router]);
 
+  if (!userLoading && !user) {
+    return <Loading />;
+  }
+
   if (userLoading) {
     return <Loading />;
   }

@@ -75,9 +75,9 @@ export default function Login() {
   };
 
   return (
-    <div className="flex h-screen items-center mx-4 pt-[52px] md:pt-[60px] justify-center bg-gradient-to-br from-gray-50 to-gray-100">
+    <div className="flex flex-col items-center">
       {/* Header */}
-      <header className="fixed top-0 w-full bg-white shadow px-4 md:px-6 py-3">
+      <header className="sticky top-0 w-full bg-white shadow px-4 md:px-6 py-3">
         <img
           src="/invenzo_logo.png"
           alt="Invenzo Logo"
@@ -85,76 +85,75 @@ export default function Login() {
           className="max-h-10 md:max-h-12"
         />
       </header>
-
       {/* Login Form */}
-      {/* <main className="flex flex-1 px-4"> */}
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 md:p-10 border border-gray-100">
-        {/* Logo */}
-        <div className="flex justify-center mb-6">
-          <img
-            src="/invenzo_icon.png"
-            alt="Invenzo Icon"
-            draggable={false}
-            className="rounded-full shadow-sm w-[60px] aspect-square"
-          />
+      <div className="flex w-full min-h-[80vh] flex-col items-center justify-center p-6">
+        <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8 md:p-10 border border-gray-100">
+          {/* Logo */}
+          <div className="flex justify-center mb-6">
+            <img
+              src="/invenzo_icon.png"
+              alt="Invenzo Icon"
+              draggable={false}
+              className="rounded-full shadow-sm w-[60px] aspect-square"
+            />
+          </div>
+
+          {/* Heading */}
+          <h2 className="text-2xl md:text-3xl font-semibold text-center text-gray-800 mb-8">
+            Welcome Back
+          </h2>
+
+          {/* Form */}
+          <form
+            onSubmit={handleLogin}
+            className="flex flex-col gap-5 text-gray-700 text-sm font-medium"
+          >
+            <div>
+              <label className="block mb-2" htmlFor="email">
+                Email
+              </label>
+              <input
+                spellCheck="false"
+                autoCorrect="off"
+                className="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                id="email"
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value.trim().toLowerCase())}
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block mb-2" htmlFor="password">
+                Password
+              </label>
+              <input
+                className="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+                id="password"
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="flex items-center justify-center mt-6">
+              <button
+                disabled={loading}
+                className={`w-full rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 transition-all duration-200 shadow-sm ${
+                  loading ? 'opacity-70 cursor-not-allowed' : ''
+                }`}
+                type="submit"
+              >
+                {loading ? 'Signing in...' : 'Login'}
+              </button>
+            </div>
+          </form>
         </div>
-
-        {/* Heading */}
-        <h2 className="text-2xl md:text-3xl font-semibold text-center text-gray-800 mb-8">
-          Welcome Back
-        </h2>
-
-        {/* Form */}
-        <form
-          onSubmit={handleLogin}
-          className="flex flex-col gap-5 text-gray-700 text-sm font-medium"
-        >
-          <div>
-            <label className="block mb-2" htmlFor="email">
-              Email
-            </label>
-            <input
-              spellCheck="false"
-              autoCorrect="off"
-              className="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-              id="email"
-              type="email"
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value.trim().toLowerCase())}
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block mb-2" htmlFor="password">
-              Password
-            </label>
-            <input
-              className="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
-              id="password"
-              type="password"
-              placeholder="••••••••"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-
-          <div className="flex items-center justify-center mt-6">
-            <button
-              disabled={loading}
-              className={`w-full rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 transition-all duration-200 shadow-sm ${
-                loading ? 'opacity-70 cursor-not-allowed' : ''
-              }`}
-              type="submit"
-            >
-              {loading ? 'Signing in...' : 'Login'}
-            </button>
-          </div>
-        </form>
       </div>
-      {/* </main> */}
     </div>
   );
 }
