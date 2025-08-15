@@ -54,51 +54,51 @@ const handlePost = async (req, res, inventoryId) => {
 
 async function handleGet(req, res, inventoryId) {
   try {
-    // Ensure inventoryId is a valid integer
     const id = parseInt(inventoryId, 10);
     if (isNaN(id) || id <= 0) {
       return res.status(400).json({ message: 'Invalid inventory ID' });
     }
 
-    // Extract userId from request (assuming it's coming from a header or request body)
-    const userId = req.query.userId || req.body.userId || req.headers['userId'];
+    const userId = parseInt(
+      req.query.userId || req.body.userId || req.headers['userid'],
+      10
+    );
     if (!userId) {
       return res.status(400).json({ message: 'User ID is required' });
     }
 
-    // console.log("User ID:", userId, "Inventory ID:", id);
-
-    // Check if inventory exists
+    // Find inventory with adminId
     const inv = await prisma.inventory.findUnique({
       where: { id },
-      select: {
-        id: true,
-        adminId: true,
-      },
-      // include: { admin: true },
+      select: { id: true, adminId: true },
     });
 
     if (!inv) {
       return res.status(404).json({ message: 'Invalid inventory ID' });
     }
 
-    // Check if the user is either the admin or a moderator of the inventory
-    const isAdmin = inv.adminId === parseInt(userId, 10);
+    // Check if admin
+    let isAuthorized = inv.adminId === userId;
 
-    // const isModerator = await prisma.moderator.findFirst({
-    //   where: {
-    //     inventoryId: id,
-    //     userId: parseInt(userId, 10),
-    //   },
-    // });
+    // If not admin, check if cashier
+    if (!isAuthorized) {
+      const cashierExists = await prisma.cashier.findFirst({
+        where: {
+          inventoryId: id,
+          userId: userId,
+        },
+        select: { id: true },
+      });
+      isAuthorized = Boolean(cashierExists);
+    }
 
-    if (!isAdmin) {
+    if (!isAuthorized) {
       return res
         .status(403)
         .json({ message: 'User is not authorized to access this inventory' });
     }
 
-    // Fetch products, categories, and moderators
+    // Fetch products
     const products = await prisma.product.findMany({
       where: { inventoryId: id },
       select: {
@@ -117,22 +117,12 @@ async function handleGet(req, res, inventoryId) {
       orderBy: { name: 'asc' },
     });
 
+    // Fetch categories
     const categories = await prisma.category.findMany({
       where: { inventoryId: id },
-      select: {
-        id: true,
-        name: true,
-      },
+      select: { id: true, name: true },
       orderBy: { name: 'asc' },
     });
-
-    // const moderators = await prisma.moderator.findMany({
-    //   where: { inventoryId: id },
-    //   include: {
-    //     user: true,
-    //   }, // Include the related user data
-    //   orderBy: { userId: "asc" },
-    // });
 
     return res.status(200).json({ products, categories });
   } catch (error) {

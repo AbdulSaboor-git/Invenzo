@@ -81,7 +81,7 @@ export default function SettingsPage() {
       const response = await fetch('/api/user/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: user.email, password: passwordInput }),
+        body: JSON.stringify({ email: user?.email, password: passwordInput }),
       });
 
       const data = await response.json();

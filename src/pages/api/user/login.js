@@ -19,8 +19,30 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Step 1: Find user
-    const user = await prisma.user.findUnique({ where: { email } });
+    // Step 1: Find user with cashier + inventory relation
+    const user = await prisma.user.findUnique({
+      where: { email },
+      select: {
+        id: true,
+        email: true,
+        password: true,
+        role: true,
+        isActive: true,
+        firstName: true,
+        lastName: true,
+        profilePicture: true,
+        Cashier: {
+          select: {
+            Inventory: {
+              select: {
+                adminId: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
     if (!user || password !== user.password) {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
@@ -30,20 +52,22 @@ export default async function handler(req, res) {
       return res.status(403).json({ error: 'Account is deactivated' });
     }
 
-    // Step 3: Update last login (after successful checks)
+    // Step 3: Update last login
     await prisma.user.update({
       where: { id: user.id },
       data: { lastLogin: new Date() },
     });
 
-    // Step 4: Generate JWT
+    // Step 4: Determine adminId
+    const adminId = user.Cashier?.Inventory?.adminId ?? user.id;
+
+    // Step 5: Generate JWT
     const token = jwt.sign(
       { userId: user.id, email: user.email },
-      process.env.JWT_SECRET,
-      { expiresIn: '7d' }
+      process.env.JWT_SECRET
     );
 
-    // Step 5: Return token and safe user info
+    // Step 6: Return token + safe user info
     res.status(200).json({
       token,
       user: {
@@ -54,6 +78,7 @@ export default async function handler(req, res) {
         firstName: user.firstName || null,
         lastName: user.lastName || null,
         profilePicture: user.profilePicture || null,
+        adminId,
       },
     });
   } catch (error) {

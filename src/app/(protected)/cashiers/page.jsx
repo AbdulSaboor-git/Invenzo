@@ -35,7 +35,7 @@ export default function CashiersPage() {
   const fetchData = async () => {
     try {
       setRefreshing(true);
-      const res = await fetch(`/api/cashiers?userId=${user?.id}`);
+      const res = await fetch(`/api/cashiers?userId=${user?.adminId}`);
       const data = await res.json();
       if (res.ok) {
         setCashiers(data.cashiers);
@@ -110,14 +110,14 @@ export default function CashiersPage() {
           cashiers={cashiers}
           loading={refreshing}
           onChange={fetchData}
-          adminId={user?.id}
+          adminId={user?.adminId}
         />
       </div>
 
       {/* Add Cashier Popup */}
       {showAddPopup && (
         <AddCashierPopup
-          adminId={user?.id}
+          adminId={user?.adminId}
           onClose={() => setShowAddPopup(false)}
           onSuccess={fetchData}
         />

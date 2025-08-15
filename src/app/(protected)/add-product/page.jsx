@@ -31,7 +31,7 @@ export default function AddProductPage() {
     if (!user) return;
     try {
       setLoadingInventory(true);
-      const response = await fetch(`/api/inventory?adminId=${user?.id}`);
+      const response = await fetch(`/api/inventory?adminId=${user?.adminId}`);
       if (!response.ok) throw new Error('Failed to fetch from server');
       const data = await response.json();
       setInventory(data.inventory);

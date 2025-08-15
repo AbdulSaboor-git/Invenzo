@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import { HiOutlineSwitchVertical } from 'react-icons/hi';
 
-import { IoSync } from 'react-icons/io5';
 import { MdClose, MdEdit } from 'react-icons/md';
 import { FiArrowUp, FiArrowDown } from 'react-icons/fi';
 import { toast } from 'sonner';
@@ -104,11 +103,23 @@ export default function Inventory() {
     if (!user) return;
     try {
       setLoadingInventory(true);
-      const response = await fetch(`/api/inventory?adminId=${user?.id}`);
-      if (!response.ok) throw new Error('Failed to fetch from server');
+
+      let response = await fetch(`/api/inventory?adminId=${user?.adminId}`);
+
+      if (response.status === 404) {
+        response = await fetch(`/api/inventory`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ adminId: user.id }),
+        });
+      }
+
+      if (!response.ok) throw new Error('Failed to fetch or create inventory');
+
       const data = await response.json();
       setInventory(data.inventory);
       console.log(data.inventory);
+
       if (typeof window !== 'undefined') {
         const cached = localStorage.getItem(localStorageKey);
         if (cached) {
