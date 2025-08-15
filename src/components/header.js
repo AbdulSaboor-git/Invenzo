@@ -18,7 +18,7 @@ export default function Header({ className, user, logout }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const router = useRouter();
-  const prefs = usePreferences(user?.id);
+  const prefs = usePreferences(user?.id, user?.role);
 
   const handleMenuClick = () => {
     setSidebarOpen(!sidebarOpen);
@@ -31,19 +31,21 @@ export default function Header({ className, user, logout }) {
     router.push(`/${name.toLowerCase().replace(/\s+/g, '-')}`);
   };
 
-  const buttons = [
-    {
+  const buttons = [];
+  user?.role !== 'cashier' &&
+    buttons.push({
       icon: <MdDashboard />,
       label: 'Dashboard',
       onclick: () => handleButtonClick('Dashboard'),
-    },
-    {
-      icon: <MdInventory />,
-      label: 'Inventory',
-      onclick: () => handleButtonClick('Inventory'),
-    },
-  ];
+    });
 
+  buttons.push({
+    icon: <MdInventory />,
+    label: 'Inventory',
+    onclick: () => handleButtonClick('Inventory'),
+  });
+
+  // user?.role != 'cashier' &&
   prefs.addProduct &&
     buttons.push({
       icon: <IoAddCircle />,
@@ -58,11 +60,12 @@ export default function Header({ className, user, logout }) {
       onclick: () => handleButtonClick('Categories'),
     });
 
-  buttons.push({
-    icon: <FaUsers />,
-    label: 'Cashiers',
-    onclick: () => handleButtonClick('Cashiers'),
-  });
+  user?.role !== 'cashier' &&
+    buttons.push({
+      icon: <FaUsers />,
+      label: 'Cashiers',
+      onclick: () => handleButtonClick('Cashiers'),
+    });
 
   prefs.viewSalesData &&
     buttons.push({
@@ -71,11 +74,12 @@ export default function Header({ className, user, logout }) {
       onclick: () => handleButtonClick('Sales'),
     });
 
-  buttons.push({
-    icon: <MdSettings />,
-    label: `Settings ${prefs.requireSettingsPassword ? '🔒' : ''}`,
-    onclick: () => handleButtonClick('Settings'),
-  });
+  user?.role !== 'cashier' &&
+    buttons.push({
+      icon: <MdSettings />,
+      label: `Settings ${prefs.requireSettingsPassword ? '🔒' : ''}`,
+      onclick: () => handleButtonClick('Settings'),
+    });
   useEffect(() => {
     if (sidebarOpen) {
       document.body.classList.add('overflow-hidden');

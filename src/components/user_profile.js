@@ -1,22 +1,22 @@
-import React, { useEffect } from "react";
-import { MdLogout } from "react-icons/md";
-import { toast } from "sonner";
+import React, { useEffect } from 'react';
+import { MdLogout } from 'react-icons/md';
+import { toast } from 'sonner';
 
 export default function UserProfile({ CloseForm, user, logout, showProfile }) {
-  const username = user?.firstName + " " + (user?.lastName || "");
+  const username = user?.firstName + ' ' + (user?.lastName || '');
   const profilePic = user?.profilePicture;
   const email = user?.email;
-  const defaultProfilePictureLink = "default.png";
+  const defaultProfilePictureLink = 'default.png';
 
   useEffect(() => {
     if (showProfile) {
-      document.body.classList.add("overflow-hidden");
+      document.body.classList.add('overflow-hidden');
     } else {
-      document.body.classList.remove("overflow-hidden");
+      document.body.classList.remove('overflow-hidden');
     }
 
     return () => {
-      document.body.classList.remove("overflow-hidden");
+      document.body.classList.remove('overflow-hidden');
     };
   }, [showProfile]);
 
@@ -24,11 +24,12 @@ export default function UserProfile({ CloseForm, user, logout, showProfile }) {
     <div
       className={`fixed inset-0 text-sm bg-black/20 backdrop-blur-sm flex items-center justify-center z-50 px-4 sm:px-6 transition ease-in-out ${
         showProfile
-          ? "opacity-100 pointer-events-auto"
-          : "opacity-0 pointer-events-none"
+          ? 'opacity-100 pointer-events-auto'
+          : 'opacity-0 pointer-events-none'
       }`}
+      onClick={CloseForm}
     >
-      {" "}
+      {' '}
       <div className="bg-white backdrop-blur-md rounded-xl shadow-2xl max-w-lg w-full p-6 relative ">
         {/* Close Button */}
         <button
@@ -78,7 +79,7 @@ export default function UserProfile({ CloseForm, user, logout, showProfile }) {
         {/* Logout Button */}
         <button
           onClick={() => {
-            toast.success("Loged out");
+            toast.success('Loged out');
             CloseForm();
             logout();
           }}

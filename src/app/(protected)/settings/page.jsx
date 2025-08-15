@@ -4,6 +4,7 @@ import useAuthUser from '@/hooks/authUser';
 import Header from '@/components/header';
 import { toast } from 'sonner';
 import { IoLockClosed, IoLockOpen } from 'react-icons/io5';
+import NotFound from '@/app/not-found';
 
 export default function SettingsPage() {
   const { user, logout } = useAuthUser();
@@ -13,37 +14,67 @@ export default function SettingsPage() {
   const [isPasswordCorrect, setIsPasswordCorrect] = useState(false);
   const [passwordInput, setPasswordInput] = useState('');
   const [authLoading, setAuthLoading] = useState(false);
-
-  const triggerReload = () => {
-    setReloadKey(!reloadKey);
-  };
-
-  const defaultPrefs = {
+  const [defaultPrefs, setDefaultPrefs] = useState({
     // general
-    addProduct: true,
-    editProduct: true,
-    deleteProduct: true,
-    allowCategoryManagement: true,
-    renamingInventory: true,
+    addProduct: false,
+    editProduct: false,
+    deleteProduct: false,
+    allowCategoryManagement: false,
+    renamingInventory: false,
     viewSalesData: true,
     // inventory display
-    viewPurchasePriceColumn: true,
-    viewDateAddedColumn: true,
+    viewPurchasePriceColumn: false,
+    viewDateAddedColumn: false,
     viewDateUpdatedColumn: true,
     viewCategoryColumn: true,
     defaultSortOrder: 'name',
     // product data
     viewCategory: true,
-    viewPurchasePrice: true,
+    viewPurchasePrice: false,
     viewGovtSalePrice: true,
-    viewDateAdded: true,
+    viewDateAdded: false,
     viewDateUpdated: true,
-    // security
+    //security
     requireSettingsPassword: true,
+  });
+
+  const triggerReload = () => {
+    setReloadKey(!reloadKey);
   };
 
   const [preferences, setPreferences] = useState(defaultPrefs);
   const [tempPreferences, setTempPreferences] = useState(defaultPrefs);
+
+  useEffect(() => {
+    if (user.role != 'cashier') {
+      const updatedPrefs = {
+        // general
+        addProduct: true,
+        editProduct: true,
+        deleteProduct: true,
+        allowCategoryManagement: true,
+        renamingInventory: true,
+        viewSalesData: true,
+        // inventory display
+        viewPurchasePriceColumn: true,
+        viewDateAddedColumn: true,
+        viewDateUpdatedColumn: true,
+        viewCategoryColumn: true,
+        defaultSortOrder: 'name',
+        // product data
+        viewCategory: true,
+        viewPurchasePrice: true,
+        viewGovtSalePrice: true,
+        viewDateAdded: true,
+        viewDateUpdated: true,
+        //security
+        requireSettingsPassword: true,
+      };
+      setDefaultPrefs(updatedPrefs);
+      setTempPreferences(updatedPrefs);
+      setPreferences(updatedPrefs);
+    }
+  }, [user]);
 
   useEffect(() => {
     const savedPrefs = JSON.parse(localStorage.getItem(localStorageKey));
@@ -106,6 +137,10 @@ export default function SettingsPage() {
     { value: 'name', label: 'Name' },
     { value: 'salePrice', label: 'Sales Price' },
   ];
+
+  if (user?.role == 'cashier') {
+    return <NotFound />;
+  }
 
   if (preferences.viewPurchasePriceColumn)
     sortOptions.push({ value: 'purchasePrice', label: 'Purchase Price' });

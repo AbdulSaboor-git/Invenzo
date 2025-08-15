@@ -17,7 +17,7 @@ import RefreshButton from './components/refresh_btn';
 
 export default function Inventory() {
   const { user, logout } = useAuthUser();
-  const prefs = usePreferences(user?.id);
+  const prefs = usePreferences(user?.id, user?.role);
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loadingData, setLoadingData] = useState(true);

@@ -7,6 +7,7 @@ import RefreshButton from '../inventory/components/refresh_btn';
 import AddCashierPopup from './components/add_cashier';
 import { toast } from 'sonner';
 import { MdAdd } from 'react-icons/md';
+import NotFound from '@/app/not-found';
 
 export default function CashiersPage() {
   const { user, logout } = useAuthUser();
@@ -73,6 +74,10 @@ export default function CashiersPage() {
       toast.error('Failed to refresh data.', { id: loadingToastId });
     }
   };
+
+  if (user?.role == 'cashier') {
+    return <NotFound />;
+  }
 
   return (
     <div className="flex flex-col items-center w-full">
