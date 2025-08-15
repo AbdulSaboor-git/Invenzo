@@ -83,12 +83,24 @@ async function handleAddCashier(req, res) {
   if (!userId || !firstName)
     return res.status(400).json({ error: 'Missing data' });
 
+  if (!/^[a-zA-Z]+$/.test(firstName)) {
+    return res
+      .status(400)
+      .json({ error: 'First name can only contain letters' });
+  }
+
+  if (lastName && !/^[a-zA-Z]+$/.test(lastName)) {
+    return res
+      .status(400)
+      .json({ error: 'Last name can only contain letters' });
+  }
+
   const inventory = await prisma.inventory.findUnique({
     where: { adminId: Number(userId) },
   });
   if (!inventory) return res.status(404).json({ error: 'Inventory not found' });
 
-  const email = `${firstName.replace(/\s+/g, '').toLowerCase()}.cashier@invenzo.com`;
+  const email = `cashier.${firstName.replace(/\s+/g, '').toLowerCase()}@invenzo.com`;
 
   const existingUser = await prisma.user.findFirst({
     where: { email: email.toLowerCase() },

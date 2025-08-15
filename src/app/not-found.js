@@ -2,10 +2,26 @@
 import Header from '@/components/header';
 import useAuthUser from '@/hooks/authUser';
 import Link from 'next/link';
-import React from 'react';
+import { useRouter } from 'next/navigation';
+import React, { useEffect } from 'react';
+import Loading from './loading';
 
 export default function NotFound() {
-  const { user, logout } = useAuthUser();
+  const { user, userLoading, logout } = useAuthUser();
+
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!userLoading && !user) {
+      router.replace('/login');
+      return;
+    }
+  }, [user, userLoading, router]);
+
+  if (userLoading) {
+    return <Loading />;
+  }
+
   return (
     <main className=" w-full bg-white">
       <Header user={user} logout={logout} className={'shadow'} />

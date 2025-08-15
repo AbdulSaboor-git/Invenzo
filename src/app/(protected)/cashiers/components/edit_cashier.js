@@ -113,7 +113,7 @@ export default function EditCashierPopup({ cashier, onClose, onSuccess }) {
               Last Name
             </label>
             <input
-              id="cashier-name"
+              id="last-name"
               type="text"
               placeholder="Enter last name"
               className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"

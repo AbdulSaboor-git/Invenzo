@@ -11,14 +11,12 @@ export default function AddCashierPopup({ adminId, onClose, onSuccess }) {
 
   const handleAdd = async () => {
     if (!navigator.onLine) {
-      toast.error(
-        'Network not available. Please check your internet connection.'
-      );
+      toast.error('No internet connection. Please try again when online.');
       return;
     }
 
     if (!firstName.trim()) {
-      toast.error('Cashier name is required.');
+      toast.error('Cashier first name is required.');
       return;
     }
 
@@ -27,6 +25,7 @@ export default function AddCashierPopup({ adminId, onClose, onSuccess }) {
 
     try {
       setLoading(true);
+
       const res = await fetch('/api/cashiers', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -38,16 +37,18 @@ export default function AddCashierPopup({ adminId, onClose, onSuccess }) {
       });
 
       const data = await res.json();
+
       if (!res.ok) {
         toast.error(data.error || 'Failed to add cashier');
         return;
       }
 
-      toast.success(`Cashier added. Password: ${password}`);
+      toast.success(`Cashier added successfully! Password: ${password}`);
+
       onSuccess();
       onClose();
-    } catch {
-      toast.error('Error adding cashier');
+    } catch (err) {
+      toast.error('Unexpected error while adding cashier.');
     } finally {
       setLoading(false);
     }
@@ -90,7 +91,10 @@ export default function AddCashierPopup({ adminId, onClose, onSuccess }) {
               placeholder="Enter first name"
               className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
               value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value.replace(/[^a-zA-Z]/g, '');
+                setFirstName(value);
+              }}
             />
           </div>
           <div className="flex flex-col items-start gap-2 w-full ">
@@ -106,7 +110,10 @@ export default function AddCashierPopup({ adminId, onClose, onSuccess }) {
               placeholder="Enter last name"
               className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
               value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
+              onChange={(e) => {
+                const value = e.target.value.replace(/[^a-zA-Z]/g, '');
+                setLastName(value);
+              }}
             />
           </div>
         </div>
