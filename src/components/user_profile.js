@@ -30,7 +30,10 @@ export default function UserProfile({ CloseForm, user, logout, showProfile }) {
       onClick={CloseForm}
     >
       {' '}
-      <div className="bg-white backdrop-blur-md rounded-xl shadow-2xl max-w-lg w-full p-6 relative ">
+      <div
+        className="bg-white backdrop-blur-md rounded-xl shadow-2xl max-w-lg w-full p-6 relative "
+        onClick={(e) => e.stopPropagation()}
+      >
         {/* Close Button */}
         <button
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"

@@ -82,7 +82,7 @@ export default function SettingsPage() {
       setPreferences({ ...defaultPrefs, ...savedPrefs });
       setTempPreferences({ ...defaultPrefs, ...savedPrefs });
     }
-  }, [localStorageKey]);
+  }, [localStorageKey, user]);
 
   const togglePref = (key) => {
     setPreferences((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -197,7 +197,12 @@ export default function SettingsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header className={'shadow'} key={reloadKey} />
+      <Header
+        className={'shadow'}
+        key={reloadKey}
+        user={user}
+        logout={logout}
+      />
       <div className="max-w-3xl mx-auto p-4 md:p-6">
         <div className="bg-white rounded-xl shadow-sm p-6 md:p-8">
           <h1 className="text-2xl font-semibold text-gray-800 mb-6">
