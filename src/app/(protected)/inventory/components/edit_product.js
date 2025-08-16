@@ -99,7 +99,7 @@ export default function EditProduct({
       >
         {/* Close Button */}
         <button
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl"
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 "
           onClick={close}
           disabled={loadingForEdit}
           aria-label="Close edit form"

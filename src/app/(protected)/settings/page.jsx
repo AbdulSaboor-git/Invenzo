@@ -122,7 +122,7 @@ export default function SettingsPage() {
         return;
       }
 
-      setTimeout(setAuthenticated, 2000, true);
+      setTimeout(setAuthenticated, 1500, true);
       setPasswordInput('');
       setIsPasswordCorrect(true);
       toast.success('Access granted');

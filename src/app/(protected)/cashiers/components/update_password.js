@@ -53,7 +53,7 @@ export default function UpdatePasswordPopup({ cashier, onClose, onSuccess }) {
   return (
     <div
       className="fixed inset-0 text-sm bg-black/30 flex items-center justify-center z-50 px-4 sm:px-6 transition ease-in-out backdrop-blur-[2px]"
-      onClick={onClose}
+      // onClick={onClose}1
     >
       <div
         className="bg-white max-h-[96%] hidden_scroll_bar overflow-auto rounded-xl shadow-2xl w-full max-w-md sm:max-w-lg py-8 px-6 sm:py-8 sm:px-10 relative"
@@ -61,7 +61,7 @@ export default function UpdatePasswordPopup({ cashier, onClose, onSuccess }) {
       >
         {/* Close Button */}
         <button
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl"
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 "
           onClick={onClose}
           disabled={loading}
           aria-label="Close password update form"

@@ -64,7 +64,7 @@ export default function AddCashierPopup({ adminId, onClose, onSuccess }) {
       >
         {/* Close Button */}
         <button
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl"
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 "
           onClick={onClose}
           disabled={loading}
           aria-label="Close add cashier form"
