@@ -1,6 +1,6 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import { FaArrowUp } from "react-icons/fa";
+'use client';
+import React, { useEffect, useState } from 'react';
+import { FaArrowUp } from 'react-icons/fa';
 
 export default function ScrollToTop({}) {
   const [showScrollToTop, setShowScrollToTop] = useState(false);
@@ -17,24 +17,24 @@ export default function ScrollToTop({}) {
       setShowScrollToTop(scrollY > 500);
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll);
     handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
     <div
       onClick={scrollToTop}
-      className={`fixed cursor-pointer z-50 bottom-6 right-6 sm:bottom-8 sm:right-8 
+      className={`fixed cursor-pointer z-40 bottom-6 right-6 sm:bottom-8 sm:right-8 
     overflow-visible text-white p-[2px] rounded-full
     ${
       showScrollToTop
-        ? "opacity-100 translate-y-0"
-        : "opacity-0 translate-y-full"
+        ? 'opacity-100 translate-y-0'
+        : 'opacity-0 translate-y-full'
     } transition-all duration-500`}
     >
       <div className="relative w-14 h-14">
@@ -48,7 +48,7 @@ export default function ScrollToTop({}) {
             cx="28"
             cy="28"
             r="25"
-            stroke={"#b5e761"}
+            stroke={'#b5e761'}
             strokeWidth="3"
             fill="none"
           />
@@ -56,7 +56,7 @@ export default function ScrollToTop({}) {
             cx="28"
             cy="28"
             r="25"
-            stroke={"#08bcc7"}
+            stroke={'#08bcc7'}
             strokeWidth="3.2"
             fill="none"
             strokeDasharray={2 * Math.PI * 25}
@@ -66,7 +66,7 @@ export default function ScrollToTop({}) {
             }
             strokeLinecap="round"
             style={{
-              transition: "stroke-dashoffset 0.2s ease-out",
+              transition: 'stroke-dashoffset 0.2s ease-out',
             }}
           />
         </svg>

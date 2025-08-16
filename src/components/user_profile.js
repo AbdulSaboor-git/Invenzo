@@ -36,7 +36,7 @@ export default function UserProfile({ CloseForm, user, logout, showProfile }) {
       >
         {/* Close Button */}
         <button
-          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+          className=" hidden md:block absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
           onClick={CloseForm}
           aria-label="Close"
         >

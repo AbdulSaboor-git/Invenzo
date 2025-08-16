@@ -26,7 +26,7 @@ export default function ViewProduct({
         >
           {/* Close button */}
           <button
-            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
+            className="hidden md:block absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
             onClick={close}
             aria-label="Close"
           >
