@@ -115,6 +115,7 @@ export default function Login() {
               <input
                 spellCheck="false"
                 autoCorrect="off"
+                disabled={loading}
                 className="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                 id="email"
                 type="email"
@@ -133,6 +134,7 @@ export default function Login() {
                 className="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
                 id="password"
                 type="password"
+                disabled={loading}
                 placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}

@@ -53,7 +53,7 @@ export default async function handler(req, res) {
     }
 
     const adminId = user.Cashier?.Inventory?.adminId ?? user.id;
-    const invName = user.Cashier?.Inventory?.invName ?? user.Inventories?.name;
+    const invName = user.Cashier?.Inventory?.name ?? user.Inventories?.name;
 
     res.status(200).json({
       user: {

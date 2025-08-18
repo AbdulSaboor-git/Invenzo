@@ -67,7 +67,7 @@ export default async function handler(req, res) {
 
     // Step 4: Determine adminId
     const adminId = user.Cashier?.Inventory?.adminId ?? user.id;
-    const invName = user.Cashier?.Inventory?.invName ?? user.Inventories?.name;
+    const invName = user.Cashier?.Inventory?.name ?? user.Inventories?.name;
 
     // Step 5: Generate JWT
     const token = jwt.sign(
