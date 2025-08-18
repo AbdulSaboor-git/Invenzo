@@ -8,6 +8,8 @@ import { MdAdd, MdOutlineAdminPanelSettings } from 'react-icons/md';
 import { BsThreeDotsVertical, BsShieldLock } from 'react-icons/bs';
 import { FiEdit, FiKey, FiTrash2 } from 'react-icons/fi';
 import NotFound from '@/app/not-found';
+import usePreferences from '@/hooks/usePreferences';
+import { IoLockClosed, IoLockOpen } from 'react-icons/io5';
 
 /*
   Super Admin Panel (Users Management)
@@ -37,6 +39,13 @@ export default function SuperAdminPage() {
   const [inventoryFilter, setInventoryFilter] = useState('all');
   const [search, setSearch] = useState('');
 
+  const [authenticated, setAuthenticated] = useState(false);
+  const [isPasswordCorrect, setIsPasswordCorrect] = useState(false);
+  const [passwordInput, setPasswordInput] = useState('');
+  const [authLoading, setAuthLoading] = useState(false);
+
+  const prefs = usePreferences(user?.id, user?.role);
+
   const localKey = `inventoryData_users_${user?.id}`;
 
   useEffect(() => {
@@ -57,6 +66,12 @@ export default function SuperAdminPage() {
   }, [user?.id]);
 
   const fetchData = async () => {
+    if (!navigator.onLine) {
+      toast.error(
+        'Network not available. Please check your internet connection.'
+      );
+      return;
+    }
     try {
       setRefreshing(true);
       const res = await fetch('/api/user/user');
@@ -92,8 +107,12 @@ export default function SuperAdminPage() {
       return;
     }
     const id = toast.loading('Refreshing users...');
-    await fetchData();
-    toast.success('Users refreshed', { id });
+    try {
+      await fetchData();
+      toast.success('Users refreshed', { id });
+    } catch (error) {
+      toast.error('Failed to refresh users.', { id });
+    }
   };
 
   // Derived lists for filters
@@ -143,6 +162,119 @@ export default function SuperAdminPage() {
     const inactive = total - active;
     return { total, admins, cashiers, active, inactive };
   }, [users]);
+
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const checkAndAutoFetch = () => {
+      if (!navigator.onLine) return;
+
+      const now = Date.now();
+      const twentyMinutes = 20 * 60 * 1000;
+
+      // always read directly from localStorage
+      let last = 0;
+      const cached = localStorage.getItem(localKey);
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (parsed?.lastUpdated) {
+          last = new Date(parsed.lastUpdated).getTime();
+        }
+      }
+
+      if (!last || now - last >= twentyMinutes) {
+        fetchData();
+      }
+    };
+
+    // run every 2 minutes
+    const interval = setInterval(checkAndAutoFetch, 2 * 60 * 1000);
+    window.addEventListener('online', checkAndAutoFetch);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('online', checkAndAutoFetch);
+    };
+  }, [user?.id]);
+
+  const handleAuthSubmit = async (e) => {
+    e.preventDefault();
+    if (!navigator.onLine) {
+      toast.error(
+        'Network not available. Please check your internet connection.'
+      );
+      return;
+    }
+    setAuthLoading(true);
+    try {
+      const response = await fetch('/api/user/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: user?.email, password: passwordInput }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        toast.error('Incorrect password');
+        return;
+      }
+
+      setTimeout(setAuthenticated, 1500, true);
+      setPasswordInput('');
+      setIsPasswordCorrect(true);
+      toast.success('Access granted');
+    } catch (err) {
+      toast.error('Authentication failed');
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  if (prefs.requireSuperAdminPassword && !authenticated) {
+    return (
+      <div className="flex flex-col items-center">
+        <Header className={'shadow'} user={user} logout={logout} />
+        <div className="flex min-h-[80vh] flex-col items-center justify-center text-center p-6">
+          <div className="bg-white rounded-xl shadow p-6 md:p-8 w-full min-w-[300px] max-w-md border border-gray-200">
+            <div className="w-full text-4xl mb-4 text-gray-500">
+              {isPasswordCorrect ? (
+                <IoLockOpen className="place-self-center" />
+              ) : (
+                <IoLockClosed className="place-self-center" />
+              )}
+            </div>
+            <h1 className="text-xl font-semibold text-gray-800 mb-4 text-center">
+              Enter Password to Access <br /> Super-Admin Panel
+            </h1>
+            <form onSubmit={handleAuthSubmit} className="flex flex-col gap-4">
+              <input
+                type="password"
+                placeholder="••••••••"
+                className="w-full rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-gray-700 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                value={passwordInput}
+                onChange={(e) => setPasswordInput(e.target.value)}
+                required
+              />
+              <button
+                type="submit"
+                disabled={authLoading || isPasswordCorrect}
+                className={`px-4 py-2 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 transition disabled:cursor-not-allowed ${
+                  authLoading ? 'opacity-70 cursor-not-allowed' : ''
+                }`}
+              >
+                {authLoading
+                  ? 'Checking...'
+                  : isPasswordCorrect
+                    ? 'Unlocked'
+                    : 'Unlock Settings'}
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center w-full">
@@ -334,7 +466,7 @@ function UsersTable({ users, allLoading, onChange }) {
                 </td>
               </tr>
             ) : users?.length > 0 ? (
-              users.map((u, index) => (
+              users?.map((u, index) => (
                 <tr
                   key={u.id}
                   className={`${!u.isActive && 'bg-red-50 hover:bg-red-50'} hover:bg-gray-50 transition`}

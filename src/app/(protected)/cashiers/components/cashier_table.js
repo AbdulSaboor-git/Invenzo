@@ -54,13 +54,13 @@ export default function CashierTable({ cashiers, loading, onChange, adminId }) {
           <thead className="bg-gray-50 text-gray-700 font-semibold uppercase tracking-wide text-xs">
             <tr>
               <th className="px-3 py-3 text-center">#</th>
-              <th className="px-3 py-3 min-w-[120px]">Name</th>
-              <th className="px-3 py-3">Email</th>
+              <th className="px-3 py-3 min-w-[140px]">Name</th>
+              <th className="px-3 py-3 min-w-[160px]">Email</th>
               <th className="px-3 py-3 min-w-[180px]">Inventory</th>
-              <th className="px-3 py-3">Status</th>
-              <th className="px-3 py-3">Date Added</th>
-              <th className="px-3 py-3">Last Modified</th>
-              <th className="px-3 py-3">Last Login</th>
+              <th className="px-3 py-3 min-w-[80px]">Status</th>
+              <th className="px-3 py-3 min-w-[120px]">Date Added</th>
+              <th className="px-3 py-3 min-w-[140px]">Last Modified</th>
+              <th className="px-3 py-3 min-w-[120px]">Last Login</th>
               <th className="px-3 py-3 text-right">Actions</th>
             </tr>
           </thead>

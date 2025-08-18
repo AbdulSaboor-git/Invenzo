@@ -79,6 +79,49 @@ export default function CashiersPage() {
     return <NotFound />;
   }
 
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const checkAndAutoFetch = () => {
+      if (!navigator.onLine) return; // skip offline
+
+      const now = Date.now();
+      const twentyMinutes = 20 * 60 * 1000;
+
+      // always read the freshest "lastUpdated"
+      let last = lastUpdated ? new Date(lastUpdated).getTime() : 0;
+
+      // fallback to localStorage if state is empty
+      if (!last) {
+        const cached = localStorage.getItem(localKey);
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (parsed?.lastUpdated) {
+            last = new Date(parsed.lastUpdated).getTime();
+          }
+        }
+      }
+
+      if (!last || now - last >= twentyMinutes) {
+        fetchData();
+      }
+    };
+
+    // check every 2 minutes
+    const interval = setInterval(checkAndAutoFetch, 2 * 60 * 1000);
+
+    // also check immediately on mount
+    checkAndAutoFetch();
+
+    // check when back online
+    window.addEventListener('online', checkAndAutoFetch);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('online', checkAndAutoFetch);
+    };
+  }, [user?.id, localKey, fetchData]);
+
   return (
     <div className="flex flex-col items-center w-full">
       <Header user={user} logout={logout} />

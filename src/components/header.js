@@ -78,7 +78,7 @@ export default function Header({ className, user, logout }) {
   user?.role === 'superadmin' &&
     buttons.push({
       icon: <BsShieldLockFill />,
-      label: 'Super Admin Panel',
+      label: `Super-Admin Panel ${prefs.requireSuperAdminPassword ? '🔒' : ''}`,
       onclick: () => handleButtonClick('super-admin'),
     });
 

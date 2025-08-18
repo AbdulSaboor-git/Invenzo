@@ -36,6 +36,7 @@ export default function SettingsPage() {
     viewDateUpdated: true,
     //security
     requireSettingsPassword: true,
+    requireSuperAdminPassword: true,
   });
 
   const triggerReload = () => {
@@ -68,13 +69,60 @@ export default function SettingsPage() {
         viewDateAdded: true,
         viewDateUpdated: true,
         //security
-        requireSettingsPassword: true,
+        requireSettingsPassword: false,
+        requireSuperAdminPassword: false,
       };
       setDefaultPrefs(updatedPrefs);
       setTempPreferences(updatedPrefs);
       setPreferences(updatedPrefs);
     }
   }, [user]);
+
+  const generalSettings = [
+    { key: 'addProduct', label: 'Allow Adding Products' },
+    { key: 'editProduct', label: 'Allow Editing Products' },
+    { key: 'deleteProduct', label: 'Allow Deleting Products' },
+    {
+      key: 'allowCategoryManagement',
+      label: 'Allow Category Management',
+    },
+    { key: 'renamingInventory', label: 'Allow Renaming Inventory' },
+    { key: 'viewSalesData', label: 'Allow Viewing Sales Data' },
+  ];
+
+  const invDisplaySettings = [
+    {
+      key: 'viewPurchasePriceColumn',
+      label: 'View Purchase Price Column',
+    },
+    { key: 'viewCategoryColumn', label: 'View Category Column' },
+    { key: 'viewDateAddedColumn', label: 'View Date Added Column' },
+    {
+      key: 'viewDateUpdatedColumn',
+      label: 'View Date Updated Column',
+    },
+  ];
+
+  const prodDisplaySettings = [
+    { key: 'viewCategory', label: 'View Category' },
+    { key: 'viewPurchasePrice', label: 'View Purchase Price' },
+    { key: 'viewGovtSalePrice', label: 'View Govt. Sale Price' },
+    { key: 'viewDateAdded', label: 'View Date Added' },
+    { key: 'viewDateUpdated', label: 'View Date Updated' },
+  ];
+
+  const securitySettings = [
+    {
+      key: 'requireSettingsPassword',
+      label: 'Lock Settings',
+    },
+  ];
+
+  user?.role === 'superadmin' &&
+    securitySettings.push({
+      key: 'requireSuperAdminPassword',
+      label: 'Lock Super-Admin Panel',
+    });
 
   useEffect(() => {
     const savedPrefs = JSON.parse(localStorage.getItem(localStorageKey));
@@ -211,17 +259,7 @@ export default function SettingsPage() {
 
           {/* Sections */}
           <SettingsSection title="General">
-            {[
-              { key: 'addProduct', label: 'Allow Adding Products' },
-              { key: 'editProduct', label: 'Allow Editing Products' },
-              { key: 'deleteProduct', label: 'Allow Deleting Products' },
-              {
-                key: 'allowCategoryManagement',
-                label: 'Allow Category Management',
-              },
-              { key: 'renamingInventory', label: 'Allow Renaming Inventory' },
-              { key: 'viewSalesData', label: 'Allow Viewing Sales Data' },
-            ].map((item) => (
+            {generalSettings.map((item) => (
               <ToggleRow
                 key={item.key}
                 label={item.label}
@@ -232,18 +270,7 @@ export default function SettingsPage() {
           </SettingsSection>
 
           <SettingsSection title="Inventory Display">
-            {[
-              {
-                key: 'viewPurchasePriceColumn',
-                label: 'View Purchase Price Column',
-              },
-              { key: 'viewCategoryColumn', label: 'View Category Column' },
-              { key: 'viewDateAddedColumn', label: 'View Date Added Column' },
-              {
-                key: 'viewDateUpdatedColumn',
-                label: 'View Date Updated Column',
-              },
-            ].map((item) => (
+            {invDisplaySettings.map((item) => (
               <ToggleRow
                 key={item.key}
                 label={item.label}
@@ -281,13 +308,7 @@ export default function SettingsPage() {
           </SettingsSection>
 
           <SettingsSection title="Product Details">
-            {[
-              { key: 'viewCategory', label: 'View Category' },
-              { key: 'viewPurchasePrice', label: 'View Purchase Price' },
-              { key: 'viewGovtSalePrice', label: 'View Govt. Sale Price' },
-              { key: 'viewDateAdded', label: 'View Date Added' },
-              { key: 'viewDateUpdated', label: 'View Date Updated' },
-            ].map((item) => (
+            {prodDisplaySettings.map((item) => (
               <ToggleRow
                 key={item.key}
                 label={item.label}
@@ -298,12 +319,7 @@ export default function SettingsPage() {
           </SettingsSection>
 
           <SettingsSection title="Security">
-            {[
-              {
-                key: 'requireSettingsPassword',
-                label: 'Lock Settings',
-              },
-            ].map((item) => (
+            {securitySettings.map((item) => (
               <ToggleRow
                 key={item.key}
                 label={item.label}

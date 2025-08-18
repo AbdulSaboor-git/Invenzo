@@ -23,6 +23,7 @@ export default function usePreferences(userId, role) {
     viewDateUpdated: true,
     //security
     requireSettingsPassword: true,
+    requireSuperAdminPassword: true,
   };
 
   const nonCashierPrefs = {
@@ -39,7 +40,9 @@ export default function usePreferences(userId, role) {
     viewCategoryColumn: true,
     viewPurchasePrice: true,
     viewDateAdded: true,
-    viewDateUpdated: true,
+    viewDateUpdated: false,
+    requireSettingsPassword: false,
+    requireSuperAdminPassword: false,
   };
 
   const [prefs, setPrefs] = useState(basePrefs);

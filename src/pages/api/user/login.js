@@ -1,3 +1,4 @@
+import Inventory from '@/app/(protected)/inventory/page';
 import prisma from '@/lib/prisma';
 import jwt from 'jsonwebtoken';
 
@@ -36,8 +37,14 @@ export default async function handler(req, res) {
             Inventory: {
               select: {
                 adminId: true,
+                name: true,
               },
             },
+          },
+        },
+        Inventories: {
+          select: {
+            name: true,
           },
         },
       },
@@ -60,6 +67,7 @@ export default async function handler(req, res) {
 
     // Step 4: Determine adminId
     const adminId = user.Cashier?.Inventory?.adminId ?? user.id;
+    const invName = user.Cashier?.Inventory?.invName ?? user.Inventories?.name;
 
     // Step 5: Generate JWT
     const token = jwt.sign(
@@ -79,6 +87,7 @@ export default async function handler(req, res) {
         lastName: user.lastName || null,
         profilePicture: user.profilePicture || null,
         adminId,
+        invName,
       },
     });
   } catch (error) {

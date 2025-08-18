@@ -353,6 +353,56 @@ export default function Inventory() {
     }
   }, [products]);
 
+  useEffect(() => {
+    if (!user?.id || !inventory) return;
+
+    const checkAndAutoFetch = () => {
+      if (!navigator.onLine) return; // skip offline
+
+      const now = Date.now();
+      const sixtyMinutes = 60 * 60 * 1000;
+
+      // always re-read latest "lastUpdated"
+      let last = lastUpdated ? new Date(lastUpdated).getTime() : 0;
+
+      // fallback to localStorage if state is empty
+      if (!last) {
+        const cached = localStorage.getItem(localStorageKey);
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (parsed?.lastUpdated) {
+            last = new Date(parsed.lastUpdated).getTime();
+          }
+        }
+      }
+
+      if (!last || now - last >= sixtyMinutes) {
+        fetchAndStoreData();
+      }
+    };
+
+    // run every 2 minutes
+    const interval = setInterval(checkAndAutoFetch, 2 * 60 * 1000);
+
+    // run immediately once on mount
+    checkAndAutoFetch();
+
+    // also run when coming back online
+    window.addEventListener('online', checkAndAutoFetch);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('online', checkAndAutoFetch);
+    };
+  }, [user?.id, inventory, localStorageKey, fetchAndStoreData]);
+
+  const formatDate = (date) =>
+    new Date(date).toLocaleDateString(undefined, {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+
   return (
     <div className="flex w-full flex-col items-center justify-center ">
       <Header user={user} logout={logout} />
@@ -541,12 +591,12 @@ export default function Inventory() {
                         )}
                         {prefs.viewDateUpdatedColumn && (
                           <td className="px-3 py-2 min-w-[160px] md:px-6 md:py-4">
-                            {new Date(product.updatedAt).toLocaleDateString()}
+                            {formatDate(product.updatedAt)}
                           </td>
                         )}
                         {prefs.viewDateAddedColumn && (
                           <td className="px-3 py-2 min-w-[140px] md:px-6 md:py-4">
-                            {new Date(product.createdAt).toLocaleDateString()}
+                            {formatDate(product.createdAt)}
                           </td>
                         )}
                       </tr>

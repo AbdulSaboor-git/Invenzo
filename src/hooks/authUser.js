@@ -1,17 +1,19 @@
 'use client';
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setUser, setUserLoading, logoutUser } from '@/redux/userSlice';
 import { toast } from 'sonner';
 
 const TEN_MINUTES = 10 * 60 * 1000;
-const REFRESH_INTERVAL = 1 * 60 * 1000; // 1 minutes
+const STALE_CHECK_INTERVAL = 2 * 60 * 1000;
 
 let hasShownDeactivationToast = false;
+let hasShownOfflineToast = false;
 
 export default function useAuthUser() {
   const { user, userLoading } = useSelector((state) => state.user);
   const dispatch = useDispatch();
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
   const intervalRef = useRef(null);
 
   const logout = useCallback(() => {
@@ -39,11 +41,18 @@ export default function useAuthUser() {
   }, [dispatch]);
 
   const fetchFreshUser = useCallback(async () => {
-    if (typeof window === 'undefined' || !navigator.onLine) return;
+    if (typeof window === 'undefined') return;
+    if (!navigator.onLine) {
+      console.log('Skipped fetch: offline');
+      return;
+    }
 
     try {
       const token = localStorage.getItem('token');
-      if (!token) return;
+      if (!token) {
+        logout();
+        return;
+      }
 
       const res = await fetch('/api/user', {
         headers: { Authorization: `Bearer ${token}` },
@@ -78,17 +87,20 @@ export default function useAuthUser() {
       }
     } catch (err) {
       console.error('Error refreshing user:', err);
-      toast.error('Failed to refresh user data.');
       if (err?.message?.includes('Invalid')) logout();
     }
   }, [dispatch, logout]);
 
   const checkStaleAndFetch = useCallback(() => {
+    if (!navigator.onLine) {
+      console.log('Skipped stale check: offline');
+      return;
+    }
     const fetchedAt = parseInt(
       localStorage.getItem('userFetchedAt') || '0',
       10
     );
-    if (Date.now() - fetchedAt > TEN_MINUTES && navigator.onLine) {
+    if (Date.now() - fetchedAt > TEN_MINUTES) {
       fetchFreshUser();
     }
   }, [fetchFreshUser]);
@@ -102,6 +114,16 @@ export default function useAuthUser() {
         return;
       }
 
+      if (!navigator.onLine) {
+        if (isFirstLoad && !hasShownOfflineToast) {
+          toast.error('You are offline. Some features may be unavailable.');
+          hasShownOfflineToast = true;
+        } else {
+          console.log('Offline: skipping user load');
+        }
+      }
+
+      // ---- initial load from localStorage ----
       const storedUser = localStorage.getItem('user');
       if (storedUser) {
         const parsedUser = JSON.parse(storedUser);
@@ -124,17 +146,27 @@ export default function useAuthUser() {
       dispatch(setUser(null));
     } finally {
       dispatch(setUserLoading(false));
+      setIsFirstLoad(false);
     }
 
-    intervalRef.current = setInterval(checkStaleAndFetch, REFRESH_INTERVAL);
+    // ---- setup interval (every 2 min) ----
+    intervalRef.current = setInterval(() => {
+      checkStaleAndFetch();
+    }, STALE_CHECK_INTERVAL);
 
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
-      }
+    // ---- refresh on reconnect ----
+    const handleOnline = () => {
+      console.log('Back online → refreshing user');
+      checkStaleAndFetch();
     };
-  }, [dispatch, logout, checkStaleAndFetch]);
+    window.addEventListener('online', handleOnline);
+
+    // ---- cleanup ----
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+      window.removeEventListener('online', handleOnline);
+    };
+  }, [dispatch, logout, checkStaleAndFetch, isFirstLoad]);
 
   return { user, userLoading, logout, fetchFreshUser };
 }

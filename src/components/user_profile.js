@@ -81,22 +81,42 @@ export default function UserProfile({ CloseForm, user, logout, showProfile }) {
               </p>
               <p className="text-lg font-medium text-gray-800">{email}</p>
             </div>
+            <div>
+              <p className="text-xs uppercase text-gray-500 tracking-wider">
+                {user?.role === 'superadmin' ? 'super-admin' : `${user?.role}`}
+              </p>
+              {user?.role === 'superadmin' && (
+                <p className="text-lg font-medium text-gray-800">INVENZO</p>
+              )}
+              {user?.role === 'superadmin' && (
+                <p className="mt-4 text-xs uppercase text-gray-500 tracking-wider">
+                  admin
+                </p>
+              )}
+              <p className="text-lg font-medium text-gray-800">
+                {user?.invName}
+              </p>
+            </div>
           </div>
 
           {/* Action Buttons */}
           <div className="flex flex-col md:flex-row gap-3 mt-8">
-            <button
-              onClick={() => setShowEditPopup(true)}
-              className="flex-1 px-4 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition"
-            >
-              Edit Profile
-            </button>
-            <button
-              onClick={() => setShowPasswordPopup(true)}
-              className="flex-1 px-4 py-3 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg font-medium transition"
-            >
-              Change Password
-            </button>
+            {user.role != 'cashier' && (
+              <button
+                onClick={() => setShowEditPopup(true)}
+                className="flex-1 px-4 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition"
+              >
+                Edit Profile
+              </button>
+            )}
+            {user.role != 'cashier' && (
+              <button
+                onClick={() => setShowPasswordPopup(true)}
+                className="flex-1 px-4 py-3 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg font-medium transition"
+              >
+                Change Password
+              </button>
+            )}
             <button
               onClick={() => {
                 toast.success('Logged out');
