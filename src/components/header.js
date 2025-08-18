@@ -13,6 +13,7 @@ import {
 } from 'react-icons/md';
 import UserProfile from './user_profile';
 import usePreferences from '@/hooks/usePreferences';
+import { BsShieldLock, BsShieldLockFill } from 'react-icons/bs';
 
 export default function Header({ className, user, logout }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -72,6 +73,13 @@ export default function Header({ className, user, logout }) {
       icon: <FaFileInvoice />,
       label: 'Sales',
       onclick: () => handleButtonClick('Sales'),
+    });
+
+  user?.role === 'superadmin' &&
+    buttons.push({
+      icon: <BsShieldLockFill />,
+      label: 'Super Admin Panel',
+      onclick: () => handleButtonClick('super-admin'),
     });
 
   user?.role !== 'cashier' &&

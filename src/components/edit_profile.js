@@ -26,7 +26,10 @@ export default function EditProfilePopup({ user, onClose, cancel }) {
       lastName.trim() === user?.lastName &&
       profilePicture.trim() === user?.profilePicture;
 
-    if (unchanged) return;
+    if (unchanged) {
+      cancel();
+      return;
+    }
 
     try {
       setLoading(true);
