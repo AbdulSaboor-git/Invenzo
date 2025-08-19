@@ -1,12 +1,12 @@
-import "./globals.css";
-import ReduxProvider from "./reduxProvider";
-import { Toaster } from "sonner";
+import './globals.css';
+import ReduxProvider from './reduxProvider';
+import { Toaster } from 'sonner';
 
 export const metadata = {
-  title: "Invenzo - Inventory Management",
-  description: "",
+  title: 'Invenzo - Inventory Management',
+  description: '',
   icons: {
-    icon: "/src/app/icon.png",
+    icon: '/src/app/icon.png',
   },
 };
 

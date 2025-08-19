@@ -3,10 +3,12 @@ import { MdLogout } from 'react-icons/md';
 import { toast } from 'sonner';
 import EditProfilePopup from './edit_profile';
 import ChangePasswordPopup from './change_password';
+import useAuthUser from '@/hooks/authUser';
 
-export default function UserProfile({ CloseForm, user, logout, showProfile }) {
+export default function UserProfile({ CloseForm, user, showProfile }) {
   const [showEditPopup, setShowEditPopup] = useState(false);
   const [showPasswordPopup, setShowPasswordPopup] = useState(false);
+  const { logout } = useAuthUser();
 
   const username = user?.firstName + ' ' + (user?.lastName || '');
   const profilePic = user?.profilePicture;

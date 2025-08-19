@@ -51,10 +51,6 @@ function requireFields(body, fields) {
 }
 
 function sanitizeUser(u) {
-  let inferredRole = u.role || null;
-  if (u.Inventories) inferredRole = 'admin';
-  else if (u.Cashier) inferredRole = 'cashier';
-
   let inventory = null;
   if (u.Inventories) {
     inventory = { id: u.Inventories.id, name: u.Inventories.name };
@@ -72,7 +68,7 @@ function sanitizeUser(u) {
     lastLogin: u.lastLogin,
     profilePicture: u.profilePicture,
     isActive: u.isActive,
-    role: inferredRole,
+    role: u.role,
     inventory,
   };
 }
@@ -82,12 +78,58 @@ async function handleGetUsers(req, res) {
   const users = await prisma.user.findMany({
     include: {
       Inventories: { select: { id: true, name: true } },
-      Cashier: { include: { Inventory: { select: { id: true, name: true } } } },
+      Cashier: {
+        include: {
+          Inventory: { select: { id: true, name: true } },
+        },
+      },
     },
     orderBy: { id: 'asc' },
   });
 
-  return res.status(200).json({ success: true, data: users.map(sanitizeUser) });
+  const sanitized = users.map(sanitizeUser);
+
+  const superadmins = [];
+  const inventoryGroups = new Map();
+  const noInventoryUsers = [];
+
+  for (const u of sanitized) {
+    if (u.role === 'superadmin') {
+      superadmins.push(u);
+      continue;
+    }
+
+    const invId = u.inventory?.id;
+    if (!invId) {
+      noInventoryUsers.push(u); // 👈 collect users without inventory
+      continue;
+    }
+
+    if (!inventoryGroups.has(invId)) {
+      inventoryGroups.set(invId, { admin: null, cashiers: [], others: [] });
+    }
+
+    if (u.role === 'admin') {
+      inventoryGroups.get(invId).admin = u;
+    } else if (u.role === 'cashier') {
+      inventoryGroups.get(invId).cashiers.push(u);
+    } else {
+      inventoryGroups.get(invId).others.push(u);
+    }
+  }
+
+  const result = [];
+  result.push(...superadmins);
+
+  for (const group of inventoryGroups.values()) {
+    if (group.admin) result.push(group.admin);
+    result.push(...group.cashiers);
+    result.push(...group.others);
+  }
+
+  result.push(...noInventoryUsers); // 👈 append at end
+
+  return res.status(200).json({ success: true, data: result });
 }
 
 /* ------------------------------- POST ------------------------------- */
@@ -95,12 +137,7 @@ async function handleAddUser(req, res) {
   const { email, password, firstName, lastName, isActive, profilePicture } =
     req.body || {};
 
-  const missing = requireFields(req.body, [
-    'email',
-    'password',
-    'firstName',
-    'lastName',
-  ]);
+  const missing = requireFields(req.body, ['email', 'password', 'firstName']);
   if (missing.length) {
     return res
       .status(400)
@@ -177,6 +214,40 @@ async function handleEditUser(req, res) {
   }
 
   try {
+    // Get current user info first
+    const currentUser = await prisma.user.findUnique({
+      where: { id: Number(userId) },
+      include: {
+        Inventories: { select: { id: true, adminId: true } },
+        Cashier: {
+          include: { Inventory: { select: { id: true, adminId: true } } },
+        },
+      },
+    });
+
+    if (!currentUser) {
+      return res.status(404).json({ success: false, error: 'User not found' });
+    }
+
+    // Check if cashier/other is trying to be activated while admin is inactive
+    if (
+      data.isActive === true &&
+      currentUser.Cashier?.Inventory // user is cashier
+    ) {
+      const admin = await prisma.user.findUnique({
+        where: { id: currentUser.Cashier.Inventory.adminId },
+        select: { isActive: true },
+      });
+
+      if (admin && admin.isActive === false) {
+        return res.status(400).json({
+          success: false,
+          error: 'Cannot activate cashier because its admin is inactive',
+        });
+      }
+    }
+
+    // Update user
     const updated = await prisma.user.update({
       where: { id: Number(userId) },
       data,
@@ -187,8 +258,25 @@ async function handleEditUser(req, res) {
         },
       },
     });
+
+    // If user is an admin and set inactive → deactivate all its inventory users
+    if (currentUser.Inventories && data.isActive === false) {
+      const inventoryId = currentUser.Inventories.id;
+
+      await prisma.user.updateMany({
+        where: {
+          OR: [
+            { Cashier: { inventoryId } },
+            { Inventories: { id: inventoryId } },
+          ],
+        },
+        data: { isActive: false },
+      });
+    }
+
     return res.status(200).json({ success: true, data: sanitizeUser(updated) });
   } catch (e) {
+    console.error(e);
     return res
       .status(400)
       .json({ success: false, error: 'Failed to update user' });
@@ -297,36 +385,97 @@ async function handleDeleteUser(req, res) {
       .json({ success: false, error: 'userId is required' });
   }
 
-  const user = await prisma.user.findUnique({
-    where: { id: Number(userId) },
-    include: {
-      Inventories: { select: { id: true, name: true } },
-      Cashier: { include: { Sale: { select: { id: true }, take: 1 } } },
-    },
-  });
-
-  if (!user)
-    return res.status(404).json({ success: false, error: 'User not found' });
-
-  if (user.Inventories) {
-    return res.status(400).json({
-      success: false,
-      error: 'Cannot delete user: user is an admin of an inventory',
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: Number(userId) },
+      include: {
+        Inventories: { select: { id: true } },
+        Cashier: { select: { id: true, inventoryId: true } },
+      },
     });
-  }
-  if (user.Cashier?.Sale?.length > 0) {
-    return res.status(400).json({
-      success: false,
-      error: 'Cannot delete user: cashier has recorded sales',
-    });
-  }
 
-  if (user.Cashier) {
-    await prisma.cashier.delete({ where: { id: user.Cashier.id } });
-  }
-  await prisma.user.delete({ where: { id: Number(userId) } });
+    if (!user) {
+      return res.status(404).json({ success: false, error: 'User not found' });
+    }
 
-  return res
-    .status(200)
-    .json({ success: true, data: { id: Number(userId), deleted: true } });
+    await prisma.$transaction(
+      async (tx) => {
+        // --- if user is an admin of an inventory ---
+        if (user.Inventories) {
+          const invId = user.Inventories.id;
+
+          // delete sales + saleItems
+          await tx.saleItem.deleteMany({
+            where: { Sale: { inventoryId: invId } },
+          });
+          await tx.sale.deleteMany({
+            where: { inventoryId: invId },
+          });
+
+          // delete products + categories
+          await tx.product.deleteMany({
+            where: { inventoryId: invId },
+          });
+          await tx.category.deleteMany({
+            where: { inventoryId: invId },
+          });
+
+          // find all cashier userIds for this inventory
+          const cashierUsers = await tx.user.findMany({
+            where: { Cashier: { inventoryId: invId } },
+            select: { id: true },
+          });
+
+          // delete cashier records
+          await tx.cashier.deleteMany({
+            where: { inventoryId: invId },
+          });
+
+          // delete cashier users
+          if (cashierUsers.length > 0) {
+            await tx.user.deleteMany({
+              where: { id: { in: cashierUsers.map((c) => c.id) } },
+            });
+          }
+
+          // finally delete inventory
+          await tx.inventory.delete({
+            where: { id: invId },
+          });
+        }
+
+        // --- if user is a cashier ---
+        if (user.Cashier) {
+          const cashierId = user.Cashier.id;
+
+          const salesCount = await tx.sale.count({
+            where: { cashierId },
+          });
+
+          if (salesCount === 0) {
+            await tx.cashier.delete({
+              where: { id: cashierId },
+            });
+          }
+        }
+
+        // --- finally delete user itself ---
+        await tx.user.delete({
+          where: { id: Number(userId) },
+        });
+      },
+      {
+        timeout: 20000, // ⏳ increase timeout to 20 seconds
+      }
+    );
+
+    return res
+      .status(200)
+      .json({ success: true, data: { id: Number(userId), deleted: true } });
+  } catch (error) {
+    console.error('Error deleting user and related data:', error);
+    return res
+      .status(500)
+      .json({ success: false, error: 'Internal server error' });
+  }
 }

@@ -14,9 +14,11 @@ import DeleteProduct from './components/delete_product';
 import Header from '@/components/header';
 import usePreferences from '@/hooks/usePreferences';
 import RefreshButton from './components/refresh_btn';
+import { useSelector } from 'react-redux';
 
 export default function Inventory() {
-  const { user, logout } = useAuthUser();
+  // const { user, logout } = useAuthUser();
+  const { user } = useSelector((state) => state.user);
   const prefs = usePreferences(user?.id, user?.role);
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -106,15 +108,7 @@ export default function Inventory() {
 
       let response = await fetch(`/api/inventory?adminId=${user?.adminId}`);
 
-      if (response.status === 404) {
-        response = await fetch(`/api/inventory`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ adminId: user.id }),
-        });
-      }
-
-      if (!response.ok) throw new Error('Failed to fetch or create inventory');
+      if (!response.ok) throw new Error('Failed to fetch inventory');
 
       const data = await response.json();
       setInventory(data.inventory);
@@ -405,7 +399,7 @@ export default function Inventory() {
 
   return (
     <div className="flex w-full flex-col items-center justify-center ">
-      <Header user={user} logout={logout} />
+      <Header />
       <ScrollToTop />
       <div className="w-full max-w-7xl place-self-center">
         <div className="flex flex-col md:flex-row md:justify-between items-center shadow px-3 md:px-6 py-4 gap-3 sticky top-3 md:top-[68px] bg-white z-40">

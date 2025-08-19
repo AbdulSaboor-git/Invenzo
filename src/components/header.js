@@ -14,8 +14,10 @@ import {
 import UserProfile from './user_profile';
 import usePreferences from '@/hooks/usePreferences';
 import { BsShieldLock, BsShieldLockFill } from 'react-icons/bs';
+import { useSelector } from 'react-redux';
 
-export default function Header({ className, user, logout }) {
+export default function Header({ className }) {
+  const { user } = useSelector((state) => state.user);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const router = useRouter();
@@ -175,7 +177,6 @@ export default function Header({ className, user, logout }) {
       </div>
       <UserProfile
         user={user}
-        logout={logout}
         CloseForm={() => setShowProfile(false)}
         showProfile={showProfile}
       />

@@ -10,6 +10,7 @@ import { FiEdit, FiKey, FiTrash2 } from 'react-icons/fi';
 import NotFound from '@/app/not-found';
 import usePreferences from '@/hooks/usePreferences';
 import { IoLockClosed, IoLockOpen } from 'react-icons/io5';
+import { useSelector } from 'react-redux';
 
 /*
   Super Admin Panel (Users Management)
@@ -21,7 +22,8 @@ import { IoLockClosed, IoLockOpen } from 'react-icons/io5';
 */
 
 export default function SuperAdminPage() {
-  const { user, logout } = useAuthUser();
+  // const { user, logout } = useAuthUser();
+  const { user } = useSelector((state) => state.user);
 
   // Access control
   if (user && user.role !== 'superadmin') return <NotFound />;
@@ -234,7 +236,7 @@ export default function SuperAdminPage() {
   if (prefs.requireSuperAdminPassword && !authenticated) {
     return (
       <div className="flex flex-col items-center">
-        <Header className={'shadow'} user={user} logout={logout} />
+        <Header className={'shadow'} />
         <div className="flex min-h-[80vh] flex-col items-center justify-center text-center p-6">
           <div className="bg-white rounded-xl shadow p-6 md:p-8 w-full min-w-[300px] max-w-md border border-gray-200">
             <div className="w-full text-4xl mb-4 text-gray-500">
@@ -277,8 +279,8 @@ export default function SuperAdminPage() {
   }
 
   return (
-    <div className="flex flex-col items-center w-full">
-      <Header user={user} logout={logout} />
+    <div className="flex flex-col items-center w-full pb-20">
+      <Header />
 
       <div className="w-full">
         {/* Sticky toolbar */}
@@ -449,7 +451,7 @@ function UsersTable({ users, allLoading, onChange }) {
               <th className="px-3 py-3 text-center">#</th>
               <th className="px-3 py-3 min-w-[140px]">Name</th>
               <th className="px-3 py-3 min-w-[160px]">Email</th>
-              <th className="px-3 py-3 min-w-[80px]">Role</th>
+              <th className="px-3 py-3 min-w-[90px]">Role</th>
               <th className="px-3 py-3 min-w-[180px]">Inventory</th>
               <th className="px-3 py-3 min-w-[80px]">Status</th>
               <th className="px-3 py-3 min-w-[120px]">Date Added</th>
@@ -478,9 +480,9 @@ function UsersTable({ users, allLoading, onChange }) {
                   <td className="px-3 py-2">{u.email}</td>
                   <td className="px-3 py-2">
                     <span
-                      className={`px-2 py-1 rounded-full text-xs font-semibold ${u.role === 'admin' ? 'bg-blue-100 text-blue-700' : 'bg-amber-100 text-amber-700'}`}
+                      className={`px-2 py-1 rounded-full text-xs font-semibold ${u.role === 'admin' ? 'bg-blue-100 text-blue-700' : u.role === 'superadmin' ? 'bg-purple-100 text-purple-700' : 'bg-amber-100 text-amber-700'}`}
                     >
-                      {u.role || '—'}
+                      {u?.role === 'superadmin' ? 's-admin' : u.role || '—'}
                     </span>
                   </td>
                   <td className="px-3 py-2 min-w-[180px]">
@@ -518,24 +520,28 @@ function UsersTable({ users, allLoading, onChange }) {
                         ref={menuRef}
                         className="absolute right-12 mt-3 w-44 bg-white border border-gray-200 rounded-lg shadow-lg z-10 overflow-hidden"
                       >
-                        <button
-                          onClick={() => openPopup('edit', u)}
-                          className="flex items-center gap-2 w-full px-3 py-2 text-left hover:bg-gray-100"
-                        >
-                          <FiEdit /> Edit
-                        </button>
+                        {u.role != 'superadmin' && (
+                          <button
+                            onClick={() => openPopup('edit', u)}
+                            className="flex items-center gap-2 w-full px-3 py-2 text-left hover:bg-gray-100"
+                          >
+                            <FiEdit /> Edit
+                          </button>
+                        )}
                         <button
                           onClick={() => openPopup('reset', u)}
                           className="flex items-center gap-2 w-full px-3 py-2 text-left hover:bg-gray-100"
                         >
                           <FiKey /> Reset Password
                         </button>
-                        <button
-                          onClick={() => openPopup('delete', u)}
-                          className="flex items-center gap-2 w-full px-3 py-2 text-left text-red-600 hover:bg-gray-100"
-                        >
-                          <FiTrash2 /> Delete
-                        </button>
+                        {u.role != 'superadmin' && (
+                          <button
+                            onClick={() => openPopup('delete', u)}
+                            className="flex items-center gap-2 w-full px-3 py-2 text-left text-red-600 hover:bg-gray-100"
+                          >
+                            <FiTrash2 /> Delete
+                          </button>
+                        )}
                       </div>
                     )}
                   </td>
@@ -612,11 +618,22 @@ function AddAdminPopup({ onClose, onSuccess }) {
           email: email.trim(),
           password: password.trim(),
           firstName: firstName.trim(),
-          lastName: lastName.trim(),
+          lastName: lastName?.trim(),
           isActive,
         }),
       });
+
       const data = await res.json();
+
+      // console.log(data?.id);
+      try {
+        const response = await fetch(`/api/inventory`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ adminId: data?.data?.id }),
+        });
+      } catch {}
+
       if (!res.ok) {
         toast.error(data?.error || 'Failed to create admin');
         return;

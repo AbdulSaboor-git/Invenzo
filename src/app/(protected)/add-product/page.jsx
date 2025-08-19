@@ -5,9 +5,12 @@ import Header from '@/components/header';
 import { toast } from 'sonner';
 import useAuthUser from '@/hooks/authUser';
 import { useRouter } from 'next/navigation';
+import { useSelector } from 'react-redux';
 
 export default function AddProductPage() {
-  const { user, logout } = useAuthUser();
+  // const { user, logout } = useAuthUser();
+  const { user } = useSelector((state) => state.user);
+
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [tags, setTags] = useState('');
@@ -215,7 +218,7 @@ export default function AddProductPage() {
 
   return (
     <div className="min-h-screen w-full md:bg-gray-100">
-      <Header user={user} logout={logout} />
+      <Header />
       <div className="w-full flex  justify-center md:justify-start shadow px-3 md:px-6 py-4 gap-3 sticky top-3 md:top-16 bg-white z-40">
         {loadingInventory || !inventory ? (
           <div className="h-7 bg-gray-200 rounded w-52 place-self-center md:place-self-auto animate-pulse"></div>

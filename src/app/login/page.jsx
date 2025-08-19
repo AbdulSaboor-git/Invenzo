@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { setUser } from '@/redux/userSlice';
-import useAuthUser from '@/hooks/authUser';
 import { toast } from 'sonner';
 import { useAuthRedirect } from '@/hooks/useAuthRedirect';
 

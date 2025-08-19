@@ -113,6 +113,7 @@ export const POST = async (req, res) => {
             categoryId: newCategory.id,
             inventoryId: newInv.id,
             tags: 'sample test',
+            unit: 'pc',
           },
           {
             name: 'Sample Product 2',
@@ -121,6 +122,7 @@ export const POST = async (req, res) => {
             categoryId: newCategory.id,
             inventoryId: newInv.id,
             tags: 'sample test',
+            unit: 'pc',
           },
           {
             name: 'Sample Product 3',
@@ -129,6 +131,7 @@ export const POST = async (req, res) => {
             categoryId: newCategory.id,
             inventoryId: newInv.id,
             tags: 'sample test',
+            unit: 'pc',
           },
         ],
         skipDuplicates: true,

@@ -5,9 +5,12 @@ import Header from '@/components/header';
 import { toast } from 'sonner';
 import { IoLockClosed, IoLockOpen } from 'react-icons/io5';
 import NotFound from '@/app/not-found';
+import { useSelector } from 'react-redux';
 
 export default function SettingsPage() {
-  const { user, logout } = useAuthUser();
+  // const { user, logout } = useAuthUser();
+  const { user } = useSelector((state) => state.user);
+
   const localStorageKey = `inventoryData_preferences_${user.id}`;
   const [reloadKey, setReloadKey] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
@@ -201,7 +204,7 @@ export default function SettingsPage() {
   if (tempPreferences.requireSettingsPassword && !authenticated) {
     return (
       <div className="flex flex-col items-center">
-        <Header className={'shadow'} user={user} logout={logout} />
+        <Header className={'shadow'} />
         <div className="flex min-h-[80vh] flex-col items-center justify-center text-center p-6">
           <div className="bg-white rounded-xl shadow p-6 md:p-8 w-full max-w-sm border border-gray-200">
             <div className="w-full text-4xl mb-4 text-gray-500">
@@ -245,12 +248,7 @@ export default function SettingsPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header
-        className={'shadow'}
-        key={reloadKey}
-        user={user}
-        logout={logout}
-      />
+      <Header className={'shadow'} key={reloadKey} />
       <div className="max-w-3xl mx-auto p-4 md:p-6">
         <div className="bg-white rounded-xl shadow-sm p-6 md:p-8">
           <h1 className="text-2xl font-semibold text-gray-800 mb-6">

@@ -187,17 +187,40 @@ async function handleResetPassword(req, res) {
  */
 async function handleDeleteCashier(req, res) {
   const { cashierId } = req.body;
-  if (!cashierId) return res.status(400).json({ error: 'Missing data' });
+  if (!cashierId) {
+    return res.status(400).json({ success: false, error: 'Missing cashierId' });
+  }
 
-  const cashier = await prisma.cashier.findUnique({
-    where: { id: Number(cashierId) },
-  });
-  if (!cashier) return res.status(404).json({ error: 'Cashier not found' });
+  try {
+    const cashier = await prisma.cashier.findUnique({
+      where: { id: Number(cashierId) },
+      include: { Sale: true }, // include sales
+    });
 
-  await prisma.cashier.delete({ where: { id: Number(cashierId) } });
-  await prisma.user.delete({ where: { id: cashier.userId } });
+    if (!cashier) {
+      return res
+        .status(404)
+        .json({ success: false, error: 'Cashier not found' });
+    }
 
-  return res.json({ message: 'Cashier deleted successfully' });
+    if (cashier.Sale.length > 0) {
+      return res.status(400).json({
+        success: false,
+        error: 'Cannot delete cashier who has sales',
+      });
+    }
+
+    // delete cashier + linked user
+    await prisma.cashier.delete({ where: { id: cashier.id } });
+    await prisma.user.delete({ where: { id: cashier.userId } });
+
+    return res.json({ success: true, message: 'Cashier deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting cashier:', error);
+    return res
+      .status(500)
+      .json({ success: false, error: 'Internal server error' });
+  }
 }
 
 /**

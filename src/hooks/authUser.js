@@ -67,6 +67,11 @@ export default function useAuthUser() {
         return;
       }
 
+      if (res.status === 401) {
+        toast.error('Something went wrong');
+        return;
+      }
+
       if (!res.ok) throw new Error('Failed to fetch fresh user');
 
       const data = await res.json();
