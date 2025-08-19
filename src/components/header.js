@@ -80,15 +80,17 @@ export default function Header({ className }) {
   user?.role === 'superadmin' &&
     buttons.push({
       icon: <BsShieldLockFill />,
-      label: `Super-Admin Panel ${prefs.requireSuperAdminPassword ? '🔒' : ''}`,
+      label: `Super-Admin Panel`,
       onclick: () => handleButtonClick('super-admin'),
+      locked: prefs.requireSuperAdminPassword,
     });
 
   user?.role !== 'cashier' &&
     buttons.push({
       icon: <MdSettings />,
-      label: `Settings ${prefs.requireSettingsPassword ? '🔒' : ''}`,
+      label: `Settings`,
       onclick: () => handleButtonClick('Settings'),
+      locked: prefs.requireSettingsPassword,
     });
   useEffect(() => {
     if (sidebarOpen) {
@@ -171,6 +173,7 @@ export default function Header({ className }) {
             >
               <span className="text-lg md:text-xl">{button.icon}</span>
               <span className="text-sm md:text-base">{button.label}</span>
+              {button.locked && <IoLockClosed />}
             </button>
           ))}
         </div>

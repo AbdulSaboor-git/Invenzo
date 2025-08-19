@@ -174,7 +174,6 @@ export default function SuperAdminPage() {
       const now = Date.now();
       const twentyMinutes = 20 * 60 * 1000;
 
-      // always read directly from localStorage
       let last = 0;
       const cached = localStorage.getItem(localKey);
       if (cached) {
@@ -189,7 +188,8 @@ export default function SuperAdminPage() {
       }
     };
 
-    // run every 2 minutes
+    checkAndAutoFetch();
+
     const interval = setInterval(checkAndAutoFetch, 2 * 60 * 1000);
     window.addEventListener('online', checkAndAutoFetch);
 
