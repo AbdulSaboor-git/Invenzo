@@ -158,7 +158,9 @@ export default function SuperAdminPage() {
   // Stats
   const stats = useMemo(() => {
     const total = users.length;
-    const admins = users.filter((u) => u.role === 'admin').length;
+    const admins = users.filter(
+      (u) => u.role === 'admin' || u.role === 'superadmin'
+    ).length;
     const cashiers = users.filter((u) => u.role === 'cashier').length;
     const active = users.filter((u) => u.isActive).length;
     const inactive = total - active;

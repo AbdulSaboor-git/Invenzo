@@ -153,7 +153,7 @@ export default function Header({ className }) {
         onClick={() => setSidebarOpen(false)}
       />
       <div
-        className={`fixed left-0 w-[60%] max-w-[400px] h-full bg-white shadow-lg shadow-black/30 z-50 flex flex-col gap-12 px-3 py-5 md:px-4 ${
+        className={`fixed left-0 w-[70%] max-w-[400px] h-full bg-white shadow-lg shadow-black/30 z-50 flex flex-col gap-12 px-3 py-5 md:px-4 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         } transition-transform duration-300 ease-in-out`}
       >
@@ -168,11 +168,11 @@ export default function Header({ className }) {
           {buttons.map((button, index) => (
             <button
               key={index}
-              className="flex items-center gap-4 px-3 py-3  md:px-4 md:py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
+              className="flex items-center justify-start gap-1 px-3 py-3  md:px-4 md:py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
               onClick={button.onclick}
             >
               <span className="text-lg md:text-xl">{button.icon}</span>
-              <span className="text-sm md:text-base">{button.label}</span>
+              <span className="text-sm md:text-base ml-3">{button.label}</span>
               {button.locked && <IoLockClosed />}
             </button>
           ))}
