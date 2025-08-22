@@ -4,8 +4,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setUser, setUserLoading, logoutUser } from '@/redux/userSlice';
 import { toast } from 'sonner';
 
-const TEN_MINUTES = 10 * 60 * 1000;
-const STALE_CHECK_INTERVAL = 2 * 60 * 1000;
+const TOW_MINUTES = 2 * 60 * 1000;
+const STALE_CHECK_INTERVAL = 20 * 1000;
 
 let hasShownDeactivationToast = false;
 let hasShownOfflineToast = false;
@@ -105,7 +105,7 @@ export default function useAuthUser() {
       localStorage.getItem('userFetchedAt') || '0',
       10
     );
-    if (Date.now() - fetchedAt > TEN_MINUTES) {
+    if (Date.now() - fetchedAt > TOW_MINUTES) {
       fetchFreshUser();
     }
   }, [fetchFreshUser]);

@@ -123,11 +123,11 @@ export default function CashierTable({ cashiers, loading, onChange, adminId }) {
                       <BsThreeDotsVertical size={18} />
                     </button>
                   </td>
-                  <td>
+                  <td className={`w-0`}>
                     {openMenuId === c.id && (
                       <div
                         ref={menuRef}
-                        className="absolute right-0 mt-2 w-44 bg-white border border-gray-200 rounded-lg shadow-lg z-10 overflow-hidden"
+                        className="absolute right-8 md:right-14 mt-2 w-44 bg-white border border-gray-200 rounded-lg shadow-lg z-10 overflow-hidden"
                       >
                         <button
                           onClick={() => openPopup('edit', c)}

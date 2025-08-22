@@ -43,28 +43,33 @@ export default function Header({ className }) {
       onclick: () => handleButtonClick('Dashboard'),
     });
 
-  buttons.push({
-    icon: <MdInventory />,
-    label: 'Inventory',
-    onclick: () => handleButtonClick('Inventory'),
-  });
+  user?.role !== 'superadmin' &&
+    buttons.push({
+      icon: <MdInventory />,
+      label: 'Inventory',
+      onclick: () => handleButtonClick('Inventory'),
+    });
 
-  // user?.role != 'cashier' &&
-  prefs.addProduct &&
+  user?.role !== 'superadmin' &&
+    user?.role !== 'cashier' &&
+    prefs.addProduct &&
     buttons.push({
       icon: <IoAddCircle />,
       label: 'Add Product',
       onclick: () => handleButtonClick('Add Product'),
     });
 
-  prefs.allowCategoryManagement &&
+  user?.role !== 'superadmin' &&
+    user?.role !== 'cashier' &&
+    prefs.allowCategoryManagement &&
     buttons.push({
       icon: <MdCategory />,
       label: 'Categories',
       onclick: () => handleButtonClick('Categories'),
     });
 
-  user?.role !== 'cashier' &&
+  user?.role !== 'superadmin' &&
+    user?.role !== 'cashier' &&
     buttons.push({
       icon: <FaUsers />,
       label: 'Cashiers',
@@ -112,7 +117,7 @@ export default function Header({ className }) {
       <div className="flex items-center gap-4">
         <MdOutlineMenu
           size={30}
-          className="text-3xl cursor-pointer text-gray-600 "
+          className="cursor-pointer text-gray-600 "
           onClick={handleMenuClick}
         />
         <div className="flex items-center justify-center h-full">

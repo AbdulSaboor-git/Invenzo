@@ -52,10 +52,19 @@ function requireFields(body, fields) {
 
 function sanitizeUser(u) {
   let inventory = null;
-  if (u.Inventories) {
-    inventory = { id: u.Inventories.id, name: u.Inventories.name };
-  } else if (u.Cashier?.Inventory) {
-    inventory = { id: u.Cashier.Inventory.id, name: u.Cashier.Inventory.name };
+
+  if (u.role === 'cashier' && u.Cashier?.Inventory) {
+    inventory = {
+      id: u.Cashier.Inventory.id,
+      name: u.Cashier.Inventory.name,
+      productCount: u.Cashier.Inventory._count?.products || 0,
+    };
+  } else if (u.Inventories) {
+    inventory = {
+      id: u.Inventories.id,
+      name: u.Inventories.name,
+      productCount: u.Inventories._count?.products || 0,
+    };
   }
 
   return {
@@ -77,10 +86,22 @@ function sanitizeUser(u) {
 async function handleGetUsers(req, res) {
   const users = await prisma.user.findMany({
     include: {
-      Inventories: { select: { id: true, name: true } },
+      Inventories: {
+        select: {
+          id: true,
+          name: true,
+          _count: { select: { products: true } },
+        },
+      },
       Cashier: {
         include: {
-          Inventory: { select: { id: true, name: true } },
+          Inventory: {
+            select: {
+              id: true,
+              name: true,
+              _count: { select: { products: true } },
+            },
+          },
         },
       },
     },
@@ -89,45 +110,19 @@ async function handleGetUsers(req, res) {
 
   const sanitized = users.map(sanitizeUser);
 
-  const superadmins = [];
-  const inventoryGroups = new Map();
-  const noInventoryUsers = [];
+  // split superadmins and others
+  const superadmins = sanitized.filter((u) => u.role === 'superadmin');
+  const others = sanitized.filter((u) => u.role !== 'superadmin');
 
-  for (const u of sanitized) {
-    if (u.role === 'superadmin') {
-      superadmins.push(u);
-      continue;
-    }
+  // sort others by inventory name (users without inventory go last)
+  others.sort((a, b) => {
+    if (!a.inventory && !b.inventory) return 0;
+    if (!a.inventory) return 1;
+    if (!b.inventory) return -1;
+    return a.inventory.name.localeCompare(b.inventory.name);
+  });
 
-    const invId = u.inventory?.id;
-    if (!invId) {
-      noInventoryUsers.push(u); // 👈 collect users without inventory
-      continue;
-    }
-
-    if (!inventoryGroups.has(invId)) {
-      inventoryGroups.set(invId, { admin: null, cashiers: [], others: [] });
-    }
-
-    if (u.role === 'admin') {
-      inventoryGroups.get(invId).admin = u;
-    } else if (u.role === 'cashier') {
-      inventoryGroups.get(invId).cashiers.push(u);
-    } else {
-      inventoryGroups.get(invId).others.push(u);
-    }
-  }
-
-  const result = [];
-  result.push(...superadmins);
-
-  for (const group of inventoryGroups.values()) {
-    if (group.admin) result.push(group.admin);
-    result.push(...group.cashiers);
-    result.push(...group.others);
-  }
-
-  result.push(...noInventoryUsers); // 👈 append at end
+  const result = [...superadmins, ...others];
 
   return res.status(200).json({ success: true, data: result });
 }

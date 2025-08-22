@@ -455,6 +455,7 @@ function UsersTable({ users, allLoading, onChange }) {
               <th className="px-3 py-3 min-w-[160px]">Email</th>
               <th className="px-3 py-3 min-w-[90px]">Role</th>
               <th className="px-3 py-3 min-w-[180px]">Inventory</th>
+              <th className="px-3 py-3">Products</th>
               <th className="px-3 py-3 min-w-[80px]">Status</th>
               <th className="px-3 py-3 min-w-[120px]">Date Added</th>
               <th className="px-3 py-3 min-w-[140px]">Last Modified</th>
@@ -491,6 +492,9 @@ function UsersTable({ users, allLoading, onChange }) {
                     {u.inventory?.name || '—'}
                   </td>
                   <td className="px-3 py-2">
+                    {u.inventory?.productCount || '—'}
+                  </td>
+                  <td className="px-3 py-2">
                     <StatusPill active={u.isActive} />
                   </td>
                   <td className="px-3 py-2">
@@ -516,11 +520,11 @@ function UsersTable({ users, allLoading, onChange }) {
                       <BsThreeDotsVertical size={18} />
                     </button>
                   </td>
-                  <td>
+                  <td className="w-0">
                     {openMenuId === u.id && (
                       <div
                         ref={menuRef}
-                        className="absolute right-6 md:right-12 mt-3 w-44 bg-white border border-gray-200 rounded-lg shadow-lg z-10 overflow-hidden"
+                        className="absolute right-8 md:right-14 mt-3 w-44 bg-white border border-gray-200 rounded-lg shadow-lg z-10 overflow-hidden"
                       >
                         {u.role != 'superadmin' && (
                           <button

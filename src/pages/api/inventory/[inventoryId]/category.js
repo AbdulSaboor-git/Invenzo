@@ -82,10 +82,6 @@ async function handleGet(req, res, inventoryId) {
       orderBy: { name: 'asc' },
     });
 
-    if (!categories.length) {
-      return res.status(404).json({ message: 'Categories not found' });
-    }
-
     return res.status(200).json(categories);
   } catch (error) {
     console.error(error);

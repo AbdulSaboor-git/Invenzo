@@ -256,66 +256,70 @@ export default function SettingsPage() {
           </h1>
 
           {/* Sections */}
-          <SettingsSection title="General">
-            {generalSettings.map((item) => (
-              <ToggleRow
-                key={item.key}
-                label={item.label}
-                value={preferences[item.key]}
-                onChange={() => togglePref(item.key)}
-              />
-            ))}
-          </SettingsSection>
+          {user?.role !== 'superadmin' && (
+            <SettingsSection title="General">
+              {generalSettings.map((item) => (
+                <ToggleRow
+                  key={item.key}
+                  label={item.label}
+                  value={preferences[item.key]}
+                  onChange={() => togglePref(item.key)}
+                />
+              ))}
+            </SettingsSection>
+          )}
 
-          <SettingsSection title="Inventory Display">
-            {invDisplaySettings.map((item) => (
-              <ToggleRow
-                key={item.key}
-                label={item.label}
-                value={preferences[item.key]}
-                onChange={() => {
-                  setPreferences((prev) => ({
-                    ...prev,
-                    defaultSortOrder: 'name',
-                  }));
-                  togglePref(item.key);
-                }}
-              />
-            ))}
+          {user?.role !== 'superadmin' && (
+            <SettingsSection title="Inventory Display">
+              {invDisplaySettings.map((item) => (
+                <ToggleRow
+                  key={item.key}
+                  label={item.label}
+                  value={preferences[item.key]}
+                  onChange={() => {
+                    setPreferences((prev) => ({
+                      ...prev,
+                      defaultSortOrder: 'name',
+                    }));
+                    togglePref(item.key);
+                  }}
+                />
+              ))}
 
-            {/* Sort dropdown */}
-            <div className="flex justify-between items-center  px-4 py-3">
-              <span className="text-gray-700">Default Sort Order</span>
-              <select
-                value={preferences.defaultSortOrder}
-                onChange={(e) =>
-                  setPreferences((prev) => ({
-                    ...prev,
-                    defaultSortOrder: e.target.value,
-                  }))
-                }
-                className="border border-gray-300 min-w-[150px] rounded-lg px-3 py-2 text-gray-700 bg-white focus:outline-none md:focus:ring-2 md:focus:ring-emerald-500"
-              >
-                {sortOptions.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </SettingsSection>
-
-          <SettingsSection title="Product Details">
-            {prodDisplaySettings.map((item) => (
-              <ToggleRow
-                key={item.key}
-                label={item.label}
-                value={preferences[item.key]}
-                onChange={() => togglePref(item.key)}
-              />
-            ))}
-          </SettingsSection>
-
+              {/* Sort dropdown */}
+              <div className="flex justify-between items-center  px-4 py-3">
+                <span className="text-gray-700">Default Sort Order</span>
+                <select
+                  value={preferences.defaultSortOrder}
+                  onChange={(e) =>
+                    setPreferences((prev) => ({
+                      ...prev,
+                      defaultSortOrder: e.target.value,
+                    }))
+                  }
+                  className="border border-gray-300 min-w-[150px] rounded-lg px-3 py-2 text-gray-700 bg-white focus:outline-none md:focus:ring-2 md:focus:ring-emerald-500"
+                >
+                  {sortOptions.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </SettingsSection>
+          )}
+          {user?.role !== 'superadmin' && (
+            <SettingsSection title="Product Details">
+              {prodDisplaySettings.map((item) => (
+                <ToggleRow
+                  key={item.key}
+                  label={item.label}
+                  value={preferences[item.key]}
+                  onChange={() => togglePref(item.key)}
+                />
+              ))}
+            </SettingsSection>
+          )}
           <SettingsSection title="Security">
             {securitySettings.map((item) => (
               <ToggleRow
