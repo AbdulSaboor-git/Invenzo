@@ -341,16 +341,15 @@ export default function Inventory() {
                           {formatDate(category.createdAt)}
                         </td>
                         <td
-                          className="px-3 py-2 text-right relative"
+                          className="px-3 py-2 text-right relative cursor-pointer"
                           ref={buttonRef}
+                          onClick={() =>
+                            setOpenMenuId(
+                              openMenuId === category.id ? null : category.id
+                            )
+                          }
                         >
-                          <button
-                            onClick={() =>
-                              setOpenMenuId(
-                                openMenuId === category.id ? null : category.id
-                              )
-                            }
-                          >
+                          <button className="mt-[3px]">
                             <BsThreeDotsVertical size={18} />
                           </button>
                         </td>
