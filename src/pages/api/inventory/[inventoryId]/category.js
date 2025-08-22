@@ -1,20 +1,20 @@
-import prisma from "@/lib/prisma";
+import prisma from '@/lib/prisma';
 
 export default async function handler(req, res) {
   const { method } = req;
   const { inventoryId } = req.query; // Extract inventoryId from query parameters
 
   switch (method) {
-    case "GET":
+    case 'GET':
       return handleGet(req, res, inventoryId);
-    case "POST":
+    case 'POST':
       return handlePost(req, res, inventoryId);
-    case "PATCH":
+    case 'PATCH':
       return handlePatch(req, res, inventoryId);
-    case "DELETE":
-      return handleDelete(req, res, inventoryId);
+    case 'DELETE':
+      return handleDelete(req, res);
     default:
-      res.setHeader("Allow", ["GET", "POST", "PATCH", "DELETE"]);
+      res.setHeader('Allow', ['GET', 'POST', 'PATCH', 'DELETE']);
       return res.status(405).end(`Method ${method} Not Allowed`);
   }
 }
@@ -23,7 +23,6 @@ const handlePost = async (req, res, inventoryId) => {
   const { name } = req.body;
 
   try {
-    // Ensure the inventoryId is valid
     const inventory = await prisma.inventory.findUnique({
       where: { id: parseInt(inventoryId, 10) },
     });
@@ -31,7 +30,7 @@ const handlePost = async (req, res, inventoryId) => {
     if (!inventory) {
       return res
         .status(404)
-        .json({ error: "Inventory not found", errorCode: 4 });
+        .json({ error: 'Inventory not found', errorCode: 4 });
     }
 
     // Check if the category already exists within the same inventory
@@ -45,7 +44,7 @@ const handlePost = async (req, res, inventoryId) => {
     if (existingCategory) {
       return res
         .status(409) // Conflict status code is more appropriate here
-        .json({ error: "Category already exists", errorCode: 3 });
+        .json({ error: 'Category already exists', errorCode: 3 });
     }
 
     // Create the new category
@@ -57,12 +56,12 @@ const handlePost = async (req, res, inventoryId) => {
     });
 
     res.status(201).json({
-      message: "Category added successfully",
+      message: 'Category added successfully',
       category: newCategory,
     });
   } catch (error) {
-    console.error("Error adding category:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error('Error adding category:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 };
 
@@ -75,20 +74,24 @@ async function handleGet(req, res, inventoryId) {
       where: {
         inventoryId: id,
       },
+      include: {
+        _count: {
+          select: { products: true },
+        },
+      },
+      orderBy: { name: 'asc' },
     });
 
     if (!categories.length) {
-      return res.status(404).json({ message: "Categories not found" });
+      return res.status(404).json({ message: 'Categories not found' });
     }
 
     return res.status(200).json(categories);
   } catch (error) {
     console.error(error);
-    return res
-      .status(500)
-      .json({
-        message: "Internal Server Error. Please check your network connection",
-      });
+    return res.status(500).json({
+      message: 'Internal Server Error. Please check your network connection',
+    });
   }
 }
 
@@ -105,7 +108,7 @@ const handlePatch = async (req, res, inventoryId) => {
     if (!category) {
       return res
         .status(404)
-        .json({ error: "Category not found", errorCode: 4 });
+        .json({ error: 'Category not found', errorCode: 4 });
     }
 
     // Check if the new category name is unique within the same inventory
@@ -120,7 +123,7 @@ const handlePatch = async (req, res, inventoryId) => {
     if (existingCategory) {
       return res
         .status(409)
-        .json({ error: "Category name already exists", errorCode: 3 });
+        .json({ error: 'Category name already exists', errorCode: 3 });
     }
 
     // Update the category
@@ -131,12 +134,12 @@ const handlePatch = async (req, res, inventoryId) => {
 
     return res.status(200).json(updatedCategory);
   } catch (error) {
-    console.error("Error updating category:", error);
-    return res.status(500).json({ message: "Failed to update category" });
+    console.error('Error updating category:', error);
+    return res.status(500).json({ message: 'Failed to update category' });
   }
 };
 
-const handleDelete = async (req, res, inventoryId) => {
+const handleDelete = async (req, res) => {
   const { categoryId } = req.body;
 
   try {
@@ -149,14 +152,14 @@ const handleDelete = async (req, res, inventoryId) => {
     if (!category) {
       return res
         .status(404)
-        .json({ error: "Category not found", errorCode: 4 });
+        .json({ error: 'Category not found', errorCode: 4 });
     }
 
     // Check if the category has associated products
     if (category.products.length > 0) {
       return res
         .status(409)
-        .json({ error: "Cannot delete category with products", errorCode: 5 });
+        .json({ error: 'Cannot delete category with products', errorCode: 5 });
     }
 
     // Delete the category
@@ -164,9 +167,9 @@ const handleDelete = async (req, res, inventoryId) => {
       where: { id: parseInt(categoryId, 10) },
     });
 
-    return res.status(200).json({ message: "Category deleted successfully" });
+    return res.status(200).json({ message: 'Category deleted successfully' });
   } catch (error) {
-    console.error("Error deleting category:", error);
-    return res.status(500).json({ message: "Failed to delete category" });
+    console.error('Error deleting category:', error);
+    return res.status(500).json({ message: 'Failed to delete category' });
   }
 };

@@ -290,7 +290,7 @@ export default function SuperAdminPage() {
           <div className="min-w-[250px] flex justify-center md:justify-start">
             <h2 className="text-lg line-clamp-1 md:text-xl font-bold text-gray-800 text-center md:text-left cursor-pointer flex items-center gap-2">
               <MdOutlineAdminPanelSettings className="text-gray-700" /> Super
-              Admin • Users
+              Admin
             </h2>
           </div>
 

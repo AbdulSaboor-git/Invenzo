@@ -34,6 +34,7 @@ export default async function handler(req, res) {
           select: {
             Inventory: {
               select: {
+                id: true,
                 adminId: true,
                 name: true,
               },
@@ -42,6 +43,7 @@ export default async function handler(req, res) {
         },
         Inventories: {
           select: {
+            id: true,
             name: true,
           },
         },
@@ -54,6 +56,7 @@ export default async function handler(req, res) {
 
     const adminId = user.Cashier?.Inventory?.adminId ?? user.id;
     const invName = user.Cashier?.Inventory?.name ?? user.Inventories?.name;
+    const invId = user.Cashier?.Inventory?.id ?? user.Inventories?.id;
 
     res.status(200).json({
       user: {
@@ -65,6 +68,7 @@ export default async function handler(req, res) {
         lastName: user.lastName || null,
         profilePicture: user.profilePicture || null,
         adminId,
+        invId,
         invName,
       },
     });
