@@ -296,7 +296,7 @@ export default function Inventory() {
               <thead className="bg-gray-100 text-gray-700 text-sm font-semibold uppercase tracking-wide">
                 <tr>
                   <th className="px-3 py-3 md:px-6 md:py-4 text-center">#</th>
-                  <th className=" px-3 py-3 w-full min-w-[200px] md:px-6 md:py-4 cursor-pointer">
+                  <th className=" px-3 py-3 min-w-[200px] md:px-6 md:py-4 cursor-pointer">
                     Name
                   </th>
                   <th className=" px-3 py-3 md:px-6 md:py-4 cursor-pointer">
@@ -328,7 +328,7 @@ export default function Inventory() {
                         <td className="px-3 py-2 md:px-6 md:py-4 text-gray-500 text-center">
                           {index + 1}
                         </td>
-                        <td className="px-3 min-w-[200px] w-full py-2 md:px-6 md:py-4 font-medium cursor-pointer">
+                        <td className="px-3 min-w-[200px] py-2 md:px-6 md:py-4 font-medium cursor-pointer">
                           {category.name}
                         </td>
                         <td className="px-3 py-2 md:px-6 md:py-4 font-medium cursor-pointer">
