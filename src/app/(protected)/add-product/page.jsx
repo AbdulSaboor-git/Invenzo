@@ -198,6 +198,10 @@ export default function AddProductPage() {
     }
   };
 
+  if (user?.role === 'superadmin' || user?.role === 'cashier') {
+    return <NotFound />;
+  }
+
   // Handlers
   const handleNameChange = (e) => setName(e.target.value);
   const handleDescriptionChange = (e) => setDescription(e.target.value);

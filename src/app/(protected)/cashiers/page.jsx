@@ -125,6 +125,10 @@ export default function CashiersPage() {
     };
   }, [user?.id, localKey, fetchData]);
 
+  if (user?.role === 'superadmin' || user?.role === 'cashier') {
+    return <NotFound />;
+  }
+
   return (
     <div className="flex flex-col items-center w-full">
       <Header />

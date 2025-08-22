@@ -189,7 +189,7 @@ export default function SettingsPage() {
     { value: 'salePrice', label: 'Sales Price' },
   ];
 
-  if (user?.role == 'cashier') {
+  if (user?.role === 'cashier') {
     return <NotFound />;
   }
 

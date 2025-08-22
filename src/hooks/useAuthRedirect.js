@@ -10,7 +10,11 @@ export const useAuthRedirect = () => {
   useEffect(() => {
     if (!userLoading) {
       if (user) {
-        router.push('/inventory');
+        if (user.role === 'superadmin') {
+          router.push('/super-admin');
+        } else {
+          router.push('/inventory');
+        }
       } else {
         router.push('/login');
       }

@@ -15,6 +15,7 @@ import Header from '@/components/header';
 import usePreferences from '@/hooks/usePreferences';
 import RefreshButton from './components/refresh_btn';
 import { useSelector } from 'react-redux';
+import NotFound from '@/app/not-found';
 
 export default function Inventory() {
   // const { user, logout } = useAuthUser();
@@ -396,6 +397,10 @@ export default function Inventory() {
       month: 'short',
       day: 'numeric',
     });
+
+  if (user?.role === 'superadmin') {
+    return <NotFound />;
+  }
 
   return (
     <div className="flex w-full flex-col items-center justify-center ">

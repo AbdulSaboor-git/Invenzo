@@ -12,6 +12,7 @@ import { MdAdd } from 'react-icons/md';
 import AddCategoryPopup from './components/add_category';
 import EditCategoryPopup from './components/edit_category';
 import DeleteCategoryPopup from './components/delete_category';
+import NotFound from '@/app/not-found';
 
 export default function Inventory() {
   // const { user, logout } = useAuthUser();
@@ -258,6 +259,10 @@ export default function Inventory() {
     document.addEventListener('mousedown', onDocClick);
     return () => document.removeEventListener('mousedown', onDocClick);
   }, []);
+
+  if (user?.role === 'superadmin' || user?.role === 'cashier') {
+    return <NotFound />;
+  }
 
   return (
     <div className="flex w-full flex-col items-center justify-center ">
