@@ -90,14 +90,11 @@ export default function UserProfile({ CloseForm, user, showProfile }) {
               {user?.role === 'superadmin' && (
                 <p className="text-lg font-medium text-gray-800">INVENZO</p>
               )}
-              {user?.role === 'superadmin' && (
-                <p className="mt-4 text-xs uppercase text-gray-500 tracking-wider">
-                  admin
+              {user?.role != 'superadmin' && (
+                <p className="text-lg font-medium text-gray-800">
+                  {user?.invName}
                 </p>
               )}
-              <p className="text-lg font-medium text-gray-800">
-                {user?.invName}
-              </p>
             </div>
           </div>
 
