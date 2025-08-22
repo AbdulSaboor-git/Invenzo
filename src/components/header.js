@@ -33,6 +33,8 @@ export default function Header({ className }) {
     router.push(`/${name.toLowerCase().replace(/\s+/g, '-')}`);
   };
 
+  const logo = '/invenzo_logo.png';
+
   const buttons = [];
   user?.role !== 'cashier' &&
     buttons.push({
@@ -109,12 +111,13 @@ export default function Header({ className }) {
     >
       <div className="flex items-center gap-4">
         <MdOutlineMenu
+          size={30}
           className="text-3xl cursor-pointer text-gray-600 "
           onClick={handleMenuClick}
         />
         <div className="flex items-center justify-center h-full">
           <img
-            src="invenzo_logo.png"
+            src={logo}
             alt="logo"
             draggable={false}
             className="h-full aspect-auto object-contain  max-h-10 md:max-h-12"

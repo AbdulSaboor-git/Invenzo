@@ -10,6 +10,8 @@ export const metadata = {
   },
 };
 
+<link rel="preload" href="/invenzo_logo.png" as="image" />;
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
