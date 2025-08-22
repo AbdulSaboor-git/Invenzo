@@ -21,6 +21,7 @@ export default function Login() {
   //   }
   // }, [user, userLoading, router]);
   useAuthRedirect();
+
   const handleLogin = async (e) => {
     e.preventDefault();
 

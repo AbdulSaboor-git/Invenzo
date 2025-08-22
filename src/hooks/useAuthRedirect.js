@@ -1,11 +1,12 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useSelector } from 'react-redux';
+import useAuthUser from './authUser';
 
 export const useAuthRedirect = () => {
   const router = useRouter();
-  const user = useSelector((state) => state.user.user);
-  const userLoading = useSelector((state) => state.user.userLoading);
+  const { user, userLoading } = useAuthUser();
+  // const user = useSelector((state) => state.user.user);
+  // const userLoading = useSelector((state) => state.user.userLoading);
 
   useEffect(() => {
     if (!userLoading) {
