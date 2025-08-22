@@ -343,13 +343,15 @@ export default function Inventory() {
                         <td
                           className="px-3 py-2 text-right relative cursor-pointer"
                           ref={buttonRef}
-                          onClick={() =>
-                            setOpenMenuId(
-                              openMenuId === category.id ? null : category.id
-                            )
-                          }
                         >
-                          <button className="mt-[3px]">
+                          <button
+                            className="mt-[3px]"
+                            onClick={() =>
+                              setOpenMenuId(
+                                openMenuId === category.id ? null : category.id
+                              )
+                            }
+                          >
                             <BsThreeDotsVertical size={18} />
                           </button>
                         </td>
@@ -357,7 +359,7 @@ export default function Inventory() {
                           {openMenuId === category.id && (
                             <div
                               ref={menuRef}
-                              className="absolute right-12 mt-3 w-44 bg-white border border-gray-200 rounded-lg shadow-lg z-10 overflow-hidden"
+                              className="absolute right-6 md:right-12 mt-3 w-44 bg-white border border-gray-200 rounded-lg shadow-lg z-10 overflow-hidden"
                             >
                               <button
                                 className="flex items-center gap-2 w-full px-3 py-2 text-left hover:bg-gray-100"

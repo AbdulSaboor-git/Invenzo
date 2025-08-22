@@ -520,7 +520,7 @@ function UsersTable({ users, allLoading, onChange }) {
                     {openMenuId === u.id && (
                       <div
                         ref={menuRef}
-                        className="absolute right-12 mt-3 w-44 bg-white border border-gray-200 rounded-lg shadow-lg z-10 overflow-hidden"
+                        className="absolute right-6 md:right-12 mt-3 w-44 bg-white border border-gray-200 rounded-lg shadow-lg z-10 overflow-hidden"
                       >
                         {u.role != 'superadmin' && (
                           <button
