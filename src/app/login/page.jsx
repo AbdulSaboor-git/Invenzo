@@ -64,7 +64,7 @@ export default function Login() {
       toast.success('Logged in successfully');
       dispatch(setUser(data.user)); // Store user in Redux
       setTimeout(() => {
-        router.push('/inventory');
+        router.push('/');
       }, 0); // Redirect to a different page after successful login
     } catch (err) {
       console.log(err);
