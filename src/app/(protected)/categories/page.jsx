@@ -295,20 +295,20 @@ export default function Inventory() {
             <table className="min-w-full divide-y divide-gray-200 bg-white text-sm text-left overflow-hidden">
               <thead className="bg-gray-100 text-gray-700 text-sm font-semibold uppercase tracking-wide">
                 <tr>
-                  <th className="px-3 py-2 md:px-6 md:py-4 text-center">#</th>
-                  <th className=" px-3 py-2 min-w-[140px] md:px-6 md:py-4 cursor-pointer">
+                  <th className="px-3 py-3 md:px-6 md:py-4 text-center">#</th>
+                  <th className=" px-3 py-3 min-w-[140px] md:px-6 md:py-4 cursor-pointer">
                     Name
                   </th>
-                  <th className=" px-3 py-2 md:px-6 md:py-4 cursor-pointer">
+                  <th className=" px-3 py-3 md:px-6 md:py-4 cursor-pointer">
                     Products
                   </th>
-                  <th className="px-3 py-2 min-w-[140px] md:min-w-[160px] md:px-6 md:py-4 cursor-pointer">
+                  <th className="px-3 py-3 min-w-[140px] md:min-w-[160px] md:px-6 md:py-4 cursor-pointer">
                     Last Modified
                   </th>
-                  <th className="px-3 py-2 min-w-[120px] md:min-w-[140px] md:px-6 md:py-4 cursor-pointer">
+                  <th className="px-3 py-3 min-w-[120px] md:min-w-[140px] md:px-6 md:py-4 cursor-pointer">
                     Date Added
                   </th>
-                  <th className="px-3 py-2 text-right">Actions</th>
+                  <th className="px-3 py-3 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 text-gray-800">
@@ -350,7 +350,6 @@ export default function Inventory() {
                                 openMenuId === category.id ? null : category.id
                               )
                             }
-                            className="p-2 rounded"
                           >
                             <BsThreeDotsVertical size={18} />
                           </button>
