@@ -262,7 +262,7 @@ export default function Inventory() {
   return (
     <div className="flex w-full flex-col items-center justify-center ">
       <Header />
-      <div className="w-full max-w-7xl place-self-center pb-12">
+      <div className="w-full max-w-7xl place-self-center pb-16">
         <div className="flex flex-col md:flex-row md:justify-between items-center shadow px-3 md:px-6 py-4 gap-3 sticky top-3 md:top-[68px] bg-white z-40">
           <div className="w-full flex justify-center md:justify-start">
             <h2 className="text-lg line-clamp-1 md:text-xl font-bold text-gray-800 text-center md:text-left ">
@@ -295,20 +295,20 @@ export default function Inventory() {
             <table className="min-w-full divide-y divide-gray-200 bg-white text-sm text-left overflow-hidden">
               <thead className="bg-gray-100 text-gray-700 text-sm font-semibold uppercase tracking-wide">
                 <tr>
-                  <th className="px-3 py-3 md:px-6 md:py-4 text-center">#</th>
-                  <th className=" px-3 py-3 min-w-[140px] md:px-6 md:py-4 cursor-pointer">
+                  <th className="px-3 py-2 md:px-6 md:py-4 text-center">#</th>
+                  <th className=" px-3 py-2 min-w-[140px] md:px-6 md:py-4 cursor-pointer">
                     Name
                   </th>
-                  <th className=" px-3 py-3 md:px-6 md:py-4 cursor-pointer">
+                  <th className=" px-3 py-2 md:px-6 md:py-4 cursor-pointer">
                     Products
                   </th>
-                  <th className="px-3 py-3 min-w-[140px] md:min-w-[160px] md:px-6 md:py-4 cursor-pointer">
+                  <th className="px-3 py-2 min-w-[140px] md:min-w-[160px] md:px-6 md:py-4 cursor-pointer">
                     Last Modified
                   </th>
-                  <th className="px-3 py-3 min-w-[120px] md:min-w-[140px] md:px-6 md:py-4 cursor-pointer">
+                  <th className="px-3 py-2 min-w-[120px] md:min-w-[140px] md:px-6 md:py-4 cursor-pointer">
                     Date Added
                   </th>
-                  <th className="px-3 py-3 text-right">Actions</th>
+                  <th className="px-3 py-2 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100 text-gray-800">
