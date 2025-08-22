@@ -213,11 +213,19 @@ export default function SalesPage() {
               <thead className="bg-gray-100 text-gray-700 text-sm font-semibold uppercase tracking-wide">
                 <tr>
                   <th className="px-3 py-3 md:px-6 md:py-4 text-center">#</th>
-                  <th className="px-3 py-3 md:px-6 md:py-4">Sale ID</th>
-                  <th className="px-3 py-3 md:px-6 md:py-4">Date / Time</th>
-                  <th className="px-3 py-3 md:px-6 md:py-4">Cashier</th>
+                  <th className="px-3 py-3 md:px-6 md:py-4 min-w-[80px]">
+                    Sale ID
+                  </th>
+                  <th className="px-3 py-3 md:px-6 md:py-4 min-w-[200px]">
+                    Date / Time
+                  </th>
+                  <th className="px-3 py-3 md:px-6 md:py-4 min-w-[150px]">
+                    Cashier
+                  </th>
                   <th className="px-3 py-3 md:px-6 md:py-4">Items</th>
-                  <th className="px-3 py-3 md:px-6 md:py-4">Total</th>
+                  <th className="px-3 py-3 md:px-6 md:py-4 min-w-[60px]">
+                    Total
+                  </th>
                   <th className="px-3 py-3 text-right">Actions</th>
                 </tr>
               </thead>
@@ -390,122 +398,152 @@ function ViewSalePopup({ saleId, onClose }) {
     [lines]
   );
 
+  function NormalizeId(id) {
+    return String(id).padStart(8, '0');
+  }
+
   return (
     <div className="fixed inset-0 bg-black/20 backdrop-blur-[2px] flex items-center justify-center px-4 sm:px-6 z-50">
-      <div className="bg-white rounded-lg p-6 shadow-xl w-full max-w-2xl">
+      <div className=" bg-white rounded-lg p-4 sm:p-6 shadow-xl w-full max-w-2xl overflow-hidden">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold">Sale Details</h3>
+          <h3 className="text-lg font-semibold">Invoice</h3>
           <button
+            className=" text-gray-400 hover:text-gray-600"
             onClick={onClose}
-            className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300"
+            disabled={loading}
+            aria-label="Close edit category form"
           >
-            Close
+            ✕
           </button>
         </div>
 
         {loading ? (
           <div className="py-12 text-center text-gray-500">Loading...</div>
         ) : !sale ? (
-          <div className="py-12 text-center text-gray-500">Sale not found.</div>
+          <div className="py-12 text-center text-gray-500">
+            Invoice not found.
+          </div>
         ) : (
           <>
-            {/* Header info */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-5 text-sm">
-              <div>
-                <div className="text-gray-500">Sale ID</div>
-                <div className="font-medium">{sale.id}</div>
-              </div>
-              <div>
-                <div className="text-gray-500">Date / Time</div>
-                <div className="font-medium">
-                  {formatDateTime(sale.createdAt)}
-                </div>
-              </div>
-              <div>
-                <div className="text-gray-500">Cashier</div>
-                <div className="font-medium">
-                  {sale?.Cashier?.User
-                    ? `${sale.Cashier.User.firstName ?? ''} ${sale.Cashier.User.lastName ?? ''}`.trim() ||
-                      sale.Cashier.User.email
-                    : '-'}
-                </div>
-              </div>
-              <div>
-                <div className="text-gray-500">Inventory</div>
-                <div className="font-medium">
-                  {sale?.Inventory?.name ?? '-'}
-                </div>
-              </div>
-            </div>
-
             {/* Line items */}
-            <div className="border rounded-lg overflow-hidden">
-              <table className="min-w-full text-sm">
-                <thead className="bg-gray-100 text-gray-700 font-semibold">
-                  <tr>
-                    <th className="px-3 py-2 md:px-4 md:py-3 text-left">
-                      Product
-                    </th>
-                    <th className="px-3 py-2 md:px-4 md:py-3 text-right">
-                      Qty
-                    </th>
-                    <th className="px-3 py-2 md:px-4 md:py-3 text-right">
-                      Price
-                    </th>
-                    <th className="px-3 py-2 md:px-4 md:py-3 text-right">
-                      Subtotal
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y">
-                  {lines.length === 0 ? (
-                    <tr>
-                      <td
-                        className="px-4 py-6 text-center text-gray-500"
-                        colSpan={4}
-                      >
-                        No items.
-                      </td>
-                    </tr>
-                  ) : (
-                    lines.map((li) => {
-                      const subtotal = Number(li.quantity) * Number(li.price);
-                      return (
-                        <tr key={li.id}>
-                          <td className="px-3 py-2 md:px-4 md:py-3">
-                            {li?.Product?.name ?? `#${li.productId}`}
-                          </td>
-                          <td className="px-3 py-2 md:px-4 md:py-3 text-right">
-                            {li.quantity}
-                          </td>
-                          <td className="px-3 py-2 md:px-4 md:py-3 text-right">
-                            {currency(li.price)}
-                          </td>
-                          <td className="px-3 py-2 md:px-4 md:py-3 text-right font-medium">
-                            {currency(subtotal)}
+            <div className="border rounded-lg max-h-[70vh] md:max-h-[90vh] overflow-auto">
+              <div className="bg-white border rounded p-3 md:p-6 font-mono text-sm">
+                {/* Header (shared) */}
+                <div className="text-center mb-3 md:mb-6">
+                  <div className="font-bold text-base md:text-lg">
+                    {sale?.Inventory?.name ?? 'Inventory'}
+                  </div>
+                  <div className="text-xs text-gray-500">
+                    {formatDateTime(sale.createdAt)}
+                  </div>
+                  <div className="text-xs text-gray-600 mt-0.5">
+                    Cashier:{' '}
+                    {sale?.Cashier?.User
+                      ? `${sale.Cashier.User.firstName ?? ''} ${sale.Cashier.User.lastName ?? ''}`.trim() ||
+                        sale.Cashier.User.email
+                      : '-'}
+                  </div>
+                  <div className="text-xs text-gray-500 mt-0.5">
+                    Invoice No: {NormalizeId(sale.id)}
+                  </div>
+                </div>
+
+                {/* Items */}
+                <div className="hidden md:block">
+                  {/* Desktop: table */}
+                  <table className="w-full border-t border-b border-dashed text-sm">
+                    <thead>
+                      <tr className="text-gray-700 font-semibold">
+                        <th className="py-2 text-left">Product</th>
+                        <th className="py-2 text-right">Qty</th>
+                        <th className="py-2 text-right">Price</th>
+                        <th className="py-2 text-right">Subtotal</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y">
+                      {lines.length === 0 ? (
+                        <tr>
+                          <td
+                            colSpan={4}
+                            className="py-4 text-center text-gray-500"
+                          >
+                            No items.
                           </td>
                         </tr>
-                      );
-                    })
-                  )}
-                </tbody>
-                <tfoot>
-                  <tr className="bg-gray-50">
-                    <td
-                      className="px-3 py-3 md:px-4 md:py-4 text-right"
-                      colSpan={3}
-                    >
-                      <span className="text-gray-600">Grand Total</span>
-                    </td>
-                    <td className="px-3 py-3 md:px-4 md:py-4 text-right font-semibold">
-                      {currency(grandTotal)}
-                    </td>
-                  </tr>
-                </tfoot>
-              </table>
+                      ) : (
+                        lines.map((li) => {
+                          const subtotal =
+                            Number(li.quantity) * Number(li.price);
+                          return (
+                            <tr key={li.id}>
+                              <td className="py-2">
+                                {li?.Product?.name ?? `#${li.productId}`}
+                              </td>
+                              <td className="py-2 text-right">{li.quantity}</td>
+                              <td className="py-2 text-right">
+                                {currency(li.price)}
+                              </td>
+                              <td className="py-2 text-right font-medium">
+                                {currency(subtotal)}
+                              </td>
+                            </tr>
+                          );
+                        })
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+
+                <div className="block md:hidden">
+                  {/* Mobile: stacked list */}
+                  <div className="divide-y">
+                    {lines.length === 0 ? (
+                      <div className="py-4 text-center text-gray-500">
+                        No items.
+                      </div>
+                    ) : (
+                      lines.map((li) => {
+                        const subtotal = Number(li.quantity) * Number(li.price);
+                        return (
+                          <div
+                            key={li.id}
+                            className="flex justify-between py-2"
+                          >
+                            <div className="flex-1">
+                              {li?.Product?.name ?? `#${li.productId}`}
+                              <div className="text-xs text-gray-500">
+                                {li.quantity} × {currency(li.price)}
+                              </div>
+                            </div>
+                            <div className="font-semibold">
+                              {currency(subtotal)}
+                            </div>
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+                </div>
+
+                {/* Totals (shared) */}
+                {lines.length > 0 && (
+                  <div className="border-t border-dashed mt-3 md:mt-4 pt-2 md:pt-3 flex justify-between font-bold text-base">
+                    <span>Total</span>
+                    <span>{currency(grandTotal)}</span>
+                  </div>
+                )}
+
+                {/* Debug: mismatch notice (shared) */}
+                {Number(sale.totalAmount) !== Number(grandTotal) && (
+                  <div className="mt-2 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded p-2">
+                    Note: Calculated total ({currency(grandTotal)}) differs from
+                    stored totalAmount ({currency(Number(sale.totalAmount))}).
+                  </div>
+                )}
+              </div>
             </div>
 
-            {/* If API total differs, show it (debug/visibility) */}
+            {/* Mismatch note */}
             {Number(sale.totalAmount) !== Number(grandTotal) && (
               <div className="mt-3 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded p-2">
                 Note: Calculated total ({currency(grandTotal)}) differs from

@@ -68,7 +68,7 @@ export default function useAuthUser() {
       }
 
       if (res.status === 401) {
-        toast.error('Something went wrong');
+        console.log('Something went wrong');
         return;
       }
 
