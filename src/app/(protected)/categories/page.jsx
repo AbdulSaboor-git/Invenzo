@@ -332,7 +332,7 @@ export default function Inventory() {
                           {category.name}
                         </td>
                         <td className="px-3 py-2 md:px-6 md:py-4 font-medium cursor-pointer">
-                          {category._count.products}
+                          {category._count?.products}
                         </td>
                         <td className="px-3 py-2 min-w-[140px] md:min-w-[160px] md:px-6 md:py-4">
                           {formatDate(category.updatedAt)}
