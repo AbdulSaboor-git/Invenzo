@@ -1,5 +1,4 @@
 'use client';
-import useAuthUser from '@/hooks/authUser';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { FaFileInvoice, FaUsers } from 'react-icons/fa';
@@ -13,7 +12,7 @@ import {
 } from 'react-icons/md';
 import UserProfile from './user_profile';
 import usePreferences from '@/hooks/usePreferences';
-import { BsShieldLock, BsShieldLockFill } from 'react-icons/bs';
+import { BsShieldLockFill } from 'react-icons/bs';
 import { useSelector } from 'react-redux';
 
 export default function Header({ className }) {
@@ -109,12 +108,10 @@ export default function Header({ className }) {
       className={` ${className} w-full px-4 pt-4 pb-3 md:px-6 sticky top-0 z-50 bg-white grid grid-cols-[2fr_1.3fr] gap-6`}
     >
       <div className="flex items-center gap-4">
-        {user && (
-          <MdOutlineMenu
-            className="text-3xl cursor-pointer text-gray-600 "
-            onClick={handleMenuClick}
-          />
-        )}
+        <MdOutlineMenu
+          className="text-3xl cursor-pointer text-gray-600 "
+          onClick={handleMenuClick}
+        />
         <div className="flex items-center justify-center h-full">
           <img
             src="invenzo_logo.png"
@@ -125,23 +122,21 @@ export default function Header({ className }) {
         </div>
       </div>
 
-      {user && (
-        <div className="flex items-center justify-end gap-3 md:gap-5 text-2xl">
-          <div className="h-10 md:h-14 cursor-pointer aspect-square rounded-full overflow-hidden">
-            <img
-              src={profilePicture}
-              draggable={false}
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src = defaultProfilePictureLink;
-              }}
-              onClick={() => setShowProfile(true)}
-              alt="user"
-              className={`w-full aspect-square object-cover rounded-full `}
-            />
-          </div>
+      <div className="flex items-center justify-end gap-3 md:gap-5 text-2xl">
+        <div className="h-10 md:h-14 cursor-pointer aspect-square rounded-full overflow-hidden">
+          <img
+            src={profilePicture}
+            draggable={false}
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = defaultProfilePictureLink;
+            }}
+            onClick={() => setShowProfile(true)}
+            alt="user"
+            className={`w-full aspect-square object-cover rounded-full `}
+          />
         </div>
-      )}
+      </div>
 
       {/* sidebar */}
       <div
