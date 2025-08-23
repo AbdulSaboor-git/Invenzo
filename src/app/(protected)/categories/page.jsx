@@ -270,8 +270,13 @@ export default function Inventory() {
       <div className="w-full max-w-7xl place-self-center pb-16">
         <div className="flex flex-col md:flex-row md:justify-between items-center shadow px-3 md:px-6 py-4 gap-3 sticky top-3 md:top-[68px] bg-white z-40">
           <div className="w-full flex justify-center md:justify-start">
-            <h2 className="text-lg line-clamp-1 md:text-xl font-bold text-gray-800 text-center md:text-left ">
+            <h2 className="text-lg flex items-center gap-1 line-clamp-1 md:text-xl font-bold text-gray-800 text-center md:text-left">
               Categories
+              {user?.role !== 'superadmin' && (
+                <span className="hidden md:block font-normal text-gray-700">
+                  {' - ' + user?.invName || ''}
+                </span>
+              )}
             </h2>
           </div>
           <div className="flex w-full items-stretch justify-end gap-3 bg-white">

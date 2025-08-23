@@ -34,6 +34,7 @@ export default async function handler(req, res) {
         profilePicture: true,
         Cashier: {
           select: {
+            id: true,
             Inventory: {
               select: {
                 id: true,
@@ -71,7 +72,7 @@ export default async function handler(req, res) {
     const adminId = user.Cashier?.Inventory?.adminId ?? user.id;
     const invName = user.Cashier?.Inventory?.name ?? user.Inventories?.name;
     const invId = user.Cashier?.Inventory?.id ?? user.Inventories?.id;
-
+    const cashierId = user.Cashier?.id ?? null;
     // Step 5: Generate JWT
     const token = jwt.sign(
       { userId: user.id, email: user.email },
@@ -92,6 +93,7 @@ export default async function handler(req, res) {
         adminId,
         invId,
         invName,
+        cashierId,
       },
     });
   } catch (error) {

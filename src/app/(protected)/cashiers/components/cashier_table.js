@@ -51,23 +51,32 @@ export default function CashierTable({ cashiers, loading, onChange, adminId }) {
     <div className="bg-white md:p-6">
       <div className="overflow-x-auto md:rounded-xl shadow-md border border-gray-200">
         <table className="min-w-full divide-y divide-gray-200 bg-white text-sm text-left">
-          <thead className="bg-gray-50 text-gray-700 font-semibold uppercase tracking-wide text-xs">
+          <thead className="bg-gray-50 text-gray-700 font-semibold uppercase tracking-wide text-sm">
             <tr>
-              <th className="px-3 py-3 text-center">#</th>
-              <th className="px-3 py-3 min-w-[140px]">Name</th>
-              <th className="px-3 py-3 min-w-[160px]">Email</th>
-              <th className="px-3 py-3 min-w-[180px]">Inventory</th>
-              <th className="px-3 py-3 min-w-[80px]">Status</th>
-              <th className="px-3 py-3 min-w-[120px]">Date Added</th>
-              <th className="px-3 py-3 min-w-[140px]">Last Modified</th>
-              <th className="px-3 py-3 min-w-[120px]">Last Login</th>
-              <th className="px-3 py-3 text-right">Actions</th>
+              <th className="px-3 py-3 md:px-6 md:py-4  text-center">#</th>
+              <th className="px-3 py-3 md:px-6 md:py-4  min-w-[140px]">Name</th>
+              <th className="px-3 py-3 md:px-6 md:py-4  min-w-[160px]">
+                Email
+              </th>
+              <th className="px-3 py-3 md:px-6 md:py-4  min-w-[80px]">
+                Status
+              </th>
+              <th className="px-3 py-3 md:px-6 md:py-4  min-w-[120px]">
+                Date Added
+              </th>
+              <th className="px-3 py-3 md:px-6 md:py-4  min-w-[140px]">
+                Last Modified
+              </th>
+              <th className="px-3 py-3 md:px-6 md:py-4  min-w-[120px]">
+                Last Login
+              </th>
+              <th className="px-3 py-3 md:px-6 md:py-4  text-right">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100 text-gray-800">
             {loading ? (
               <tr>
-                <td colSpan="9" className="text-center py-6">
+                <td colSpan="8" className="text-center py-6">
                   Loading...
                 </td>
               </tr>
@@ -84,11 +93,6 @@ export default function CashierTable({ cashiers, loading, onChange, adminId }) {
                     {c.User.firstName} {c.User.lastName || ''}
                   </td>
                   <td className="px-3 py-2">{c.User.email}</td>
-                  <td className="px-3 py-2">
-                    <span className="inline-block px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
-                      {c.Inventory.name}
-                    </span>
-                  </td>
                   <td className="px-3 py-2">
                     <span
                       className={`px-2 py-1 text-xs rounded-full font-medium ${
@@ -160,7 +164,7 @@ export default function CashierTable({ cashiers, loading, onChange, adminId }) {
               ))
             ) : (
               <tr>
-                <td colSpan="9" className="text-center text-gray-500 py-6">
+                <td colSpan="8" className="text-center text-gray-500 py-6">
                   No cashiers found.
                 </td>
               </tr>
