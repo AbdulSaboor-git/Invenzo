@@ -83,6 +83,12 @@ model Sale {
   totalAmount Float
   cashierId   Int
   inventoryId Int
+  discount    Float      @default(0)
+  tax         Float      @default(0)
+  paidAmount  Float?
+  paymentMode String     @default("cash")
+  note        String?
+  deactivated Boolean    @default(false)
   Cashier     Cashier    @relation(fields: [cashierId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_cashier")
   Inventory   Inventory  @relation(fields: [inventoryId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_inventory")
   SaleItem    SaleItem[]

@@ -46,6 +46,9 @@ export default function ViewSaleInvoice({
     [lines]
   );
 
+  const discount = sale?.discount ?? 0;
+  const netPayable = grandTotal - discount;
+
   function NormalizeId(id) {
     return String(id).padStart(8, '0');
   }
@@ -77,10 +80,11 @@ export default function ViewSaleInvoice({
             <div className="border rounded-lg max-h-[70vh] md:max-h-[90vh] overflow-auto">
               <div className="bg-white p-3 md:p-6 font-mono text-sm">
                 {/* Header (shared) */}
-                <div className="text-center text-xs text-gray-500 mb-3 md:mb-6">
+                <div className="text-center text-xs text-gray-700 mb-3 md:mb-6">
                   <div className="font-bold text-base md:text-lg">
                     {sale?.Inventory?.name ?? 'Inventory'}
                   </div>
+                  <div className="mt-1">Invoice No: {NormalizeId(sale.id)}</div>
                   <div className="">{formatDateTime(sale.createdAt)}</div>
                   <div className=" mt-1">
                     Cashier:{' '}
@@ -89,7 +93,7 @@ export default function ViewSaleInvoice({
                         sale.Cashier.User.email
                       : '-'}
                   </div>
-                  <div className="mt-1">Invoice No: {NormalizeId(sale.id)}</div>
+                  <div className="mt-1">Payment Mode: {sale.paymentMode}</div>
                 </div>
 
                 {/* Items */}
@@ -97,7 +101,7 @@ export default function ViewSaleInvoice({
                   {/* Desktop: table */}
                   <table className="w-full border-t border-dashed text-sm">
                     <thead>
-                      <tr className="text-gray-700 font-semibold">
+                      <tr className="text-gray-700 font-bold">
                         <th className="py-2 text-left">Product</th>
                         <th className="py-2 text-right">Qty</th>
                         <th className="py-2 text-right">Price</th>
@@ -123,12 +127,12 @@ export default function ViewSaleInvoice({
                               <td className="py-2">
                                 {li?.Product?.name ?? `#${li.productId}`}
                               </td>
-                              <td className="py-2 text-right">{li.quantity}</td>
                               <td className="py-2 text-right">
-                                {currency(li.price)}
+                                {li.quantity + ' ' + li.Product.unit}
                               </td>
+                              <td className="py-2 text-right">{li.price}</td>
                               <td className="py-2 text-right font-medium">
-                                {currency(subtotal)}
+                                {subtotal}
                               </td>
                             </tr>
                           );
@@ -141,6 +145,10 @@ export default function ViewSaleInvoice({
                 <div className="block md:hidden">
                   {/* Mobile: stacked list */}
                   <div className="divide-y">
+                    <div className="flex justify-between text-gray-700 py-2 font-bold border-b">
+                      <div className="flex-1">Product</div>
+                      <div>Price</div>
+                    </div>
                     {lines.length === 0 ? (
                       <div className="py-4 text-center text-gray-500">
                         No items.
@@ -153,15 +161,15 @@ export default function ViewSaleInvoice({
                             key={li.id}
                             className="flex justify-between py-2"
                           >
-                            <div className="flex-1">
-                              {li?.Product?.name ?? `#${li.productId}`}
+                            <div className="flex-1 flex flex-col">
+                              {li?.Product?.name ??
+                                `Product Id: ${li.productId}`}
                               <div className="text-xs text-gray-500">
-                                {li.quantity} × {currency(li.price)}
+                                {li.quantity + ' ' + li.Product.unit} ×{' '}
+                                {li.price}
                               </div>
                             </div>
-                            <div className="font-semibold">
-                              {currency(subtotal)}
-                            </div>
+                            <div className="font-semibold">{subtotal}</div>
                           </div>
                         );
                       })
@@ -171,24 +179,28 @@ export default function ViewSaleInvoice({
 
                 {/* Totals (shared) */}
                 {lines.length > 0 && (
-                  <div className="border-t border-dashed mt-3 md:mt-4 pt-2 md:pt-3 flex justify-between font-bold text-base">
-                    <span>Total</span>
-                    <span>{currency(grandTotal)}</span>
-                  </div>
-                )}
-
-                {/* Debug: mismatch notice (shared) */}
-                {Number(sale.totalAmount) !== Number(grandTotal) && (
-                  <div className="mt-2 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded p-2">
-                    Note: Calculated total ({currency(grandTotal)}) differs from
-                    stored totalAmount ({currency(Number(sale.totalAmount))}).
+                  <div className="flex border-t border-dashed  mt-3 md:mt-4 pt-2 md:pt-3  flex-col">
+                    <div className="grid w-auto grid-cols-[3fr_2fr] md:grid-cols-[3fr_1fr] gap-2">
+                      <span className="place-self-end">Total</span>
+                      <span className="place-self-end">{grandTotal}</span>
+                    </div>
+                    <div className="grid w-auto grid-cols-[3fr_2fr] md:grid-cols-[3fr_1fr] gap-2">
+                      <span className="place-self-end">Discount</span>
+                      <span className="place-self-end">{discount}</span>
+                    </div>
+                    <div className="font-bold mt-2 grid w-auto grid-cols-[3fr_2fr] md:grid-cols-[3fr_1fr] gap-2">
+                      <span className="place-self-end">Net Payable</span>
+                      <span className="place-self-end">
+                        {currency(netPayable)}
+                      </span>
+                    </div>
                   </div>
                 )}
               </div>
             </div>
 
             {/* Mismatch note */}
-            {Number(sale.totalAmount) !== Number(grandTotal) && (
+            {Number(sale.totalAmount) !== Number(netPayable) && (
               <div className="mt-3 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded p-2">
                 Note: Calculated total ({currency(grandTotal)}) differs from
                 stored totalAmount ({currency(Number(sale.totalAmount))}).
