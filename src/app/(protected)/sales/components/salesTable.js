@@ -1,16 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { FiTrash2 } from 'react-icons/fi';
-import DeleteSalePopup from './deletePopup';
 import ViewSaleInvoice from './viewSaleInvoice';
+import VoidSalePopup from './voidPopup';
 
-export default function SalesTable({ user, loadingData, sales }) {
+export default function SalesTable({
+  user,
+  loadingData,
+  sales,
+  fetchAllSales,
+}) {
   const [openMenuId, setOpenMenuId] = useState(null);
   const menuRef = useRef(null);
   const buttonRef = useRef(null);
 
   const [showSaleInvoiceId, setShowSaleInvoiceId] = useState(null);
-  const [showDeleteSalePopup, setShowDeleteSalePopup] = useState(null);
+  const [showVoidSalePopup, setShowVoidSalePopup] = useState(null);
 
   function formatDateTime(dt) {
     const d = new Date(dt);
@@ -27,7 +32,7 @@ export default function SalesTable({ user, loadingData, sales }) {
     if (typeof n !== 'number') return n;
     return n.toLocaleString(undefined, {
       style: 'currency',
-      currency: 'PKR', // change if needed
+      currency: 'PKR',
       minimumFractionDigits: 0,
     });
   }
@@ -112,12 +117,13 @@ export default function SalesTable({ user, loadingData, sales }) {
                 const cashierRole = sale?.Cashier?.User.role;
                 const inventoryName = sale?.Inventory?.name ?? '-';
 
+                const isVoided = sale?.deactivated;
+
                 return (
                   <tr
                     key={sale.id}
-                    className="hover:bg-gray-50 transition cursor-pointer"
+                    className={`hover:bg-gray-50 transition cursor-pointer ${isVoided ? 'bg-red-50 text-gray-400' : ''}`}
                     onClick={(e) => {
-                      // avoid row click when clicking action button
                       const isActionBtn = e.target.closest?.(
                         'button[data-row-action]'
                       );
@@ -129,8 +135,13 @@ export default function SalesTable({ user, loadingData, sales }) {
                     <td className="px-3 py-2 md:px-6 md:py-4 text-gray-500 text-center">
                       {idx + 1}
                     </td>
-                    <td className="px-3 py-2 md:px-6 md:py-4 font-medium">
+                    <td className="px-3 py-2 md:px-6 md:py-4 font-medium flex items-center gap-2">
                       {NormalizeId(sale.id)}
+                      {isVoided && (
+                        <span className="px-2 py-0.5 text-xs font-semibold rounded bg-red-100 text-red-600">
+                          Voided
+                        </span>
+                      )}
                     </td>
                     <td className="px-3 py-2 md:px-6 md:py-4">
                       {formatDateTime(sale.createdAt)}
@@ -161,7 +172,7 @@ export default function SalesTable({ user, loadingData, sales }) {
                     <td className="px-3 py-2 md:px-6 md:py-4 font-semibold">
                       {currency(sale.totalAmount ?? 0)}
                     </td>
-                    {user.role === 'admin' && (
+                    {user.role === 'admin' && !isVoided && (
                       <td className="px-3 py-2 text-right relative">
                         <button
                           data-row-action
@@ -188,11 +199,11 @@ export default function SalesTable({ user, loadingData, sales }) {
                           <button
                             className="flex items-center gap-2 w-full px-3 py-2 text-left text-red-600 hover:bg-gray-100"
                             onClick={() => {
-                              setShowDeleteSalePopup(sale);
+                              setShowVoidSalePopup(sale);
                               setOpenMenuId(null);
                             }}
                           >
-                            <FiTrash2 /> Delete
+                            <FiTrash2 /> Void
                           </button>
                         </div>
                       )}
@@ -213,6 +224,7 @@ export default function SalesTable({ user, loadingData, sales }) {
           </tbody>
         </table>
       </div>
+
       {/* View Popup */}
       {showSaleInvoiceId != null && (
         <ViewSaleInvoice
@@ -223,15 +235,14 @@ export default function SalesTable({ user, loadingData, sales }) {
         />
       )}
 
-      {/* Delete Popup */}
-
-      {showDeleteSalePopup && user?.role != 'cashier' && (
-        <DeleteSalePopup
-          sale={showDeleteSalePopup}
-          onClose={() => setShowDeleteSalePopup(null)}
+      {/* Void Popup */}
+      {showVoidSalePopup && user?.role != 'cashier' && (
+        <VoidSalePopup
+          sale={showVoidSalePopup}
+          onClose={() => setShowVoidSalePopup(null)}
           onSuccess={async () => {
-            await fetchAllSales(); // refetch after delete
-            setShowDeleteSalePopup(null);
+            await fetchAllSales();
+            setShowVoidSalePopup(null);
           }}
         />
       )}

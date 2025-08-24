@@ -8,6 +8,7 @@ import {
   MdDashboard,
   MdInventory,
   MdOutlineMenu,
+  MdPointOfSale,
   MdSettings,
 } from 'react-icons/md';
 import UserProfile from './user_profile';
@@ -40,15 +41,19 @@ export default function Header({ className }) {
     buttons.push({
       icon: <MdDashboard />,
       label: 'Dashboard',
-      onclick: () => handleButtonClick('Dashboard'),
     });
 
   user?.role !== 'superadmin' &&
-    buttons.push({
-      icon: <MdInventory />,
-      label: 'Inventory',
-      onclick: () => handleButtonClick('Inventory'),
-    });
+    buttons.push(
+      {
+        icon: <MdPointOfSale />,
+        label: 'POS',
+      },
+      {
+        icon: <MdInventory />,
+        label: 'Inventory',
+      }
+    );
 
   user?.role !== 'superadmin' &&
     user?.role !== 'cashier' &&
@@ -56,7 +61,6 @@ export default function Header({ className }) {
     buttons.push({
       icon: <IoAddCircle />,
       label: 'Add Product',
-      onclick: () => handleButtonClick('Add Product'),
     });
 
   user?.role !== 'superadmin' &&
@@ -65,7 +69,6 @@ export default function Header({ className }) {
     buttons.push({
       icon: <MdCategory />,
       label: 'Categories',
-      onclick: () => handleButtonClick('Categories'),
     });
 
   user?.role !== 'superadmin' &&
@@ -73,21 +76,18 @@ export default function Header({ className }) {
     buttons.push({
       icon: <FaUsers />,
       label: 'Cashiers',
-      onclick: () => handleButtonClick('Cashiers'),
     });
 
   prefs.viewSalesData &&
     buttons.push({
       icon: <FaFileInvoice />,
       label: 'Sales',
-      onclick: () => handleButtonClick('Sales'),
     });
 
   user?.role === 'superadmin' &&
     buttons.push({
       icon: <BsShieldLockFill />,
       label: `Super-Admin Panel`,
-      onclick: () => handleButtonClick('super-admin'),
       locked: prefs.requireSuperAdminPassword,
     });
 
@@ -95,7 +95,6 @@ export default function Header({ className }) {
     buttons.push({
       icon: <MdSettings />,
       label: `Settings`,
-      onclick: () => handleButtonClick('Settings'),
       locked: prefs.requireSettingsPassword,
     });
   useEffect(() => {
@@ -172,7 +171,9 @@ export default function Header({ className }) {
             <button
               key={index}
               className="flex items-center justify-start gap-1 px-3 py-3  md:px-4 md:py-3 text-gray-600 hover:bg-gray-100 rounded-lg"
-              onClick={button.onclick}
+              onClick={() => {
+                handleButtonClick(button.label);
+              }}
             >
               <span className="text-lg md:text-xl">{button.icon}</span>
               <span className="text-sm md:text-base ml-3">{button.label}</span>

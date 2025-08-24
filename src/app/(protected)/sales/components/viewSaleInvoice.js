@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { toast } from 'sonner';
 
 export default function ViewSaleInvoice({
   formatDateTime,
@@ -77,7 +78,9 @@ export default function ViewSaleInvoice({
         ) : (
           <>
             {/* Line items */}
-            <div className="border rounded-lg max-h-[70vh] md:max-h-[90vh] overflow-auto">
+            <div
+              className={`border rounded-lg max-h-[70vh] md:max-h-[90vh] overflow-auto ${sale.deactivated && 'border-red-300'} `}
+            >
               <div className="bg-white p-3 md:p-6 font-mono text-sm">
                 {/* Header (shared) */}
                 <div className="text-center text-xs text-gray-700 mb-3 md:mb-6">
@@ -94,6 +97,11 @@ export default function ViewSaleInvoice({
                       : '-'}
                   </div>
                   <div className="mt-1">Payment Mode: {sale.paymentMode}</div>
+                  {sale.deactivated && (
+                    <div className="mt-1 text-red-500 uppercase">
+                      sale voided
+                    </div>
+                  )}
                 </div>
 
                 {/* Items */}

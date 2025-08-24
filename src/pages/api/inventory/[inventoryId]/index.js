@@ -101,18 +101,10 @@ async function handleGet(req, res, inventoryId) {
     // Fetch products
     const products = await prisma.product.findMany({
       where: { inventoryId: id },
-      select: {
-        id: true,
-        name: true,
-        description: true,
-        categoryId: true,
-        purchasePrice: true,
-        salePrice: true,
-        govtSalePrice: true,
-        unit: true,
-        createdAt: true,
-        updatedAt: true,
-        tags: true,
+      include: {
+        category: {
+          select: { id: true, name: true },
+        },
       },
       orderBy: { name: 'asc' },
     });

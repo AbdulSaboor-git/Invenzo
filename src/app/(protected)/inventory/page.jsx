@@ -2,11 +2,10 @@
 import React, { useEffect, useState } from 'react';
 import { HiOutlineSwitchVertical } from 'react-icons/hi';
 
-import { MdClose, MdEdit } from 'react-icons/md';
+import { MdClose, MdEdit, MdSearch } from 'react-icons/md';
 import { FiArrowUp, FiArrowDown } from 'react-icons/fi';
 import { toast } from 'sonner';
 import ScrollToTop from '@/components/scroll_to_top';
-import useAuthUser from '@/hooks/authUser';
 import InvLoader from './components/inv_loader';
 import ViewProduct from './components/view_product';
 import EditProduct from './components/edit_product';
@@ -16,6 +15,7 @@ import usePreferences from '@/hooks/usePreferences';
 import RefreshButton from './components/refresh_btn';
 import { useSelector } from 'react-redux';
 import NotFound from '@/app/not-found';
+import SearchBar from '@/components/search_bar';
 
 export default function Inventory() {
   // const { user, logout } = useAuthUser();
@@ -408,7 +408,7 @@ export default function Inventory() {
       <ScrollToTop />
       <div className="w-full max-w-7xl place-self-center">
         <div className="flex flex-col md:flex-row md:justify-between items-center shadow px-3 md:px-6 py-4 gap-3 sticky top-3 md:top-[68px] bg-white z-40">
-          <div className="w-full flex justify-center md:justify-start">
+          <div className="w-full max-w-[400px] flex justify-center md:justify-start">
             {loadingInventory || !inventory ? (
               <div className="h-7 bg-gray-200 rounded w-52 place-self-center md:place-self-auto animate-pulse"></div>
             ) : isEditingInventoryName && prefs.renamingInventory ? (
@@ -472,23 +472,10 @@ export default function Inventory() {
             )}
           </div>
           <div className="flex w-full items-stretch justify-end gap-3 bg-white">
-            <div className="relative w-full text-gray-500 md:max-w-80">
-              <input
-                type="text"
-                placeholder="Search by name, category, or tag..."
-                className="border border-gray-200 rounded-lg px-3 py-2 pr-7 w-full text-sm outline-none focus:border-green-300"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              {searchQuery && (
-                <div
-                  className="absolute inset-y-0 right-0 h-full p-2 flex items-center cursor-pointer "
-                  onClick={() => setSearchQuery('')}
-                >
-                  <MdClose />
-                </div>
-              )}
-            </div>
+            <SearchBar
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+            />
             {lastUpdated && (
               <span className="text-sm place-content-center hidden sm:block text-gray-500">
                 Last Updated: {new Date(lastUpdated).toLocaleString()}
@@ -560,9 +547,6 @@ export default function Inventory() {
                   ))
                 ) : sortedProducts.length > 0 && user ? (
                   sortedProducts.map((product, index) => {
-                    const category = categories.find(
-                      (cat) => cat.id === product.categoryId
-                    );
                     return (
                       <tr
                         key={product.id}
@@ -585,7 +569,7 @@ export default function Inventory() {
                         )}
                         {prefs.viewCategoryColumn && (
                           <td className="px-3 py-2 min-w-[130px] max-w-[180px] md:px-6 md:py-4">
-                            {category?.name || '—'}
+                            {product.category?.name || '—'}
                           </td>
                         )}
                         {prefs.viewDateUpdatedColumn && (

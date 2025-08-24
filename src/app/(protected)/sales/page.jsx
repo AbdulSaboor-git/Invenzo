@@ -9,7 +9,7 @@ import { BsThreeDotsVertical } from 'react-icons/bs';
 import { FiTrash2 } from 'react-icons/fi';
 import RefreshButton from '../inventory/components/refresh_btn';
 import ViewSaleInvoice from './components/viewSaleInvoice';
-import DeleteSalePopup from './components/deletePopup';
+import DeleteSalePopup from './components/voidPopup';
 import SalesTable from './components/salesTable';
 
 export default function SalesPage() {
@@ -177,7 +177,12 @@ export default function SalesPage() {
         </div>
 
         {/* Table */}
-        <SalesTable user={user} sales={sales} loadingData={loadingData} />
+        <SalesTable
+          user={user}
+          sales={sales}
+          loadingData={loadingData}
+          fetchAllSales={fetchAllSales}
+        />
       </div>
     </div>
   );

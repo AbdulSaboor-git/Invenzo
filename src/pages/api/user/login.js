@@ -1,4 +1,3 @@
-import Inventory from '@/app/(protected)/inventory/page';
 import prisma from '@/lib/prisma';
 import jwt from 'jsonwebtoken';
 

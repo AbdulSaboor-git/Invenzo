@@ -334,7 +334,7 @@ export default function AddProductPage() {
               <option value="g">Gram (g)</option>
               <option value="kg">Kilogram (kg)</option>
               <option value="ml">Milliliter (ml)</option>
-              <option value="litter">Liter (l)</option>
+              <option value="liter">Liter (l)</option>
               <option value="pc">Piece (pc)</option>
               <option value="dozen">Dozen</option>
               <option value="pack">Pack</option>

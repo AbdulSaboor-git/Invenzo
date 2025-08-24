@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
+import { toast } from 'sonner';
 
-export default function DeleteSalePopup({ sale, onClose, onSuccess }) {
+export default function VoidSalePopup({ sale, onClose, onSuccess }) {
   const [loading, setLoading] = useState(false);
 
-  const handleDelete = async () => {
+  const handleVoid = async () => {
     if (!navigator.onLine) {
       toast.error(
         'Network not available. Please check your internet connection.'
@@ -19,7 +20,7 @@ export default function DeleteSalePopup({ sale, onClose, onSuccess }) {
       });
 
       if (res.status === 204) {
-        toast.success('Sale deleted successfully');
+        toast.success('Sale voided successfully');
         onSuccess?.();
         onClose?.();
         return;
@@ -27,15 +28,15 @@ export default function DeleteSalePopup({ sale, onClose, onSuccess }) {
 
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
-        toast.error(data?.error || 'Failed to delete sale');
+        toast.error(data?.error || 'Failed to void sale');
         return;
       }
 
-      toast.success('Sale deleted successfully');
+      toast.success('Sale voided successfully');
       onSuccess?.();
       onClose?.();
     } catch {
-      toast.error('Error deleting sale');
+      toast.error('Error voiding sale');
     } finally {
       setLoading(false);
     }
@@ -44,9 +45,9 @@ export default function DeleteSalePopup({ sale, onClose, onSuccess }) {
   return (
     <div className="fixed inset-0 bg-black/20 backdrop-blur-[2px] flex items-center justify-center px-4 sm:px-6 z-50">
       <div className="bg-white rounded-lg p-6 shadow-xl max-w-sm w-full">
-        <h3 className="text-lg font-semibold text-red-700 mb-4">Delete Sale</h3>
+        <h3 className="text-lg font-semibold text-red-700 mb-4">Void Sale</h3>
         <p className="text-gray-700 mb-6">
-          Are you sure you want to delete sale{' '}
+          Are you sure you want to void sale{' '}
           <span className="font-semibold">#{sale?.id}</span>?
         </p>
         <div className="flex justify-end gap-4">
@@ -58,14 +59,14 @@ export default function DeleteSalePopup({ sale, onClose, onSuccess }) {
             Cancel
           </button>
           <button
-            onClick={handleDelete}
+            onClick={handleVoid}
             disabled={loading}
             className="px-4 py-2 w-28 bg-red-600 hover:bg-red-700 rounded text-white disabled:hover:bg-red-700 disabled:cursor-not-allowed"
           >
             {loading ? (
               <div className="border-2 border-gray-200 border-t-transparent animate-spin rounded-full w-4 h-4 mx-auto" />
             ) : (
-              'Delete'
+              'Void'
             )}
           </button>
         </div>

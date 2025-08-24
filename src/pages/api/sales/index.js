@@ -56,7 +56,8 @@ async function handleGetSales(req, res) {
  * POST – Add new sale
  */
 async function handleAddSale(req, res) {
-  const { cashierId, inventoryId, items } = req.body;
+  const { cashierId, inventoryId, items, discount, paymentMode, note } =
+    req.body;
 
   if (!cashierId || !inventoryId || !items?.length) {
     return res.status(400).json({ error: 'Missing required fields' });
@@ -68,11 +69,16 @@ async function handleAddSale(req, res) {
       0
     );
 
+    const netAmount = totalAmount - (discount || 0);
+
     const sale = await tx.sale.create({
       data: {
         cashierId,
         inventoryId,
-        totalAmount,
+        discount: discount || 0,
+        totalAmount: netAmount,
+        paymentMode: paymentMode || 'cash',
+        note: note || null,
       },
     });
 
@@ -120,13 +126,17 @@ async function handleDeleteSale(req, res) {
   if (!id) return res.status(400).json({ error: 'Missing sale id' });
 
   try {
-    await prisma.sale.delete({
+    await prisma.sale.update({
       where: { id: Number(id) },
+      data: { deactivated: true },
     });
 
-    return res.json({ success: true, message: 'Sale deleted successfully' });
+    return res.json({
+      success: true,
+      message: 'Sale deactivated successfully',
+    });
   } catch (error) {
     console.error('Error deleting sale:', error);
-    return res.status(500).json({ error: 'Failed to delete sale' });
+    return res.status(500).json({ error: 'Failed to deactivate sale' });
   }
 }

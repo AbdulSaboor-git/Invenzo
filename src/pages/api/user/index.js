@@ -24,15 +24,14 @@ export default async function handler(req, res) {
       select: {
         id: true,
         email: true,
-        password: true,
         role: true,
         isActive: true,
         firstName: true,
         lastName: true,
         profilePicture: true,
         Cashier: {
-          id: true,
           select: {
+            id: true,
             Inventory: {
               select: {
                 id: true,
@@ -56,8 +55,8 @@ export default async function handler(req, res) {
     }
 
     const adminId = user.Cashier?.Inventory?.adminId ?? user.id;
-    const invName = user.Cashier?.Inventory?.name ?? user.Inventories?.name;
     const invId = user.Cashier?.Inventory?.id ?? user.Inventories?.id;
+    const invName = user.Cashier?.Inventory?.name ?? user.Inventories?.name;
     const cashierId = user.Cashier?.id ?? null;
 
     res.status(200).json({

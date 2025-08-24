@@ -12,7 +12,9 @@ export const useAuthRedirect = () => {
     if (!userLoading) {
       if (user) {
         if (user.role === 'superadmin') {
-          router.push('/super-admin');
+          router.push('/super-admin-panel');
+        } else if (user.role === 'cashier') {
+          router.push('/pos');
         } else {
           router.push('/inventory');
         }

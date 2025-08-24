@@ -46,14 +46,7 @@ export default function ViewProduct({
               value={selectedProduct.description || "—"}
             /> */}
             {prefs.viewCategory && (
-              <Detail
-                label="Category"
-                value={
-                  categories.find(
-                    (cat) => cat.id === selectedProduct.categoryId
-                  )?.name || '—'
-                }
-              />
+              <Detail label="Category" value={selectedProduct.category?.name} />
             )}
             {prefs.viewPurchasePrice && (
               <Detail
