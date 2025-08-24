@@ -310,9 +310,11 @@ export default function Inventory() {
       const category =
         categories.find((cat) => cat.id === product.categoryId)?.name || '';
       return (
-        product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        product.tags?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        category.toLowerCase().includes(searchQuery.toLowerCase())
+        product.name.toLowerCase().includes(searchQuery.toLowerCase().trim()) ||
+        product.tags
+          ?.toLowerCase()
+          .includes(searchQuery.toLowerCase().trim()) ||
+        category.toLowerCase().includes(searchQuery.toLowerCase().trim())
       );
     })
     .sort((a, b) => {
