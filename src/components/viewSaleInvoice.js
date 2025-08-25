@@ -106,8 +106,8 @@ export default function ViewSaleInvoice({
                       <tr className="text-gray-700 font-bold">
                         <th className="py-2 text-left">Product</th>
                         <th className="py-2 text-right">Qty</th>
-                        <th className="py-2 text-right">Unit Price (Rs.)</th>
-                        <th className="py-2 text-right">Subtotal (Rs.)</th>
+                        <th className="py-2 text-right">Unit Price (Rs)</th>
+                        <th className="py-2 text-right">Subtotal (Rs)</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y">
@@ -155,7 +155,7 @@ export default function ViewSaleInvoice({
                   <div className="divide-y">
                     <div className="flex justify-between text-gray-700 py-2 font-bold border-b">
                       <div className="flex-1">Product</div>
-                      <div>Price</div>
+                      <div>Price (Rs)</div>
                     </div>
                     {lines.length === 0 ? (
                       <div className="py-4 text-center text-gray-500">
