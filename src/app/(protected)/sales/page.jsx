@@ -2,14 +2,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { toast } from 'sonner';
-
 import Header from '@/components/header';
-import NotFound from '@/app/not-found';
-import { BsThreeDotsVertical } from 'react-icons/bs';
-import { FiTrash2 } from 'react-icons/fi';
 import RefreshButton from '../inventory/components/refresh_btn';
-import ViewSaleInvoice from './components/viewSaleInvoice';
-import DeleteSalePopup from './components/voidPopup';
 import SalesTable from './components/salesTable';
 
 export default function SalesPage() {

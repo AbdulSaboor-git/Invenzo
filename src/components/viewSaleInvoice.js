@@ -3,7 +3,7 @@ import { toast } from 'sonner';
 
 export default function ViewSaleInvoice({
   formatDateTime,
-  currency,
+  // currency,
   saleId,
   onClose,
 }) {
@@ -38,12 +38,14 @@ export default function ViewSaleInvoice({
 
   const items = sale?.SaleItem ?? [];
   const lines = Array.isArray(items) ? items : [];
+
   const grandTotal = useMemo(
     () =>
-      lines.reduce(
-        (sum, li) => sum + Number(li.quantity) * Number(li.price),
-        0
-      ),
+      lines.reduce((sum, li) => {
+        if (li.Product?.unit === 'kg' || li.Product?.unit === 'liter') {
+          return sum + (Number(li.quantity) / 1000) * Number(li.price);
+        } else return sum + Number(li.quantity) * Number(li.price);
+      }, 0),
     [lines]
   );
 
@@ -128,15 +130,33 @@ export default function ViewSaleInvoice({
                         </tr>
                       ) : (
                         lines.map((li) => {
-                          const subtotal =
-                            Number(li.quantity) * Number(li.price);
+                          function calcSubtotal() {
+                            if (
+                              li.Product?.unit === 'kg' ||
+                              li.Product?.unit === 'liter'
+                            ) {
+                              return (
+                                (Number(li.quantity) / 1000) * Number(li.price)
+                              );
+                            } else {
+                              return Number(li.quantity) * Number(li.price);
+                            }
+                          }
+                          const subtotal = calcSubtotal();
+
+                          function getUnitLabel() {
+                            if (li.Product?.unit === 'kg') return 'g';
+                            if (li.Product?.unit === 'liter') return 'ml';
+                            return li.Product?.unit || '';
+                          }
+
                           return (
                             <tr key={li.id}>
                               <td className="py-2">
                                 {li?.Product?.name ?? `#${li.productId}`}
                               </td>
                               <td className="py-2 text-right">
-                                {li.quantity + ' ' + li.Product.unit}
+                                {li.quantity + ' ' + getUnitLabel()}
                               </td>
                               <td className="py-2 text-right">{li.price}</td>
                               <td className="py-2 text-right font-medium">
@@ -163,7 +183,26 @@ export default function ViewSaleInvoice({
                       </div>
                     ) : (
                       lines.map((li) => {
-                        const subtotal = Number(li.quantity) * Number(li.price);
+                        function calcSubtotal() {
+                          if (
+                            li.Product?.unit === 'kg' ||
+                            li.Product?.unit === 'liter'
+                          ) {
+                            return (
+                              (Number(li.quantity) / 1000) * Number(li.price)
+                            );
+                          } else {
+                            return Number(li.quantity) * Number(li.price);
+                          }
+                        }
+                        const subtotal = calcSubtotal();
+
+                        function getUnitLabel() {
+                          if (li.Product?.unit === 'kg') return 'g';
+                          if (li.Product?.unit === 'liter') return 'ml';
+                          return li.Product?.unit || '';
+                        }
+
                         return (
                           <div
                             key={li.id}
@@ -173,7 +212,7 @@ export default function ViewSaleInvoice({
                               {li?.Product?.name ??
                                 `Product Id: ${li.productId}`}
                               <div className="text-xs text-gray-500">
-                                {li.quantity + ' ' + li.Product.unit} ×{' '}
+                                {li.quantity + ' ' + getUnitLabel()} ×{' '}
                                 {li.price}
                               </div>
                             </div>
@@ -198,9 +237,7 @@ export default function ViewSaleInvoice({
                     </div>
                     <div className="font-bold mt-2 grid w-auto grid-cols-[3fr_2fr] md:grid-cols-[3fr_1fr] gap-2">
                       <span className="place-self-end">Net Payable</span>
-                      <span className="place-self-end">
-                        {currency(netPayable)}
-                      </span>
+                      <span className="place-self-end">Rs.{netPayable}</span>
                     </div>
                   </div>
                 )}
@@ -210,8 +247,8 @@ export default function ViewSaleInvoice({
             {/* Mismatch note */}
             {Number(sale.totalAmount) !== Number(netPayable) && (
               <div className="mt-3 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded p-2">
-                Note: Calculated total ({currency(grandTotal)}) differs from
-                stored totalAmount ({currency(Number(sale.totalAmount))}).
+                Note: Calculated total (Rs.{grandTotal}) differs from stored
+                totalAmount (Rs.{Number(sale.totalAmount)}).
               </div>
             )}
           </>

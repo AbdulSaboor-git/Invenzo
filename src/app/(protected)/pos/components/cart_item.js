@@ -14,14 +14,14 @@ export default function CartItem({ item, onUpdate, onDelete }) {
   const handleQtyChange = (val) => {
     let newQty = Math.max(0, Number(val) || 0); // in base units
     const newPrice = Number((newQty * unitPricePerBase).toFixed(0));
-    onUpdate({ ...item, quantity: newQty, totalPrice: newPrice });
+    onUpdate({ ...item, quantity: newQty, price: newPrice });
   };
 
   // when price changes
   const handlePriceChange = (val) => {
     const newPrice = Math.max(0, Number(val) || 0);
     const newQty = Number((newPrice / unitPricePerBase).toFixed(0)); // base units
-    onUpdate({ ...item, quantity: newQty, totalPrice: newPrice });
+    onUpdate({ ...item, quantity: newQty, price: newPrice });
   };
 
   // auto format unit label
@@ -73,7 +73,7 @@ export default function CartItem({ item, onUpdate, onDelete }) {
         {/* Price input */}
         <input
           type="number"
-          value={item.totalPrice}
+          value={item.price}
           disabled={
             item.product.unit === 'pc' ||
             item.product.unit === 'dozen' ||
@@ -142,7 +142,7 @@ export default function CartItem({ item, onUpdate, onDelete }) {
           <div className="flex items-center gap-1">
             <input
               type="number"
-              value={item.totalPrice}
+              value={item.price}
               disabled={
                 item.product.unit === 'pc' ||
                 item.product.unit === 'dozen' ||

@@ -1,12 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import CartItem from './cart_item';
-import { MdDragIndicator, MdOutlineDragIndicator } from 'react-icons/md';
+import { MdOutlineDragIndicator } from 'react-icons/md';
+import { toast } from 'sonner';
+import ViewSaleInvoice from '@/components/viewSaleInvoice';
 
-export default function Cart({ cart, setCart }) {
+export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
   const [discount, setDiscount] = useState('');
 
-  const subTotal = cart.reduce((sum, item) => sum + item.totalPrice, 0);
-  const netPayable = Math.max(0, subTotal - discount);
+  const subTotal = cart.reduce((sum, item) => sum + item.price, 0);
+  const discountValue = Number(discount) || 0;
+  const netPayable = Math.max(0, subTotal - discountValue);
+  const [saleId, setSaleId] = useState(null);
+  const [showInvoice, setShowInvoice] = useState(false);
+
+  useEffect(() => {
+    if (showInvoice) {
+      document.body.classList.add('overflow-hidden');
+    } else {
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    return () => {
+      document.body.classList.remove('overflow-hidden');
+    };
+  }, [showInvoice]);
 
   const handleUpdate = (index, updatedItem) => {
     setCart((prev) =>
@@ -29,8 +46,75 @@ export default function Cart({ cart, setCart }) {
     }
   }, [cart]);
 
+  async function placeOrder() {
+    if (!navigator.onLine) {
+      toast.error(
+        'Network not available. Please check your internet connection.'
+      );
+      return;
+    }
+
+    if (cart.length === 0) {
+      toast.error('Cart is empty. Add products to place an order.');
+      return;
+    }
+    if (!user || !invId) {
+      return;
+    }
+
+    try {
+      setPlacingOrder(true);
+      const id = toast.loading('Placing order...');
+      const response = await fetch('/api/sales', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          cashierId: user?.cashierId,
+          inventoryId: invId,
+          items: cart,
+          discount: discount || 0,
+          netPayable: netPayable,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to place order');
+      }
+
+      const data = await response.json();
+      setSaleId(data.sale.id);
+      setShowInvoice(true);
+
+      console.log('Order placed successfully:', data.sale);
+      toast.success('Order placed successfully', { id });
+      clearCart();
+    } catch (error) {
+      console.error('Error placing order:', error);
+      toast.error('There was an error placing the order. Please try again.', {
+        id,
+      });
+    } finally {
+      setPlacingOrder(false);
+    }
+  }
+
+  function formatDateTime(dt) {
+    const d = new Date(dt);
+    return d.toLocaleString(undefined, {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  }
+
   return (
-    <div className="bg-gradient-to-r from-gray-700 to-gray-600 shadow-[0_-1px_3px_0_rgba(0,0,0,0.2),0_-1px_2px_-1px_rgba(0,0,0,0.2)] rounded-t-2xl relative md:from-white md:to-white md:shadow-sm md:rounded-xl h-full flex flex-col">
+    <div
+      className={`bg-gradient-to-r from-gray-700 to-gray-600 shadow-[0_-1px_3px_0_rgba(0,0,0,0.2),0_-1px_2px_-1px_rgba(0,0,0,0.2)] rounded-t-2xl relative md:from-white md:to-white md:shadow-sm md:rounded-xl h-full flex flex-col  `}
+    >
       {cart.length > 0 && (
         <div className="absolute border border-gray-600 shadow-[0_-1px_3px_0_rgba(0,0,0,0.2),0_-1px_2px_-1px_rgba(0,0,0,0.2)] flex text-gray-400 justify-center md:hidden -top-1.5 left-1/2 -translate-x-1/2 rounded-full bg-gray-300 z-10 w-12 h-[14px]">
           <MdOutlineDragIndicator size={12} className="rotate-90" />
@@ -106,7 +190,10 @@ export default function Cart({ cart, setCart }) {
                 >
                   Cancel
                 </button>
-                <button className="w-full px-3 py-2 md:px-4 rounded-md bg-green-500 hover:bg-green-600 text-sm md:text-base">
+                <button
+                  onClick={placeOrder}
+                  className="w-full px-3 py-2 md:px-4 rounded-md bg-green-500 hover:bg-green-600 text-sm md:text-base"
+                >
                   Place Order
                 </button>
               </div>
@@ -114,6 +201,13 @@ export default function Cart({ cart, setCart }) {
           </div>
         )}
       </div>
+      {showInvoice && (
+        <ViewSaleInvoice
+          saleId={saleId}
+          formatDateTime={formatDateTime}
+          onClose={() => setShowInvoice(false)}
+        />
+      )}
     </div>
   );
 }

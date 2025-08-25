@@ -56,45 +56,64 @@ async function handleGetSales(req, res) {
  * POST – Add new sale
  */
 async function handleAddSale(req, res) {
-  const { cashierId, inventoryId, items, discount, paymentMode, note } =
-    req.body;
+  const {
+    cashierId,
+    inventoryId,
+    items,
+    discount,
+    netPayable,
+    paymentMode,
+    note,
+  } = req.body;
 
   if (!cashierId || !inventoryId || !items?.length) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
-  const result = await prisma.$transaction(async (tx) => {
-    const totalAmount = items.reduce(
-      (sum, item) => sum + item.quantity * item.price,
-      0
-    );
+  try {
+    const cashier = await prisma.cashier.findUnique({
+      where: { id: Number(cashierId) },
+    });
+    if (!cashier) {
+      return res.status(404).json({ error: 'Cashier not found' });
+    }
 
-    const netAmount = totalAmount - (discount || 0);
+    const inventory = await prisma.inventory.findUnique({
+      where: { id: Number(inventoryId) },
+    });
+    if (!inventory) {
+      return res.status(404).json({ error: 'Inventory not found' });
+    }
 
-    const sale = await tx.sale.create({
-      data: {
-        cashierId,
-        inventoryId,
-        discount: discount || 0,
-        totalAmount: netAmount,
-        paymentMode: paymentMode || 'cash',
-        note: note || null,
-      },
+    const result = await prisma.$transaction(async (tx) => {
+      const sale = await tx.sale.create({
+        data: {
+          discount: Number(discount) || 0,
+          totalAmount: Number(netPayable) || 0,
+          paymentMode: paymentMode || 'cash',
+          note: note || null,
+          Cashier: { connect: { id: Number(cashierId) } },
+          Inventory: { connect: { id: Number(inventoryId) } },
+        },
+      });
+
+      await tx.saleItem.createMany({
+        data: items.map((item) => ({
+          saleId: sale.id,
+          productId: item.product.id,
+          quantity: Number(item.quantity),
+          price: Number(item.price),
+        })),
+      });
+
+      return sale;
     });
 
-    await tx.saleItem.createMany({
-      data: items.map((item) => ({
-        saleId: sale.id,
-        productId: item.productId,
-        quantity: item.quantity,
-        price: item.price,
-      })),
-    });
-
-    return sale;
-  });
-
-  return res.status(201).json({ sale: result });
+    return res.status(201).json({ sale: result });
+  } catch (err) {
+    console.error('Error creating sale:', err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
 }
 
 /**

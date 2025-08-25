@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { FiTrash2 } from 'react-icons/fi';
-import ViewSaleInvoice from './viewSaleInvoice';
 import VoidSalePopup from './voidPopup';
+import ViewSaleInvoice from '@/components/viewSaleInvoice';
 
 export default function SalesTable({
   user,
@@ -16,6 +16,18 @@ export default function SalesTable({
 
   const [showSaleInvoiceId, setShowSaleInvoiceId] = useState(null);
   const [showVoidSalePopup, setShowVoidSalePopup] = useState(null);
+
+  useEffect(() => {
+    if (showSaleInvoiceId || showVoidSalePopup) {
+      document.body.classList.add('overflow-hidden');
+    } else {
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    return () => {
+      document.body.classList.remove('overflow-hidden');
+    };
+  }, [showSaleInvoiceId, showVoidSalePopup]);
 
   function formatDateTime(dt) {
     const d = new Date(dt);
@@ -170,7 +182,7 @@ export default function SalesTable({
                     )}
                     <td className="px-3 py-2 md:px-6 md:py-4">{itemsCount}</td>
                     <td className="px-3 py-2 md:px-6 md:py-4 font-semibold">
-                      {currency(sale.totalAmount ?? 0)}
+                      Rs.{sale.totalAmount ?? 0}
                     </td>
                     {user.role === 'admin' && !isVoided && (
                       <td className="px-3 py-2 text-right relative">
@@ -229,7 +241,7 @@ export default function SalesTable({
       {showSaleInvoiceId != null && (
         <ViewSaleInvoice
           formatDateTime={formatDateTime}
-          currency={currency}
+          // currency={currency}
           saleId={showSaleInvoiceId}
           onClose={() => setShowSaleInvoiceId(null)}
         />

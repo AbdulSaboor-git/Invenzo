@@ -24,6 +24,7 @@ export default function POSPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [cart, setCart] = useState([]);
   const localStorageKey = user?.id ? `inventoryData_${user.id}` : null;
+  const [placingOrder, setPlacingOrder] = useState(false);
 
   function createCartItem(product) {
     const unitPricePerBase =
@@ -37,12 +38,12 @@ export default function POSPage() {
     product.unit === 'kg' && (quantity = 1000); // default 1000g for kg
     product.unit === 'liter' && (quantity = 1000); // default 1000ml for liter
 
-    const totalPrice = Number((quantity * unitPricePerBase).toFixed(2));
+    const price = Number((quantity * unitPricePerBase).toFixed(2));
 
     return {
       product,
       quantity,
-      totalPrice,
+      price,
     };
   }
 
@@ -270,13 +271,6 @@ export default function POSPage() {
     };
   }, [user?.id, inventory, localStorageKey, fetchAndStoreData]);
 
-  const formatDate = (date) =>
-    new Date(date).toLocaleDateString(undefined, {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
-
   if (user?.role === 'superadmin') {
     return <NotFound />;
   }
@@ -286,7 +280,9 @@ export default function POSPage() {
       <Header className={'shadow'} />
 
       {/* Main Grid Layout */}
-      <div className="grid grid-cols-1 md:grid-cols-[2fr_1.6fr] max-w-7xl mx-auto w-full md:my-4 md:px-2 md:gap-4">
+      <div
+        className={`grid grid-cols-1 md:grid-cols-[2fr_1.6fr] max-w-7xl mx-auto w-full md:my-4 md:px-2 md:gap-4 ${placingOrder && 'opacity-70 pointer-events-none'}`}
+      >
         {/* Products Section */}
         <div className="md:h-[calc(100vh-140px)] h-[40vh] border-none overflow-y-auto bg-gray-100 shadow-sm md:rounded-xl">
           <div className="  relative">
@@ -337,7 +333,13 @@ export default function POSPage() {
         </div>
 
         {/* Cart Section */}
-        <Cart cart={cart} setCart={setCart} />
+        <Cart
+          cart={cart}
+          setCart={setCart}
+          user={user}
+          invId={inventory?.id}
+          setPlacingOrder={setPlacingOrder}
+        />
       </div>
     </div>
   );
