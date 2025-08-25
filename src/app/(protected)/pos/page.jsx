@@ -290,8 +290,8 @@ export default function POSPage() {
         {/* Products Section */}
         <div className="md:h-[calc(100vh-140px)] h-[40vh] border-none overflow-y-auto bg-gray-100 shadow-sm md:rounded-xl">
           <div className="  relative">
-            <div className="flex px-3 md:pl-5 md:pr-2 items-stretch  bg-gray-100 z-10 justify-between gap-2 md:gap-4 py-3 sticky top-0">
-              <h2 className="hidden md:block text-base md:text-lg font-semibold text-gray-800">
+            <div className="flex px-3 md:pl-5 md:pr-2 items-stretch  bg-gray-50 z-10 justify-between gap-2 md:gap-4 py-3 sticky top-0">
+              <h2 className="hidden md:block place-self-center text-base md:text-lg font-semibold text-gray-800">
                 Products
               </h2>
               <SearchBar

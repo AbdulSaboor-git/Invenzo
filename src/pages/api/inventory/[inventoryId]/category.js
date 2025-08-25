@@ -82,7 +82,17 @@ async function handleGet(req, res, inventoryId) {
       orderBy: { name: 'asc' },
     });
 
-    return res.status(200).json(categories);
+    const products = await prisma.product.findMany({
+      where: {
+        inventoryId: id,
+      },
+      select: {
+        name: true,
+      },
+      orderBy: { name: 'asc' },
+    });
+
+    return res.status(200).json({ categories, products });
   } catch (error) {
     console.error(error);
     return res.status(500).json({

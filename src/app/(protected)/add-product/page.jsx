@@ -20,13 +20,15 @@ export default function AddProductPage() {
   const [unit, setUnit] = useState('');
   const [categoryId, setCategoryId] = useState('');
   const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingCategories, setLoadingCategories] = useState(false);
   const [syncing, setSyncing] = useState(false);
   const [inventory, setInventory] = useState(null);
   const [fetchedInv, setFetchedInv] = useState(false);
   const [loadingInventory, setLoadingInventory] = useState(false);
-  const router = useRouter();
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
 
   const localStorageKey = user?.id ? `inventoryData_${user.id}` : null;
 
@@ -51,13 +53,16 @@ export default function AddProductPage() {
     }
     try {
       setLoadingCategories(true);
-      const res = await fetch(`/api/inventory/${inventory.id}/category`);
+      const res = await fetch(
+        `/api/inventory/${inventory.id}?userId=${user?.id}`
+      );
       if (!res.ok) {
         const errorData = await res.json();
         throw new Error(errorData.message || 'Unknown error');
       }
       const data = await res.json();
-      setCategories(data);
+      setCategories(data.categories);
+      setProducts(data.products);
 
       // Update localStorage
       if (typeof window !== 'undefined') {
@@ -65,7 +70,12 @@ export default function AddProductPage() {
         const parsed = local ? JSON.parse(local) : {};
         localStorage.setItem(
           localStorageKey,
-          JSON.stringify({ ...parsed, categories: data, inventory: inventory })
+          JSON.stringify({
+            ...parsed,
+            products: data.products,
+            categories: data.categories,
+            inventory: inventory,
+          })
         );
       }
     } catch (error) {
@@ -97,6 +107,7 @@ export default function AddProductPage() {
           return false;
         }
         setCategories(parsed.categories);
+        setProducts(parsed.products);
         setInventory(parsed.inventory);
         return true;
       }
@@ -220,6 +231,52 @@ export default function AddProductPage() {
   const handleSalePriceChange = (e) => setSalePrice(e.target.value);
   const handleGovtSalePriceChange = (e) => setGovtSalePrice(e.target.value);
 
+  const filteredSuggestions = products
+    .filter((p) => p.name.toLowerCase().includes(name.toLowerCase()))
+    .slice(0, 5); // Limit to 5 suggestions
+
+  const handleSelect = (selectedName) => {
+    setName(selectedName);
+    setShowSuggestions(false);
+    setHighlightedIndex(-1);
+  };
+
+  const handleKeyDown = (e) => {
+    if (!showSuggestions || filteredSuggestions.length === 0) return;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setHighlightedIndex((prev) =>
+        prev < filteredSuggestions.length - 1 ? prev + 1 : 0
+      );
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setHighlightedIndex((prev) =>
+        prev > 0 ? prev - 1 : filteredSuggestions.length - 1
+      );
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (highlightedIndex >= 0) {
+        handleSelect(filteredSuggestions[highlightedIndex].name);
+      }
+    } else if (e.key === 'Escape') {
+      setShowSuggestions(false);
+      setHighlightedIndex(-1);
+    }
+  };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (!e.target.closest('.relative')) {
+        setShowSuggestions(false);
+        setHighlightedIndex(-1);
+      }
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
+
   return (
     <div className="min-h-screen w-full md:bg-gray-100">
       <Header />
@@ -240,8 +297,8 @@ export default function AddProductPage() {
           onSubmit={handleSubmit}
           className="space-y-3 text-sm md:text-base"
         >
-          {/* Product Name */}
-          <div>
+          {/* Product Name with Suggestions */}
+          <div className="relative">
             <label className="block mb-1 font-medium text-gray-700">
               Product Name <span className="text-red-500">*</span>
             </label>
@@ -249,10 +306,31 @@ export default function AddProductPage() {
               type="text"
               value={name}
               onChange={handleNameChange}
+              onFocus={() => setShowSuggestions(true)}
+              onKeyDown={handleKeyDown}
               required
               maxLength={40}
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
             />
+
+            {/* Suggestions Dropdown */}
+            {showSuggestions && filteredSuggestions.length > 0 && (
+              <ul className="absolute z-50 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+                {filteredSuggestions.map((prod, idx) => (
+                  <li
+                    key={prod.id}
+                    onClick={() => handleSelect(prod.name)}
+                    className={`px-4 py-2 cursor-pointer ${
+                      idx === highlightedIndex
+                        ? 'bg-blue-500 text-white'
+                        : 'hover:bg-gray-100 text-gray-700'
+                    }`}
+                  >
+                    {prod.name}
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
 
           {/* Category */}

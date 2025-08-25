@@ -22,7 +22,7 @@ export default function SearchBar({ searchQuery, setSearchQuery, className }) {
           </div>
         )}
       </div>
-      <div className="hidden md:flex h-10 max-h-10 bg-green-500 items-center justify-center w-10 rounded-e-md text-white">
+      <div className="hidden md:flex h-10 max-h-10 cursor-pointer bg-green-100 items-center justify-center w-10 rounded-e-md text-green-800 border border-green-300 hover:bg-green-200 transition">
         <MdSearch size={20} />
       </div>
     </div>
