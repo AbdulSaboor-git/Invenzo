@@ -104,6 +104,7 @@ export default function ViewSaleInvoice({
                   <table className="w-full border-t border-dashed text-sm">
                     <thead>
                       <tr className="text-gray-700 font-bold">
+                        <th className="py-2 px-1 text-left">#</th>
                         <th className="py-2 text-left">Product</th>
                         <th className="py-2 text-right">Qty</th>
                         <th className="py-2 text-right">Unit Price (Rs)</th>
@@ -121,7 +122,7 @@ export default function ViewSaleInvoice({
                           </td>
                         </tr>
                       ) : (
-                        lines.map((li) => {
+                        lines.map((li, i) => {
                           function getUnitLabel() {
                             if (li.Product?.unit === 'kg') return 'g';
                             if (li.Product?.unit === 'liter') return 'ml';
@@ -130,6 +131,7 @@ export default function ViewSaleInvoice({
 
                           return (
                             <tr key={li.id}>
+                              <td className="py-2 px-1">{i + 1}.</td>
                               <td className="py-2">
                                 {li?.Product?.name ?? `#${li.productId}`}
                               </td>
@@ -153,7 +155,8 @@ export default function ViewSaleInvoice({
                 <div className="block md:hidden">
                   {/* Mobile: stacked list */}
                   <div className="divide-y">
-                    <div className="flex justify-between text-gray-700 py-2 font-bold border-b">
+                    <div className="flex justify-between gap-2 text-gray-700 py-2 font-bold border-b">
+                      <div className="">#</div>
                       <div className="flex-1">Product</div>
                       <div>Price (Rs)</div>
                     </div>
@@ -162,7 +165,7 @@ export default function ViewSaleInvoice({
                         No items.
                       </div>
                     ) : (
-                      lines.map((li) => {
+                      lines.map((li, i) => {
                         function getUnitLabel() {
                           if (li.Product?.unit === 'kg') return 'g';
                           if (li.Product?.unit === 'liter') return 'ml';
@@ -172,8 +175,9 @@ export default function ViewSaleInvoice({
                         return (
                           <div
                             key={li.id}
-                            className="flex justify-between py-2"
+                            className="flex justify-between py-2 gap-2"
                           >
+                            <div>{i + 1}.</div>
                             <div className="flex-1 flex flex-col text-[13px]">
                               {li?.Product?.name ??
                                 `Product Id: ${li.productId}`}
@@ -194,15 +198,19 @@ export default function ViewSaleInvoice({
                 {lines.length > 0 && (
                   <div className="flex border-t border-dashed  mt-3 md:mt-4 pt-2 md:pt-3  flex-col">
                     <div className="grid w-auto grid-cols-[3fr_2fr] md:grid-cols-[3fr_1fr] gap-2">
-                      <span className="place-self-end">Total</span>
+                      <span className="place-self-end">Items:</span>
+                      <span className="place-self-end">{lines.length}</span>
+                    </div>
+                    <div className="grid w-auto grid-cols-[3fr_2fr] md:grid-cols-[3fr_1fr] gap-2">
+                      <span className="place-self-end">Total:</span>
                       <span className="place-self-end">{grandTotal}</span>
                     </div>
                     <div className="grid w-auto grid-cols-[3fr_2fr] md:grid-cols-[3fr_1fr] gap-2">
-                      <span className="place-self-end">Discount</span>
+                      <span className="place-self-end">Discount:</span>
                       <span className="place-self-end">{discount}</span>
                     </div>
                     <div className="font-bold border-t border-dashed mt-2 pt-2 grid w-auto grid-cols-[3fr_2fr] md:grid-cols-[3fr_1fr] gap-2">
-                      <span className="place-self-end">Net Payable</span>
+                      <span className="place-self-end">Net Payable:</span>
                       <span className="place-self-end">Rs.{netPayable}</span>
                     </div>
                   </div>

@@ -21,7 +21,7 @@ export default function SalesPage() {
   );
 
   useEffect(() => {
-    handleRefresh();
+    fetchAllSales();
   }, []);
 
   // --- LocalStorage load ---

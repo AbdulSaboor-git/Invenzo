@@ -49,7 +49,27 @@ async function handleGetSales(req, res) {
     orderBy: { createdAt: 'desc' },
   });
 
-  return res.json({ sales });
+  const salesWithProfit = sales.map((sale) => {
+    const cost = sale.SaleItem.reduce((acc, item) => {
+      let qty = item.quantity;
+
+      if (item.Product.unit === 'kg' || item.Product.unit === 'litre') {
+        qty = qty / 1000;
+      }
+
+      const itemCost = (item.Product?.purchasePrice || 0) * qty;
+      return acc + itemCost;
+    }, 0);
+
+    const profit = (sale.totalAmount - cost).toFixed(0);
+
+    return {
+      ...sale,
+      profit,
+    };
+  });
+
+  return res.json({ sales: salesWithProfit });
 }
 
 /**

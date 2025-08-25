@@ -96,7 +96,14 @@ export default function SalesTable({
                 <th className="px-3 py-3 md:px-6 md:py-4">Role</th>
               )}
               <th className="px-3 py-3 md:px-6 md:py-4">Items</th>
-              <th className="px-3 py-3 md:px-6 md:py-4 min-w-[60px]">Total</th>
+              <th className="px-3 py-3 md:px-6 md:py-4 min-w-[60px]">
+                Revenue
+              </th>
+              {user?.role != 'cashier' && (
+                <th className="px-3 py-3 md:px-6 md:py-4 min-w-[60px]">
+                  Profit
+                </th>
+              )}
               {user.role === 'admin' && (
                 <th className="px-3 py-3 text-right">Actions</th>
               )}
@@ -184,6 +191,11 @@ export default function SalesTable({
                     <td className="px-3 py-2 md:px-6 md:py-4 font-semibold">
                       Rs.{sale.totalAmount ?? 0}
                     </td>
+                    {user?.role != 'cashier' && (
+                      <td className="px-3 py-2 md:px-6 md:py-4 font-semibold">
+                        Rs.{sale.profit ?? 0}
+                      </td>
+                    )}
                     {user.role === 'admin' && !isVoided && (
                       <td className="px-3 py-2 text-right relative">
                         <button

@@ -48,7 +48,8 @@ export default function POSPage() {
   }
 
   useEffect(() => {
-    RefreshData();
+    fetchInventory();
+    fetchAndStoreData();
   }, []);
 
   function addToCart(product) {

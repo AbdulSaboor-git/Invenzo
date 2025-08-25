@@ -25,7 +25,7 @@ export default function CashiersPage() {
   const localKey = `inventoryData_cashiers_${user?.id}`;
 
   useEffect(() => {
-    RefreshData();
+    fetchData();
   }, []);
 
   useEffect(() => {
