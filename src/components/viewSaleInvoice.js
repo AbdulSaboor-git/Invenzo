@@ -39,15 +39,7 @@ export default function ViewSaleInvoice({
   const items = sale?.SaleItem ?? [];
   const lines = Array.isArray(items) ? items : [];
 
-  const grandTotal = useMemo(
-    () =>
-      lines.reduce((sum, li) => {
-        if (li.Product?.unit === 'kg' || li.Product?.unit === 'liter') {
-          return sum + (Number(li.quantity) / 1000) * Number(li.price);
-        } else return sum + Number(li.quantity) * Number(li.price);
-      }, 0),
-    [lines]
-  );
+  const grandTotal = lines.reduce((sum, li) => sum + Number(li.price), 0);
 
   const discount = sale?.discount ?? 0;
   const netPayable = grandTotal - discount;
@@ -57,8 +49,8 @@ export default function ViewSaleInvoice({
   }
 
   return (
-    <div className="fixed inset-0 bg-black/20 backdrop-blur-[2px] flex items-center justify-center px-4 sm:px-6 z-50">
-      <div className=" bg-white rounded-lg p-4 sm:p-6  shadow-xl w-full max-w-2xl overflow-hidden">
+    <div className="fixed inset-0 bg-black/20 backdrop-blur-[2px] flex items-center justify-center px-4 py-4 sm:px-6 z-50">
+      <div className=" bg-white rounded-lg p-4 sm:p-6 shadow-xl w-full max-w-2xl ">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold">Invoice</h3>
           <button
@@ -78,12 +70,12 @@ export default function ViewSaleInvoice({
             Invoice not found.
           </div>
         ) : (
-          <>
+          <div className="max-h-[50vh] md:max-h-[70vh] overflow-y-auto">
             {/* Line items */}
             <div
-              className={`border rounded-lg max-h-[70vh] md:max-h-[90vh] overflow-auto ${sale.deactivated && 'border-red-300'} `}
+              className={`border rounded-lg  ${sale.deactivated && 'border-red-300'} `}
             >
-              <div className="bg-white p-3 md:p-6 font-mono text-sm">
+              <div className="bg-white p-3 md:p-6 font-mono text-sm ">
                 {/* Header (shared) */}
                 <div className="text-center text-xs text-gray-700 mb-3 md:mb-6">
                   <div className="font-bold text-base md:text-lg">
@@ -130,20 +122,6 @@ export default function ViewSaleInvoice({
                         </tr>
                       ) : (
                         lines.map((li) => {
-                          function calcSubtotal() {
-                            if (
-                              li.Product?.unit === 'kg' ||
-                              li.Product?.unit === 'liter'
-                            ) {
-                              return (
-                                (Number(li.quantity) / 1000) * Number(li.price)
-                              );
-                            } else {
-                              return Number(li.quantity) * Number(li.price);
-                            }
-                          }
-                          const subtotal = calcSubtotal();
-
                           function getUnitLabel() {
                             if (li.Product?.unit === 'kg') return 'g';
                             if (li.Product?.unit === 'liter') return 'ml';
@@ -158,9 +136,11 @@ export default function ViewSaleInvoice({
                               <td className="py-2 text-right">
                                 {li.quantity + ' ' + getUnitLabel()}
                               </td>
-                              <td className="py-2 text-right">{li.price}</td>
+                              <td className="py-2 text-right">
+                                {li.Product.salePrice}
+                              </td>
                               <td className="py-2 text-right font-medium">
-                                {subtotal}
+                                {li.price}
                               </td>
                             </tr>
                           );
@@ -183,20 +163,6 @@ export default function ViewSaleInvoice({
                       </div>
                     ) : (
                       lines.map((li) => {
-                        function calcSubtotal() {
-                          if (
-                            li.Product?.unit === 'kg' ||
-                            li.Product?.unit === 'liter'
-                          ) {
-                            return (
-                              (Number(li.quantity) / 1000) * Number(li.price)
-                            );
-                          } else {
-                            return Number(li.quantity) * Number(li.price);
-                          }
-                        }
-                        const subtotal = calcSubtotal();
-
                         function getUnitLabel() {
                           if (li.Product?.unit === 'kg') return 'g';
                           if (li.Product?.unit === 'liter') return 'ml';
@@ -213,10 +179,10 @@ export default function ViewSaleInvoice({
                                 `Product Id: ${li.productId}`}
                               <div className="text-xs text-gray-500">
                                 {li.quantity + ' ' + getUnitLabel()} ×{' '}
-                                {li.price}
+                                {li.Product.salePrice}
                               </div>
                             </div>
-                            <div className="font-semibold">{subtotal}</div>
+                            <div className="font-semibold">{li.price}</div>
                           </div>
                         );
                       })
@@ -251,7 +217,7 @@ export default function ViewSaleInvoice({
                 totalAmount (Rs.{Number(sale.totalAmount)}).
               </div>
             )}
-          </>
+          </div>
         )}
       </div>
     </div>
