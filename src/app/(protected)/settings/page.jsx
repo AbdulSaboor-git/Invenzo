@@ -6,11 +6,13 @@ import { toast } from 'sonner';
 import { IoLockClosed, IoLockOpen } from 'react-icons/io5';
 import NotFound from '@/app/not-found';
 import { useSelector } from 'react-redux';
+import { useRouter } from 'next/navigation';
 
 export default function SettingsPage() {
   // const { user, logout } = useAuthUser();
   const { user } = useSelector((state) => state.user);
 
+  const router = useRouter();
   const localStorageKey = `inventoryData_preferences_${user.id}`;
   const [reloadKey, setReloadKey] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
@@ -143,11 +145,16 @@ export default function SettingsPage() {
     localStorage.setItem(localStorageKey, JSON.stringify(preferences));
     setTempPreferences(preferences);
     toast.success('Settings saved!');
-    triggerReload();
+    router.back();
+    // triggerReload();
   };
 
   const cancelChanges = () => {
     setPreferences(tempPreferences);
+    router.back();
+    toast.message('Changes discarded', {
+      description: 'No changes were saved.',
+    });
   };
 
   const handleAuthSubmit = async (e) => {
