@@ -47,6 +47,10 @@ export default function POSPage() {
     };
   }
 
+  useEffect(() => {
+    RefreshData();
+  }, []);
+
   function addToCart(product) {
     setCart((prevCart) => {
       const existingItem = prevCart.find(
@@ -281,7 +285,7 @@ export default function POSPage() {
 
       {/* Main Grid Layout */}
       <div
-        className={`grid grid-cols-1 md:grid-cols-[2fr_1.6fr] max-w-7xl mx-auto w-full md:my-4 md:px-2 md:gap-4 ${placingOrder && 'opacity-70 pointer-events-none'}`}
+        className={`grid grid-cols-1 md:grid-cols-[2fr_1.6fr] max-w-7xl mx-auto w-full md:my-4 md:px-2 md:gap-4 ${(placingOrder || loadingData || refreshing || loadingInventory) && 'opacity-70 pointer-events-none'}`}
       >
         {/* Products Section */}
         <div className="md:h-[calc(100vh-140px)] h-[40vh] border-none overflow-y-auto bg-gray-100 shadow-sm md:rounded-xl">
@@ -302,33 +306,25 @@ export default function POSPage() {
                 onClick={RefreshData}
               />
             </div>
-            {loadingData || refreshing || loadingInventory ? (
-              <div className="flex px-3 md:pl-5 md:pr-2 items-center justify-center h-40 md:h-64">
-                {/* <div className="loader ease-linear rounded-full border-8 border-t-8 border-gray-200 h-12 w-12 md:h-16 md:w-16"></div> */}
-                <Loading />
-              </div>
-            ) : (
-              <div className="px-3 md:pl-5 md:pr-2 py-2 grid grid-cols-2 bg-gray-100 sm:grid-cols-3 lg:grid-cols-4 gap-1 md:gap-3">
-                {products
-                  .filter((product) => {
-                    const query = searchQuery.toLowerCase().trim();
-                    return (
-                      product.name.toLowerCase().includes(query) ||
-                      (product.category &&
-                        product.category.name.toLowerCase().includes(query)) ||
-                      (product.tags &&
-                        product.tags.toLowerCase().includes(query))
-                    );
-                  })
-                  .map((product) => (
-                    <ProductCard
-                      key={product.id}
-                      addToCart={addToCart}
-                      product={product}
-                    />
-                  ))}
-              </div>
-            )}
+            <div className="px-3 md:pl-5 md:pr-2 py-2 grid grid-cols-2 bg-gray-100 sm:grid-cols-3 lg:grid-cols-4 gap-1 md:gap-3">
+              {products
+                .filter((product) => {
+                  const query = searchQuery.toLowerCase().trim();
+                  return (
+                    product.name.toLowerCase().includes(query) ||
+                    (product.category &&
+                      product.category.name.toLowerCase().includes(query)) ||
+                    (product.tags && product.tags.toLowerCase().includes(query))
+                  );
+                })
+                .map((product) => (
+                  <ProductCard
+                    key={product.id}
+                    addToCart={addToCart}
+                    product={product}
+                  />
+                ))}
+            </div>
           </div>
         </div>
 

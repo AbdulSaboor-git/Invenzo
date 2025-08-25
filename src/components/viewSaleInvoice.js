@@ -70,12 +70,12 @@ export default function ViewSaleInvoice({
             Invoice not found.
           </div>
         ) : (
-          <div className="max-h-[50vh] md:max-h-[70vh] overflow-y-auto">
+          <div
+            className={`border bg-white rounded-lg ${sale.deactivated && 'border-red-300'} max-h-[75vh] overflow-y-auto`}
+          >
             {/* Line items */}
-            <div
-              className={`border rounded-lg  ${sale.deactivated && 'border-red-300'} `}
-            >
-              <div className="bg-white p-3 md:p-6 font-mono text-sm ">
+            <div className={``}>
+              <div className=" p-3 md:p-6 font-mono text-sm ">
                 {/* Header (shared) */}
                 <div className="text-center text-xs text-gray-700 mb-3 md:mb-6">
                   <div className="font-bold text-base md:text-lg">
@@ -106,8 +106,8 @@ export default function ViewSaleInvoice({
                       <tr className="text-gray-700 font-bold">
                         <th className="py-2 text-left">Product</th>
                         <th className="py-2 text-right">Qty</th>
-                        <th className="py-2 text-right">Price</th>
-                        <th className="py-2 text-right">Subtotal</th>
+                        <th className="py-2 text-right">Unit Price (Rs.)</th>
+                        <th className="py-2 text-right">Subtotal (Rs.)</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y">
@@ -134,7 +134,7 @@ export default function ViewSaleInvoice({
                                 {li?.Product?.name ?? `#${li.productId}`}
                               </td>
                               <td className="py-2 text-right">
-                                {li.quantity + ' ' + getUnitLabel()}
+                                {li.quantity + '' + getUnitLabel()}
                               </td>
                               <td className="py-2 text-right">
                                 {li.Product.salePrice}
@@ -174,11 +174,11 @@ export default function ViewSaleInvoice({
                             key={li.id}
                             className="flex justify-between py-2"
                           >
-                            <div className="flex-1 flex flex-col">
+                            <div className="flex-1 flex flex-col text-[13px]">
                               {li?.Product?.name ??
                                 `Product Id: ${li.productId}`}
                               <div className="text-xs text-gray-500">
-                                {li.quantity + ' ' + getUnitLabel()} ×{' '}
+                                {li.quantity + '' + getUnitLabel()} × Rs.
                                 {li.Product.salePrice}
                               </div>
                             </div>
@@ -201,7 +201,7 @@ export default function ViewSaleInvoice({
                       <span className="place-self-end">Discount</span>
                       <span className="place-self-end">{discount}</span>
                     </div>
-                    <div className="font-bold mt-2 grid w-auto grid-cols-[3fr_2fr] md:grid-cols-[3fr_1fr] gap-2">
+                    <div className="font-bold border-t border-dashed mt-2 pt-2 grid w-auto grid-cols-[3fr_2fr] md:grid-cols-[3fr_1fr] gap-2">
                       <span className="place-self-end">Net Payable</span>
                       <span className="place-self-end">Rs.{netPayable}</span>
                     </div>

@@ -20,6 +20,10 @@ export default function SalesPage() {
     [user?.id]
   );
 
+  useEffect(() => {
+    handleRefresh();
+  }, []);
+
   // --- LocalStorage load ---
   const loadFromLocalStorage = () => {
     try {
@@ -112,7 +116,7 @@ export default function SalesPage() {
     const checkAndAutoFetch = () => {
       if (!navigator.onLine) return;
       const now = Date.now();
-      const sixtyMin = 60 * 60 * 1000;
+      const twentyMin = 20 * 60 * 1000;
       let last = lastUpdated ? new Date(lastUpdated).getTime() : 0;
 
       if (!last && typeof window !== 'undefined' && localStorageKey) {
@@ -124,7 +128,7 @@ export default function SalesPage() {
         }
       }
 
-      if (!last || now - last >= sixtyMin) {
+      if (!last || now - last >= twentyMin) {
         fetchAllSales();
       }
     };
