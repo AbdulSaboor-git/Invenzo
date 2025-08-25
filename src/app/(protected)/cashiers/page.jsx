@@ -25,6 +25,10 @@ export default function CashiersPage() {
   const localKey = `inventoryData_cashiers_${user?.id}`;
 
   useEffect(() => {
+    RefreshData();
+  }, []);
+
+  useEffect(() => {
     const cachedData = localStorage.getItem(localKey);
     if (cachedData) {
       const parsed = JSON.parse(cachedData);
