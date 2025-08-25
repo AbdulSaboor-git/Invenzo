@@ -52,7 +52,7 @@ export default function Cart({ cart, setCart }) {
             </div>
 
             {/* Cart Items */}
-            <div className="md:h-[calc(40vh)] pb-[164px] md:pb-0 overflow-y-auto relative space-y-2">
+            <div className="h-[calc(100vh-380px)] overflow-y-auto relative space-y-2 md:space-y-0">
               {cart.map((item, index) => (
                 <div key={index}>
                   <CartItem
@@ -67,6 +67,10 @@ export default function Cart({ cart, setCart }) {
             {/* Totals */}
             <div className=" w-full flex shadow-[0_-1px_3px_0_rgba(0,0,0,0.2),0_-1px_2px_-1px_rgba(0,0,0,0.2)] md:shadow-none flex-col rounded-t-xl md:rounded-t-none bg-white md:border-t px-4 py-2 md:px-0 md:py-0 gap-4 fixed md:static bottom-0 left-0 md:left-auto md:bottom-auto">
               <div className="flex w-full flex-col gap-1 pt-2 md:pt-4  text-sm md:text-base">
+                <div className="grid grid-cols-[2fr_1fr] gap-2">
+                  <span className="place-self-end">Total Products</span>
+                  <span className="place-self-end">{cart.length}</span>
+                </div>
                 <div className="grid grid-cols-[2fr_1fr] gap-2">
                   <span className="place-self-end">Subtotal</span>
                   <span className="place-self-end">

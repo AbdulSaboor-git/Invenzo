@@ -35,7 +35,7 @@ export default function CartItem({ item, onUpdate, onDelete }) {
   return (
     <div className="border rounded-lg md:rounded-none md:border-0 md:p-0 p-3 bg-white">
       {/* Desktop / Tablet layout */}
-      <div className="hidden sm:grid w-full gap-2 text-sm grid-cols-[2fr_2fr_0.6fr_0.3fr] pr-1 border-b py-2 items-center">
+      <div className="hidden sm:grid w-full gap-2 text-sm grid-cols-[2fr_2fr_0.6fr_0.3fr] border-b py-2 items-center">
         {/* Name */}
         <h3 className="font-medium text-gray-800 line-clamp-2">
           {item.product.name}{' '}
