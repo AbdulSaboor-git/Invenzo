@@ -53,7 +53,7 @@ export default function Cart({ cart, setCart }) {
 
             {/* Cart Items */}
 
-            <div className="md:h-[calc(100vh-380px)] pb-[164px] md:pb-0 overflow-y-auto relative space-y-2">
+            <div className="md:h-[calc(100vh-380px)] pb-[170px] md:pb-0 overflow-y-auto relative space-y-2">
               {cart.map((item, index) => (
                 <div key={index}>
                   <CartItem
