@@ -256,6 +256,7 @@ export default function SalesTable({
           // currency={currency}
           saleId={showSaleInvoiceId}
           onClose={() => setShowSaleInvoiceId(null)}
+          user={user}
         />
       )}
 

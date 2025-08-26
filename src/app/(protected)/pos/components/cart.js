@@ -10,6 +10,20 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
   const subTotal = cart.reduce((sum, item) => sum + item.price, 0);
   const discountValue = Number(discount) || 0;
   const netPayable = Math.max(0, subTotal - discountValue);
+
+  const getQuantity = (item) => {
+    if (item.product.unit == 'kg' || item.product.unit == 'liter') {
+      return item.quantity / 1000;
+    } else return item.quantity;
+  };
+
+  const itemCost = cart.reduce(
+    (sum, item) => sum + item.product.purchasePrice * getQuantity(item),
+    0
+  );
+
+  const profit = netPayable - itemCost;
+
   const [saleId, setSaleId] = useState(null);
   const [showInvoice, setShowInvoice] = useState(false);
 
@@ -180,6 +194,10 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
                     Rs.{netPayable.toFixed(0)}
                   </span>
                 </div>
+                <div className="grid grid-cols-[2fr_1fr] gap-2">
+                  <span className="place-self-end">Profit</span>
+                  <span className="place-self-end">Rs.{profit.toFixed(0)}</span>
+                </div>
               </div>
 
               {/* Buttons */}
@@ -206,6 +224,7 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
           saleId={saleId}
           formatDateTime={formatDateTime}
           onClose={() => setShowInvoice(false)}
+          user={user}
         />
       )}
     </div>

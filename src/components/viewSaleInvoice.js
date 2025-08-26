@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { use, useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
 export default function ViewSaleInvoice({
@@ -6,6 +6,7 @@ export default function ViewSaleInvoice({
   // currency,
   saleId,
   onClose,
+  user,
 }) {
   const [loading, setLoading] = useState(true);
   const [sale, setSale] = useState(null);
@@ -104,11 +105,16 @@ export default function ViewSaleInvoice({
                   <table className="w-full border-t border-dashed text-sm">
                     <thead>
                       <tr className="text-gray-700 font-bold">
-                        <th className="py-2 px-1 text-left">#</th>
-                        <th className="py-2 text-left">Product</th>
-                        <th className="py-2 text-right">Qty</th>
-                        <th className="py-2 text-right">Unit Price (Rs)</th>
-                        <th className="py-2 text-right">Subtotal (Rs)</th>
+                        <th className=" py-2 px-1 text-left">#</th>
+                        <th className=" py-2 pr-3 text-left">Product</th>
+                        <th className=" py-2 pl-3 text-right">Qty</th>
+                        <th className=" py-2 pl-3 text-right min-w-24">
+                          Unit-Price
+                        </th>
+                        {user.role != 'cashier' && (
+                          <th className=" py-2 pl-3 text-right">Profit</th>
+                        )}
+                        <th className=" py-2 pl-3 text-right">Subtotal</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y">
@@ -124,10 +130,41 @@ export default function ViewSaleInvoice({
                       ) : (
                         lines.map((li, i) => {
                           function getUnitLabel() {
-                            if (li.Product?.unit === 'kg') return 'g';
-                            if (li.Product?.unit === 'liter') return 'ml';
+                            if (li.Product?.unit === 'kg' && li.quantity < 1000)
+                              return 'g';
+                            if (
+                              li.Product?.unit === 'liter' &&
+                              li.quantity < 1000
+                            )
+                              return 'ml';
                             return li.Product?.unit || '';
                           }
+
+                          const getQuantity = (li) => {
+                            if (
+                              li.Product?.unit === 'kg' &&
+                              li.quantity >= 1000
+                            )
+                              return Number(li.quantity) / 1000;
+                            if (
+                              li.Product?.unit === 'liter' &&
+                              li.quantity >= 1000
+                            )
+                              return Number(li.quantity) / 1000;
+                            return Number(li.quantity);
+                          };
+
+                          const getQuantityinBaseUnit = (li) => {
+                            if (li.Product?.unit === 'kg')
+                              return Number(li.quantity) / 1000;
+                            if (li.Product?.unit === 'liter')
+                              return Number(li.quantity) / 1000;
+                            return Number(li.quantity);
+                          };
+
+                          const profit =
+                            (li.Product.salePrice - li.Product.purchasePrice) *
+                            getQuantityinBaseUnit(li).toFixed(0);
 
                           return (
                             <tr key={li.id}>
@@ -136,12 +173,15 @@ export default function ViewSaleInvoice({
                                 {li?.Product?.name ?? `#${li.productId}`}
                               </td>
                               <td className="py-2 text-right">
-                                {li.quantity + '' + getUnitLabel()}
+                                {getQuantity(li) + '' + getUnitLabel()}
                               </td>
                               <td className="py-2 text-right">
                                 {li.Product.salePrice}
                               </td>
-                              <td className="py-2 text-right font-medium">
+                              {user.role != 'cashier' && (
+                                <td className="py-2 text-right">{profit}</td>
+                              )}
+                              <td className="py-2 text-right font-bold">
                                 {li.price}
                               </td>
                             </tr>
@@ -155,10 +195,11 @@ export default function ViewSaleInvoice({
                 <div className="block md:hidden">
                   {/* Mobile: stacked list */}
                   <div className="divide-y">
-                    <div className="flex justify-between gap-2 text-gray-700 py-2 font-bold border-b">
+                    <div className="flex justify-between gap-3 text-gray-700 py-2 font-bold border-b">
                       <div className="">#</div>
                       <div className="flex-1">Product</div>
-                      <div>Price (Rs)</div>
+                      {user.role != 'cashier' && <div>Prof</div>}
+                      <div>Price</div>
                     </div>
                     {lines.length === 0 ? (
                       <div className="py-4 text-center text-gray-500">
@@ -172,21 +213,49 @@ export default function ViewSaleInvoice({
                           return li.Product?.unit || '';
                         }
 
+                        const getQuantity = (li) => {
+                          if (li.Product?.unit === 'kg' && li.quantity >= 1000)
+                            return Number(li.quantity) / 1000;
+                          if (
+                            li.Product?.unit === 'liter' &&
+                            li.quantity >= 1000
+                          )
+                            return Number(li.quantity) / 1000;
+                          return Number(li.quantity);
+                        };
+
+                        const getQuantityinBaseUnit = (li) => {
+                          if (li.Product?.unit === 'kg')
+                            return Number(li.quantity) / 1000;
+                          if (li.Product?.unit === 'liter')
+                            return Number(li.quantity) / 1000;
+                          return Number(li.quantity);
+                        };
+
+                        const profit =
+                          (li.Product.salePrice - li.Product.purchasePrice) *
+                          getQuantityinBaseUnit(li).toFixed(0);
+
                         return (
                           <div
                             key={li.id}
-                            className="flex justify-between py-2 gap-2"
+                            className="flex justify-between py-2 gap-3"
                           >
                             <div>{i + 1}.</div>
                             <div className="flex-1 flex flex-col text-[13px]">
                               {li?.Product?.name ??
                                 `Product Id: ${li.productId}`}
                               <div className="text-xs text-gray-500">
-                                {li.quantity + '' + getUnitLabel()} × Rs.
-                                {li.Product.salePrice}
+                                {getQuantity(li) + '' + getUnitLabel()} × Rs.
+                                {li.Product.salePrice}/{li.Product.unit}
                               </div>
                             </div>
-                            <div className="font-semibold">{li.price}</div>
+                            {user.role != 'cashier' && (
+                              <div className="">{profit}</div>
+                            )}
+                            <div className="font-semibold text-end min-w-10">
+                              {li.price}
+                            </div>
                           </div>
                         );
                       })
