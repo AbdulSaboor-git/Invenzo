@@ -178,7 +178,7 @@ export default function SalesPage() {
         <SalesTable
           user={user}
           sales={sales}
-          loadingData={loadingData}
+          loadingData={loadingData || refreshing}
           fetchAllSales={fetchAllSales}
         />
       </div>

@@ -75,10 +75,10 @@ export default function CartItem({ item, onUpdate, onDelete }) {
           type="number"
           value={item.price}
           disabled={
-            item.product.unit === 'pc' ||
-            item.product.unit === 'dozen' ||
-            item.product.unit === 'box' ||
-            item.product.unit === 'pack'
+            item.product.unit !== 'kg' &&
+            item.product.unit !== 'liter' &&
+            item.product.unit !== 'g' &&
+            item.product.unit !== 'ml'
           }
           onChange={(e) => handlePriceChange(e.target.value)}
           className="w-20 text-right border rounded px-2 py-1"
