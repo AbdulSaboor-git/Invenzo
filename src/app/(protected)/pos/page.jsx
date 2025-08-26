@@ -47,10 +47,24 @@ export default function POSPage() {
     };
   }
 
+  async function loadFreshData() {
+    if (!navigator.onLine) {
+      toast.error(
+        'Network not available. Please check your internet connection.'
+      );
+      return;
+    }
+    try {
+      if (inventory && !loadingInventory) await fetchAndStoreData();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
-    fetchInventory();
-    fetchAndStoreData();
-  }, []);
+    if (!user) return;
+    loadFreshData();
+  }, [user]);
 
   function addToCart(product) {
     setCart((prevCart) => {
@@ -108,7 +122,6 @@ export default function POSPage() {
         `/api/inventory/${inventory?.id}?userId=${user?.id}`
       );
       if (!response.ok) throw new Error('Failed to fetch from server');
-
       const data = await response.json();
       const { products, categories } = data;
       const timestamp = new Date().toISOString();

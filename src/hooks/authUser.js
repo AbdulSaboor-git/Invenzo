@@ -111,6 +111,12 @@ export default function useAuthUser() {
   }, [fetchFreshUser]);
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      dispatch(logoutUser());
+      return; // 👈 exit early if no token
+    }
+
     dispatch(setUserLoading(true));
 
     try {
@@ -129,8 +135,10 @@ export default function useAuthUser() {
       }
 
       // ---- initial load from localStorage ----
-      const storedUser = localStorage.getItem('user');
-      if (storedUser) {
+      const token = localStorage.getItem('token');
+      const storedUser = token ? localStorage.getItem('user') : null;
+
+      if (storedUser && token) {
         const parsedUser = JSON.parse(storedUser);
         if (!parsedUser.isActive) {
           if (!hasShownDeactivationToast) {
