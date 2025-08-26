@@ -162,9 +162,10 @@ export default function ViewSaleInvoice({
                             return Number(li.quantity);
                           };
 
-                          const profit =
+                          const profit = (
                             (li.Product.salePrice - li.Product.purchasePrice) *
-                            getQuantityinBaseUnit(li).toFixed(0);
+                            getQuantityinBaseUnit(li)
+                          ).toFixed(0);
 
                           return (
                             <tr key={li.id}>
@@ -208,8 +209,13 @@ export default function ViewSaleInvoice({
                     ) : (
                       lines.map((li, i) => {
                         function getUnitLabel() {
-                          if (li.Product?.unit === 'kg') return 'g';
-                          if (li.Product?.unit === 'liter') return 'ml';
+                          if (li.Product?.unit === 'kg' && li.quantity < 1000)
+                            return 'g';
+                          if (
+                            li.Product?.unit === 'liter' &&
+                            li.quantity < 1000
+                          )
+                            return 'ml';
                           return li.Product?.unit || '';
                         }
 
@@ -232,9 +238,10 @@ export default function ViewSaleInvoice({
                           return Number(li.quantity);
                         };
 
-                        const profit =
+                        const profit = (
                           (li.Product.salePrice - li.Product.purchasePrice) *
-                          getQuantityinBaseUnit(li).toFixed(0);
+                          getQuantityinBaseUnit(li)
+                        ).toFixed(0);
 
                         return (
                           <div

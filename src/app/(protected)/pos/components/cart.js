@@ -9,7 +9,7 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
 
   const subTotal = cart.reduce((sum, item) => sum + item.price, 0);
   const discountValue = Number(discount) || 0;
-  const netPayable = Math.max(0, subTotal - discountValue);
+  const netPayable = Math.max(0, subTotal - discountValue).toFixed(0);
 
   const getQuantity = (item) => {
     if (item.product.unit == 'kg' || item.product.unit == 'liter') {
@@ -22,7 +22,7 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
     0
   );
 
-  const profit = netPayable - itemCost;
+  const profit = (netPayable - itemCost).toFixed(0);
 
   const [saleId, setSaleId] = useState(null);
   const [showInvoice, setShowInvoice] = useState(false);
@@ -190,13 +190,11 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
 
                 <div className="font-bold grid grid-cols-[2fr_1fr] gap-2">
                   <span className="place-self-end">Net Payable</span>
-                  <span className="place-self-end">
-                    Rs.{netPayable.toFixed(0)}
-                  </span>
+                  <span className="place-self-end">Rs.{netPayable}</span>
                 </div>
                 <div className="grid grid-cols-[2fr_1fr] gap-2">
                   <span className="place-self-end">Profit</span>
-                  <span className="place-self-end">Rs.{profit.toFixed(0)}</span>
+                  <span className="place-self-end">Rs.{profit}</span>
                 </div>
               </div>
 
