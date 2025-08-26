@@ -417,7 +417,10 @@ async function handleDeleteUser(req, res) {
 
           // find all cashier userIds for this inventory
           const cashierUsers = await tx.user.findMany({
-            where: { Cashier: { inventoryId: invId } },
+            where: {
+              Cashier: { inventoryId: invId },
+              NOT: { id: user.id },
+            },
             select: { id: true },
           });
 
@@ -440,18 +443,18 @@ async function handleDeleteUser(req, res) {
         }
 
         // --- if user is a cashier ---
-        if (user.Cashier) {
+        if (user.Cashier && user.role !== 'admin') {
           const cashierId = user.Cashier.id;
 
-          const salesCount = await tx.sale.count({
-            where: { cashierId },
+          await tx.saleItem.deleteMany({
+            where: { Sale: { cashierId: cashierId } },
           });
-
-          if (salesCount === 0) {
-            await tx.cashier.delete({
-              where: { id: cashierId },
-            });
-          }
+          await tx.sale.deleteMany({
+            where: { cashierId: cashierId },
+          });
+          await tx.cashier.delete({
+            where: { id: cashierId },
+          });
         }
 
         // --- finally delete user itself ---

@@ -76,14 +76,17 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
       return;
     }
 
+    setPlacingOrder(true);
+    const id = toast.loading('Placing order...');
+
     try {
-      setPlacingOrder(true);
-      const id = toast.loading('Placing order...');
+      console.log(user?.cashierId, invId, cart, discount, netPayable);
       const response = await fetch('/api/sales', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+
         body: JSON.stringify({
           cashierId: user?.cashierId,
           inventoryId: invId,

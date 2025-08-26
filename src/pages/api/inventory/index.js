@@ -95,50 +95,56 @@ export const POST = async (req, res) => {
       return res.status(200).json({ inventory, created: false });
     }
 
-    inventory = await prisma.$transaction(async (tx) => {
-      const newInv = await tx.inventory.create({
-        data: { name: 'Get Started', adminId: parsedAdminId },
-      });
+    inventory = await prisma.$transaction(
+      async (tx) => {
+        const newInv = await tx.inventory.create({
+          data: { name: 'Get Started', adminId: parsedAdminId },
+        });
 
-      const newCategory = await tx.category.create({
-        data: { name: 'General', inventoryId: newInv.id },
-      });
+        const newCategory = await tx.category.create({
+          data: { name: 'General', inventoryId: newInv.id },
+        });
 
-      await tx.product.createMany({
-        data: [
-          {
-            name: 'Sample Product 1',
-            purchasePrice: 10,
-            salePrice: 15,
-            categoryId: newCategory.id,
-            inventoryId: newInv.id,
-            tags: 'sample test',
-            unit: 'pc',
-          },
-          {
-            name: 'Sample Product 2',
-            purchasePrice: 20,
-            salePrice: 25,
-            categoryId: newCategory.id,
-            inventoryId: newInv.id,
-            tags: 'sample test',
-            unit: 'pc',
-          },
-          {
-            name: 'Sample Product 3',
-            purchasePrice: 30,
-            salePrice: 40,
-            categoryId: newCategory.id,
-            inventoryId: newInv.id,
-            tags: 'sample test',
-            unit: 'pc',
-          },
-        ],
-        skipDuplicates: true,
-      });
+        await tx.product.createMany({
+          data: [
+            {
+              name: 'Sample Product 1',
+              purchasePrice: 10,
+              salePrice: 15,
+              categoryId: newCategory.id,
+              inventoryId: newInv.id,
+              tags: 'sample test',
+              unit: 'pc',
+            },
+            {
+              name: 'Sample Product 2',
+              purchasePrice: 20,
+              salePrice: 25,
+              categoryId: newCategory.id,
+              inventoryId: newInv.id,
+              tags: 'sample test',
+              unit: 'pc',
+            },
+            {
+              name: 'Sample Product 3',
+              purchasePrice: 30,
+              salePrice: 40,
+              categoryId: newCategory.id,
+              inventoryId: newInv.id,
+              tags: 'sample test',
+              unit: 'pc',
+            },
+          ],
+          skipDuplicates: true,
+        });
 
-      return newInv;
-    });
+        return newInv;
+      },
+      {
+        timeout: 15000, // 15 seconds
+        maxWait: 5000, // (optional) how long to wait for a transaction slot
+      }
+    );
 
     return res.status(201).json({ inventory, created: true });
   } catch (error) {

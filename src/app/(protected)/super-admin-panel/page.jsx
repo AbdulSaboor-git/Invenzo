@@ -51,6 +51,10 @@ export default function SuperAdminPage() {
   const localKey = `inventoryData_users_${user?.id}`;
 
   useEffect(() => {
+    fetchData();
+  }, []);
+
+  useEffect(() => {
     try {
       const cached = localStorage.getItem(localKey);
       if (cached) {
@@ -638,6 +642,19 @@ function AddAdminPopup({ onClose, onSuccess }) {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ adminId: data?.data?.id }),
         });
+        const data2 = await response.json();
+        console.log(data2);
+
+        try {
+          const res = await fetch(`/api/cashiers`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              userId: data?.data?.id,
+              invId: data2?.inventory?.id,
+            }),
+          });
+        } catch {}
       } catch {}
 
       if (!res.ok) {

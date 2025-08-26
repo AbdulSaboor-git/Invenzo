@@ -79,55 +79,68 @@ async function handleGetCashiers(req, res) {
  * POST – Add cashier
  */
 async function handleAddCashier(req, res) {
-  const { userId, firstName, lastName } = req.body;
-  if (!userId || !firstName)
-    return res.status(400).json({ error: 'Missing data' });
+  const { userId, firstName, lastName, invId } = req.body;
 
-  if (!/^[a-zA-Z]+$/.test(firstName)) {
-    return res
-      .status(400)
-      .json({ error: 'First name can only contain letters' });
+  if (invId) {
+    if (!userId) return res.status(400).json({ error: 'Missing data' });
+
+    const cashier = await prisma.cashier.create({
+      data: {
+        inventoryId: invId,
+        userId: userId,
+      },
+    });
+    return res.status(201).json({ cashier });
+  } else {
+    if (!userId || !firstName)
+      return res.status(400).json({ error: 'Missing data' });
+
+    if (!/^[a-zA-Z]+$/.test(firstName)) {
+      return res
+        .status(400)
+        .json({ error: 'First name can only contain letters' });
+    }
+
+    if (lastName && !/^[a-zA-Z]+$/.test(lastName)) {
+      return res
+        .status(400)
+        .json({ error: 'Last name can only contain letters' });
+    }
+
+    const inventory = await prisma.inventory.findUnique({
+      where: { adminId: Number(userId) },
+    });
+    if (!inventory)
+      return res.status(404).json({ error: 'Inventory not found' });
+
+    const email = `cashier.${firstName.replace(/\s+/g, '').toLowerCase()}@invenzo.com`;
+
+    const existingUser = await prisma.user.findFirst({
+      where: { email: email.toLowerCase() },
+    });
+    if (existingUser)
+      return res.status(400).json({ error: 'Cashier email already exists' });
+
+    const plainPassword = `${firstName.toLowerCase()}.inv`.toLowerCase();
+
+    const user = await prisma.user.create({
+      data: {
+        firstName,
+        lastName: lastName || '',
+        email: email.toLowerCase(),
+        password: plainPassword,
+        role: 'cashier',
+      },
+    });
+
+    const cashier = await prisma.cashier.create({
+      data: {
+        inventoryId: inventory.id,
+        userId: user.id,
+      },
+    });
+    return res.status(201).json({ cashier });
   }
-
-  if (lastName && !/^[a-zA-Z]+$/.test(lastName)) {
-    return res
-      .status(400)
-      .json({ error: 'Last name can only contain letters' });
-  }
-
-  const inventory = await prisma.inventory.findUnique({
-    where: { adminId: Number(userId) },
-  });
-  if (!inventory) return res.status(404).json({ error: 'Inventory not found' });
-
-  const email = `cashier.${firstName.replace(/\s+/g, '').toLowerCase()}@invenzo.com`;
-
-  const existingUser = await prisma.user.findFirst({
-    where: { email: email.toLowerCase() },
-  });
-  if (existingUser)
-    return res.status(400).json({ error: 'Cashier email already exists' });
-
-  const plainPassword = `${firstName.toLowerCase()}.inv`.toLowerCase();
-
-  const user = await prisma.user.create({
-    data: {
-      firstName,
-      lastName: lastName || '',
-      email: email.toLowerCase(),
-      password: plainPassword,
-      role: 'cashier',
-    },
-  });
-
-  const cashier = await prisma.cashier.create({
-    data: {
-      inventoryId: inventory.id,
-      userId: user.id,
-    },
-  });
-
-  return res.status(201).json({ cashier });
 }
 
 /**
