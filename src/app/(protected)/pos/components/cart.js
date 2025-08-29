@@ -155,7 +155,7 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
 
             {/* Cart Items */}
 
-            <div className="md:h-[calc(100vh-410px)] pb-[176px] md:pb-0 overflow-y-auto relative space-y-2">
+            <div className="md:h-[calc(100vh-410px)] pb-[192px] md:pb-0 overflow-y-auto relative space-y-2">
               {cart.map((item, index) => (
                 <div key={index}>
                   <CartItem
