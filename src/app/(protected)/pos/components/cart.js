@@ -9,7 +9,7 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
 
   const subTotal = cart.reduce((sum, item) => sum + item.price, 0);
   const discountValue = Number(discount) || 0;
-  const netPayable = Math.max(0, subTotal - discountValue).toFixed(0);
+  const netPayable = (subTotal - discountValue).toFixed(0);
 
   const getQuantity = (item) => {
     if (item.product.unit == 'kg' || item.product.unit == 'liter') {
@@ -186,6 +186,8 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
                   <input
                     type="number"
                     value={discount || ''}
+                    max={subTotal}
+                    min={0}
                     onChange={(e) => setDiscount(Number(e.target.value) || '')}
                     className="w-20 md:w-24 text-right border rounded px-2 py-1 place-self-end text-sm md:text-base"
                   />

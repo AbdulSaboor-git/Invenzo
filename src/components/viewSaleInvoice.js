@@ -296,8 +296,8 @@ export default function ViewSaleInvoice({
 
             {/* Mismatch note */}
             {Number(sale.totalAmount) !== Number(netPayable) && (
-              <div className="mt-3 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded p-2">
-                Note: Calculated total (Rs.{grandTotal}) differs from stored
+              <div className="mt-3 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded-lg p-2">
+                Note: Calculated total (Rs.{netPayable}) differs from stored
                 totalAmount (Rs.{Number(sale.totalAmount)}).
               </div>
             )}
