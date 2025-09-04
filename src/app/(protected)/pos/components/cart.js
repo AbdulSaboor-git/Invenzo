@@ -188,7 +188,12 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
                     value={discount || ''}
                     max={subTotal}
                     min={0}
-                    onChange={(e) => setDiscount(Number(e.target.value) || '')}
+                    onChange={(e) => {
+                      let val = Number(e.target.value);
+                      if (val > subTotal) val = subTotal;
+                      if (val < 0) val = 0;
+                      setDiscount(e.target.value === '' ? '' : val);
+                    }}
                     className="w-20 md:w-24 text-right border rounded px-2 py-1 place-self-end text-sm md:text-base"
                   />
                 </div>
