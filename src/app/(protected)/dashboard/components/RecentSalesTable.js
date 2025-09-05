@@ -1,7 +1,7 @@
 // File: /components/dashboard/RecentSalesTable.jsx
 import React from 'react';
 
-export default function RecentSalesTable({ sales }) {
+export default function RecentSalesTable({ sales, user }) {
   if (!sales || !sales.length)
     return <div className="py-4">No recent sales</div>;
   return (
@@ -10,7 +10,7 @@ export default function RecentSalesTable({ sales }) {
         <thead>
           <tr className="text-gray-600">
             <th className="py-2">Date</th>
-            <th>Inventory</th>
+            {user.role === 'admin' && <th>Inventory</th>}
             <th>Cashier</th>
             <th className="text-right">Amount</th>
           </tr>
@@ -19,7 +19,9 @@ export default function RecentSalesTable({ sales }) {
           {sales.map((s) => (
             <tr key={s.id} className="border-t">
               <td className="py-2">{new Date(s.createdAt).toLocaleString()}</td>
-              <td>{s.inventoryName ?? s.inventoryId}</td>
+              {user.role === 'admin' && (
+                <td>{s.inventoryName ?? s.inventoryId}</td>
+              )}
               <td>{s.cashierName ?? s.cashierId}</td>
               <td className="text-right font-semibold">
                 Rs {Number(s.totalAmount).toFixed(0)}

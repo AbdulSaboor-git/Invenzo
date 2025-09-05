@@ -32,7 +32,7 @@ export default function PaymentPie({ data }) {
   if (!data || !data.length)
     return <div className="h-48 flex items-center justify-center">No data</div>;
   return (
-    <div style={{ width: '100%', height: 240 }}>
+    <div style={{ width: '100%', height: 240 }} className="w-full md:w-auto">
       <ResponsiveContainer>
         <PieChart>
           <Pie

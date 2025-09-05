@@ -108,7 +108,7 @@ export default function DashboardPage() {
 
         <section className="mt-6 bg-white/60 p-4 rounded-2xl shadow-sm">
           <h3 className="font-semibold mb-3">Recent Sales</h3>
-          <RecentSalesTable sales={metrics?.recentSales} />
+          <RecentSalesTable sales={metrics?.recentSales} user={user} />
         </section>
 
         <section className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
