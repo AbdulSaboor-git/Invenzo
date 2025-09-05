@@ -10,7 +10,7 @@ export default function RecentSalesTable({ sales, user }) {
         <thead>
           <tr className="text-gray-600">
             <th className="py-2">Date</th>
-            {user.role === 'admin' && <th>Inventory</th>}
+            {user.role === 'superadmin' && <th>Inventory</th>}
             <th>Cashier</th>
             <th className="text-right">Amount</th>
           </tr>
@@ -19,7 +19,7 @@ export default function RecentSalesTable({ sales, user }) {
           {sales.map((s) => (
             <tr key={s.id} className="border-t">
               <td className="py-2">{new Date(s.createdAt).toLocaleString()}</td>
-              {user.role === 'admin' && (
+              {user.role === 'superadmin' && (
                 <td>{s.inventoryName ?? s.inventoryId}</td>
               )}
               <td>{s.cashierName ?? s.cashierId}</td>
