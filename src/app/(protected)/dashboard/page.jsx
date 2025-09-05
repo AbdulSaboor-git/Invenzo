@@ -93,7 +93,7 @@ export default function DashboardPage() {
           />
         </section>
 
-        <section className="grid grid-cols-1 lg:grid-cols-3 md:gap-6">
+        <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="col-span-2 bg-white/60 p-4 rounded-2xl shadow-sm">
             <h2 className="font-semibold mb-3">Sales Trend (daily)</h2>
             <SalesTrendChart data={metrics?.salesTrend} />
