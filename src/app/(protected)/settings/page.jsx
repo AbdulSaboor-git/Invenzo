@@ -356,6 +356,7 @@ export default function SettingsPage() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }
@@ -389,7 +390,6 @@ function ToggleRow({ label, value, onChange }) {
           }`}
         />
       </button>
-      <Footer />
     </div>
   );
 }
