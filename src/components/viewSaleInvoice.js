@@ -162,8 +162,11 @@ export default function ViewSaleInvoice({
                             return Number(li.quantity);
                           };
 
+                          const salePrice =
+                            li.price / getQuantityinBaseUnit(li);
+
                           const profit = (
-                            (li.Product.salePrice - li.Product.purchasePrice) *
+                            (salePrice - li.Product.purchasePrice) *
                             getQuantityinBaseUnit(li)
                           ).toFixed(0);
 
@@ -176,9 +179,7 @@ export default function ViewSaleInvoice({
                               <td className="py-2 text-right">
                                 {getQuantity(li) + '' + getUnitLabel()}
                               </td>
-                              <td className="py-2 text-right">
-                                {li.Product.salePrice}
-                              </td>
+                              <td className="py-2 text-right">{salePrice}</td>
                               {user.role != 'cashier' && (
                                 <td className="py-2 text-right">{profit}</td>
                               )}
@@ -238,8 +239,10 @@ export default function ViewSaleInvoice({
                           return Number(li.quantity);
                         };
 
+                        const salePrice = li.price / getQuantityinBaseUnit(li);
+
                         const profit = (
-                          (li.Product.salePrice - li.Product.purchasePrice) *
+                          (salePrice - li.Product.purchasePrice) *
                           getQuantityinBaseUnit(li)
                         ).toFixed(0);
 
@@ -254,7 +257,7 @@ export default function ViewSaleInvoice({
                                 `Product Id: ${li.productId}`}
                               <div className="text-xs text-gray-500">
                                 {getQuantity(li) + '' + getUnitLabel()} × Rs.
-                                {li.Product.salePrice}/{li.Product.unit}
+                                {salePrice}/{li.Product.unit}
                               </div>
                             </div>
                             {user.role != 'cashier' && (

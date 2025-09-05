@@ -9,6 +9,7 @@ import SearchBar from '@/components/search_bar';
 import Cart from './components/cart';
 import Loading from '@/app/loading';
 import ProductCard from './components/product_card';
+import Footer from '@/components/footer';
 
 export default function POSPage() {
   const { user } = useSelector((state) => state.user);
@@ -351,6 +352,7 @@ export default function POSPage() {
           setPlacingOrder={setPlacingOrder}
         />
       </div>
+      {/* <Footer /> */}
     </div>
   );
 }

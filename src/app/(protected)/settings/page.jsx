@@ -7,6 +7,7 @@ import { IoLockClosed, IoLockOpen } from 'react-icons/io5';
 import NotFound from '@/app/not-found';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
+import Footer from '@/components/footer';
 
 export default function SettingsPage() {
   // const { user, logout } = useAuthUser();
@@ -388,6 +389,7 @@ function ToggleRow({ label, value, onChange }) {
           }`}
         />
       </button>
+      <Footer />
     </div>
   );
 }

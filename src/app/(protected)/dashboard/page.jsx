@@ -10,6 +10,7 @@ import RecentSalesTable from './components/RecentSalesTable';
 import CategorySales from './components/CategorySales';
 import Header from '@/components/header';
 import Loading from '@/app/loading';
+import Footer from '@/components/footer';
 
 export default function DashboardPage() {
   const { user } = useSelector((state) => state.user);
@@ -156,6 +157,7 @@ export default function DashboardPage() {
           )} */}
         </section>
       </div>
+      <Footer />
     </div>
   );
 }

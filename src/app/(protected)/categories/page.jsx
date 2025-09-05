@@ -13,6 +13,7 @@ import AddCategoryPopup from './components/add_category';
 import EditCategoryPopup from './components/edit_category';
 import DeleteCategoryPopup from './components/delete_category';
 import NotFound from '@/app/not-found';
+import Footer from '@/components/footer';
 
 export default function Inventory() {
   // const { user, logout } = useAuthUser();
@@ -442,6 +443,7 @@ export default function Inventory() {
           />
         )}
       </div>
+      <Footer />
     </div>
   );
 }

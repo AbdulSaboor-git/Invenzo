@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { MdAdd } from 'react-icons/md';
 import NotFound from '@/app/not-found';
 import { useSelector } from 'react-redux';
+import Footer from '@/components/footer';
 
 export default function CashiersPage() {
   // const { user, logout } = useAuthUser();
@@ -186,6 +187,7 @@ export default function CashiersPage() {
           onSuccess={fetchData}
         />
       )}
+      <Footer />
     </div>
   );
 }

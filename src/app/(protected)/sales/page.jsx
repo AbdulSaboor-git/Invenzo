@@ -5,6 +5,7 @@ import { toast } from 'sonner';
 import Header from '@/components/header';
 import RefreshButton from '../inventory/components/refresh_btn';
 import SalesTable from './components/salesTable';
+import Footer from '@/components/footer';
 
 export default function SalesPage() {
   const { user } = useSelector((s) => s.user);
@@ -182,6 +183,7 @@ export default function SalesPage() {
           fetchAllSales={fetchAllSales}
         />
       </div>
+      <Footer />
     </div>
   );
 }

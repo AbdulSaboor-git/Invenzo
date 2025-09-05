@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import useAuthUser from '@/hooks/authUser';
 import { useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
+import Footer from '@/components/footer';
 
 export default function AddProductPage() {
   // const { user, logout } = useAuthUser();
@@ -449,6 +450,7 @@ export default function AddProductPage() {
           </button>
         </form>
       </div>
+      <Footer />
     </div>
   );
 }

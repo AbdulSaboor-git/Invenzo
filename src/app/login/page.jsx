@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { setUser } from '@/redux/userSlice';
 import { toast } from 'sonner';
 import { useAuthRedirect } from '@/hooks/useAuthRedirect';
+import Footer from '@/components/footer';
 
 export default function Login() {
   const router = useRouter();
@@ -156,6 +157,7 @@ export default function Login() {
           </form>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

@@ -16,6 +16,7 @@ import RefreshButton from './components/refresh_btn';
 import { useSelector } from 'react-redux';
 import NotFound from '@/app/not-found';
 import SearchBar from '@/components/search_bar';
+import Footer from '@/components/footer';
 
 export default function Inventory() {
   // const { user, logout } = useAuthUser();
@@ -640,6 +641,7 @@ export default function Inventory() {
           fetchNewData={fetchAndStoreData}
         />
       </div>
+      <Footer />
     </div>
   );
 }

@@ -11,6 +11,7 @@ import NotFound from '@/app/not-found';
 import usePreferences from '@/hooks/usePreferences';
 import { IoLockClosed, IoLockOpen } from 'react-icons/io5';
 import { useSelector } from 'react-redux';
+import Footer from '@/components/footer';
 
 /*
   Super Admin Panel (Users Management)
@@ -287,7 +288,6 @@ export default function SuperAdminPage() {
   return (
     <div className="flex flex-col items-center w-full pb-20">
       <Header />
-
       <div className="w-full">
         {/* Sticky toolbar */}
         <div className="flex flex-col md:flex-row md:justify-between items-center shadow px-3 md:px-6 py-4 gap-3 sticky top-3 md:top-[68px] bg-white z-40">
@@ -392,14 +392,14 @@ export default function SuperAdminPage() {
           onChange={fetchData}
         />
       </div>
-
       {/* Add Admin Popup */}
       {showAddPopup && (
         <AddAdminPopup
           onClose={() => setShowAddPopup(false)}
           onSuccess={fetchData}
         />
-      )}
+      )}{' '}
+      <Footer />
     </div>
   );
 }
