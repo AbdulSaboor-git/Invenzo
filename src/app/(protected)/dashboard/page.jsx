@@ -63,7 +63,7 @@ export default function DashboardPage() {
             title="Total Sales"
             value={
               metrics
-                ? `Rs ${Number(metrics.totalSalesAmount).toFixed(2)}`
+                ? `Rs ${Number(metrics.totalSalesAmount).toFixed(0)}`
                 : '—'
             }
             subtitle="Sum of sale totals"
@@ -76,7 +76,7 @@ export default function DashboardPage() {
           <StatCard
             title="Avg Sale Value"
             value={
-              metrics ? `Rs ${Number(metrics.avgSaleValue).toFixed(2)}` : '—'
+              metrics ? `Rs ${Number(metrics.avgSaleValue).toFixed(0)}` : '—'
             }
             subtitle="Average per sale"
           />
@@ -123,12 +123,7 @@ export default function DashboardPage() {
               <div className="grid grid-cols-2 gap-2">
                 <div className="text-sm text-gray-600">Total Discounts</div>
                 <div className="font-medium">
-                  Rs{' '}
-                  {metrics ? Number(metrics.totalDiscounts).toFixed(2) : '0.00'}
-                </div>
-                <div className="text-sm text-gray-600">Total Tax</div>
-                <div className="font-medium">
-                  Rs {metrics ? Number(metrics.totalTax).toFixed(2) : '0.00'}
+                  Rs {metrics ? Number(metrics.totalDiscounts).toFixed(0) : '0'}
                 </div>
                 <div className="text-sm text-gray-600">Total Inventories</div>
                 <div className="font-medium">

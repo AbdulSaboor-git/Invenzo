@@ -66,7 +66,7 @@ export default async function handler(req, res) {
     // 4) Top selling products (by quantity + revenue)
     const topProductsRows = isSuper
       ? await prisma.$queryRaw`
-          SELECT p.id, p.name, p.unit, COALESCE(SUM(si.quantity),0) as quantity, COALESCE(SUM(si.price * si.quantity),0) as revenue
+          SELECT p.id, p.name, p.unit, COALESCE(SUM(si.quantity),0) as quantity, COALESCE(SUM(si.price),0) as revenue
           FROM "SaleItem" si
           JOIN "Sale" s ON s.id = si."saleId" AND s."deactivated" = false
           JOIN "Product" p ON p.id = si."productId"
@@ -75,7 +75,7 @@ export default async function handler(req, res) {
           LIMIT 8
         `
       : await prisma.$queryRaw`
-          SELECT p.id, p.name, p.unit, COALESCE(SUM(si.quantity),0) as quantity, COALESCE(SUM(si.price * si.quantity),0) as revenue
+          SELECT p.id, p.name, p.unit, COALESCE(SUM(si.quantity),0) as quantity, COALESCE(SUM(si.price),0) as revenue
           FROM "SaleItem" si
           JOIN "Sale" s ON s.id = si."saleId" AND s."deactivated" = false AND s."inventoryId" = ${inventoryId}
           JOIN "Product" p ON p.id = si."productId"
@@ -147,7 +147,7 @@ export default async function handler(req, res) {
     // 7) Category-wise sales
     const categoryRows = isSuper
       ? await prisma.$queryRaw`
-          SELECT cat.id as category_id, cat.name as category_name, COALESCE(sum(si.quantity * si.price),0) as total
+          SELECT cat.id as category_id, cat.name as category_name, COALESCE(sum(si.price),0) as total
           FROM "SaleItem" si
           JOIN "Sale" s ON s.id = si."saleId" AND s."deactivated" = false
           JOIN "Product" p ON p.id = si."productId"
@@ -157,7 +157,7 @@ export default async function handler(req, res) {
           LIMIT 10
         `
       : await prisma.$queryRaw`
-          SELECT cat.id as category_id, cat.name as category_name, COALESCE(sum(si.quantity * si.price),0) as total
+          SELECT cat.id as category_id, cat.name as category_name, COALESCE(sum(si.price),0) as total
           FROM "SaleItem" si
           JOIN "Sale" s ON s.id = si."saleId" AND s."deactivated" = false AND s."inventoryId" = ${inventoryId}
           JOIN "Product" p ON p.id = si."productId"

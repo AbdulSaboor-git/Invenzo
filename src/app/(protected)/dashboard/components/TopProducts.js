@@ -14,10 +14,10 @@ export default function TopProducts({ products }) {
     else return prod.quantity;
   };
 
-  const getRevenue = (prod) => {
-    if (prod.unit === 'kg' || prod.uint === 'liter') return prod.revenue / 1000;
-    else return prod.revenue;
-  };
+  // const getRevenue = (prod) => {
+  //   if (prod.unit === 'kg' || prod.uint === 'liter') return prod.revenue / 1000;
+  //   else return prod.revenue;
+  // };
 
   if (!products || !products.length) return <div>No data</div>;
   return (
@@ -33,7 +33,7 @@ export default function TopProducts({ products }) {
             </div>
           </div>
           <div className="text-sm font-semibold">
-            Rs {Number(getRevenue(p) || 0).toFixed(2)}
+            Rs {Number(p.revenue || 0).toFixed(0)}
           </div>
         </li>
       ))}

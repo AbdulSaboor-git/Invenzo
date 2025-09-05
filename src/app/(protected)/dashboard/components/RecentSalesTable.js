@@ -22,7 +22,7 @@ export default function RecentSalesTable({ sales }) {
               <td>{s.inventoryName ?? s.inventoryId}</td>
               <td>{s.cashierName ?? s.cashierId}</td>
               <td className="text-right font-semibold">
-                Rs {Number(s.totalAmount).toFixed(2)}
+                Rs {Number(s.totalAmount).toFixed(0)}
               </td>
             </tr>
           ))}
