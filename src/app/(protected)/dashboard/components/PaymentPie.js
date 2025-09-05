@@ -32,15 +32,15 @@ export default function PaymentPie({ data }) {
   if (!data || !data.length)
     return <div className="h-48 flex items-center justify-center">No data</div>;
   return (
-    <div style={{ width: '100%', height: 240 }} className="w-full md:w-auto">
+    <div style={{ width: '100%', height: 240 }}>
       <ResponsiveContainer>
         <PieChart>
           <Pie
             data={data}
             dataKey="value"
             nameKey="method"
-            innerRadius={40}
-            outerRadius={80}
+            innerRadius={30}
+            outerRadius={60}
             label
           >
             {data.map((entry, index) => (

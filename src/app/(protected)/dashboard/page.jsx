@@ -9,11 +9,12 @@ import CashierList from './components/CashierList';
 import RecentSalesTable from './components/RecentSalesTable';
 import CategorySales from './components/CategorySales';
 import Header from '@/components/header';
+import Loading from '@/app/loading';
 
 export default function DashboardPage() {
   const { user } = useSelector((state) => state.user);
   const [metrics, setMetrics] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -48,25 +49,35 @@ export default function DashboardPage() {
   if (!user)
     return <div className="p-6">Please login to see the dashboard.</div>;
 
-  return (
+  return loading && !metrics ? (
+    <Loading />
+  ) : (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       <Header />
+      <div className="flex flex-col md:flex-row md:justify-between items-center shadow px-3 md:px-6 py-4 gap-3 sticky top-3 md:top-[68px] bg-white z-40">
+        <div className="w-full flex justify-center md:justify-start">
+          <h2 className="text-lg flex items-center gap-1 line-clamp-1 md:text-xl font-bold text-gray-800 text-center md:text-left">
+            Dashboard
+            {user?.role !== 'superadmin' && (
+              <span className="hidden md:block font-normal text-gray-700">
+                {' - ' + user?.invName || ''}
+              </span>
+            )}
+          </h2>
+        </div>
+      </div>
+
       <div className="p-4 md:p-8">
-        <header className="mb-6 flex items-center justify-between">
-          <h1 className="text-2xl md:text-3xl font-extrabold">POS Dashboard</h1>
-        </header>
-
         {error && <div className="mb-4 text-red-600">{error}</div>}
-
         <section className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <StatCard
-            title="Total Sales"
+            title="Total Revenue"
             value={
               metrics
                 ? `Rs ${Number(metrics.totalSalesAmount).toFixed(0)}`
                 : '—'
             }
-            subtitle="Sum of sale totals"
+            subtitle="Sum of all sale revenues "
           />
           <StatCard
             title="Total Transactions"
@@ -82,13 +93,13 @@ export default function DashboardPage() {
           />
         </section>
 
-        <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <section className="grid grid-cols-1 lg:grid-cols-3 md:gap-6">
           <div className="col-span-2 bg-white/60 p-4 rounded-2xl shadow-sm">
             <h2 className="font-semibold mb-3">Sales Trend (daily)</h2>
             <SalesTrendChart data={metrics?.salesTrend} />
           </div>
 
-          <div className="bg-white/60 p-4 rounded-2xl shadow-sm">
+          <div className="bg-white/60 p-4 rounded-2xl shadow-sm w-full md:w-auto">
             <h2 className="font-semibold mb-3">Payment Method Breakdown</h2>
             <PaymentPie data={metrics?.paymentBreakdown} />
           </div>
