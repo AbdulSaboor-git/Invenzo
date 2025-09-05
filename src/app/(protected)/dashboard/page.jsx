@@ -94,7 +94,7 @@ export default function DashboardPage() {
         </section>
 
         <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="col-span-2 bg-white/60 p-4 rounded-2xl shadow-sm">
+          <div className="md:col-span-2 bg-white/60 p-4 rounded-2xl shadow-sm">
             <h2 className="font-semibold mb-3">Sales Trend (daily)</h2>
             <SalesTrendChart data={metrics?.salesTrend} />
           </div>
@@ -105,10 +105,19 @@ export default function DashboardPage() {
           </div>
         </section>
 
-        <section className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <section className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="bg-white/60 p-4 rounded-2xl shadow-sm">
-            <h3 className="font-semibold mb-3">Top Selling Products</h3>
-            <TopProducts products={metrics?.topProducts} />
+            <h3 className="font-semibold mb-3">
+              Top Selling Products by Weight
+            </h3>
+            <TopProducts products={metrics?.topProductsByWeight} />
+          </div>
+
+          <div className="bg-white/60 p-4 rounded-2xl shadow-sm">
+            <h3 className="font-semibold mb-3">
+              Top Selling Products by Number of Pieces
+            </h3>
+            <TopProducts products={metrics?.topProductsByNumber} />
           </div>
 
           <div className="bg-white/60 p-4 rounded-2xl shadow-sm">
@@ -128,7 +137,7 @@ export default function DashboardPage() {
             <CategorySales categories={metrics?.categorySales} />
           </div>
 
-          {user.role === 'superadmin' && (
+          {/* {user.role === 'superadmin' && (
             <div className="bg-white/60 p-4 rounded-2xl shadow-sm">
               <h3 className="font-semibold mb-3">Misc Stats</h3>
               <div className="grid grid-cols-2 gap-2">
@@ -144,7 +153,7 @@ export default function DashboardPage() {
                 <div className="font-medium">{metrics?.userCount ?? '-'}</div>
               </div>
             </div>
-          )}
+          )} */}
         </section>
       </div>
     </div>

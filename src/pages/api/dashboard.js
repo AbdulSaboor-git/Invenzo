@@ -64,27 +64,67 @@ export default async function handler(req, res) {
     });
 
     // 4) Top selling products (by quantity + revenue)
-    const topProductsRows = isSuper
+    const topProductsWeightRows = isSuper
       ? await prisma.$queryRaw`
-          SELECT p.id, p.name, p.unit, COALESCE(SUM(si.quantity),0) as quantity, COALESCE(SUM(si.price),0) as revenue
-          FROM "SaleItem" si
-          JOIN "Sale" s ON s.id = si."saleId" AND s."deactivated" = false
-          JOIN "Product" p ON p.id = si."productId"
-          GROUP BY p.id, p.name
-          ORDER BY quantity DESC
-          LIMIT 8
-        `
+SELECT p.id, p.name, p.unit,
+COALESCE(SUM(si.quantity),0) as quantity,
+COALESCE(SUM(si.price),0) as revenue
+FROM "SaleItem" si
+JOIN "Sale" s ON s.id = si."saleId" AND s."deactivated" = false
+JOIN "Product" p ON p.id = si."productId"
+WHERE p.unit IN ('kg','g','liter','ml')
+GROUP BY p.id, p.name, p.unit
+ORDER BY quantity DESC
+LIMIT 8
+`
       : await prisma.$queryRaw`
-          SELECT p.id, p.name, p.unit, COALESCE(SUM(si.quantity),0) as quantity, COALESCE(SUM(si.price),0) as revenue
-          FROM "SaleItem" si
-          JOIN "Sale" s ON s.id = si."saleId" AND s."deactivated" = false AND s."inventoryId" = ${inventoryId}
-          JOIN "Product" p ON p.id = si."productId"
-          GROUP BY p.id, p.name
-          ORDER BY quantity DESC
-          LIMIT 8
-        `;
+SELECT p.id, p.name, p.unit,
+COALESCE(SUM(si.quantity),0) as quantity,
+COALESCE(SUM(si.price),0) as revenue
+FROM "SaleItem" si
+JOIN "Sale" s ON s.id = si."saleId" AND s."deactivated" = false AND s."inventoryId" = ${inventoryId}
+JOIN "Product" p ON p.id = si."productId"
+WHERE p.unit IN ('kg','g','liter','ml')
+GROUP BY p.id, p.name, p.unit
+ORDER BY quantity DESC
+LIMIT 8
+`;
 
-    const topProducts = (topProductsRows || []).map((r) => ({
+    const topProductsNumberRows = isSuper
+      ? await prisma.$queryRaw`
+SELECT p.id, p.name, p.unit,
+COALESCE(SUM(si.quantity),0) as quantity,
+COALESCE(SUM(si.price),0) as revenue
+FROM "SaleItem" si
+JOIN "Sale" s ON s.id = si."saleId" AND s."deactivated" = false
+JOIN "Product" p ON p.id = si."productId"
+WHERE p.unit NOT IN ('kg','g','liter','ml') OR p.unit IS NULL
+GROUP BY p.id, p.name, p.unit
+ORDER BY quantity DESC
+LIMIT 8
+`
+      : await prisma.$queryRaw`
+SELECT p.id, p.name, p.unit,
+COALESCE(SUM(si.quantity),0) as quantity,
+COALESCE(SUM(si.price),0) as revenue
+FROM "SaleItem" si
+JOIN "Sale" s ON s.id = si."saleId" AND s."deactivated" = false AND s."inventoryId" = ${inventoryId}
+JOIN "Product" p ON p.id = si."productId"
+WHERE p.unit NOT IN ('kg','g','liter','ml') OR p.unit IS NULL
+GROUP BY p.id, p.name, p.unit
+ORDER BY quantity DESC
+LIMIT 8
+`;
+
+    const topProductsByWeight = (topProductsWeightRows || []).map((r) => ({
+      id: r.id,
+      name: r.name,
+      unit: r.unit,
+      quantity: Number(r.quantity),
+      revenue: Number(r.revenue),
+    }));
+
+    const topProductsByNumber = (topProductsNumberRows || []).map((r) => ({
       id: r.id,
       name: r.name,
       unit: r.unit,
@@ -239,7 +279,8 @@ export default async function handler(req, res) {
           : null,
       })),
       salesTrend,
-      topProducts,
+      topProductsByWeight,
+      topProductsByNumber,
       paymentBreakdown,
       cashierPerformance,
       categorySales,
