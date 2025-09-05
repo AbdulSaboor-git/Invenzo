@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { MdLogout } from 'react-icons/md';
+import { MdEdit, MdLogout } from 'react-icons/md';
 import { toast } from 'sonner';
 import EditProfilePopup from './edit_profile';
 import ChangePasswordPopup from './change_password';
 import useAuthUser from '@/hooks/authUser';
+import { FiEdit2, FiEdit3 } from 'react-icons/fi';
+import { FaEdit } from 'react-icons/fa';
 
 export default function UserProfile({ CloseForm, user, showProfile }) {
   const [showEditPopup, setShowEditPopup] = useState(false);
@@ -75,7 +77,17 @@ export default function UserProfile({ CloseForm, user, showProfile }) {
               <p className="text-xs uppercase text-gray-500 tracking-wider">
                 Name
               </p>
-              <p className="text-lg font-medium text-gray-800">{username}</p>
+              <div className="flex items-center gap-3 place-self-center">
+                <p className="text-lg font-medium text-gray-800">{username}</p>
+                {user.role != 'cashier' && (
+                  <button
+                    onClick={() => setShowEditPopup(true)}
+                    className="text-green-600 text-lg mt-0.5"
+                  >
+                    <FaEdit />
+                  </button>
+                )}
+              </div>
             </div>
             <div>
               <p className="text-xs uppercase text-gray-500 tracking-wider">
@@ -102,16 +114,8 @@ export default function UserProfile({ CloseForm, user, showProfile }) {
           <div className="flex flex-col md:flex-row gap-3 mt-8">
             {user.role != 'cashier' && (
               <button
-                onClick={() => setShowEditPopup(true)}
-                className="flex-1 px-4 py-3 bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-medium transition"
-              >
-                Edit Profile
-              </button>
-            )}
-            {user.role != 'cashier' && (
-              <button
                 onClick={() => setShowPasswordPopup(true)}
-                className="flex-1 px-4 py-3 bg-indigo-500 hover:bg-indigo-600 text-white rounded-lg font-medium transition"
+                className="flex-1 px-4 py-3 border border-indigo-500 hover:bg-indigo-500 text-indigo-500 hover:text-white rounded-lg font-medium transition"
               >
                 Change Password
               </button>

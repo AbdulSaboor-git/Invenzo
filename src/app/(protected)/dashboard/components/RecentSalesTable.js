@@ -1,9 +1,24 @@
 // File: /components/dashboard/RecentSalesTable.jsx
-import React from 'react';
+import ViewSaleInvoice from '@/components/viewSaleInvoice';
+import React, { useState } from 'react';
 
 export default function RecentSalesTable({ sales, user }) {
+  const [invoiceId, setInvoiceId] = useState(null);
+
+  function formatDateTime(dt) {
+    const d = new Date(dt);
+    return d.toLocaleString(undefined, {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  }
+
   if (!sales || !sales.length)
     return <div className="py-4">No recent sales</div>;
+
   return (
     <div className="overflow-auto">
       <table className="w-full text-left text-sm">
@@ -17,7 +32,11 @@ export default function RecentSalesTable({ sales, user }) {
         </thead>
         <tbody>
           {sales.map((s) => (
-            <tr key={s.id} className="border-t">
+            <tr
+              key={s.id}
+              className="border-t cursor-pointer hover:bg-gray-100 transition"
+              onClick={() => setInvoiceId(s.id)}
+            >
               <td className="py-2 pr-2  max-w-[70px] md:max-w-auto">
                 {new Date(s.createdAt).toLocaleString()}
               </td>
@@ -32,6 +51,14 @@ export default function RecentSalesTable({ sales, user }) {
           ))}
         </tbody>
       </table>
+      {invoiceId && (
+        <ViewSaleInvoice
+          saleId={invoiceId}
+          formatDateTime={formatDateTime}
+          onClose={() => setInvoiceId(null)}
+          user={user}
+        />
+      )}
     </div>
   );
 }

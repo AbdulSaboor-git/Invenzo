@@ -162,8 +162,9 @@ export default function ViewSaleInvoice({
                             return Number(li.quantity);
                           };
 
-                          const salePrice =
-                            li.price / getQuantityinBaseUnit(li);
+                          const salePrice = (
+                            li.price / getQuantityinBaseUnit(li)
+                          ).toFixed(0);
 
                           const profit = (
                             (salePrice - li.Product.purchasePrice) *
@@ -239,7 +240,9 @@ export default function ViewSaleInvoice({
                           return Number(li.quantity);
                         };
 
-                        const salePrice = li.price / getQuantityinBaseUnit(li);
+                        const salePrice = (
+                          li.price / getQuantityinBaseUnit(li)
+                        ).toFixed(0);
 
                         const profit = (
                           (salePrice - li.Product.purchasePrice) *
