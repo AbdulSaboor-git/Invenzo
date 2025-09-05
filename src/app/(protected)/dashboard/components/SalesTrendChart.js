@@ -37,7 +37,7 @@ export default function SalesTrendChart({ data }) {
             dataKey="total"
             stroke="#8884d8"
             strokeWidth={2}
-            dot={false}
+            dot={true}
           />
         </LineChart>
       </ResponsiveContainer>

@@ -50,7 +50,7 @@ export default async function handler(req, res) {
           FROM "Sale"
           WHERE "deactivated" = false
           AND "inventoryId" = ${inventoryId}
-          AND "createdAt" >= NOW() - INTERVAL '30 days'
+          AND "createdAt" >= NOW() - INTERVAL '7 days'
           GROUP BY day
           ORDER BY day ASC
         `;
