@@ -235,7 +235,7 @@ export default function AddProductPage() {
 
   const filteredSuggestions = products
     .filter((p) => p.name.toLowerCase().includes(name.toLowerCase()))
-    .slice(0, 7);
+    .slice(0, 12);
 
   const handleSelect = (selectedProd) => {
     setName(selectedProd.name);
