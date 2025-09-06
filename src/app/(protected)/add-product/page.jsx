@@ -172,6 +172,7 @@ export default function AddProductPage() {
 
       toast.success('Product added successfully');
       setLoading(false);
+      fetchCategories();
 
       // Reset fields
       setName('');
