@@ -78,11 +78,13 @@ export default function Inventory() {
       setRefreshFailed(false);
       setLoadingData(true);
       setRefreshing(true);
-      const response = await fetch(`/api/inventory/${inventory?.id}/category`);
+      const response = await fetch(
+        `/api/inventory/${inventory?.id}?userId=${user?.id}`
+      );
       if (!response.ok) throw new Error('Failed to fetch from server');
 
       const data = await response.json();
-      const categories = data;
+      const categories = data.categories;
       const timestamp = new Date().toISOString();
       setLastUpdated(timestamp);
       if (typeof window !== 'undefined') {
