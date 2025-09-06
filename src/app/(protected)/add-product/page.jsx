@@ -328,7 +328,7 @@ export default function AddProductPage() {
                 {filteredSuggestions.map((prod, idx) => (
                   <li
                     key={prod.id}
-                    onClick={() => handleSelect(prod.name)}
+                    onClick={() => handleSelect(prod)}
                     className={`px-4 py-2 cursor-pointer ${
                       idx === highlightedIndex
                         ? 'bg-blue-500 text-white'
