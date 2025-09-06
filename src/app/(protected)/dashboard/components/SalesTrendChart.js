@@ -25,7 +25,6 @@ const ResponsiveContainer = dynamic(
 export default function SalesTrendChart({ data }) {
   const formatted = data.map((d) => ({
     ...d,
-    total: 'Rs. ' + d.total,
     day: new Date(d.day).toLocaleDateString(undefined, {
       day: '2-digit',
       month: '2-digit',
@@ -41,7 +40,13 @@ export default function SalesTrendChart({ data }) {
         <LineChart data={formatted}>
           <XAxis dataKey="day" />
           <YAxis />
-          <Tooltip />
+          <Tooltip
+            formatter={(val, name) => [`Rs. ${val}`, name]}
+            contentStyle={{
+              borderRadius: '14px',
+              boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
+            }}
+          />
           <Line
             type="monotone"
             dataKey="total"
