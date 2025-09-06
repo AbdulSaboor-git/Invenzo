@@ -8,7 +8,7 @@ export default function CategorySales({ categories }) {
       {categories.map((c) => (
         <li key={c.categoryId} className="flex justify-between py-1">
           <div>{c.categoryName}</div>
-          <div>Rs {Number(c.total || 0).toFixed(0)}</div>
+          <div>Rs. {Number(c.total || 0).toFixed(0)}</div>
         </li>
       ))}
     </ul>

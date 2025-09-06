@@ -14,7 +14,7 @@ export default function CashierList({ cashiers }) {
             <div className="text-xs text-gray-500">Sales: {c.count}</div>
           </div>
           <div className="text-sm font-semibold">
-            Rs {Number(c.total || 0).toFixed(0)}
+            Rs. {Number(c.total || 0).toFixed(0)}
           </div>
         </li>
       ))}

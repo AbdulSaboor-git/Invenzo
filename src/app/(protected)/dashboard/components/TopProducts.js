@@ -33,7 +33,7 @@ export default function TopProducts({ products }) {
             </div>
           </div>
           <div className="text-sm font-semibold">
-            Rs {Number(p.revenue || 0).toFixed(0)}
+            Rs. {Number(p.revenue || 0).toFixed(0)}
           </div>
         </li>
       ))}

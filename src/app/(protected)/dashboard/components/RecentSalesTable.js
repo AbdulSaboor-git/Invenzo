@@ -1,10 +1,11 @@
 // File: /components/dashboard/RecentSalesTable.jsx
 import ViewSaleInvoice from '@/components/viewSaleInvoice';
+import { useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 
 export default function RecentSalesTable({ sales, user }) {
   const [invoiceId, setInvoiceId] = useState(null);
-
+  const router = useRouter();
   function formatDateTime(dt) {
     const d = new Date(dt);
     return d.toLocaleString(undefined, {
@@ -20,7 +21,7 @@ export default function RecentSalesTable({ sales, user }) {
     return <div className="py-4">No recent sales</div>;
 
   return (
-    <div className="overflow-auto">
+    <div className="overflow-auto space-y-4">
       <table className="w-full text-left text-sm">
         <thead>
           <tr className="text-gray-600">
@@ -45,7 +46,7 @@ export default function RecentSalesTable({ sales, user }) {
               )}
               <td className="px-2">{s.cashierName ?? s.cashierId}</td>
               <td className="text-right font-semibold pl-2">
-                Rs {Number(s.totalAmount).toFixed(0)}
+                Rs. {Number(s.totalAmount).toFixed(0)}
               </td>
             </tr>
           ))}
@@ -59,6 +60,16 @@ export default function RecentSalesTable({ sales, user }) {
           user={user}
         />
       )}
+      <div className="w-full flex justify-center">
+        <button
+          onClick={() => {
+            router.push('sales');
+          }}
+          className="bg-green-500 hover:bg-green-600 transition text-white px-6 py-2 place-self-center rounded-lg"
+        >
+          See All
+        </button>
+      </div>
     </div>
   );
 }

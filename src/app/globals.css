@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-:root[color-scheme="green"] {
+:root[color-scheme='green'] {
   --background-prim: #c8f6f6;
   --background-sec: #00a5a5;
   --background-sec-transparent: #019f9f6a;
@@ -34,7 +34,7 @@
   --prod-card-details-border: #209d958b;
 }
 
-[data-theme="dark"][color-scheme="green"] {
+[data-theme='dark'][color-scheme='green'] {
   --background-prim: #005d5d;
   --background-sec: #001c1c;
   --background-sec-transparent: #001b1bc2;
@@ -66,7 +66,7 @@
   --prod-card-details-border: #d1d5d58d;
 }
 
-:root[color-scheme="blue"] {
+:root[color-scheme='blue'] {
   --background-prim: #e0f7fc; /* Very light blue */
   --background-sec: #21aee1; /* Vibrant blue */
   --background-sec-transparent: #00a3e06a; /* Vibrant blue with transparency */
@@ -98,7 +98,7 @@
   --prod-card-details-border: #00a3e08b; /* Light blue border with transparency */
 }
 
-[data-theme="dark"][color-scheme="blue"] {
+[data-theme='dark'][color-scheme='blue'] {
   --background-prim: #0a3a53;
   --background-sec: #001624;
   --background-sec-transparent: #001624c2;
@@ -130,7 +130,7 @@
   --prod-card-details-border: #8abfd699;
 }
 
-:root[color-scheme="purple"] {
+:root[color-scheme='purple'] {
   --background-prim: #f4f0f7;
   --background-sec: #cb9bde;
   --background-sec-transparent: #be9ee66a;
@@ -162,7 +162,7 @@
   --prod-card-details-border: #967bb68b;
 }
 
-[data-theme="dark"][color-scheme="purple"] {
+[data-theme='dark'][color-scheme='purple'] {
   --background-prim: #3d2842;
   --background-sec: #180b20;
   --background-sec-transparent: #180b20a8;
@@ -194,7 +194,7 @@
   --prod-card-details-border: #a47aa0b1;
 }
 
-:root[color-scheme="orange"] {
+:root[color-scheme='orange'] {
   --background-prim: #ffeddc;
   --background-sec: #edad4e;
   --background-sec-transparent: #edad4e6a;
@@ -226,7 +226,7 @@
   --prod-card-details-border: #ff9e3d8a;
 }
 
-[data-theme="dark"][color-scheme="orange"] {
+[data-theme='dark'][color-scheme='orange'] {
   --background-prim: #652900; /* Deep brownish orange */
   --background-sec: #201301; /* Very dark brownish orange */
   --background-sec-transparent: #201301c2; /* Transparent very dark brownish orange */
@@ -403,10 +403,14 @@ input {
 }
 
 .animate-slide-expand {
-  animation: slideExpand 1s forwards, pulseBoxShadow 2s infinite;
+  animation:
+    slideExpand 1s forwards,
+    pulseBoxShadow 2s infinite;
 }
 .animate-slide-expand-error {
-  animation: slideExpand 1s forwards, pulseBoxShadowError 2s infinite;
+  animation:
+    slideExpand 1s forwards,
+    pulseBoxShadowError 2s infinite;
 }
 .animate-slide-contract {
   animation: slideContract 1s forwards;
@@ -542,4 +546,11 @@ input {
 }
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
+}
+
+.recharts-wrapper:focus,
+.recharts-surface:focus,
+.recharts-line:focus,
+.recharts-responsive-container:focus {
+  outline: none !important;
 }

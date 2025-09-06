@@ -23,12 +23,22 @@ const ResponsiveContainer = dynamic(
 );
 
 export default function SalesTrendChart({ data }) {
+  const formatted = data.map((d) => ({
+    ...d,
+    total: 'Rs. ' + d.total,
+    day: new Date(d.day).toLocaleDateString(undefined, {
+      day: '2-digit',
+      month: '2-digit',
+      year: '2-digit',
+    }),
+  }));
+
   if (!data || !data.length)
     return <div className="h-72 flex items-center justify-center">No data</div>;
   return (
     <div style={{ width: '100%', height: 300 }}>
       <ResponsiveContainer>
-        <LineChart data={data}>
+        <LineChart data={formatted}>
           <XAxis dataKey="day" />
           <YAxis />
           <Tooltip />

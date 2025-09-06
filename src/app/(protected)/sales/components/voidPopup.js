@@ -42,13 +42,17 @@ export default function VoidSalePopup({ sale, onClose, onSuccess }) {
     }
   };
 
+  function NormalizeId(id) {
+    return String(id).padStart(8, '0');
+  }
+
   return (
     <div className="fixed inset-0 bg-black/20 backdrop-blur-[2px] flex items-center justify-center px-4 sm:px-6 z-50">
       <div className="bg-white rounded-lg p-6 shadow-xl max-w-sm w-full">
         <h3 className="text-lg font-semibold text-red-700 mb-4">Void Sale</h3>
         <p className="text-gray-700 mb-6">
-          Are you sure you want to void sale{' '}
-          <span className="font-semibold">#{sale?.id}</span>?
+          Are you sure you want to void invoice{' '}
+          <span className="font-semibold">#{NormalizeId(sale?.id)}</span>?
         </p>
         <div className="flex justify-end gap-4">
           <button
