@@ -216,7 +216,7 @@ export default function AddProductPage() {
   }
 
   // Handlers
-  const handleNameChange = (e) => setName(e.target.value);
+  const handleNameChange = (value) => setName(value);
   const handleDescriptionChange = (e) => setDescription(e.target.value);
   const handleTagsChange = (e) => setTags(e.target.value.slice(0, 200));
   const handleCategoryChange = (e) => setCategoryId(e.target.value);
@@ -315,7 +315,10 @@ export default function AddProductPage() {
             <input
               type="text"
               value={name}
-              onChange={handleNameChange}
+              onChange={(e) => {
+                setShowSuggestions(true);
+                handleNameChange(e.target.value);
+              }}
               onFocus={() => setShowSuggestions(true)}
               onKeyDown={handleKeyDown}
               required
