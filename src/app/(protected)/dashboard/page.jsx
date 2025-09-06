@@ -112,6 +112,15 @@ export default function DashboardPage() {
             }
             subtitle="Sum of all sale revenues"
           />
+          {user.role === 'admin' && (
+            <StatCard
+              title="Total Profit"
+              value={
+                metrics ? `Rs. ${Number(metrics.totalProfit).toFixed(0)}` : '—'
+              }
+              subtitle="Sum of all sale profits"
+            />
+          )}
           <StatCard
             title="Total Transactions"
             value={metrics ? metrics.totalSalesCount : '—'}

@@ -45,9 +45,9 @@ export default function PaymentPie({ data }) {
             data={data}
             dataKey="value"
             nameKey="method"
-            innerRadius={30}
-            outerRadius={70}
-            paddingAngle={3}
+            innerRadius={20}
+            outerRadius={60}
+            paddingAngle={2}
             label={({ value }) => `Rs. ${value}`}
           >
             {data.map((entry, index) => (

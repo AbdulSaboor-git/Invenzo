@@ -1,7 +1,7 @@
 // File: /components/dashboard/RecentSalesTable.jsx
 import ViewSaleInvoice from '@/components/viewSaleInvoice';
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export default function RecentSalesTable({ sales, user }) {
   const [invoiceId, setInvoiceId] = useState(null);
@@ -19,6 +19,18 @@ export default function RecentSalesTable({ sales, user }) {
 
   if (!sales || !sales.length)
     return <div className="py-4">No recent sales</div>;
+
+  useEffect(() => {
+    if (invoiceId) {
+      document.body.classList.add('overflow-hidden');
+    } else {
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    return () => {
+      document.body.classList.remove('overflow-hidden');
+    };
+  }, [invoiceId]);
 
   return (
     <div className="overflow-auto space-y-4">

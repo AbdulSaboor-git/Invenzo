@@ -29,6 +29,41 @@ export default async function handler(req, res) {
       _count: { id: true },
     });
 
+    let totalProfit = null;
+
+    if (!isSuper) {
+      const salesWithItems = await prisma.sale.findMany({
+        where: {
+          inventoryId,
+          deactivated: false,
+          createdAt: { gte: from, lte: to },
+        },
+        include: {
+          SaleItem: {
+            include: { Product: true },
+          },
+        },
+      });
+
+      totalProfit = 0;
+
+      for (const sale of salesWithItems) {
+        const cost = sale.SaleItem.reduce((acc, item) => {
+          let qty = item.quantity;
+
+          // normalize for kg/litre → grams/ml
+          if (item.Product?.unit === 'kg' || item.Product?.unit === 'litre') {
+            qty = qty / 1000;
+          }
+
+          const itemCost = (item.Product?.purchasePrice || 0) * qty;
+          return acc + itemCost;
+        }, 0);
+
+        totalProfit += sale.totalAmount - cost;
+      }
+    }
+
     const totalSalesAmount = agg._sum.totalAmount ?? 0;
     const totalSalesCount = agg._count.id ?? 0;
     const avgSaleValue = agg._avg.totalAmount ?? 0;
@@ -327,6 +362,7 @@ export default async function handler(req, res) {
         : {
             // for admin only
             totalDiscounts,
+            totalProfit,
           }),
     });
   } catch (err) {

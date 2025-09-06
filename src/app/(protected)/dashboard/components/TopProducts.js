@@ -9,9 +9,21 @@ export default function TopProducts({ products }) {
   // };
 
   const getQuantity = (prod) => {
-    if (prod.unit === 'kg' || prod.uint === 'liter')
+    if ((prod.unit === 'kg' || prod.uint === 'liter') && prod.quantity >= 1000)
       return prod.quantity / 1000;
     else return prod.quantity;
+  };
+
+  const getUnit = (prod) => {
+    if (prod.quantity < 1000) {
+      if (prod.unit === 'kg') {
+        return 'g';
+      } else if (prod.unit == 'liter') {
+        return 'ml';
+      } else {
+        return prod.unit;
+      }
+    } else return prod.unit;
   };
 
   // const getRevenue = (prod) => {
@@ -21,22 +33,20 @@ export default function TopProducts({ products }) {
 
   if (!products || !products.length) return <div>No data</div>;
   return (
-    <ul className="space-y-2">
+    <div className="space-y-2">
       {products.map((p) => (
-        <li key={p.id} className="flex justify-between">
-          <div>
-            <div className="font-medium truncate" title={p.name}>
-              {p.name}
-            </div>
+        <div key={p.id} className="grid grid-cols-[3fr_1fr] gap-3">
+          <div className="flex flex-col">
+            <div className="font-medium line-clamp-2 ">{p.name}</div>
             <div className="text-xs text-gray-500">
-              Sold: {getQuantity(p)} {p.unit}
+              Sold: {getQuantity(p)} {getUnit(p)}
             </div>
           </div>
-          <div className="text-sm font-semibold">
+          <div className="text-sm font-semibold min-w-[50px] text-right">
             Rs. {Number(p.revenue || 0).toFixed(0)}
           </div>
-        </li>
+        </div>
       ))}
-    </ul>
+    </div>
   );
 }

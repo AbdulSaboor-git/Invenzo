@@ -234,10 +234,18 @@ export default function AddProductPage() {
 
   const filteredSuggestions = products
     .filter((p) => p.name.toLowerCase().includes(name.toLowerCase()))
-    .slice(0, 5); // Limit to 5 suggestions
+    .slice(0, 7);
 
-  const handleSelect = (selectedName) => {
-    setName(selectedName);
+  const handleSelect = (selectedProd) => {
+    setName(selectedProd.name);
+    setCategoryId(selectedProd.categoryId);
+    setPurchasePrice(selectedProd.purchasePrice);
+    setSalePrice(selectedProd.salePrice);
+    setGovtSalePrice(
+      selectedProd.govtSalePrice ? selectedProd.govtSalePrice : ''
+    );
+    setTags(selectedProd.tags ? selectedProd.tags : '');
+    setUnit(selectedProd.unit);
     setShowSuggestions(false);
     setHighlightedIndex(-1);
   };
@@ -258,7 +266,7 @@ export default function AddProductPage() {
     } else if (e.key === 'Enter') {
       e.preventDefault();
       if (highlightedIndex >= 0) {
-        handleSelect(filteredSuggestions[highlightedIndex].name);
+        handleSelect(filteredSuggestions[highlightedIndex]);
       }
     } else if (e.key === 'Escape') {
       setShowSuggestions(false);
