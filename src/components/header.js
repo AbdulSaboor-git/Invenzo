@@ -142,13 +142,13 @@ export default function Header({ className }) {
           .map((button, index) => (
             <button
               key={index}
-              className="flex items-center gap-1.5 px-4 py-0.5 text-gray-600 hover:text-gray-800"
+              className="flex items-center gap-1.5 hover:scale-105 px-4 py-0.5 text-gray-600 hover:text-gray-800 "
               onClick={() => {
                 handleButtonClick(button.label);
               }}
             >
-              <span>{button.icon}</span>
-              <span>{button.label}</span>
+              <span className="">{button.icon}</span>
+              <span className="">{button.label}</span>
             </button>
           ))}
       </div>
