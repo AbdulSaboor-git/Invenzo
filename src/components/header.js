@@ -111,7 +111,7 @@ export default function Header({ className }) {
 
   return (
     <div
-      className={` ${className} w-full px-4 pt-4 pb-3 md:px-6 sticky top-0 z-50 bg-white grid grid-cols-[2fr_1.3fr] gap-6`}
+      className={` ${className} w-full px-4 pt-4 pb-3 md:px-6 sticky top-0 z-50 bg-white grid grid-cols-[3fr_1fr] lg:grid-cols-[2fr_6fr_2fr] gap-6`}
     >
       <div className="flex items-center gap-4">
         <MdOutlineMenu
@@ -127,6 +127,30 @@ export default function Header({ className }) {
             className="h-full aspect-auto object-contain  max-h-10 md:max-h-12"
           />
         </div>
+      </div>
+
+      <div className="items-center place-self-center hidden lg:flex divide-x-2">
+        {buttons
+          .filter(
+            (btn) =>
+              btn.label === 'Inventory' ||
+              btn.label === 'POS' ||
+              btn.label === 'Dashboard' ||
+              btn.label === 'Add Product' ||
+              btn.label === 'Sales'
+          )
+          .map((button, index) => (
+            <button
+              key={index}
+              className="flex items-center gap-1.5 px-4 py-0.5 text-gray-600 hover:text-gray-800"
+              onClick={() => {
+                handleButtonClick(button.label);
+              }}
+            >
+              <span>{button.icon}</span>
+              <span>{button.label}</span>
+            </button>
+          ))}
       </div>
 
       <div className="flex items-center justify-end gap-3 md:gap-5 text-2xl">
