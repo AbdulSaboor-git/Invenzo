@@ -17,14 +17,18 @@ import { useSelector } from 'react-redux';
 import NotFound from '@/app/not-found';
 import SearchBar from '@/components/search_bar';
 import Footer from '@/components/footer';
-import { useSearchParams } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 
 export default function Inventory() {
   // const { user, logout } = useAuthUser();
   const { user } = useSelector((state) => state.user);
 
+  const router = useRouter();
+
   const queryParams = new URLSearchParams(window.location.search);
-  const categoryFilter = queryParams.get('category') || null;
+  const [categoryFilter, setCategoryFilter] = useState(
+    queryParams.get('category') || null
+  );
 
   const prefs = usePreferences(user?.id, user?.role);
   const [products, setProducts] = useState([]);
@@ -316,6 +320,9 @@ export default function Inventory() {
       const category =
         categories.find((cat) => cat.id === product.categoryId)?.name || '';
 
+      const normalizedCategory = category.toLowerCase().replace(/\s+/g, '_');
+      const normalizedFilter = categoryFilter?.toLowerCase() || '';
+
       const matchesSearch =
         product.name.toLowerCase().includes(searchQuery.toLowerCase().trim()) ||
         product.tags
@@ -323,11 +330,8 @@ export default function Inventory() {
           .includes(searchQuery.toLowerCase().trim()) ||
         category.toLowerCase().includes(searchQuery.toLowerCase().trim());
 
-      if (categoryFilter) {
-        return (
-          categoryFilter.toLowerCase() ===
-            category.toLowerCase().replace(/\s+/g, '_') && matchesSearch
-        );
+      if (normalizedFilter) {
+        return normalizedFilter === normalizedCategory && matchesSearch;
       }
 
       return matchesSearch;
@@ -493,11 +497,38 @@ export default function Inventory() {
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
             />
-            {lastUpdated && (
+            <select
+              value={categoryFilter || ''}
+              onChange={(e) => {
+                const value = e.target.value;
+                setCategoryFilter(value || null);
+
+                if (value) {
+                  router.push(
+                    `inventory?category=${value.toLowerCase().replace(/\s+/g, '_')}`
+                  );
+                } else {
+                  router.push('inventory'); // reset filter
+                }
+              }}
+              className="border rounded-md px-3 py-2 text-sm focus:outline-none"
+            >
+              <option value="">All Categories</option>
+              {categories.map((categ) => (
+                <option
+                  key={categ.id}
+                  value={categ.name.toLowerCase().replace(/\s+/g, '_')}
+                >
+                  {categ.name}
+                </option>
+              ))}
+            </select>
+
+            {/* {lastUpdated && (
               <span className="text-sm place-content-center hidden sm:block text-gray-500">
                 Last Updated: {new Date(lastUpdated).toLocaleString()}
               </span>
-            )}
+            )} */}
             <RefreshButton
               failedtoRefresh={refreshFailed}
               loading={loadingInventory || refreshing}
