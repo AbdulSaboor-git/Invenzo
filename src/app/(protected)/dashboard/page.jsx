@@ -15,10 +15,18 @@ import NotFound from '@/app/not-found';
 
 export default function DashboardPage() {
   const { user } = useSelector((state) => state.user);
-  const today = new Date().toDateString();
 
-  const [fromDate, setFromDate] = useState(today);
-  const [toDate, setToDate] = useState(today);
+  function formatDateForInput(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // 0-based
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`; // yyyy-mm-dd
+  }
+
+  const today = new Date();
+  const [fromDate, setFromDate] = useState(formatDateForInput(today));
+  const [toDate, setToDate] = useState(formatDateForInput(today));
+
   const [metrics, setMetrics] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
