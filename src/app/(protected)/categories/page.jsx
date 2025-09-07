@@ -14,6 +14,7 @@ import EditCategoryPopup from './components/edit_category';
 import DeleteCategoryPopup from './components/delete_category';
 import NotFound from '@/app/not-found';
 import Footer from '@/components/footer';
+import { useRouter } from 'next/navigation';
 
 export default function Inventory() {
   // const { user, logout } = useAuthUser();
@@ -26,6 +27,8 @@ export default function Inventory() {
   const [refreshing, setRefreshing] = useState(false);
   const [lastUpdated, setLastUpdated] = useState(null);
   const [refreshFailed, setRefreshFailed] = useState(false);
+
+  const router = useRouter();
 
   const [categoryToEdit, setCategoryToEdit] = useState(null);
   const [categoryToDelete, setCategoryToDelete] = useState(null);
@@ -344,8 +347,18 @@ export default function Inventory() {
                         <td className="px-3 min-w-[140px] py-2 md:px-6 md:py-4 font-medium cursor-pointer">
                           {category.name}
                         </td>
-                        <td className="px-3 py-2 md:px-6 md:py-4 font-medium cursor-pointer">
+                        <td className="px-3 py-2 md:px-6 md:py-4 font-medium cursor-pointer flex items-center justify-between gap-2">
                           {category._count?.products}
+                          <button
+                            onClick={() => {
+                              router.push(
+                                `inventory?category=${category.name.toLowerCase().replace(/\s+/g, '_')}`
+                              );
+                            }}
+                            className="border-none text-blue-900 hover:underline transition"
+                          >
+                            view
+                          </button>
                         </td>
                         <td className="px-3 py-2 min-w-[140px] md:min-w-[160px] md:px-6 md:py-4">
                           {formatDate(category.updatedAt)}

@@ -11,10 +11,11 @@ import CategorySales from './components/CategorySales';
 import Header from '@/components/header';
 import Loading from '@/app/loading';
 import Footer from '@/components/footer';
+import NotFound from '@/app/not-found';
 
 export default function DashboardPage() {
   const { user } = useSelector((state) => state.user);
-  const today = new Date().toISOString().slice(0, 10);
+  const today = new Date().toDateString();
 
   const [fromDate, setFromDate] = useState(today);
   const [toDate, setToDate] = useState(today);
@@ -56,10 +57,14 @@ export default function DashboardPage() {
   if (!user)
     return <div className="p-6">Please login to see the dashboard.</div>;
 
+  if (user?.role === 'cashier') {
+    return <NotFound />;
+  }
+
   return loading && !metrics ? (
     <Loading />
   ) : (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+    <div className="bg-gradient-to-br from-slate-50 to-slate-100">
       <Header />
 
       {/* Top bar */}

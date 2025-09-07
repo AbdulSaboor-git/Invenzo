@@ -18,7 +18,7 @@ export default function SalesTable({
   const [showVoidSalePopup, setShowVoidSalePopup] = useState(null);
 
   useEffect(() => {
-    if (showSaleInvoiceId || showVoidSalePopup) {
+    if (showVoidSalePopup) {
       document.body.classList.add('overflow-hidden');
     } else {
       document.body.classList.remove('overflow-hidden');
@@ -27,7 +27,7 @@ export default function SalesTable({
     return () => {
       document.body.classList.remove('overflow-hidden');
     };
-  }, [showSaleInvoiceId, showVoidSalePopup]);
+  }, [showVoidSalePopup]);
 
   function formatDateTime(dt) {
     const d = new Date(dt);
@@ -252,8 +252,6 @@ export default function SalesTable({
       {/* View Popup */}
       {showSaleInvoiceId != null && (
         <ViewSaleInvoice
-          formatDateTime={formatDateTime}
-          // currency={currency}
           saleId={showSaleInvoiceId}
           onClose={() => setShowSaleInvoiceId(null)}
           user={user}

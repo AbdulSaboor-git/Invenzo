@@ -1,4 +1,5 @@
 // File: /components/dashboard/RecentSalesTable.jsx
+'use client';
 import ViewSaleInvoice from '@/components/viewSaleInvoice';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
@@ -6,34 +7,12 @@ import React, { useEffect, useState } from 'react';
 export default function RecentSalesTable({ sales, user }) {
   const [invoiceId, setInvoiceId] = useState(null);
   const router = useRouter();
-  function formatDateTime(dt) {
-    const d = new Date(dt);
-    return d.toLocaleString(undefined, {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    });
-  }
 
   if (!sales || !sales.length)
     return <div className="py-4">No recent sales</div>;
 
-  useEffect(() => {
-    if (invoiceId) {
-      document.body.classList.add('overflow-hidden');
-    } else {
-      document.body.classList.remove('overflow-hidden');
-    }
-
-    return () => {
-      document.body.classList.remove('overflow-hidden');
-    };
-  }, [invoiceId]);
-
   return (
-    <div className="overflow-auto space-y-4">
+    <div className="overflow-auto flex flex-col items-center justify-center gap-4">
       <table className="w-full text-left text-sm">
         <thead>
           <tr className="text-gray-600">
@@ -64,24 +43,21 @@ export default function RecentSalesTable({ sales, user }) {
           ))}
         </tbody>
       </table>
+      <button
+        onClick={() => {
+          router.push('sales');
+        }}
+        className="bg-green-500 hover:bg-green-600 transition text-white px-6 py-2 rounded-lg"
+      >
+        See All
+      </button>
       {invoiceId && (
         <ViewSaleInvoice
           saleId={invoiceId}
-          formatDateTime={formatDateTime}
           onClose={() => setInvoiceId(null)}
           user={user}
         />
       )}
-      <div className="w-full flex justify-center">
-        <button
-          onClick={() => {
-            router.push('sales');
-          }}
-          className="bg-green-500 hover:bg-green-600 transition text-white px-6 py-2 place-self-center rounded-lg"
-        >
-          See All
-        </button>
-      </div>
     </div>
   );
 }

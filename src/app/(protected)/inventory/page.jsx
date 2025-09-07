@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { HiOutlineSwitchVertical } from 'react-icons/hi';
 
-import { MdClose, MdEdit, MdSearch } from 'react-icons/md';
+import { MdEdit } from 'react-icons/md';
 import { FiArrowUp, FiArrowDown } from 'react-icons/fi';
 import { toast } from 'sonner';
 import ScrollToTop from '@/components/scroll_to_top';
@@ -17,10 +17,15 @@ import { useSelector } from 'react-redux';
 import NotFound from '@/app/not-found';
 import SearchBar from '@/components/search_bar';
 import Footer from '@/components/footer';
+import { useSearchParams } from 'react-router-dom';
 
 export default function Inventory() {
   // const { user, logout } = useAuthUser();
   const { user } = useSelector((state) => state.user);
+
+  const queryParams = new URLSearchParams(window.location.search);
+  const categoryFilter = queryParams.get('category') || null;
+
   const prefs = usePreferences(user?.id, user?.role);
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -310,13 +315,22 @@ export default function Inventory() {
     .filter((product) => {
       const category =
         categories.find((cat) => cat.id === product.categoryId)?.name || '';
-      return (
+
+      const matchesSearch =
         product.name.toLowerCase().includes(searchQuery.toLowerCase().trim()) ||
         product.tags
           ?.toLowerCase()
           .includes(searchQuery.toLowerCase().trim()) ||
-        category.toLowerCase().includes(searchQuery.toLowerCase().trim())
-      );
+        category.toLowerCase().includes(searchQuery.toLowerCase().trim());
+
+      if (categoryFilter) {
+        return (
+          categoryFilter.toLowerCase() ===
+            category.toLowerCase().replace(/\s+/g, '_') && matchesSearch
+        );
+      }
+
+      return matchesSearch;
     })
     .sort((a, b) => {
       const aVal = a[sortConfig.key];

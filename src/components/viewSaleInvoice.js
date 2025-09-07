@@ -1,15 +1,20 @@
 import React, { use, useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
 
-export default function ViewSaleInvoice({
-  formatDateTime,
-  // currency,
-  saleId,
-  onClose,
-  user,
-}) {
+export default function ViewSaleInvoice({ saleId, onClose, user }) {
   const [loading, setLoading] = useState(true);
   const [sale, setSale] = useState(null);
+
+  function formatDateTime(dt) {
+    const d = new Date(dt);
+    return d.toLocaleString(undefined, {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  }
 
   useEffect(() => {
     let mounted = true;
@@ -42,6 +47,18 @@ export default function ViewSaleInvoice({
 
   const grandTotal = lines.reduce((sum, li) => sum + Number(li.price), 0);
 
+  useEffect(() => {
+    if (saleId) {
+      document.body.classList.add('overflow-hidden');
+    } else {
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    return () => {
+      document.body.classList.remove('overflow-hidden');
+    };
+  }, [saleId]);
+
   const discount = sale?.discount ?? 0;
   const netPayable = grandTotal - discount;
 
@@ -50,7 +67,7 @@ export default function ViewSaleInvoice({
   }
 
   return (
-    <div className="fixed inset-0 bg-black/20 backdrop-blur-[2px] flex items-center justify-center px-4 py-4 sm:px-6 z-50">
+    <div className="fixed h-full top-0 inset-0 bg-black/20 backdrop-blur-[2px] flex items-center justify-center px-4 py-4 sm:px-6 z-50">
       <div className=" bg-white rounded-lg p-4 sm:p-6 shadow-xl w-full max-w-2xl ">
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-lg font-semibold">Invoice</h3>
