@@ -17,18 +17,21 @@ import { useSelector } from 'react-redux';
 import NotFound from '@/app/not-found';
 import SearchBar from '@/components/search_bar';
 import Footer from '@/components/footer';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function Inventory() {
   // const { user, logout } = useAuthUser();
   const { user } = useSelector((state) => state.user);
 
   const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const queryParams = new URLSearchParams(window.location.search);
-  const [categoryFilter, setCategoryFilter] = useState(
-    queryParams.get('category') || null
-  );
+  const categoryParam = searchParams.get('category');
+  const [categoryFilter, setCategoryFilter] = useState(categoryParam || null);
+
+  useEffect(() => {
+    setCategoryFilter(categoryParam);
+  }, [categoryParam]);
 
   const prefs = usePreferences(user?.id, user?.role);
   const [products, setProducts] = useState([]);
@@ -501,8 +504,6 @@ export default function Inventory() {
               value={categoryFilter || ''}
               onChange={(e) => {
                 const value = e.target.value;
-                setCategoryFilter(value || null);
-
                 if (value) {
                   router.push(
                     `inventory?category=${value.toLowerCase().replace(/\s+/g, '_')}`
