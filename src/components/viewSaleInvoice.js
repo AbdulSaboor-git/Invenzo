@@ -197,7 +197,9 @@ export default function ViewSaleInvoice({ saleId, onClose, user }) {
                               <td className="py-2 text-right">
                                 {getQuantity(li) + '' + getUnitLabel()}
                               </td>
-                              <td className="py-2 text-right">{salePrice}</td>
+                              <td className="py-2 text-right">
+                                {salePrice}/{li.Product.unit}
+                              </td>
                               {user.role != 'cashier' && (
                                 <td className="py-2 text-right">{profit}</td>
                               )}
