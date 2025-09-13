@@ -89,7 +89,7 @@ export default function ViewSaleInvoice({ saleId, onClose, user }) {
           </div>
         ) : (
           <div
-            className={`border bg-white rounded-lg ${sale.deactivated && 'border-red-300'} max-h-[75vh] overflow-y-auto`}
+            className={`border bg-white rounded-lg border-dotted ${sale.deactivated && 'border-red-300'} max-h-[75vh] overflow-y-auto`}
           >
             {/* Line items */}
             <div className={``}>
