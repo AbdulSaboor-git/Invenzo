@@ -16,10 +16,17 @@ export default function SalesPage() {
   const [lastUpdated, setLastUpdated] = useState(null);
   const [refreshFailed, setRefreshFailed] = useState(false);
 
+  function formatDateForInput(date) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // 0-based
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`; // yyyy-mm-dd
+  }
+
   // --- Filters ---
-  const today = new Date().toISOString().split('T')[0];
-  const [fromDate, setFromDate] = useState(today);
-  const [toDate, setToDate] = useState(today);
+  const today = new Date();
+  const [fromDate, setFromDate] = useState(formatDateForInput(today));
+  const [toDate, setToDate] = useState(formatDateForInput(today));
   const [showAll, setShowAll] = useState(false);
 
   const localStorageKey = useMemo(
@@ -84,6 +91,7 @@ export default function SalesPage() {
       console.error('fetchAllSales error:', e);
       setRefreshFailed(true);
       toast.error('Failed to refresh. Showing cached data.');
+      loadFromLocalStorage();
     } finally {
       setRefreshing(false);
       setLoadingData(false);

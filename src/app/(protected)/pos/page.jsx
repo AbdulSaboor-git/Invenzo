@@ -174,6 +174,8 @@ export default function POSPage() {
       toast.success('Data refreshed!', { id: loadingToastId });
     } catch (error) {
       toast.error('Failed to refresh data.', { id: loadingToastId });
+    } finally {
+      setRefreshing(false);
     }
   };
 

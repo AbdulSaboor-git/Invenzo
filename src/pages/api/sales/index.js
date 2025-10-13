@@ -32,13 +32,18 @@ export default async function handler(req, res) {
 async function handleGetSales(req, res) {
   const { inventoryId, cashierId, from, to, showAll } = req.query;
 
+  const fromDate = from ? new Date(from) : new Date();
+  fromDate.setHours(0, 0, 0, 0);
+
+  const toDate = to ? new Date(to) : new Date();
+  toDate.setHours(23, 59, 59, 999);
   const sales = await prisma.sale.findMany({
     where: {
       inventoryId: inventoryId ? Number(inventoryId) : undefined,
       cashierId: cashierId ? Number(cashierId) : undefined,
       createdAt: {
-        gte: from ? new Date(from) : undefined,
-        lte: to ? new Date(to) : undefined,
+        gte: fromDate,
+        lte: toDate,
       },
       deactivated: showAll === 'true' ? undefined : false,
     },

@@ -12,14 +12,14 @@ export default function CartItem({ item, onUpdate, onDelete }) {
 
   // when quantity changes
   const handleQtyChange = (val) => {
-    let newQty = Math.max(0, Number(val) || 0); // in base units
+    let newQty = Math.max(1, Number(val) || 1); // in base units
     const newPrice = Number((newQty * unitPricePerBase).toFixed(0));
     onUpdate({ ...item, quantity: newQty, price: newPrice });
   };
 
   // when price changes
   const handlePriceChange = (val) => {
-    const newPrice = Math.max(0, Number(val) || 0);
+    const newPrice = Math.max(10, Number(val) || 10);
     const newQty = Number((newPrice / unitPricePerBase).toFixed(0)); // base units
     onUpdate({ ...item, quantity: newQty, price: newPrice });
   };
@@ -54,8 +54,8 @@ export default function CartItem({ item, onUpdate, onDelete }) {
           </button>
           <input
             type="number"
-            step="0.1"
             value={item.quantity}
+            min={1}
             onChange={(e) => handleQtyChange(e.target.value)}
             className="w-16 text-center border rounded"
           />
@@ -80,6 +80,7 @@ export default function CartItem({ item, onUpdate, onDelete }) {
             item.product.unit !== 'g' &&
             item.product.unit !== 'ml'
           }
+          min={10}
           onChange={(e) => handlePriceChange(e.target.value)}
           className="w-20 text-right border rounded px-2 py-1"
         />
@@ -123,7 +124,7 @@ export default function CartItem({ item, onUpdate, onDelete }) {
             </button>
             <input
               type="number"
-              step="0.1"
+              min={1}
               value={item.quantity}
               onChange={(e) => handleQtyChange(e.target.value)}
               className="w-20 text-center border rounded"
@@ -149,6 +150,7 @@ export default function CartItem({ item, onUpdate, onDelete }) {
                 item.product.unit === 'box' ||
                 item.product.unit === 'pack'
               }
+              min={10}
               onChange={(e) => handlePriceChange(e.target.value)}
               className="w-24 text-right border rounded px-2 py-1"
             />

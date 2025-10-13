@@ -5,12 +5,11 @@ import { toast } from 'sonner';
 import ViewSaleInvoice from '@/components/viewSaleInvoice';
 
 export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
-  const [discount, setDiscount] = useState('');
+  const [discount, setDiscount] = useState(0);
   const [paymentMode, setPaymentMode] = useState('cash');
   const [note, setNote] = useState('');
   const subTotal = cart.reduce((sum, item) => sum + item.price, 0);
-  const discountValue = Number(discount) || 0;
-  const netPayable = (subTotal - discountValue).toFixed(0);
+  const netPayable = (subTotal - discount).toFixed(0);
 
   const getQuantity = (item) => {
     if (item.product.unit == 'kg' || item.product.unit == 'liter') {
@@ -46,7 +45,7 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
       const parsed = JSON.parse(localCart);
       if (parsed?.cart && Array.isArray(parsed.cart)) {
         setCart(parsed.cart);
-        setDiscount(parsed.discount || '');
+        setDiscount(parsed.discount || 0);
         setPaymentMode(parsed.paymentMode || 'cash');
         setNote(parsed.note || '');
       }
@@ -60,8 +59,13 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
     const t = setTimeout(() => {
       saveToLocalStorage(cart);
     }, 300);
+    if (cart.length === 0) {
+      setDiscount(0);
+      setNote('');
+      setPaymentMode('cash');
+    }
     return () => clearTimeout(t);
-  }, [cart, discount, paymentMode, note, user?.id]);
+  }, [cart, discount, paymentMode, note]);
 
   const handleUpdate = (index, updatedItem) => {
     setCart((prev) =>
@@ -86,22 +90,16 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
     }
   };
 
-  const handleDelete = (index) => {
-    setCart((prev) => prev.filter((_, i) => i !== index));
-  };
-
   const clearCart = () => {
     setCart([]);
-    setDiscount('');
+    setDiscount(0);
     setPaymentMode('cash');
     setNote('');
   };
 
-  useEffect(() => {
-    if (cart.length === 0) {
-      setDiscount('');
-    }
-  }, [cart]);
+  const handleDelete = (index) => {
+    setCart((prev) => prev.filter((_, i) => i !== index));
+  };
 
   async function placeOrder() {
     if (!navigator.onLine) {
@@ -232,7 +230,9 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
 
                 <div>
                   <label className="w-full grid grid-cols-[2fr_1.5fr] gap-2 items-center">
-                    <span className="place-self-end">Payment Mode</span>
+                    <span className="place-self-end self-center">
+                      Payment Mode
+                    </span>
                     <select
                       value={paymentMode}
                       onChange={(e) => setPaymentMode(e.target.value)}
@@ -248,7 +248,7 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
 
                 <div>
                   <label className="w-full grid grid-cols-[2fr_1.5fr] gap-2 items-center">
-                    <span className="place-self-end">Note</span>
+                    <span className="place-self-end self-center">Note</span>
                     <input
                       type="text"
                       value={note}
@@ -260,21 +260,23 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
                   </label>
                 </div>
 
-                <div className="grid grid-cols-[2fr_1.5fr] gap-2 items-center">
-                  <span className="place-self-end">Discount</span>
-                  <input
-                    type="number"
-                    value={discount || ''}
-                    max={subTotal}
-                    min={0}
-                    onChange={(e) => {
-                      let val = Number(e.target.value);
-                      if (val > subTotal) val = subTotal;
-                      if (val < 0) val = 0;
-                      setDiscount(e.target.value === '' ? '' : val);
-                    }}
-                    className="w-20 md:w-24 text-right border rounded px-2 py-1 place-self-end text-sm md:text-base"
-                  />
+                <div>
+                  <label className="grid grid-cols-[2fr_1.5fr] gap-2 items-center">
+                    <span className="place-self-end self-center">Discount</span>
+                    <input
+                      type="number"
+                      value={discount === 0 ? '' : discount}
+                      max={subTotal}
+                      min={0}
+                      onChange={(e) => {
+                        let val = parseFloat(e.target.value);
+                        if (isNaN(val)) val = 0;
+                        val = Math.min(Math.max(val, 0), subTotal);
+                        setDiscount(val);
+                      }}
+                      className="w-20 md:w-24 text-right border rounded px-2 py-1 place-self-end text-sm md:text-base"
+                    />
+                  </label>
                 </div>
 
                 <div className="font-bold grid grid-cols-[2fr_1.5fr] gap-2">
