@@ -66,7 +66,7 @@ export default function Login() {
       toast.success('Logged in successfully');
       dispatch(setUser(data.user)); // Store user in Redux
       setTimeout(() => {
-        redirect('/');
+        router.replace('/');
       }, 0); // Redirect to a different page after successful login
     } catch (err) {
       console.log(err);
@@ -76,7 +76,7 @@ export default function Login() {
   };
 
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col items-center ">
       {/* Header */}
       <header className="sticky top-0 w-full bg-white shadow px-4 md:px-6 py-3">
         <img

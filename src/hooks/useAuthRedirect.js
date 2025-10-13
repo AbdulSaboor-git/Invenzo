@@ -19,7 +19,7 @@ export const useAuthRedirect = () => {
           redirect('/inventory');
         }
       } else {
-        redirect('/login');
+        router.push('/login');
       }
     }
   }, [router, user, userLoading]);

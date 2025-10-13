@@ -258,6 +258,7 @@
   --prod-card-details-border: #f1a84d8a; /* Light orange with transparency for product card details border */
 }
 
+html,
 body {
   /* color: var(--text-prim); 
   background: linear-gradient(
@@ -268,6 +269,8 @@ body {
   background-attachment: fixed;*/
   user-select: none;
   background: #ffffff;
+  min-height: 100dvh;
+  height: 100%;
 }
 
 button {

@@ -200,7 +200,7 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
 
             {/* Cart Items */}
 
-            <div className="md:h-[calc(100vh-374px)] pb-[200px] md:pb-0 overflow-y-auto relative space-y-2">
+            <div className="md:h-[calc(100vh-374px)] pb-[240px] md:pb-0 overflow-y-auto relative space-y-2">
               {cart.map((item, index) => (
                 <div key={index}>
                   <CartItem
@@ -218,12 +218,12 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
             rounded-t-xl md:rounded-t-none bg-white md:border-t-2 px-4 py-2 md:px-0 md:py-0 gap-4 
             fixed md:static bottom-0 left-0 md:left-auto md:bottom-auto"
             >
-              <div className="flex w-full flex-col md:grid md:grid-cols-2 gap-1 pt-2 md:pt-4  text-xs md:text-sm">
-                <div className="grid grid-cols-[2fr_1fr] gap-2">
+              <div className="flex w-full flex-col md:grid md:grid-cols-2 gap-1 pt-1 md:pt-4 text-xs md:text-sm">
+                <div className="grid grid-cols-[2fr_1.5fr] gap-2">
                   <span className="place-self-end">Total Products</span>
                   <span className="place-self-end">{cart.length}</span>
                 </div>
-                <div className="grid grid-cols-[2fr_1fr] gap-2">
+                <div className="grid grid-cols-[2fr_1.5fr] gap-2">
                   <span className="place-self-end">Subtotal</span>
                   <span className="place-self-end">
                     Rs.{subTotal.toFixed(0)}
@@ -231,7 +231,7 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
                 </div>
 
                 <div>
-                  <label className="w-full grid grid-cols-[2fr_1fr] gap-2 items-center">
+                  <label className="w-full grid grid-cols-[2fr_1.5fr] gap-2 items-center">
                     <span className="place-self-end">Payment Mode</span>
                     <select
                       value={paymentMode}
@@ -247,7 +247,7 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
                 </div>
 
                 <div>
-                  <label className="w-full grid grid-cols-[2fr_1fr] gap-2 items-center">
+                  <label className="w-full grid grid-cols-[2fr_1.5fr] gap-2 items-center">
                     <span className="place-self-end">Note</span>
                     <input
                       type="text"
@@ -260,7 +260,7 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
                   </label>
                 </div>
 
-                <div className="grid grid-cols-[2fr_1fr] gap-2 items-center">
+                <div className="grid grid-cols-[2fr_1.5fr] gap-2 items-center">
                   <span className="place-self-end">Discount</span>
                   <input
                     type="number"
@@ -277,11 +277,11 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
                   />
                 </div>
 
-                <div className="font-bold grid grid-cols-[2fr_1fr] gap-2">
+                <div className="font-bold grid grid-cols-[2fr_1.5fr] gap-2">
                   <span className="place-self-end">Net Payable</span>
                   <span className="place-self-end">Rs.{netPayable}</span>
                 </div>
-                <div className="grid grid-cols-[2fr_1fr] gap-2">
+                <div className="grid grid-cols-[2fr_1.5fr] gap-2">
                   <span className="place-self-end">Profit</span>
                   <span className="place-self-end">Rs.{profit}</span>
                 </div>
