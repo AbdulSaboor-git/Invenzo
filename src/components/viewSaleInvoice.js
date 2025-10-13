@@ -109,6 +109,7 @@ export default function ViewSaleInvoice({ saleId, onClose, user }) {
                       : '-'}
                   </div>
                   <div className="mt-1">Payment Mode: {sale.paymentMode}</div>
+                  {sale.note && <div className="mt-1">Note: {sale.note}</div>}
                   {sale.deactivated && (
                     <div className="mt-1 text-red-500 uppercase">
                       sale voided

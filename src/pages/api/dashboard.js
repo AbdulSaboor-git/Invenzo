@@ -327,6 +327,9 @@ export default async function handler(req, res) {
         })
       : null;
 
+    const avgProfitPerSale =
+      totalSalesCount > 0 ? totalProfit / totalSalesCount : 0;
+
     // ---- Respond ----
     return res.status(200).json({
       totalSalesAmount,
@@ -351,6 +354,7 @@ export default async function handler(req, res) {
       cashierPerformance,
       categorySales,
       cashierCount,
+      avgProfitPerSale,
       ...(isSuper
         ? {
             inventoryCount,

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { setUser } from '@/redux/userSlice';
 import { toast } from 'sonner';
@@ -66,7 +66,7 @@ export default function Login() {
       toast.success('Logged in successfully');
       dispatch(setUser(data.user)); // Store user in Redux
       setTimeout(() => {
-        router.push('/');
+        redirect('/');
       }, 0); // Redirect to a different page after successful login
     } catch (err) {
       console.log(err);

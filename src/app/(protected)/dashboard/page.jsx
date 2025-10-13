@@ -117,73 +117,83 @@ export default function DashboardPage() {
         {/* Stats Section */}
         <section className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
           <StatCard
-            title="Total Revenue"
+            title="Gross Sales Revenue"
             value={
               metrics
                 ? `Rs. ${Number(metrics.totalSalesAmount).toFixed(0)}`
                 : '—'
             }
-            subtitle="Sum of all sale revenues"
+            subtitle="Total billed sales (before discounts)"
           />
+
           {user.role === 'admin' && (
             <StatCard
-              title="Total Profit"
+              title="Net Profit (After COGS)"
               value={
                 metrics ? `Rs. ${Number(metrics.totalProfit).toFixed(0)}` : '—'
               }
-              subtitle="Sum of all sale profits"
+              subtitle="Gross revenue minus cost of goods"
             />
           )}
+
           <StatCard
-            title="Total Transactions"
+            title="Completed Sales Orders"
             value={metrics ? metrics.totalSalesCount : '—'}
-            subtitle="Number of sales"
+            subtitle="Number of finalized transactions"
           />
+
           <StatCard
-            title="Avg Sale Value"
+            title="Average Transaction Value (ATV)"
             value={
               metrics ? `Rs. ${Number(metrics.avgSaleValue).toFixed(0)}` : '—'
             }
-            subtitle="Average per sale"
+            subtitle="Mean revenue per sale"
           />
 
-          {/* Admin-only */}
+          <StatCard
+            title="Average Profit Margin per Sale"
+            value={
+              metrics
+                ? `Rs. ${Number(metrics.avgProfitPerSale).toFixed(0)}`
+                : '—'
+            }
+            subtitle="Net profit per completed sale"
+          />
+
           {user.role === 'admin' && (
             <StatCard
-              title="Total Discounts"
+              title="Cumulative Discounts Issued"
               value={
                 metrics
                   ? `Rs. ${Number(metrics.totalDiscounts).toFixed(0)}`
                   : '—'
               }
-              subtitle="Discounts given"
+              subtitle="Total discounts across all sales"
             />
           )}
 
-          {/* Everyone */}
           <StatCard
-            title="Cashier Count"
+            title="Active Cashiers"
             value={metrics ? metrics.cashierCount - 1 : '—'}
-            subtitle="Number of cashiers"
+            subtitle="Cashiers who processed sales"
           />
 
-          {/* Superadmin-only */}
           {user.role === 'superadmin' && (
             <>
               <StatCard
-                title="Inventory Count"
+                title="Active Inventories"
                 value={metrics ? metrics.inventoryCount : '—'}
-                subtitle="Number of inventories"
+                subtitle="Inventories currently in use"
               />
               <StatCard
-                title="User Count"
+                title="Registered Users"
                 value={metrics ? metrics.userCount : '—'}
-                subtitle="All users"
+                subtitle="All user accounts"
               />
               <StatCard
-                title="New Users (30d)"
+                title="New User Signups (30 Days)"
                 value={metrics ? metrics.newUsersRegisteredLast30Days : '—'}
-                subtitle="Registered recently"
+                subtitle="Recent account registrations"
               />
             </>
           )}

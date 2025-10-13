@@ -300,7 +300,7 @@ export default function POSPage() {
 
       {/* Main Grid Layout */}
       <div
-        className={`grid grid-cols-1 md:grid-cols-[2fr_1.6fr] max-w-7xl mx-auto w-full md:my-4 md:px-2 md:gap-4 ${(placingOrder || loadingData || refreshing || loadingInventory) && 'opacity-70 pointer-events-none'}`}
+        className={`grid grid-cols-1 md:grid-cols-[2fr_1.8fr] max-w-7xl mx-auto w-full md:my-4 md:px-2 md:gap-4 ${(placingOrder || loadingData || refreshing || loadingInventory) && 'opacity-70 pointer-events-none'}`}
       >
         {/* Products Section */}
         <div className="md:h-[calc(100vh-140px)] h-[40vh] border-none overflow-y-auto bg-gray-100 shadow-sm md:rounded-xl">

@@ -6,7 +6,8 @@ import ViewSaleInvoice from '@/components/viewSaleInvoice';
 
 export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
   const [discount, setDiscount] = useState('');
-
+  const [paymentMode, setPaymentMode] = useState('cash');
+  const [note, setNote] = useState('');
   const subTotal = cart.reduce((sum, item) => sum + item.price, 0);
   const discountValue = Number(discount) || 0;
   const netPayable = (subTotal - discountValue).toFixed(0);
@@ -33,16 +34,56 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
     } else {
       document.body.classList.remove('overflow-hidden');
     }
-
-    return () => {
-      document.body.classList.remove('overflow-hidden');
-    };
+    return () => document.body.classList.remove('overflow-hidden');
   }, [showInvoice]);
+
+  useEffect(() => {
+    if (!user?.id) return;
+    const localCart = localStorage.getItem(`cart_${user.id}`);
+    if (!localCart) return;
+
+    try {
+      const parsed = JSON.parse(localCart);
+      if (parsed?.cart && Array.isArray(parsed.cart)) {
+        setCart(parsed.cart);
+        setDiscount(parsed.discount || '');
+        setPaymentMode(parsed.paymentMode || 'cash');
+        setNote(parsed.note || '');
+      }
+    } catch {
+      // Ignore invalid JSON
+    }
+  }, [user?.id]);
+
+  useEffect(() => {
+    if (!user?.id) return;
+    const t = setTimeout(() => {
+      saveToLocalStorage(cart);
+    }, 300);
+    return () => clearTimeout(t);
+  }, [cart, discount, paymentMode, note, user?.id]);
 
   const handleUpdate = (index, updatedItem) => {
     setCart((prev) =>
       prev.map((item, i) => (i === index ? updatedItem : item))
     );
+  };
+
+  const saveToLocalStorage = (cart) => {
+    try {
+      if (typeof window === 'undefined' || !user?.id) return;
+      localStorage.setItem(
+        `cart_${user.id}`,
+        JSON.stringify({
+          cart,
+          discount,
+          paymentMode,
+          note,
+        })
+      );
+    } catch {
+      // Ignore
+    }
   };
 
   const handleDelete = (index) => {
@@ -52,6 +93,8 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
   const clearCart = () => {
     setCart([]);
     setDiscount('');
+    setPaymentMode('cash');
+    setNote('');
   };
 
   useEffect(() => {
@@ -93,6 +136,8 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
           items: cart,
           discount: discount || 0,
           netPayable: netPayable,
+          paymentMode,
+          note,
         }),
       });
 
@@ -155,7 +200,7 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
 
             {/* Cart Items */}
 
-            <div className="md:h-[calc(100vh-410px)] pb-[200px] md:pb-0 overflow-y-auto relative space-y-2">
+            <div className="md:h-[calc(100vh-374px)] pb-[200px] md:pb-0 overflow-y-auto relative space-y-2">
               {cart.map((item, index) => (
                 <div key={index}>
                   <CartItem
@@ -168,8 +213,12 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
             </div>
 
             {/* Totals */}
-            <div className=" w-full flex shadow-[0_-1px_3px_0_rgba(0,0,0,0.2),0_-1px_2px_-1px_rgba(0,0,0,0.2)] md:shadow-none flex-col rounded-t-xl md:rounded-t-none bg-white md:border-t px-4 py-2 md:px-0 md:py-0 gap-4 fixed md:static bottom-0 left-0 md:left-auto md:bottom-auto">
-              <div className="flex w-full flex-col gap-1 pt-2 md:pt-4  text-sm md:text-base">
+            <div
+              className=" w-full flex flex-col shadow-[0_-1px_3px_0_rgba(0,0,0,0.2),0_-1px_2px_-1px_rgba(0,0,0,0.2)] md:shadow-none 
+            rounded-t-xl md:rounded-t-none bg-white md:border-t-2 px-4 py-2 md:px-0 md:py-0 gap-4 
+            fixed md:static bottom-0 left-0 md:left-auto md:bottom-auto"
+            >
+              <div className="flex w-full flex-col md:grid md:grid-cols-2 gap-1 pt-2 md:pt-4  text-xs md:text-sm">
                 <div className="grid grid-cols-[2fr_1fr] gap-2">
                   <span className="place-self-end">Total Products</span>
                   <span className="place-self-end">{cart.length}</span>
@@ -179,6 +228,36 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
                   <span className="place-self-end">
                     Rs.{subTotal.toFixed(0)}
                   </span>
+                </div>
+
+                <div>
+                  <label className="w-full grid grid-cols-[2fr_1fr] gap-2 items-center">
+                    <span className="place-self-end">Payment Mode</span>
+                    <select
+                      value={paymentMode}
+                      onChange={(e) => setPaymentMode(e.target.value)}
+                      className="w-24 md:w-32 text-right border rounded px-2 py-1 place-self-end"
+                    >
+                      <option value="cash">Cash</option>
+                      <option value="credit">Credit</option>
+                      <option value="card">Card</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </label>
+                </div>
+
+                <div>
+                  <label className="w-full grid grid-cols-[2fr_1fr] gap-2 items-center">
+                    <span className="place-self-end">Note</span>
+                    <input
+                      type="text"
+                      value={note}
+                      onChange={(e) => setNote(e.target.value)}
+                      placeholder="Add a note (optional)"
+                      maxLength={80}
+                      className="w-full text-right border rounded px-2 py-1 place-self-end "
+                    />
+                  </label>
                 </div>
 
                 <div className="grid grid-cols-[2fr_1fr] gap-2 items-center">

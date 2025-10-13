@@ -28,6 +28,7 @@ export default function useAuthUser() {
       localStorage.removeItem('user');
       localStorage.removeItem('token');
       localStorage.removeItem('userFetchedAt');
+      localStorage.removeItem('cart');
     } catch (e) {
       console.error('Error clearing localStorage on logout', e);
     }

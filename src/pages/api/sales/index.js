@@ -30,7 +30,7 @@ export default async function handler(req, res) {
  * GET – Fetch all sales (optional filters)
  */
 async function handleGetSales(req, res) {
-  const { inventoryId, cashierId, from, to } = req.query;
+  const { inventoryId, cashierId, from, to, showAll } = req.query;
 
   const sales = await prisma.sale.findMany({
     where: {
@@ -40,6 +40,7 @@ async function handleGetSales(req, res) {
         gte: from ? new Date(from) : undefined,
         lte: to ? new Date(to) : undefined,
       },
+      deactivated: showAll === 'true' ? undefined : false,
     },
     include: {
       SaleItem: { include: { Product: true } },

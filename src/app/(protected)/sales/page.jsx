@@ -16,16 +16,23 @@ export default function SalesPage() {
   const [lastUpdated, setLastUpdated] = useState(null);
   const [refreshFailed, setRefreshFailed] = useState(false);
 
+  // --- Filters ---
+  const today = new Date().toISOString().split('T')[0];
+  const [fromDate, setFromDate] = useState(today);
+  const [toDate, setToDate] = useState(today);
+  const [showAll, setShowAll] = useState(false);
+
   const localStorageKey = useMemo(
     () => (user?.id ? `inventoryData_sales_${user.id}` : null),
     [user?.id]
   );
 
   useEffect(() => {
-    fetchAllSales();
-  }, []);
+    if (!user?.id) return;
+    const t = setTimeout(fetchAllSales, 300);
+    return () => clearTimeout(t);
+  }, [user, fromDate, toDate, showAll]);
 
-  // --- LocalStorage load ---
   const loadFromLocalStorage = () => {
     try {
       if (typeof window === 'undefined' || !localStorageKey) return false;
@@ -43,25 +50,25 @@ export default function SalesPage() {
 
   // --- Fetch all sales from server ---
   const fetchAllSales = async () => {
+    if (!user?.id) return;
+
     setRefreshFailed(false);
     try {
       setRefreshing(true);
-
-      let url = `/api/sales`;
-      if (user?.role === 'admin') {
-        url += `?inventoryId=${user?.invId}`;
-      }
-      if (user?.role === 'cashier') {
-        url += `?inventoryId=${user?.invId}&cashierId=${user?.cashierId}`;
-      }
-
       setLoadingData(true);
 
-      const res = await fetch(url);
+      let url = `/api/sales?from=${fromDate}&to=${toDate}&showAll=${showAll}`;
+      if (user?.role === 'admin') {
+        url += `&inventoryId=${user?.invId}`;
+      }
+      if (user?.role === 'cashier') {
+        url += `&inventoryId=${user?.invId}&cashierId=${user?.cashierId}`;
+      }
 
+      const res = await fetch(url);
       if (!res.ok) throw new Error('Failed to fetch sales');
       const data = await res.json();
-      const list = Array.isArray(data) ? data : data.sales; // supports either shape
+      const list = Array.isArray(data) ? data : data.sales;
       const timestamp = new Date().toISOString();
 
       setSales(list || []);
@@ -83,7 +90,6 @@ export default function SalesPage() {
     }
   };
 
-  // --- Manual refresh button ---
   const handleRefresh = async () => {
     if (!navigator.onLine) {
       toast.error(
@@ -100,18 +106,7 @@ export default function SalesPage() {
     }
   };
 
-  // --- First load ---
-  useEffect(() => {
-    if (!user?.id) return;
-    const hasLocal = loadFromLocalStorage();
-    if (!hasLocal) {
-      fetchAllSales();
-    } else {
-      setLoadingData(false);
-    }
-  }, [user?.id]);
-
-  // --- Auto refresh hourly when online ---
+  // --- Auto refresh every 20 min ---
   useEffect(() => {
     if (!user?.id) return;
     const checkAndAutoFetch = () => {
@@ -141,28 +136,64 @@ export default function SalesPage() {
       clearInterval(interval);
       window.removeEventListener('online', checkAndAutoFetch);
     };
-  }, [user?.id, localStorageKey, lastUpdated]);
+  }, [user?.id, localStorageKey, lastUpdated, fromDate, toDate, showAll]);
 
   return (
     <div className="flex w-full flex-col items-center justify-center">
       <Header />
 
       <div className="w-full max-w-7xl place-self-center pb-16">
-        {/* Sticky header row */}
+        {/* Header row */}
         <div className="flex flex-col md:flex-row md:justify-between items-center shadow px-3 md:px-6 py-4 gap-3 sticky top-3 md:top-[68px] bg-white z-40">
           <div className="w-full flex justify-center md:justify-start">
             <h2 className="text-lg flex items-center gap-1 line-clamp-1 md:text-xl font-bold text-gray-800 text-center md:text-left">
               Sales Record
               {user?.role !== 'superadmin' && (
                 <span className="hidden md:block font-normal text-gray-700">
-                  {' - ' + user?.invName || ''}
+                  {' - ' + (user?.invName || '')}
                 </span>
               )}
             </h2>
           </div>
-          <div className="flex w-full items-stretch justify-end gap-3 bg-white">
+
+          <div className="flex flex-wrap justify-end items-center gap-2 bg-white">
+            <label className="flex items-center gap-1 text-sm text-gray-600">
+              From:
+              <input
+                type="date"
+                value={fromDate}
+                onChange={(e) => {
+                  setFromDate(e.target.value);
+                }}
+                disabled={refreshing}
+                className="border rounded-md px-2 py-1 text-sm"
+              />
+            </label>
+            <label className="flex items-center gap-1 text-sm text-gray-600">
+              To:
+              <input
+                disabled={refreshing}
+                type="date"
+                value={toDate}
+                onChange={(e) => {
+                  setToDate(e.target.value);
+                }}
+                className="border rounded-md px-2 py-1 text-sm"
+              />
+            </label>
+
+            <label className="flex items-center gap-1 text-sm text-gray-600">
+              <input
+                disabled={refreshing}
+                type="checkbox"
+                checked={showAll}
+                onChange={(e) => setShowAll(e.target.checked)}
+              />
+              Show all
+            </label>
+
             {lastUpdated && (
-              <span className="text-sm place-content-center hidden sm:block text-gray-500">
+              <span className="text-xs sm:text-sm hidden sm:block text-gray-500">
                 Last Updated: {new Date(lastUpdated).toLocaleString()}
               </span>
             )}
@@ -175,7 +206,6 @@ export default function SalesPage() {
           </div>
         </div>
 
-        {/* Table */}
         <SalesTable
           user={user}
           sales={sales}
@@ -183,6 +213,7 @@ export default function SalesPage() {
           fetchAllSales={fetchAllSales}
         />
       </div>
+
       <Footer />
     </div>
   );

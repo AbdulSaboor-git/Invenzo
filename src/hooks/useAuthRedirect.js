@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import useAuthUser from './authUser';
 
 export const useAuthRedirect = () => {
@@ -12,14 +12,14 @@ export const useAuthRedirect = () => {
     if (!userLoading) {
       if (user) {
         if (user.role === 'superadmin') {
-          router.push('/super-admin-panel');
+          redirect('/super-admin-panel');
         } else if (user.role === 'cashier') {
-          router.push('/pos');
+          redirect('/pos');
         } else {
-          router.push('/inventory');
+          redirect('/inventory');
         }
       } else {
-        router.push('/login');
+        redirect('/login');
       }
     }
   }, [router, user, userLoading]);
