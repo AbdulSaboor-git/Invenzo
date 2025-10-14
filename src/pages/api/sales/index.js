@@ -12,6 +12,9 @@ export default async function handler(req, res) {
         if (req.body?.action === 'getOne') {
           return await handleGetSale(req, res);
         }
+        if (req.body?.action === 'update') {
+          return await handleUpdateSale(req, res);
+        }
         return await handleAddSale(req, res);
 
       case 'DELETE':
@@ -161,6 +164,75 @@ async function handleGetSale(req, res) {
   if (!sale) return res.status(404).json({ error: 'Sale not found' });
 
   return res.json({ sale });
+}
+
+/**
+ * POST (action=update) – Update existing sale
+ */
+async function handleUpdateSale(req, res) {
+  const {
+    id,
+    cashierId,
+    inventoryId,
+    items,
+    discount,
+    netPayable,
+    paymentMode,
+    note,
+  } = req.body;
+
+  if (!id) return res.status(400).json({ error: 'Missing sale id' });
+  if (!cashierId || !inventoryId || !items?.length)
+    return res.status(400).json({ error: 'Missing required fields' });
+
+  try {
+    const existingSale = await prisma.sale.findUnique({
+      where: { id: Number(id) },
+      include: { SaleItem: true },
+    });
+
+    if (!existingSale) {
+      return res.status(404).json({ error: 'Sale not found' });
+    }
+
+    const result = await prisma.$transaction(async (tx) => {
+      // Delete existing items (simplest + safest for small number of items)
+      await tx.saleItem.deleteMany({ where: { saleId: Number(id) } });
+
+      // Recreate updated items
+      await tx.saleItem.createMany({
+        data: items.map((item) => ({
+          saleId: Number(id),
+          productId: item.product.id,
+          quantity: Number(item.quantity),
+          price: Number(item.price),
+        })),
+      });
+
+      // Update sale record
+      const updatedSale = await tx.sale.update({
+        where: { id: Number(id) },
+        data: {
+          discount: Number(discount) || 0,
+          totalAmount: Number(netPayable) || 0,
+          paymentMode: paymentMode || 'cash',
+          note: note || null,
+        },
+        include: {
+          SaleItem: { include: { Product: true } },
+          Cashier: { include: { User: true } },
+          Inventory: true,
+        },
+      });
+
+      return updatedSale;
+    });
+
+    return res.json({ sale: result });
+  } catch (err) {
+    console.error('Error updating sale:', err);
+    return res.status(500).json({ error: 'Internal server error' });
+  }
 }
 
 /**
