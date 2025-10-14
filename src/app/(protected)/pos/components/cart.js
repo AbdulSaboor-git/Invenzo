@@ -59,11 +59,6 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
     const t = setTimeout(() => {
       saveToLocalStorage(cart);
     }, 300);
-    if (cart.length === 0) {
-      setDiscount(0);
-      setNote('');
-      setPaymentMode('cash');
-    }
     return () => clearTimeout(t);
   }, [cart, discount, paymentMode, note]);
 
@@ -98,7 +93,17 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
   };
 
   const handleDelete = (index) => {
-    setCart((prev) => prev.filter((_, i) => i !== index));
+    setCart((prev) => {
+      const updated = prev.filter((_, i) => i !== index);
+      if (updated.length === 0) {
+        setTimeout(() => {
+          setDiscount(0);
+          setNote('');
+          setPaymentMode('cash');
+        }, 0);
+      }
+      return updated;
+    });
   };
 
   async function placeOrder() {
