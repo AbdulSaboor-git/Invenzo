@@ -1,144 +1,45 @@
 'use client';
-import React, { use, useEffect, useState } from 'react';
-import useAuthUser from '@/hooks/authUser';
-import Header from '@/components/header';
-import { toast } from 'sonner';
-import { IoLockClosed, IoLockOpen } from 'react-icons/io5';
-import NotFound from '@/app/not-found';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
+import { IoLockClosed, IoLockOpen } from 'react-icons/io5';
+import Header from '@/components/header';
 import Footer from '@/components/footer';
+import NotFound from '@/app/not-found';
+import { getDefaultPreferences } from '@/config/preferences'; // ✅ centralized source
 
 export default function SettingsPage() {
-  // const { user, logout } = useAuthUser();
   const { user } = useSelector((state) => state.user);
-
   const router = useRouter();
-  const localStorageKey = `inventoryData_preferences_${user.id}`;
+  const localStorageKey = `inventoryData_preferences_${user?.id}`;
+
   const [reloadKey, setReloadKey] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
   const [isPasswordCorrect, setIsPasswordCorrect] = useState(false);
   const [passwordInput, setPasswordInput] = useState('');
   const [authLoading, setAuthLoading] = useState(false);
-  const [defaultPrefs, setDefaultPrefs] = useState({
-    // general
-    addProduct: false,
-    editProduct: false,
-    deleteProduct: false,
-    allowCategoryManagement: false,
-    renamingInventory: false,
-    viewSalesData: true,
-    defaultPage: 'inventory',
-    // inventory display
-    viewPurchasePriceColumn: false,
-    viewDateAddedColumn: false,
-    viewDateUpdatedColumn: true,
-    viewCategoryColumn: true,
-    defaultSortOrder: 'name',
-    // product data
-    viewCategory: true,
-    viewPurchasePrice: false,
-    viewGovtSalePrice: true,
-    viewDateAdded: false,
-    viewDateUpdated: true,
-    //security
-    requireSettingsPassword: true,
-    requireSuperAdminPassword: true,
-  });
 
-  const triggerReload = () => {
-    setReloadKey(!reloadKey);
-  };
-
+  // ✅ Use centralized preferences
+  const defaultPrefs = getDefaultPreferences(user?.role);
   const [preferences, setPreferences] = useState(defaultPrefs);
   const [tempPreferences, setTempPreferences] = useState(defaultPrefs);
 
+  const triggerReload = () => setReloadKey((prev) => !prev);
+
+  // ✅ Load saved preferences from localStorage
   useEffect(() => {
-    if (user.role != 'cashier') {
-      const updatedPrefs = {
-        // general
-        addProduct: true,
-        editProduct: true,
-        deleteProduct: true,
-        allowCategoryManagement: true,
-        renamingInventory: true,
-        viewSalesData: true,
-        defaultPage: 'pos',
-        // inventory display
-        viewPurchasePriceColumn: true,
-        viewDateAddedColumn: true,
-        viewDateUpdatedColumn: true,
-        viewCategoryColumn: true,
-        defaultSortOrder: 'name',
-        // product data
-        viewCategory: true,
-        viewPurchasePrice: true,
-        viewGovtSalePrice: true,
-        viewDateAdded: true,
-        viewDateUpdated: true,
-        //security
-        requireSettingsPassword: false,
-        requireSuperAdminPassword: false,
-      };
-      setDefaultPrefs(updatedPrefs);
-      setTempPreferences(updatedPrefs);
-      setPreferences(updatedPrefs);
-    }
-  }, [user]);
-
-  const generalSettings = [
-    { key: 'addProduct', label: 'Allow Adding Products' },
-    { key: 'editProduct', label: 'Allow Editing Products' },
-    { key: 'deleteProduct', label: 'Allow Deleting Products' },
-    {
-      key: 'allowCategoryManagement',
-      label: 'Allow Category Management',
-    },
-    { key: 'renamingInventory', label: 'Allow Renaming Inventory' },
-    { key: 'viewSalesData', label: 'Allow Viewing Sales Data' },
-  ];
-
-  const invDisplaySettings = [
-    {
-      key: 'viewPurchasePriceColumn',
-      label: 'View Purchase Price Column',
-    },
-    { key: 'viewCategoryColumn', label: 'View Category Column' },
-    { key: 'viewDateAddedColumn', label: 'View Date Added Column' },
-    {
-      key: 'viewDateUpdatedColumn',
-      label: 'View Date Updated Column',
-    },
-  ];
-
-  const prodDisplaySettings = [
-    { key: 'viewCategory', label: 'View Category' },
-    { key: 'viewPurchasePrice', label: 'View Purchase Price' },
-    { key: 'viewGovtSalePrice', label: 'View Govt. Sale Price' },
-    { key: 'viewDateAdded', label: 'View Date Added' },
-    { key: 'viewDateUpdated', label: 'View Date Updated' },
-  ];
-
-  const securitySettings = [
-    {
-      key: 'requireSettingsPassword',
-      label: 'Lock Settings',
-    },
-  ];
-
-  user?.role === 'superadmin' &&
-    securitySettings.push({
-      key: 'requireSuperAdminPassword',
-      label: 'Lock Super-Admin Panel',
-    });
-
-  useEffect(() => {
+    if (!user) return;
     const savedPrefs = JSON.parse(localStorage.getItem(localStorageKey));
     if (savedPrefs) {
-      setPreferences({ ...defaultPrefs, ...savedPrefs });
-      setTempPreferences({ ...defaultPrefs, ...savedPrefs });
+      const merged = { ...defaultPrefs, ...savedPrefs };
+      setPreferences(merged);
+      setTempPreferences(merged);
+    } else {
+      setPreferences(defaultPrefs);
+      setTempPreferences(defaultPrefs);
     }
-  }, [localStorageKey, user]);
+  }, [user, localStorageKey]);
 
   const togglePref = (key) => {
     setPreferences((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -149,7 +50,6 @@ export default function SettingsPage() {
     setTempPreferences(preferences);
     toast.success(`Settings saved!`);
     router.back();
-    // triggerReload();
   };
 
   const cancelChanges = () => {
@@ -168,6 +68,7 @@ export default function SettingsPage() {
       );
       return;
     }
+
     setAuthLoading(true);
     try {
       const response = await fetch('/api/user/login', {
@@ -176,14 +77,12 @@ export default function SettingsPage() {
         body: JSON.stringify({ email: user?.email, password: passwordInput }),
       });
 
-      const data = await response.json();
-
       if (!response.ok) {
         toast.error('Incorrect password');
         return;
       }
 
-      setTimeout(setAuthenticated, 1500, true);
+      setTimeout(() => setAuthenticated(true), 1500);
       setPasswordInput('');
       setIsPasswordCorrect(true);
       toast.success('Access granted');
@@ -193,6 +92,44 @@ export default function SettingsPage() {
       setAuthLoading(false);
     }
   };
+
+  if (!user) return null;
+  if (user.role === 'cashier') return <NotFound />;
+
+  const generalSettings = [
+    { key: 'addProduct', label: 'Allow Adding Products' },
+    { key: 'editProduct', label: 'Allow Editing Products' },
+    { key: 'deleteProduct', label: 'Allow Deleting Products' },
+    { key: 'allowCategoryManagement', label: 'Allow Category Management' },
+    { key: 'renamingInventory', label: 'Allow Renaming Inventory' },
+    { key: 'viewSalesData', label: 'Allow Viewing Sales Data' },
+  ];
+
+  const invDisplaySettings = [
+    { key: 'viewPurchasePriceColumn', label: 'View Purchase Price Column' },
+    { key: 'viewCategoryColumn', label: 'View Category Column' },
+    { key: 'viewDateAddedColumn', label: 'View Date Added Column' },
+    { key: 'viewDateUpdatedColumn', label: 'View Date Updated Column' },
+  ];
+
+  const prodDisplaySettings = [
+    { key: 'viewCategory', label: 'View Category' },
+    { key: 'viewPurchasePrice', label: 'View Purchase Price' },
+    { key: 'viewGovtSalePrice', label: 'View Govt. Sale Price' },
+    { key: 'viewDateAdded', label: 'View Date Added' },
+    { key: 'viewDateUpdated', label: 'View Date Updated' },
+  ];
+
+  const securitySettings = [
+    { key: 'requireSettingsPassword', label: 'Lock Settings' },
+  ];
+
+  if (user?.role === 'superadmin') {
+    securitySettings.push({
+      key: 'requireSuperAdminPassword',
+      label: 'Lock Super-Admin Panel',
+    });
+  }
 
   const defaultPageOptions = [
     { value: 'inventory', label: 'Inventory' },
@@ -205,10 +142,6 @@ export default function SettingsPage() {
     { value: 'salePrice', label: 'Sales Price' },
   ];
 
-  if (user?.role === 'cashier') {
-    return <NotFound />;
-  }
-
   if (preferences.viewPurchasePriceColumn)
     sortOptions.push({ value: 'purchasePrice', label: 'Purchase Price' });
   if (preferences.viewDateUpdatedColumn)
@@ -216,21 +149,17 @@ export default function SettingsPage() {
   if (preferences.viewDateAddedColumn)
     sortOptions.push({ value: 'createdAt', label: 'Date Added' });
 
-  // If password protection enabled & not authenticated, show lock screen
+  // 🔐 Password screen
   if (tempPreferences.requireSettingsPassword && !authenticated) {
     return (
       <div className="flex flex-col items-center">
-        <Header className={'shadow'} />
+        <Header className="shadow" />
         <div className="flex min-h-[80vh] flex-col items-center justify-center text-center p-6">
           <div className="bg-white rounded-xl shadow p-6 md:p-8 w-full max-w-sm border border-gray-200">
             <div className="w-full text-4xl mb-4 text-gray-500">
-              {isPasswordCorrect ? (
-                <IoLockOpen className="place-self-center" />
-              ) : (
-                <IoLockClosed className="place-self-center" />
-              )}
+              {isPasswordCorrect ? <IoLockOpen /> : <IoLockClosed />}
             </div>
-            <h1 className="text-xl font-semibold text-gray-800 mb-4 text-center">
+            <h1 className="text-xl font-semibold text-gray-800 mb-4">
               Enter Password to Access Settings
             </h1>
             <form onSubmit={handleAuthSubmit} className="flex flex-col gap-4">
@@ -245,7 +174,7 @@ export default function SettingsPage() {
               <button
                 type="submit"
                 disabled={authLoading || isPasswordCorrect}
-                className={`px-4 py-2 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 transition disabled:cursor-not-allowed ${
+                className={`px-4 py-2 rounded-lg bg-emerald-600 text-white hover:bg-emerald-700 transition ${
                   authLoading ? 'opacity-70 cursor-not-allowed' : ''
                 }`}
               >
@@ -262,102 +191,69 @@ export default function SettingsPage() {
     );
   }
 
+  // ⚙️ Main Settings UI
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header className={'shadow'} key={reloadKey} />
+      <Header className="shadow" key={reloadKey} />
       <div className="max-w-3xl mx-auto p-4 md:p-6">
         <div className="bg-white rounded-xl shadow-sm p-6 md:p-8">
           <h1 className="text-2xl font-semibold text-gray-800 mb-6">
             Settings
           </h1>
 
-          {/* Sections */}
-          {user?.role !== 'superadmin' && (
-            <SettingsSection title="General">
-              {generalSettings.map((item) => (
-                <ToggleRow
-                  key={item.key}
-                  label={item.label}
-                  value={preferences[item.key]}
-                  onChange={() => togglePref(item.key)}
-                />
-              ))}
-              {/* Default Page dropdown */}
-              {user.role !== 'superadmin' && (
-                <div className="flex justify-between items-center  px-4 py-3">
-                  <span className="text-gray-700">Default Page</span>
-                  <select
-                    value={preferences.defaultPage}
-                    onChange={(e) =>
-                      setPreferences((prev) => ({
-                        ...prev,
-                        defaultPage: e.target.value,
-                      }))
-                    }
-                    className="border border-gray-300 min-w-[150px] rounded-lg px-3 py-2 text-gray-700 bg-white focus:outline-none md:focus:ring-2 md:focus:ring-emerald-500"
-                  >
-                    {defaultPageOptions.map((opt) => (
-                      <option key={opt.value} value={opt.value}>
-                        {opt.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
-            </SettingsSection>
-          )}
-
-          {user?.role !== 'superadmin' && (
-            <SettingsSection title="Inventory Display">
-              {invDisplaySettings.map((item) => (
-                <ToggleRow
-                  key={item.key}
-                  label={item.label}
-                  value={preferences[item.key]}
-                  onChange={() => {
-                    setPreferences((prev) => ({
-                      ...prev,
-                      defaultSortOrder: 'name',
-                    }));
-                    togglePref(item.key);
-                  }}
-                />
-              ))}
-
-              {/* Sort dropdown */}
-              <div className="flex justify-between items-center  px-4 py-3">
-                <span className="text-gray-700">Default Sort Order</span>
-                <select
-                  value={preferences.defaultSortOrder}
-                  onChange={(e) =>
-                    setPreferences((prev) => ({
-                      ...prev,
-                      defaultSortOrder: e.target.value,
-                    }))
+          {user.role !== 'superadmin' && (
+            <>
+              <SettingsSection title="General">
+                {generalSettings.map((item) => (
+                  <ToggleRow
+                    key={item.key}
+                    label={item.label}
+                    value={preferences[item.key]}
+                    onChange={() => togglePref(item.key)}
+                  />
+                ))}
+                <SelectRow
+                  label="Default Page"
+                  options={defaultPageOptions}
+                  value={preferences.defaultPage}
+                  onChange={(v) =>
+                    setPreferences((prev) => ({ ...prev, defaultPage: v }))
                   }
-                  className="border border-gray-300 min-w-[150px] rounded-lg px-3 py-2 text-gray-700 bg-white focus:outline-none md:focus:ring-2 md:focus:ring-emerald-500"
-                >
-                  {sortOptions.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </SettingsSection>
-          )}
-          {user?.role !== 'superadmin' && (
-            <SettingsSection title="Product Details">
-              {prodDisplaySettings.map((item) => (
-                <ToggleRow
-                  key={item.key}
-                  label={item.label}
-                  value={preferences[item.key]}
-                  onChange={() => togglePref(item.key)}
                 />
-              ))}
-            </SettingsSection>
+              </SettingsSection>
+
+              <SettingsSection title="Inventory Display">
+                {invDisplaySettings.map((item) => (
+                  <ToggleRow
+                    key={item.key}
+                    label={item.label}
+                    value={preferences[item.key]}
+                    onChange={() => togglePref(item.key)}
+                  />
+                ))}
+                <SelectRow
+                  label="Default Sort Order"
+                  options={sortOptions}
+                  value={preferences.defaultSortOrder}
+                  onChange={(v) =>
+                    setPreferences((prev) => ({ ...prev, defaultSortOrder: v }))
+                  }
+                />
+              </SettingsSection>
+
+              <SettingsSection title="Product Details">
+                {prodDisplaySettings.map((item) => (
+                  <ToggleRow
+                    key={item.key}
+                    label={item.label}
+                    value={preferences[item.key]}
+                    onChange={() => togglePref(item.key)}
+                  />
+                ))}
+              </SettingsSection>
+            </>
           )}
+
           <SettingsSection title="Security">
             {securitySettings.map((item) => (
               <ToggleRow
@@ -369,7 +265,6 @@ export default function SettingsPage() {
             ))}
           </SettingsSection>
 
-          {/* Actions */}
           <div className="flex justify-end gap-3 mt-6">
             <button
               onClick={cancelChanges}
@@ -410,7 +305,7 @@ function ToggleRow({ label, value, onChange }) {
       <span className="text-gray-700">{label}</span>
       <button
         onClick={onChange}
-        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none md:focus:ring-2 md:focus:ring-offset-2 ${
+        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
           value ? 'bg-emerald-600' : 'bg-gray-300'
         }`}
       >
@@ -420,6 +315,25 @@ function ToggleRow({ label, value, onChange }) {
           }`}
         />
       </button>
+    </div>
+  );
+}
+
+function SelectRow({ label, options, value, onChange }) {
+  return (
+    <div className="flex justify-between items-center px-4 py-3">
+      <span className="text-gray-700">{label}</span>
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="border border-gray-300 min-w-[150px] rounded-lg px-3 py-2 text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
+      >
+        {options.map((opt) => (
+          <option key={opt.value} value={opt.value}>
+            {opt.label}
+          </option>
+        ))}
+      </select>
     </div>
   );
 }
