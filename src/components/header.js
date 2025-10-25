@@ -21,7 +21,7 @@ export default function Header({ className }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const router = useRouter();
-  const prefs = usePreferences(user?.id, user?.role);
+  const { prefs } = usePreferences(user?.id, user?.role);
 
   const handleMenuClick = () => {
     setSidebarOpen(!sidebarOpen);

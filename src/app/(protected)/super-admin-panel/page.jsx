@@ -47,7 +47,7 @@ export default function SuperAdminPage() {
   const [passwordInput, setPasswordInput] = useState('');
   const [authLoading, setAuthLoading] = useState(false);
 
-  const prefs = usePreferences(user?.id, user?.role);
+  const { prefs } = usePreferences(user?.id, user?.role);
 
   const localKey = `inventoryData_users_${user?.id}`;
 

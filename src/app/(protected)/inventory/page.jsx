@@ -33,7 +33,7 @@ export default function Inventory() {
     setCategoryFilter(categoryParam);
   }, [categoryParam]);
 
-  const prefs = usePreferences(user?.id, user?.role);
+  const { prefs } = usePreferences(user?.id, user?.role);
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loadingData, setLoadingData] = useState(true);

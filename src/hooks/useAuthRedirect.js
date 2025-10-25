@@ -1,26 +1,28 @@
 import { useEffect } from 'react';
-import { redirect, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import useAuthUser from './authUser';
+import usePreferences from './usePreferences';
+import { toast } from 'sonner';
 
 export const useAuthRedirect = () => {
   const router = useRouter();
   const { user, userLoading } = useAuthUser();
-  // const user = useSelector((state) => state.user.user);
-  // const userLoading = useSelector((state) => state.user.userLoading);
+  const { prefs, loading: prefsLoading } = usePreferences(user?.id, user?.role);
 
   useEffect(() => {
-    if (!userLoading) {
-      if (user) {
-        if (user.role === 'superadmin') {
-          router.push('/super-admin-panel');
-        } else if (user.role === 'cashier') {
-          router.push('/pos');
-        } else {
-          router.push('/inventory');
-        }
-      } else {
-        router.push('/login');
-      }
+    if (userLoading || prefsLoading) return;
+
+    if (!user) {
+      router.push('/login');
+      return;
     }
-  }, [router, user, userLoading]);
+
+    if (user.role === 'superadmin') {
+      router.push('/super-admin-panel');
+    } else if (user.role === 'cashier') {
+      router.push('/pos');
+    } else {
+      router.push(`/${prefs.defaultPage}`);
+    }
+  }, [router, user, userLoading, prefs, prefsLoading]);
 };

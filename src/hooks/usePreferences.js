@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 
 export default function usePreferences(userId, role) {
+  const [loading, setLoading] = useState(true);
+
   const basePrefs = {
     // general
     addProduct: false,
@@ -9,6 +11,7 @@ export default function usePreferences(userId, role) {
     allowCategoryManagement: false,
     renamingInventory: false,
     viewSalesData: true,
+    defaultPage: 'pos',
     // inventory display
     viewPurchasePriceColumn: false,
     viewDateAddedColumn: false,
@@ -34,6 +37,7 @@ export default function usePreferences(userId, role) {
     allowCategoryManagement: true,
     renamingInventory: true,
     viewSalesData: true,
+    defaultPage: 'inventory',
     viewPurchasePriceColumn: true,
     viewDateAddedColumn: true,
     viewDateUpdatedColumn: true,
@@ -65,8 +69,10 @@ export default function usePreferences(userId, role) {
     } catch (err) {
       console.error('Failed to load preferences:', err);
       setPrefs(defaultToUse);
+    } finally {
+      setLoading(false);
     }
   }, [userId, role]);
 
-  return prefs;
+  return { prefs, loading };
 }

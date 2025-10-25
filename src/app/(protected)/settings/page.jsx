@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { use, useEffect, useState } from 'react';
 import useAuthUser from '@/hooks/authUser';
 import Header from '@/components/header';
 import { toast } from 'sonner';
@@ -28,6 +28,7 @@ export default function SettingsPage() {
     allowCategoryManagement: false,
     renamingInventory: false,
     viewSalesData: true,
+    defaultPage: 'inventory',
     // inventory display
     viewPurchasePriceColumn: false,
     viewDateAddedColumn: false,
@@ -62,6 +63,7 @@ export default function SettingsPage() {
         allowCategoryManagement: true,
         renamingInventory: true,
         viewSalesData: true,
+        defaultPage: 'pos',
         // inventory display
         viewPurchasePriceColumn: true,
         viewDateAddedColumn: true,
@@ -145,7 +147,7 @@ export default function SettingsPage() {
   const savePreferences = () => {
     localStorage.setItem(localStorageKey, JSON.stringify(preferences));
     setTempPreferences(preferences);
-    toast.success('Settings saved!');
+    toast.success(`Settings saved!`);
     router.back();
     // triggerReload();
   };
@@ -191,6 +193,12 @@ export default function SettingsPage() {
       setAuthLoading(false);
     }
   };
+
+  const defaultPageOptions = [
+    { value: 'inventory', label: 'Inventory' },
+    { value: 'dashboard', label: 'Dashboard' },
+    { value: 'pos', label: 'POS' },
+  ];
 
   const sortOptions = [
     { value: 'name', label: 'Name' },
@@ -274,6 +282,28 @@ export default function SettingsPage() {
                   onChange={() => togglePref(item.key)}
                 />
               ))}
+              {/* Default Page dropdown */}
+              {user.role !== 'superadmin' && (
+                <div className="flex justify-between items-center  px-4 py-3">
+                  <span className="text-gray-700">Default Page</span>
+                  <select
+                    value={preferences.defaultPage}
+                    onChange={(e) =>
+                      setPreferences((prev) => ({
+                        ...prev,
+                        defaultPage: e.target.value,
+                      }))
+                    }
+                    className="border border-gray-300 min-w-[150px] rounded-lg px-3 py-2 text-gray-700 bg-white focus:outline-none md:focus:ring-2 md:focus:ring-emerald-500"
+                  >
+                    {defaultPageOptions.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
             </SettingsSection>
           )}
 
