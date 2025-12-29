@@ -3,6 +3,7 @@ import { useRouter } from 'next/navigation';
 import useAuthUser from './authUser';
 import usePreferences from './usePreferences';
 import { toast } from 'sonner';
+import Loading from '@/app/loading';
 
 export const useAuthRedirect = () => {
   const router = useRouter();
@@ -10,7 +11,9 @@ export const useAuthRedirect = () => {
   const { prefs, loading: prefsLoading } = usePreferences(user?.id, user?.role);
 
   useEffect(() => {
-    if (userLoading || prefsLoading) return;
+    if (userLoading || prefsLoading) {
+      <Loading />;
+    }
 
     if (!user) {
       router.push('/login');
