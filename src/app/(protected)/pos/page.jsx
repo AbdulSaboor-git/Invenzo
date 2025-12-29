@@ -297,63 +297,69 @@ export default function POSPage() {
   }
 
   return (
-    <div className="flex w-full flex-col h-full bg-gray-50">
-      <Header className={'shadow'} />
+    <div className="w-full h-full bg-gradient-to-r md:from-transparent md:to-transparent from-slate-700 to-gray-600 ">
+      <div className="flex w-full flex-col ">
+        <Header className={'shadow'} />
 
-      {/* Main Grid Layout */}
-      <div
-        className={`flex flex-col md:grid h-full items-stretch md:grid-cols-[2fr_1.8fr] max-w-7xl mx-auto w-full md:my-4 md:px-2 md:gap-4 ${(placingOrder || loadingData || refreshing || loadingInventory) && 'opacity-70 pointer-events-none'}`}
-      >
-        {/* Products Section */}
-        <div className="flex-[2] md:h-[calc(100vh-140px)] max-h-[50vh] md:max-h-max border-none overflow-y-auto bg-gray-100 shadow-sm md:rounded-xl">
-          <div className="  relative">
-            <div className="flex px-3 md:pl-5 md:pr-2 items-stretch  bg-gray-50 z-10 justify-between gap-2 md:gap-4 py-3 sticky top-0">
-              <h2 className="hidden md:block place-self-center text-base md:text-lg font-semibold text-gray-800">
-                Products
-              </h2>
-              <SearchBar
-                className={'bg-white'}
-                searchQuery={searchQuery}
-                setSearchQuery={setSearchQuery}
-              />
-              <RefreshButton
-                className="aspect-square md:aspect-auto"
-                failedtoRefresh={refreshFailed}
-                loading={loadingInventory || refreshing}
-                onClick={RefreshData}
-              />
-            </div>
-            <div className="px-3 md:pl-5 md:pr-2 py-2 grid grid-cols-2 bg-gray-100 sm:grid-cols-3 lg:grid-cols-4 gap-1 md:gap-3">
-              {products
-                .filter((product) => {
-                  const query = searchQuery.toLowerCase().trim();
-                  return (
-                    product.name.toLowerCase().includes(query) ||
-                    (product.category &&
-                      product.category.name.toLowerCase().includes(query)) ||
-                    (product.tags && product.tags.toLowerCase().includes(query))
-                  );
-                })
-                .map((product) => (
-                  <ProductCard
-                    key={product.id}
-                    addToCart={addToCart}
-                    product={product}
-                  />
-                ))}
+        {/* Main Grid Layout */}
+        <div
+          className={`flex flex-col md:grid md:grid-cols-[2fr_1.8fr]
+           max-w-7xl mx-auto w-full md:my-4 md:px-2 md:gap-4 
+           ${(placingOrder || loadingData || refreshing || loadingInventory) && 'opacity-70 pointer-events-none'} 
+        `}
+        >
+          {/* Products Section */}
+          <div className="flex-[2] md:h-[calc(100vh-140px)] max-h-[50vh] md:max-h-max border-none overflow-y-auto bg-gray-100 shadow-sm md:rounded-xl">
+            <div className="  relative">
+              <div className="flex px-3 md:pl-5 md:pr-2 items-stretch  bg-gray-50 z-10 justify-between gap-2 md:gap-4 py-3 sticky top-0">
+                {/* <h2 className="hidden md:block place-self-center text-base font-semibold text-gray-600">
+                  Products
+                </h2> */}
+                <SearchBar
+                  className={'bg-white'}
+                  searchQuery={searchQuery}
+                  setSearchQuery={setSearchQuery}
+                />
+                <RefreshButton
+                  className="aspect-square md:aspect-auto"
+                  failedtoRefresh={refreshFailed}
+                  loading={loadingInventory || refreshing}
+                  onClick={RefreshData}
+                />
+              </div>
+              <div className="px-3 md:pl-5 md:pr-2 py-2 grid grid-cols-2 bg-gray-100 sm:grid-cols-3 lg:grid-cols-4 gap-1 md:gap-3">
+                {products
+                  .filter((product) => {
+                    const query = searchQuery.toLowerCase().trim();
+                    return (
+                      product.name.toLowerCase().includes(query) ||
+                      (product.category &&
+                        product.category.name.toLowerCase().includes(query)) ||
+                      (product.tags &&
+                        product.tags.toLowerCase().includes(query))
+                    );
+                  })
+                  .map((product) => (
+                    <ProductCard
+                      key={product.id}
+                      addToCart={addToCart}
+                      product={product}
+                    />
+                  ))}
+              </div>
             </div>
           </div>
+          {/* Cart Section */}
+          <Cart
+            cart={cart}
+            setCart={setCart}
+            user={user}
+            invId={inventory?.id}
+            setPlacingOrder={setPlacingOrder}
+          />
         </div>
-        {/* Cart Section */}
-        <Cart
-          cart={cart}
-          setCart={setCart}
-          user={user}
-          invId={inventory?.id}
-          setPlacingOrder={setPlacingOrder}
-        />
+        {/* <Footer /> */}
       </div>
-      {/* <Footer /> */}
     </div>
   );
 }

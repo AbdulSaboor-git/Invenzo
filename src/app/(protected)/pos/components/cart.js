@@ -185,7 +185,7 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
           <MdOutlineDragIndicator size={12} className="rotate-90" />
         </div>
       )}
-      <div className="p-3 flex-1 h-full flex flex-col">
+      <div className="p-3 h-full flex flex-col">
         {cart.length === 0 ? (
           <div className="flex h-full md:min-h-full items-center text-center justify-center text-gray-200 md:text-gray-400 text-sm border border-dashed rounded-xl p-6">
             🛒 Cart is empty – add products to start billing
@@ -232,55 +232,49 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
                   </span>
                 </div>
 
-                <div>
-                  <label className="w-full grid grid-cols-[2fr_1.5fr] gap-2 items-center">
-                    <span className="place-self-end self-center">
-                      Payment Mode
-                    </span>
-                    <select
-                      value={paymentMode}
-                      onChange={(e) => setPaymentMode(e.target.value)}
-                      className="w-24 md:w-32 text-right border rounded px-2 py-1 place-self-end"
-                    >
-                      <option value="cash">Cash</option>
-                      <option value="credit">Credit</option>
-                      <option value="card">Card</option>
-                      <option value="other">Other</option>
-                    </select>
-                  </label>
+                <div className="w-full grid grid-cols-[2fr_1.5fr] gap-2 items-center">
+                  <span className="place-self-end self-center">
+                    Payment Mode
+                  </span>
+                  <select
+                    value={paymentMode}
+                    onChange={(e) => setPaymentMode(e.target.value)}
+                    className="w-24 md:w-32 text-right border rounded px-2 py-1 place-self-end"
+                  >
+                    <option value="cash">Cash</option>
+                    <option value="credit">Credit</option>
+                    <option value="card">Card</option>
+                    <option value="other">Other</option>
+                  </select>
                 </div>
 
-                <div>
-                  <label className="w-full grid grid-cols-[2fr_1.5fr] gap-2 items-center">
-                    <span className="place-self-end self-center">Note</span>
-                    <input
-                      type="text"
-                      value={note}
-                      onChange={(e) => setNote(e.target.value)}
-                      placeholder="Add a note (optional)"
-                      maxLength={80}
-                      className="w-full text-right border rounded px-2 py-1 place-self-end "
-                    />
-                  </label>
+                <div className="w-full grid grid-cols-[2fr_1.5fr] gap-2 items-center">
+                  <span className="place-self-end self-center">Note</span>
+                  <input
+                    type="text"
+                    value={note}
+                    onChange={(e) => setNote(e.target.value)}
+                    placeholder="Add a note (optional)"
+                    maxLength={80}
+                    className="w-full text-right border rounded px-2 py-1 place-self-end "
+                  />
                 </div>
 
-                <div>
-                  <label className="grid grid-cols-[2fr_1.5fr] gap-2 items-center">
-                    <span className="place-self-end self-center">Discount</span>
-                    <input
-                      type="number"
-                      value={discount === 0 ? '' : discount}
-                      max={subTotal}
-                      min={0}
-                      onChange={(e) => {
-                        let val = parseFloat(e.target.value);
-                        if (isNaN(val)) val = 0;
-                        val = Math.min(Math.max(val, 0), subTotal);
-                        setDiscount(val);
-                      }}
-                      className="w-20 md:w-24 text-right border rounded px-2 py-1 place-self-end text-sm md:text-base"
-                    />
-                  </label>
+                <div className="grid grid-cols-[2fr_1.5fr] gap-2 items-center">
+                  <span className="place-self-end self-center">Discount</span>
+                  <input
+                    type="number"
+                    value={discount === 0 ? '' : discount}
+                    max={subTotal}
+                    min={0}
+                    onChange={(e) => {
+                      let val = parseFloat(e.target.value);
+                      if (isNaN(val)) val = 0;
+                      val = Math.min(Math.max(val, 0), subTotal);
+                      setDiscount(val);
+                    }}
+                    className="w-20 md:w-24 text-right border rounded px-2 py-1 place-self-end text-sm md:text-base"
+                  />
                 </div>
 
                 <div className="font-bold grid grid-cols-[2fr_1.5fr] gap-2">
