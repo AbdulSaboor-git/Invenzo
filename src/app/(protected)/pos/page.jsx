@@ -297,15 +297,15 @@ export default function POSPage() {
   }
 
   return (
-    <div className="flex w-full flex-col bg-gray-50">
+    <div className="flex w-full flex-col h-full bg-gray-50">
       <Header className={'shadow'} />
 
       {/* Main Grid Layout */}
       <div
-        className={`grid grid-cols-1 md:grid-cols-[2fr_1.8fr] max-w-7xl mx-auto w-full md:my-4 md:px-2 md:gap-4 ${(placingOrder || loadingData || refreshing || loadingInventory) && 'opacity-70 pointer-events-none'}`}
+        className={`flex flex-col md:grid h-full items-stretch md:grid-cols-[2fr_1.8fr] max-w-7xl mx-auto w-full md:my-4 md:px-2 md:gap-4 ${(placingOrder || loadingData || refreshing || loadingInventory) && 'opacity-70 pointer-events-none'}`}
       >
         {/* Products Section */}
-        <div className="md:h-[calc(100vh-140px)] h-[40vh] border-none overflow-y-auto bg-gray-100 shadow-sm md:rounded-xl">
+        <div className="flex-[2] md:h-[calc(100vh-140px)] max-h-[50vh] md:max-h-max border-none overflow-y-auto bg-gray-100 shadow-sm md:rounded-xl">
           <div className="  relative">
             <div className="flex px-3 md:pl-5 md:pr-2 items-stretch  bg-gray-50 z-10 justify-between gap-2 md:gap-4 py-3 sticky top-0">
               <h2 className="hidden md:block place-self-center text-base md:text-lg font-semibold text-gray-800">
@@ -344,7 +344,6 @@ export default function POSPage() {
             </div>
           </div>
         </div>
-
         {/* Cart Section */}
         <Cart
           cart={cart}
