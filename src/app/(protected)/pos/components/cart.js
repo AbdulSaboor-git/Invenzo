@@ -178,9 +178,9 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
 
   return (
     <div
-      className={` flex-[1] shadow-[0_-1px_3px_0_rgba(0,0,0,0.2),0_-1px_2px_-1px_rgba(0,0,0,0.2)] 
-        rounded-t-2xl relative md:from-white md:to-white md:shadow-sm md:rounded-xl
-        ${cart.length === 0 ? 'bg-white border-t border-gray-600' : 'bg-gradient-to-r from-slate-700 to-gray-600'}
+      className={` flex-[1]  
+        rounded-t-2xl relative  md:rounded-xl  md:from-white md:to-white
+        ${cart.length === 0 ? 'shadow-none md:shadow-none bg-gradient-to-b from-slate-600 min-h-[300px] to-white' : 'shadow-[0_-1px_3px_0_rgba(0,0,0,0.2),0_-1px_2px_-1px_rgba(0,0,0,0.2)] md:shadow-sm bg-gradient-to-r from-slate-700 to-gray-600'}
         `}
     >
       {cart.length > 0 && (
@@ -190,7 +190,7 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
       )}
       <div className="p-3 h-full flex flex-col relative">
         {cart.length === 0 ? (
-          <div className="flex h-full md:min-h-full items-center text-center justify-center text-gray-600 md:text-gray-400 text-sm rounded-xl p-6">
+          <div className="flex h-full md:min-h-full items-center text-center justify-center text-gray-200 md:text-gray-400 text-sm rounded-xl p-6">
             🛒 Cart is empty – add products to start billing
             {/* <div className="md:hidden fixed left-0 bottom-0 w-full h-[200px] -z-10 bg-gradient-to-r from-slate-700 to-gray-600"></div> */}
           </div>
