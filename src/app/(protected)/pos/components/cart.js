@@ -178,17 +178,18 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
 
   return (
     <div
-      className={`bg-gradient-to-r flex-[1] from-slate-700 to-gray-600 shadow-[0_-1px_3px_0_rgba(0,0,0,0.2),0_-1px_2px_-1px_rgba(0,0,0,0.2)] rounded-t-2xl relative md:from-white md:to-white md:shadow-sm md:rounded-xl`}
+      className={` flex-[1] bg-gradient-to-r from-slate-700 to-gray-600 shadow-[0_-1px_3px_0_rgba(0,0,0,0.2),0_-1px_2px_-1px_rgba(0,0,0,0.2)] rounded-t-2xl relative md:from-white md:to-white md:shadow-sm md:rounded-xl`}
     >
       {cart.length > 0 && (
         <div className="absolute border border-gray-600 shadow-[0_-1px_3px_0_rgba(0,0,0,0.2),0_-1px_2px_-1px_rgba(0,0,0,0.2)] flex text-gray-400 justify-center md:hidden -top-1.5 left-1/2 -translate-x-1/2 rounded-full bg-gray-300 z-10 w-12 h-[14px]">
           <MdOutlineDragIndicator size={12} className="rotate-90" />
         </div>
       )}
-      <div className="p-3 h-full flex flex-col">
+      <div className="p-3 h-full flex flex-col relative">
         {cart.length === 0 ? (
-          <div className="flex h-full md:min-h-full items-center text-center justify-center text-gray-200 md:text-gray-400 text-sm border border-dashed rounded-xl p-6">
+          <div className="flex h-full min-h-[30vh] md:min-h-full items-center text-center justify-center text-gray-200 md:text-gray-400 text-sm rounded-xl p-6">
             🛒 Cart is empty – add products to start billing
+            <div className="md:hidden fixed left-0 bottom-0 w-full h-[200px] -z-10 bg-gradient-to-r from-slate-700 to-gray-600"></div>
           </div>
         ) : (
           <div className="md:p-2 flex flex-col h-full">

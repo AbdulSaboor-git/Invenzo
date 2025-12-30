@@ -15,17 +15,17 @@ export const useAuthRedirect = () => {
       <Loading />;
     }
 
-    if (!user) {
-      router.push('/login');
+    if (!userLoading && !user) {
+      router.replace('/login');
       return;
     }
-
-    if (user.role === 'superadmin') {
-      router.push('/super-admin-panel');
-    } else if (user.role === 'cashier') {
-      router.push('/pos');
-    } else {
-      router.push(`/${prefs.defaultPage}`);
-    }
+    if (!userLoading && user)
+      if (user.role === 'superadmin') {
+        router.push('/super-admin-panel');
+      } else if (user.role === 'cashier') {
+        router.push('/pos');
+      } else {
+        router.push(`/${prefs.defaultPage}`);
+      }
   }, [router, user, userLoading, prefs, prefsLoading]);
 };
