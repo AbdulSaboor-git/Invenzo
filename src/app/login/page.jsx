@@ -7,6 +7,7 @@ import { setUser } from '@/redux/userSlice';
 import { toast } from 'sonner';
 import { useAuthRedirect } from '@/hooks/useAuthRedirect';
 import Footer from '@/components/footer';
+import Loading from '../loading';
 
 export default function Login() {
   const router = useRouter();
@@ -21,7 +22,11 @@ export default function Login() {
   //     router.push('/inventory');
   //   }
   // }, [user, userLoading, router]);
-  useAuthRedirect();
+  const { userLoading, prefsLoading } = useAuthRedirect();
+
+  if (userLoading || prefsLoading) {
+    return <Loading />;
+  }
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -66,7 +71,7 @@ export default function Login() {
       toast.success('Logged in successfully');
       dispatch(setUser(data.user)); // Store user in Redux
       setTimeout(() => {
-        router.replace('/');
+        router.push('/');
       }, 0); // Redirect to a different page after successful login
     } catch (err) {
       console.log(err);

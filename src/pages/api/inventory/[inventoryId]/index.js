@@ -1,6 +1,7 @@
 import prisma from '@/lib/prisma';
+import { withAuth } from '@/lib/middlewares/withAuth';
 
-export default async function handler(req, res) {
+async function handler(req, res) {
   const { method } = req;
   const { inventoryId } = req.query; // Extract inventoryId from query parameters
 
@@ -32,7 +33,7 @@ const handlePost = async (req, res, inventoryId) => {
   } = req.body;
 
   try {
-    const newProduct = await prisma.product.createMany({
+    const newProduct = await prisma.product.create({
       data: {
         name,
         description,
@@ -45,8 +46,7 @@ const handlePost = async (req, res, inventoryId) => {
         tags,
       },
     });
-    const data = { product: newProduct, status: 201 };
-    res.status(201).json(data);
+    res.status(201).json({ success: true, data: newProduct });
   } catch (error) {
     res.status(500).json({ error: 'Internal Server Error' });
   }
@@ -98,15 +98,31 @@ async function handleGet(req, res, inventoryId) {
         .json({ message: 'User is not authorized to access this inventory' });
     }
 
-    // Fetch products
+    // Fetch products — supports optional ?search, ?page, ?pageSize
+    const search = req.query.search ?? '';
+    const take = req.query.pageSize ? Math.min(parseInt(req.query.pageSize, 10), 500) : 100;
+    const skip = req.query.page ? Math.max(parseInt(req.query.page, 10) - 1, 0) * take : 0;
+
     const products = await prisma.product.findMany({
-      where: { inventoryId: id },
+      where: {
+        inventoryId: id,
+        ...(search
+          ? {
+              OR: [
+                { name: { contains: search, mode: 'insensitive' } },
+                { tags: { contains: search, mode: 'insensitive' } },
+              ],
+            }
+          : {}),
+      },
       include: {
         category: {
           select: { id: true, name: true },
         },
       },
       orderBy: { name: 'asc' },
+      take,
+      skip,
     });
 
     // Fetch categories
@@ -171,7 +187,6 @@ async function handleDelete(req, res) {
     });
 
     if (!existingProduct) {
-      console.log('Product not found');
       return res.status(404).json({ error: 'Product not found', errorCode: 3 });
     }
 
@@ -187,3 +202,5 @@ async function handleDelete(req, res) {
     return res.status(500).json({ error: 'Internal Server Error' });
   }
 }
+
+export default withAuth(handler);

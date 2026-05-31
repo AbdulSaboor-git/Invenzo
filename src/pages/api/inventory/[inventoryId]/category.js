@@ -1,6 +1,7 @@
 import prisma from '@/lib/prisma';
+import { withAuth } from '@/lib/middlewares/withAuth';
 
-export default async function handler(req, res) {
+async function handler(req, res) {
   const { method } = req;
   const { inventoryId } = req.query; // Extract inventoryId from query parameters
 
@@ -179,3 +180,5 @@ const handleDelete = async (req, res) => {
     return res.status(500).json({ message: 'Failed to delete category' });
   }
 };
+
+export default withAuth(handler);

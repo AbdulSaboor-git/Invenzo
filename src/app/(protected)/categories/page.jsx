@@ -15,6 +15,7 @@ import DeleteCategoryPopup from './components/delete_category';
 import NotFound from '@/app/not-found';
 import Footer from '@/components/footer';
 import { useRouter } from 'next/navigation';
+import { apiFetch } from '@/utils/apiFetch';
 
 export default function Inventory() {
   // const { user, logout } = useAuthUser();
@@ -48,7 +49,7 @@ export default function Inventory() {
     try {
       setLoadingInventory(true);
 
-      let response = await fetch(`/api/inventory?adminId=${user?.adminId}`);
+      let response = await apiFetch(`/api/inventory?adminId=${user?.adminId}`);
 
       if (!response.ok) throw new Error('Failed to fetch inventory');
 
@@ -81,7 +82,7 @@ export default function Inventory() {
       setRefreshFailed(false);
       setLoadingData(true);
       setRefreshing(true);
-      const response = await fetch(
+      const response = await apiFetch(
         `/api/inventory/${inventory?.id}?userId=${user?.id}`
       );
       if (!response.ok) throw new Error('Failed to fetch from server');

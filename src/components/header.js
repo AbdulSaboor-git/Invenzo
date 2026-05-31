@@ -1,5 +1,5 @@
 'use client';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { FaFileInvoice, FaUsers } from 'react-icons/fa';
 import { IoAddCircle, IoLockClosed } from 'react-icons/io5';
@@ -22,6 +22,7 @@ export default function Header({ className }) {
   const [showProfile, setShowProfile] = useState(false);
   const router = useRouter();
   const { prefs } = usePreferences(user?.id, user?.role);
+  const pathname = usePathname();
 
   const handleMenuClick = () => {
     setSidebarOpen(!sidebarOpen);
@@ -41,6 +42,7 @@ export default function Header({ className }) {
     buttons.push({
       icon: <MdDashboard />,
       label: 'Dashboard',
+      href: '/dashboard',
     });
 
   user?.role !== 'superadmin' &&
@@ -48,10 +50,12 @@ export default function Header({ className }) {
       {
         icon: <MdPointOfSale />,
         label: 'POS',
+        href: '/pos',
       },
       {
         icon: <MdInventory />,
         label: 'Inventory',
+        href: '/inventory',
       }
     );
 
@@ -61,6 +65,7 @@ export default function Header({ className }) {
     buttons.push({
       icon: <IoAddCircle />,
       label: 'Add Product',
+      href: '/add-product',
     });
 
   user?.role !== 'superadmin' &&
@@ -69,6 +74,7 @@ export default function Header({ className }) {
     buttons.push({
       icon: <MdCategory />,
       label: 'Categories',
+      href: '/categories',
     });
 
   user?.role !== 'superadmin' &&
@@ -76,12 +82,14 @@ export default function Header({ className }) {
     buttons.push({
       icon: <FaUsers />,
       label: 'Cashiers',
+      href: '/cashiers',
     });
 
   prefs.viewSalesData &&
     buttons.push({
       icon: <FaFileInvoice />,
       label: 'Sales',
+      href: '/sales',
     });
 
   user?.role === 'superadmin' &&
@@ -139,18 +147,25 @@ export default function Header({ className }) {
               btn.label === 'Add Product' ||
               btn.label === 'Sales'
           )
-          .map((button, index) => (
+          .map((button, index) => {
+            const isActive = button.href && pathname === button.href;
+            return (
             <button
               key={index}
-              className="flex items-center gap-1.5 hover:scale-105 px-4 py-0.5 text-gray-600 hover:text-gray-800 "
+              className={`flex items-center gap-1.5 hover:scale-105 px-4 py-0.5 transition-colors ${
+                isActive
+                  ? 'text-gray-900 border-b-2 border-gray-800 font-medium'
+                  : 'text-gray-600 hover:text-gray-800'
+              }`}
               onClick={() => {
                 handleButtonClick(button.label);
               }}
             >
-              <span className="">{button.icon}</span>
-              <span className="">{button.label}</span>
+              <span>{button.icon}</span>
+              <span>{button.label}</span>
             </button>
-          ))}
+          );
+          })}
       </div>
 
       <div className="flex items-center justify-end gap-3 md:gap-5 text-2xl">

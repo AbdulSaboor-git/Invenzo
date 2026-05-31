@@ -6,7 +6,7 @@ export default function CartItem({ item, onUpdate, onDelete }) {
   const unitPricePerBase =
     item.product.unit === 'kg'
       ? item.product.salePrice / 1000 // per gram
-      : item.product.unit === 'liter'
+      : item.product.unit === 'litre'
         ? item.product.salePrice / 1000 // per ml
         : item.product.salePrice; // per piece
 
@@ -27,7 +27,7 @@ export default function CartItem({ item, onUpdate, onDelete }) {
   // auto format unit label
   const getUnitLabel = () => {
     if (item.product.unit === 'kg' || item.product.unit === 'g') return 'g';
-    if (item.product.unit === 'liter' || item.product.unit === 'ml')
+    if (item.product.unit === 'litre' || item.product.unit === 'ml')
       return 'ml';
     return item.product.unit;
   };
@@ -76,7 +76,7 @@ export default function CartItem({ item, onUpdate, onDelete }) {
           value={item.price}
           disabled={
             item.product.unit !== 'kg' &&
-            item.product.unit !== 'liter' &&
+            item.product.unit !== 'litre' &&
             item.product.unit !== 'g' &&
             item.product.unit !== 'ml'
           }

@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { apiFetch } from '@/utils/apiFetch';
 
 export default function EditCashierPopup({ cashier, onClose, onSuccess }) {
   const [firstName, setFirstName] = useState(cashier.User.firstName || '');
@@ -37,7 +38,7 @@ export default function EditCashierPopup({ cashier, onClose, onSuccess }) {
         onClose();
         return;
       }
-      const res = await fetch('/api/cashiers', {
+      const res = await apiFetch('/api/cashiers', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

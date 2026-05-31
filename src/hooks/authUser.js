@@ -3,14 +3,15 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setUser, setUserLoading, logoutUser } from '@/redux/userSlice';
 import { toast } from 'sonner';
+import { apiFetch } from '@/utils/apiFetch';
 
-const TOW_MINUTES = 2 * 60 * 1000;
+const TWO_HOURS = 2 * 60 * 60 * 1000;
 const STALE_CHECK_INTERVAL = 20 * 1000;
 
-let hasShownDeactivationToast = false;
-let hasShownOfflineToast = false;
-
 export default function useAuthUser() {
+  // QUAL-02 fix: use refs instead of module-level mutable state
+  const hasShownDeactivationToast = useRef(false);
+  const hasShownOfflineToast = useRef(false);
   const { user, userLoading } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [isFirstLoad, setIsFirstLoad] = useState(true);
@@ -44,7 +45,6 @@ export default function useAuthUser() {
   const fetchFreshUser = useCallback(async () => {
     if (typeof window === 'undefined') return;
     if (!navigator.onLine) {
-      console.log('Skipped fetch: offline');
       return;
     }
 
@@ -55,13 +55,13 @@ export default function useAuthUser() {
         return;
       }
 
-      const res = await fetch('/api/user', {
+      const res = await apiFetch('/api/user', {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       if (res.status === 403) {
-        if (!hasShownDeactivationToast) {
-          hasShownDeactivationToast = true;
+        if (!hasShownDeactivationToast.current) {
+          hasShownDeactivationToast.current = true;
           toast.error('Your account has been deactivated. Logging out...');
         }
         setTimeout(logout, 3000);
@@ -69,7 +69,6 @@ export default function useAuthUser() {
       }
 
       if (res.status === 401) {
-        console.log('Something went wrong');
         return;
       }
 
@@ -80,15 +79,14 @@ export default function useAuthUser() {
         const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
         const isChanged =
           JSON.stringify(storedUser) !== JSON.stringify(data.user);
-
-        if (isChanged) {
-          try {
+        try {
+          localStorage.setItem('userFetchedAt', String(Date.now()));
+          if (isChanged) {
             localStorage.setItem('user', JSON.stringify(data.user));
-            localStorage.setItem('userFetchedAt', String(Date.now()));
-          } catch (e) {
-            console.error('Error writing user to localStorage', e);
+            dispatch(setUser(data.user));
           }
-          dispatch(setUser(data.user));
+        } catch (e) {
+          console.error('Error writing to localStorage', e);
         }
       }
     } catch (err) {
@@ -99,14 +97,13 @@ export default function useAuthUser() {
 
   const checkStaleAndFetch = useCallback(() => {
     if (!navigator.onLine) {
-      console.log('Skipped stale check: offline');
       return;
     }
     const fetchedAt = parseInt(
       localStorage.getItem('userFetchedAt') || '0',
       10
     );
-    if (Date.now() - fetchedAt > TOW_MINUTES) {
+    if (Date.now() - fetchedAt > TWO_HOURS) {
       fetchFreshUser();
     }
   }, [fetchFreshUser]);
@@ -127,11 +124,10 @@ export default function useAuthUser() {
       }
 
       if (!navigator.onLine) {
-        if (isFirstLoad && !hasShownOfflineToast) {
+        if (isFirstLoad && !hasShownOfflineToast.current) {
           toast.error('You are offline. Some features may be unavailable.');
-          hasShownOfflineToast = true;
+          hasShownOfflineToast.current = true;
         } else {
-          console.log('Offline: skipping user load');
         }
       }
 
@@ -142,8 +138,8 @@ export default function useAuthUser() {
       if (storedUser && token) {
         const parsedUser = JSON.parse(storedUser);
         if (!parsedUser.isActive) {
-          if (!hasShownDeactivationToast) {
-            hasShownDeactivationToast = true;
+          if (!hasShownDeactivationToast.current) {
+            hasShownDeactivationToast.current = true;
             toast.error('Your account has been deactivated. Logging out...');
           }
           logout();
@@ -170,7 +166,6 @@ export default function useAuthUser() {
 
     // ---- refresh on reconnect ----
     const handleOnline = () => {
-      console.log('Back online → refreshing user');
       checkStaleAndFetch();
     };
     window.addEventListener('online', handleOnline);

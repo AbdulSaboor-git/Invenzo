@@ -12,6 +12,7 @@ import Header from '@/components/header';
 import Loading from '@/app/loading';
 import Footer from '@/components/footer';
 import NotFound from '@/app/not-found';
+import { apiFetch } from '@/utils/apiFetch';
 
 export default function DashboardPage() {
   const { user } = useSelector((state) => state.user);
@@ -42,7 +43,7 @@ export default function DashboardPage() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch('/api/dashboard', {
+      const res = await apiFetch('/api/dashboard', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

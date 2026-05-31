@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { apiFetch } from '@/utils/apiFetch';
 
 export default function EditCategoryPopup({
   invId,
@@ -36,7 +37,7 @@ export default function EditCategoryPopup({
         onClose();
         return;
       }
-      const res = await fetch(`/api/inventory/${invId}/category`, {
+      const res = await apiFetch(`/api/inventory/${invId}/category`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -12,6 +12,7 @@ import usePreferences from '@/hooks/usePreferences';
 import { IoLockClosed, IoLockOpen } from 'react-icons/io5';
 import { useSelector } from 'react-redux';
 import Footer from '@/components/footer';
+import { apiFetch } from '@/utils/apiFetch';
 
 /*
   Super Admin Panel (Users Management)
@@ -81,7 +82,7 @@ export default function SuperAdminPage() {
     }
     try {
       setRefreshing(true);
-      const res = await fetch('/api/user/user');
+      const res = await apiFetch('/api/user/user');
       const data = await res.json();
       if (!res.ok) {
         setRefreshFailed(true);
@@ -621,7 +622,7 @@ function AddAdminPopup({ onClose, onSuccess }) {
     }
     try {
       setLoading(true);
-      const res = await fetch('/api/user/user', {
+      const res = await apiFetch('/api/user/user', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -637,7 +638,7 @@ function AddAdminPopup({ onClose, onSuccess }) {
 
       // console.log(data?.id);
       try {
-        const response = await fetch(`/api/inventory`, {
+        const response = await apiFetch(`/api/inventory`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ adminId: data?.data?.id }),
@@ -646,7 +647,7 @@ function AddAdminPopup({ onClose, onSuccess }) {
         console.log(data2);
 
         try {
-          const res = await fetch(`/api/cashiers`, {
+          const res = await apiFetch(`/api/cashiers`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -814,7 +815,7 @@ function EditUserPopup({ userObj, onClose, onSuccess }) {
 
     try {
       setLoading(true);
-      const res = await fetch('/api/user/user', {
+      const res = await apiFetch('/api/user/user', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -947,7 +948,7 @@ function ResetPasswordPopup({ userObj, onClose }) {
     }
     try {
       setLoading(true);
-      const res = await fetch('/api/user/user', {
+      const res = await apiFetch('/api/user/user', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: userObj.id }),
@@ -1045,7 +1046,7 @@ function DeleteUserPopup({ userObj, onClose, onSuccess }) {
     }
     try {
       setLoading(true);
-      const res = await fetch('/api/user/user', {
+      const res = await apiFetch('/api/user/user', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: userObj.id }),

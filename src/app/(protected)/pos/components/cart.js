@@ -1,8 +1,10 @@
+import { calculateCartItemProfit, normaliseQuantity } from '@/utils/profit';
 import React, { useEffect, useState } from 'react';
 import CartItem from './cart_item';
 import { MdOutlineDragIndicator } from 'react-icons/md';
 import { toast } from 'sonner';
 import ViewSaleInvoice from '@/components/viewSaleInvoice';
+import { apiFetch } from '@/utils/apiFetch';
 
 export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
   const [discount, setDiscount] = useState(0);
@@ -11,18 +13,11 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
   const subTotal = cart.reduce((sum, item) => sum + item.price, 0);
   const netPayable = (subTotal - discount).toFixed(0);
 
-  const getQuantity = (item) => {
-    if (item.product.unit == 'kg' || item.product.unit == 'liter') {
-      return item.quantity / 1000;
-    } else return item.quantity;
-  };
+  const getQuantity = (item) => normaliseQuantity(item.quantity, item.product?.unit);
 
-  const itemCost = cart.reduce(
-    (sum, item) => sum + item.product.purchasePrice * getQuantity(item),
-    0
-  );
-
-  const profit = (netPayable - itemCost).toFixed(0);
+  const profit = cart
+    .reduce((sum, item) => sum + calculateCartItemProfit(item), 0)
+    .toFixed(0);
 
   const [saleId, setSaleId] = useState(null);
   const [showInvoice, setShowInvoice] = useState(false);
@@ -126,11 +121,9 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
     const id = toast.loading('Placing order...');
 
     try {
-      console.log(user?.cashierId, invId, cart, discount, netPayable);
-      const response = await fetch('/api/sales', {
+      const response = await apiFetch('/api/sales', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
         },
 
         body: JSON.stringify({
@@ -151,8 +144,6 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
       const data = await response.json();
       setSaleId(data.sale.id);
       setShowInvoice(true);
-
-      console.log('Order placed successfully:', data.sale);
       toast.success('Order placed successfully', { id });
       clearCart();
     } catch (error) {
@@ -208,7 +199,7 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
 
             <div className="md:h-[calc(100vh-374px)] pb-[240px] md:pb-0 overflow-y-auto relative space-y-2">
               {cart.map((item, index) => (
-                <div key={index}>
+                <div key={item.product.id}>
                   <CartItem
                     item={item}
                     onUpdate={(updated) => handleUpdate(index, updated)}

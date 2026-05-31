@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { toast } from "sonner";
+import { apiFetch } from '@/utils/apiFetch';
 
 export default function DeleteProduct({
   inventoryId,
@@ -21,7 +22,7 @@ export default function DeleteProduct({
     }
     try {
       setLoadingForDelete(true);
-      const response = await fetch(`/api/inventory/${inventoryId}`, {
+      const response = await apiFetch(`/api/inventory/${inventoryId}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",

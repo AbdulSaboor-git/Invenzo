@@ -1,3 +1,5 @@
+// src/hooks/usePreferences.js
+
 import { useState, useEffect } from 'react';
 import { getDefaultPreferences } from '@/config/preferences';
 
@@ -6,7 +8,11 @@ export default function usePreferences(userId, role) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!userId) return;
+    // ✅ FIX: no userId means no user is logged in — resolve loading immediately
+    if (!userId) {
+      setLoading(false);
+      return;
+    }
 
     const defaults = getDefaultPreferences(role);
 

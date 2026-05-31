@@ -2,6 +2,7 @@
 import useAuthUser from '@/hooks/authUser';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { apiFetch } from '@/utils/apiFetch';
 
 export default function ChangePasswordPopup({ user, onClose, cancel }) {
   const [oldPassword, setOldPassword] = useState('');
@@ -33,7 +34,7 @@ export default function ChangePasswordPopup({ user, onClose, cancel }) {
     try {
       setLoading(true);
 
-      const res = await fetch('/api/user/user', {
+      const res = await apiFetch('/api/user/user', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -7,6 +7,7 @@ import useAuthUser from '@/hooks/authUser';
 import { useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import Footer from '@/components/footer';
+import { apiFetch } from '@/utils/apiFetch';
 
 export default function AddProductPage() {
   // const { user, logout } = useAuthUser();
@@ -37,7 +38,9 @@ export default function AddProductPage() {
     if (!user) return;
     try {
       setLoadingInventory(true);
-      const response = await fetch(`/api/inventory?adminId=${user?.adminId}`);
+      const response = await apiFetch(
+        `/api/inventory?adminId=${user?.adminId}`
+      );
       if (!response.ok) throw new Error('Failed to fetch from server');
       const data = await response.json();
       setInventory(data.inventory);
@@ -54,7 +57,7 @@ export default function AddProductPage() {
     }
     try {
       setLoadingCategories(true);
-      const res = await fetch(
+      const res = await apiFetch(
         `/api/inventory/${inventory.id}?userId=${user?.id}`
       );
       if (!res.ok) {
@@ -153,7 +156,7 @@ export default function AddProductPage() {
     try {
       setLoading(true);
 
-      const res = await fetch(`/api/inventory/${inventory.id}`, {
+      const res = await apiFetch(`/api/inventory/${inventory.id}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -187,7 +190,7 @@ export default function AddProductPage() {
       // Refetch products from DB
       try {
         setSyncing(true);
-        const productRes = await fetch(
+        const productRes = await apiFetch(
           `/api/inventory/${inventory.id}?userId=${user.id}`
         );
         if (!productRes.ok) {
@@ -424,8 +427,8 @@ export default function AddProductPage() {
               <option value="">Select unit</option>
               <option value="g">Gram (g)</option>
               <option value="kg">Kilogram (kg)</option>
-              <option value="ml">Milliliter (ml)</option>
-              <option value="liter">Liter (l)</option>
+              <option value="ml">Millilitre (ml)</option>
+              <option value="litre">litre (l)</option>
               <option value="pc">Piece (pc)</option>
               <option value="dozen">Dozen</option>
               <option value="pack">Pack</option>

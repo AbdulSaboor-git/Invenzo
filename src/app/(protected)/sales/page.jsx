@@ -6,6 +6,7 @@ import Header from '@/components/header';
 import RefreshButton from '../inventory/components/refresh_btn';
 import SalesTable from './components/salesTable';
 import Footer from '@/components/footer';
+import { apiFetch } from '@/utils/apiFetch';
 
 export default function SalesPage() {
   const { user } = useSelector((s) => s.user);
@@ -72,10 +73,10 @@ export default function SalesPage() {
         url += `&inventoryId=${user?.invId}&cashierId=${user?.cashierId}`;
       }
 
-      const res = await fetch(url);
+      const res = await apiFetch(url);
       if (!res.ok) throw new Error('Failed to fetch sales');
       const data = await res.json();
-      const list = Array.isArray(data) ? data : data.sales;
+      const list = Array.isArray(data) ? data : data.data;
       const timestamp = new Date().toISOString();
 
       setSales(list || []);

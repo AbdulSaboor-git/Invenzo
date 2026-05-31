@@ -4,12 +4,12 @@ import React from 'react';
 export default function TopProducts({ products }) {
   // const getUnit = (unit) => {
   //   if (unit === 'kg') return 'g';
-  //   else if (uint === 'liter') return 'ml';
+  //   else if (uint === 'litre') return 'ml';
   //   else return unit;
   // };
 
   const getQuantity = (prod) => {
-    if ((prod.unit === 'kg' || prod.uint === 'liter') && prod.quantity >= 1000)
+    if ((prod.unit === 'kg' || prod.uint === 'litre') && prod.quantity >= 1000)
       return prod.quantity / 1000;
     else return prod.quantity;
   };
@@ -18,7 +18,7 @@ export default function TopProducts({ products }) {
     if (prod.quantity < 1000) {
       if (prod.unit === 'kg') {
         return 'g';
-      } else if (prod.unit == 'liter') {
+      } else if (prod.unit == 'litre') {
         return 'ml';
       } else {
         return prod.unit;
@@ -27,7 +27,7 @@ export default function TopProducts({ products }) {
   };
 
   // const getRevenue = (prod) => {
-  //   if (prod.unit === 'kg' || prod.uint === 'liter') return prod.revenue / 1000;
+  //   if (prod.unit === 'kg' || prod.uint === 'litre') return prod.revenue / 1000;
   //   else return prod.revenue;
   // };
 

@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { apiFetch } from '@/utils/apiFetch';
 
 export default function AddCategoryPopup({ invId, onClose, onSuccess }) {
   const [name, setName] = useState('');
@@ -22,7 +23,7 @@ export default function AddCategoryPopup({ invId, onClose, onSuccess }) {
     try {
       setLoading(true);
 
-      const res = await fetch(`/api/inventory/${invId}/category`, {
+      const res = await apiFetch(`/api/inventory/${invId}/category`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

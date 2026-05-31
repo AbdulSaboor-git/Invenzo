@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { toast } from 'sonner';
+import { apiFetch } from '@/utils/apiFetch';
 
 export default function VoidSalePopup({ sale, onClose, onSuccess }) {
   const [loading, setLoading] = useState(false);
@@ -13,7 +14,7 @@ export default function VoidSalePopup({ sale, onClose, onSuccess }) {
     }
     setLoading(true);
     try {
-      const res = await fetch('/api/sales', {
+      const res = await apiFetch('/api/sales', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: sale.id }),

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { apiFetch } from '@/utils/apiFetch';
 
 export default function DeleteCashierPopup({ cashier, onClose, onSuccess }) {
   const [loading, setLoading] = useState(false);
@@ -14,7 +15,7 @@ export default function DeleteCashierPopup({ cashier, onClose, onSuccess }) {
 
     setLoading(true);
     try {
-      const res = await fetch('/api/cashiers', {
+      const res = await apiFetch('/api/cashiers', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ cashierId: cashier.id }),

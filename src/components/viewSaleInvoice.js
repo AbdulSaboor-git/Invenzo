@@ -1,5 +1,6 @@
 import React, { use, useEffect, useMemo, useState } from 'react';
 import { toast } from 'sonner';
+import { apiFetch } from '@/utils/apiFetch';
 
 export default function ViewSaleInvoice({ saleId, onClose, user }) {
   const [loading, setLoading] = useState(true);
@@ -20,7 +21,7 @@ export default function ViewSaleInvoice({ saleId, onClose, user }) {
     let mounted = true;
     (async () => {
       try {
-        const res = await fetch('/api/sales', {
+        const res = await apiFetch('/api/sales', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ action: 'getOne', id: saleId }),
@@ -31,7 +32,7 @@ export default function ViewSaleInvoice({ saleId, onClose, user }) {
           onClose?.();
           return;
         }
-        if (mounted) setSale(data?.sale || data); // supports both shapes
+        if (mounted) setSale(data?.data || data); // supports both shapes
       } catch {
         toast.error('Error loading sale');
         onClose?.();
@@ -151,7 +152,7 @@ export default function ViewSaleInvoice({ saleId, onClose, user }) {
                             if (li.Product?.unit === 'kg' && li.quantity < 1000)
                               return 'g';
                             if (
-                              li.Product?.unit === 'liter' &&
+                              li.Product?.unit === 'litre' &&
                               li.quantity < 1000
                             )
                               return 'ml';
@@ -165,7 +166,7 @@ export default function ViewSaleInvoice({ saleId, onClose, user }) {
                             )
                               return Number(li.quantity) / 1000;
                             if (
-                              li.Product?.unit === 'liter' &&
+                              li.Product?.unit === 'litre' &&
                               li.quantity >= 1000
                             )
                               return Number(li.quantity) / 1000;
@@ -175,7 +176,7 @@ export default function ViewSaleInvoice({ saleId, onClose, user }) {
                           const getQuantityinBaseUnit = (li) => {
                             if (li.Product?.unit === 'kg')
                               return Number(li.quantity) / 1000;
-                            if (li.Product?.unit === 'liter')
+                            if (li.Product?.unit === 'litre')
                               return Number(li.quantity) / 1000;
                             return Number(li.quantity);
                           };
@@ -234,7 +235,7 @@ export default function ViewSaleInvoice({ saleId, onClose, user }) {
                           if (li.Product?.unit === 'kg' && li.quantity < 1000)
                             return 'g';
                           if (
-                            li.Product?.unit === 'liter' &&
+                            li.Product?.unit === 'litre' &&
                             li.quantity < 1000
                           )
                             return 'ml';
@@ -245,7 +246,7 @@ export default function ViewSaleInvoice({ saleId, onClose, user }) {
                           if (li.Product?.unit === 'kg' && li.quantity >= 1000)
                             return Number(li.quantity) / 1000;
                           if (
-                            li.Product?.unit === 'liter' &&
+                            li.Product?.unit === 'litre' &&
                             li.quantity >= 1000
                           )
                             return Number(li.quantity) / 1000;
@@ -255,7 +256,7 @@ export default function ViewSaleInvoice({ saleId, onClose, user }) {
                         const getQuantityinBaseUnit = (li) => {
                           if (li.Product?.unit === 'kg')
                             return Number(li.quantity) / 1000;
-                          if (li.Product?.unit === 'liter')
+                          if (li.Product?.unit === 'litre')
                             return Number(li.quantity) / 1000;
                           return Number(li.quantity);
                         };

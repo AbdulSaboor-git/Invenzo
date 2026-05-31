@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { apiFetch } from '@/utils/apiFetch';
 
 export default function AddCashierPopup({ adminId, onClose, onSuccess }) {
   const [firstName, setFirstName] = useState('');
@@ -26,7 +27,7 @@ export default function AddCashierPopup({ adminId, onClose, onSuccess }) {
     try {
       setLoading(true);
 
-      const res = await fetch('/api/cashiers', {
+      const res = await apiFetch('/api/cashiers', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

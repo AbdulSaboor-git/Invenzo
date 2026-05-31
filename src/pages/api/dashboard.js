@@ -1,8 +1,9 @@
 // File: /pages/api/dashboard.js
-import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma';
+import { calculateTotalProfit } from '@/utils/profit';
+import { withAuth } from '@/lib/middlewares/withAuth';
 
-export default async function handler(req, res) {
+async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end('Method not allowed');
 
   const { role, inventoryId, fromDate, toDate } = req.body || {};
@@ -45,23 +46,7 @@ export default async function handler(req, res) {
         },
       });
 
-      totalProfit = 0;
-
-      for (const sale of salesWithItems) {
-        const cost = sale.SaleItem.reduce((acc, item) => {
-          let qty = item.quantity;
-
-          // normalize for kg/litre → grams/ml
-          if (item.Product?.unit === 'kg' || item.Product?.unit === 'litre') {
-            qty = qty / 1000;
-          }
-
-          const itemCost = (item.Product?.purchasePrice || 0) * qty;
-          return acc + itemCost;
-        }, 0);
-
-        totalProfit += sale.totalAmount - cost;
-      }
+      totalProfit = calculateTotalProfit(salesWithItems);
     }
 
     const totalSalesAmount = agg._sum.totalAmount ?? 0;
@@ -119,7 +104,7 @@ export default async function handler(req, res) {
           FROM "SaleItem" si
           JOIN "Sale" s ON s.id = si."saleId" AND s."deactivated" = false AND s."createdAt" BETWEEN ${from} AND ${to}
           JOIN "Product" p ON p.id = si."productId"
-          WHERE p.unit IN ('kg','g','liter','ml')
+          WHERE p.unit IN ('kg','g','litre','ml')
           GROUP BY p.id, p.name, p.unit
           ORDER BY quantity DESC
           LIMIT 8
@@ -133,7 +118,7 @@ export default async function handler(req, res) {
             AND s."inventoryId" = ${inventoryId}
             AND s."createdAt" BETWEEN ${from} AND ${to}
           JOIN "Product" p ON p.id = si."productId"
-          WHERE p.unit IN ('kg','g','liter','ml')
+          WHERE p.unit IN ('kg','g','litre','ml')
           GROUP BY p.id, p.name, p.unit
           ORDER BY quantity DESC
           LIMIT 8
@@ -147,7 +132,7 @@ export default async function handler(req, res) {
           FROM "SaleItem" si
           JOIN "Sale" s ON s.id = si."saleId" AND s."deactivated" = false AND s."createdAt" BETWEEN ${from} AND ${to}
           JOIN "Product" p ON p.id = si."productId"
-          WHERE p.unit NOT IN ('kg','g','liter','ml') OR p.unit IS NULL
+          WHERE p.unit NOT IN ('kg','g','litre','ml') OR p.unit IS NULL
           GROUP BY p.id, p.name, p.unit
           ORDER BY quantity DESC
           LIMIT 8
@@ -161,7 +146,7 @@ export default async function handler(req, res) {
             AND s."inventoryId" = ${inventoryId}
             AND s."createdAt" BETWEEN ${from} AND ${to}
           JOIN "Product" p ON p.id = si."productId"
-          WHERE p.unit NOT IN ('kg','g','liter','ml') OR p.unit IS NULL
+          WHERE p.unit NOT IN ('kg','g','litre','ml') OR p.unit IS NULL
           GROUP BY p.id, p.name, p.unit
           ORDER BY quantity DESC
           LIMIT 8
@@ -374,3 +359,5 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: err.message || String(err) });
   }
 }
+
+export default withAuth(handler);

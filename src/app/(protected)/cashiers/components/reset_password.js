@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { apiFetch } from '@/utils/apiFetch';
 
 export default function ResetPasswordPopup({ cashier, onClose }) {
   const [loading, setLoading] = useState(false);
@@ -18,7 +19,7 @@ export default function ResetPasswordPopup({ cashier, onClose }) {
 
     setLoading(true);
     try {
-      const res = await fetch('/api/cashiers', {
+      const res = await apiFetch('/api/cashiers', {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

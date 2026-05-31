@@ -1,6 +1,8 @@
 import prisma from '@/lib/prisma';
+import { calculateSaleProfit } from '@/utils/profit';
+import { withAuth } from '@/lib/middlewares/withAuth';
 
-export default async function handler(req, res) {
+async function handler(req, res) {
   const { method } = req;
 
   try {
@@ -33,7 +35,9 @@ export default async function handler(req, res) {
  * GET – Fetch all sales (optional filters)
  */
 async function handleGetSales(req, res) {
-  const { inventoryId, cashierId, from, to, showAll } = req.query;
+  const { inventoryId, cashierId, from, to, showAll, page, pageSize } = req.query;
+  const take = pageSize ? Math.min(parseInt(pageSize, 10), 200) : 50;
+  const skip = page ? Math.max(parseInt(page, 10) - 1, 0) * take : 0;
 
   const fromDate = from ? new Date(from) : new Date();
   fromDate.setHours(0, 0, 0, 0);
@@ -56,29 +60,16 @@ async function handleGetSales(req, res) {
       Inventory: true,
     },
     orderBy: { createdAt: 'desc' },
+    take,
+    skip,
   });
 
   const salesWithProfit = sales.map((sale) => {
-    const cost = sale.SaleItem.reduce((acc, item) => {
-      let qty = item.quantity;
-
-      if (item.Product.unit === 'kg' || item.Product.unit === 'litre') {
-        qty = qty / 1000;
-      }
-
-      const itemCost = (item.Product?.purchasePrice || 0) * qty;
-      return acc + itemCost;
-    }, 0);
-
-    const profit = (sale.totalAmount - cost).toFixed(0);
-
-    return {
-      ...sale,
-      profit,
-    };
+    const profit = calculateSaleProfit(sale).toFixed(0);
+    return { ...sale, profit };
   });
 
-  return res.json({ sales: salesWithProfit });
+  return res.json({ success: true, data: salesWithProfit });
 }
 
 /**
@@ -99,6 +90,15 @@ async function handleAddSale(req, res) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
+  // API-03: validate numeric fields
+  const numericFields = { discount, netPayable };
+  for (const [field, val] of Object.entries(numericFields)) {
+    const n = Number(val);
+    if (!isFinite(n) || n < 0) {
+      return res.status(400).json({ error: `Invalid value for ${field}: must be a non-negative number` });
+    }
+  }
+
   try {
     const cashier = await prisma.cashier.findUnique({
       where: { id: Number(cashierId) },
@@ -113,6 +113,16 @@ async function handleAddSale(req, res) {
     if (!inventory) {
       return res.status(404).json({ error: 'Inventory not found' });
     }
+
+    // Snapshot purchasePrice at the moment of sale (ARCH-04 / SCH-03)
+    const productIds = items.map((item) => item.product.id);
+    const products = await prisma.product.findMany({
+      where: { id: { in: productIds } },
+      select: { id: true, purchasePrice: true },
+    });
+    const purchasePriceMap = Object.fromEntries(
+      products.map((p) => [p.id, p.purchasePrice])
+    );
 
     const result = await prisma.$transaction(async (tx) => {
       const sale = await tx.sale.create({
@@ -132,13 +142,14 @@ async function handleAddSale(req, res) {
           productId: item.product.id,
           quantity: Number(item.quantity),
           price: Number(item.price),
+          purchasePrice: purchasePriceMap[item.product.id] ?? null,
         })),
       });
 
       return sale;
     });
 
-    return res.status(201).json({ sale: result });
+    return res.status(201).json({ success: true, data: result });
   } catch (err) {
     console.error('Error creating sale:', err);
     return res.status(500).json({ error: 'Internal server error' });
@@ -257,3 +268,5 @@ async function handleDeleteSale(req, res) {
     return res.status(500).json({ error: 'Failed to deactivate sale' });
   }
 }
+
+export default withAuth(handler);

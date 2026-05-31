@@ -1,8 +1,9 @@
 // /pages/api/users.ts
 
 import prisma from '@/lib/prisma';
+import { withAuth } from '@/lib/middlewares/withAuth';
 
-export default async function handler(req, res) {
+async function handler(req, res) {
   const { method } = req;
 
   try {
@@ -477,3 +478,5 @@ async function handleDeleteUser(req, res) {
       .json({ success: false, error: 'Internal server error' });
   }
 }
+
+export default withAuth(handler);

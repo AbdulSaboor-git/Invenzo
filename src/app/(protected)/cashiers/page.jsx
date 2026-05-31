@@ -1,7 +1,6 @@
 'use client';
 import Header from '@/components/header';
-import useAuthUser from '@/hooks/authUser';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import CashierTable from './components/cashier_table';
 import RefreshButton from '../inventory/components/refresh_btn';
 import AddCashierPopup from './components/add_cashier';
@@ -10,9 +9,9 @@ import { MdAdd } from 'react-icons/md';
 import NotFound from '@/app/not-found';
 import { useSelector } from 'react-redux';
 import Footer from '@/components/footer';
+import { apiFetch } from '@/utils/apiFetch';
 
 export default function CashiersPage() {
-  // const { user, logout } = useAuthUser();
   const { user } = useSelector((state) => state.user);
 
   const [cashiers, setCashiers] = useState([]);
@@ -20,40 +19,23 @@ export default function CashiersPage() {
   const [lastUpdated, setLastUpdated] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
   const [refreshFailed, setRefreshFailed] = useState(false);
-
   const [showAddPopup, setShowAddPopup] = useState(false);
 
   const localKey = `inventoryData_cashiers_${user?.id}`;
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    const cachedData = localStorage.getItem(localKey);
-    if (cachedData) {
-      const parsed = JSON.parse(cachedData);
-      setCashiers(parsed.data);
-      setLastUpdated(parsed.lastUpdated);
-      setLoading(false);
-    } else {
-      fetchData();
-    }
-  }, []);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       setRefreshing(true);
-      const res = await fetch(`/api/cashiers?userId=${user?.adminId}`);
+      const res = await apiFetch(`/api/cashiers?userId=${user?.adminId}`);
       const data = await res.json();
       if (res.ok) {
-        setCashiers(data.cashiers);
+        setCashiers(data.data);
         const timestamp = new Date().toISOString();
         setLastUpdated(timestamp);
         setRefreshFailed(false);
         localStorage.setItem(
           localKey,
-          JSON.stringify({ data: data.cashiers, lastUpdated: timestamp })
+          JSON.stringify({ data: data.data, lastUpdated: timestamp })
         );
       } else {
         setRefreshFailed(true);
@@ -65,7 +47,57 @@ export default function CashiersPage() {
       setLoading(false);
       setRefreshing(false);
     }
-  };
+  }, [user?.adminId, localKey]);
+
+  // Load from cache on mount, fallback to network
+  useEffect(() => {
+    const cachedData = localStorage.getItem(localKey);
+    if (cachedData) {
+      const parsed = JSON.parse(cachedData);
+      setCashiers(parsed.data);
+      setLastUpdated(parsed.lastUpdated);
+      setLoading(false);
+    } else {
+      fetchData();
+    }
+  }, [localKey, fetchData]);
+
+  // Polling: auto-refresh if data is stale (> 20 min)
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const checkAndAutoFetch = () => {
+      if (!navigator.onLine) return;
+
+      const now = Date.now();
+      const twentyMinutes = 20 * 60 * 1000;
+
+      let last = lastUpdated ? new Date(lastUpdated).getTime() : 0;
+
+      if (!last) {
+        const cached = localStorage.getItem(localKey);
+        if (cached) {
+          const parsed = JSON.parse(cached);
+          if (parsed?.lastUpdated) {
+            last = new Date(parsed.lastUpdated).getTime();
+          }
+        }
+      }
+
+      if (!last || now - last >= twentyMinutes) {
+        fetchData();
+      }
+    };
+
+    const interval = setInterval(checkAndAutoFetch, 2 * 60 * 1000);
+    checkAndAutoFetch();
+    window.addEventListener('online', checkAndAutoFetch);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('online', checkAndAutoFetch);
+    };
+  }, [user?.id, localKey, lastUpdated, fetchData]);
 
   const RefreshData = async () => {
     if (!navigator.onLine) {
@@ -83,53 +115,7 @@ export default function CashiersPage() {
     }
   };
 
-  if (user?.role == 'cashier') {
-    return <NotFound />;
-  }
-
-  useEffect(() => {
-    if (!user?.id) return;
-
-    const checkAndAutoFetch = () => {
-      if (!navigator.onLine) return; // skip offline
-
-      const now = Date.now();
-      const twentyMinutes = 20 * 60 * 1000;
-
-      // always read the freshest "lastUpdated"
-      let last = lastUpdated ? new Date(lastUpdated).getTime() : 0;
-
-      // fallback to localStorage if state is empty
-      if (!last) {
-        const cached = localStorage.getItem(localKey);
-        if (cached) {
-          const parsed = JSON.parse(cached);
-          if (parsed?.lastUpdated) {
-            last = new Date(parsed.lastUpdated).getTime();
-          }
-        }
-      }
-
-      if (!last || now - last >= twentyMinutes) {
-        fetchData();
-      }
-    };
-
-    // check every 2 minutes
-    const interval = setInterval(checkAndAutoFetch, 2 * 60 * 1000);
-
-    // also check immediately on mount
-    checkAndAutoFetch();
-
-    // check when back online
-    window.addEventListener('online', checkAndAutoFetch);
-
-    return () => {
-      clearInterval(interval);
-      window.removeEventListener('online', checkAndAutoFetch);
-    };
-  }, [user?.id, localKey, fetchData]);
-
+  // All hooks above — role guard comes last
   if (user?.role === 'superadmin' || user?.role === 'cashier') {
     return <NotFound />;
   }
@@ -143,7 +129,7 @@ export default function CashiersPage() {
             <h2 className="text-lg flex items-center gap-1 line-clamp-1 md:text-xl font-bold text-gray-800 text-center md:text-left">
               Cashiers
               {user?.role !== 'superadmin' && (
-                <span className="hidden md:block  font-normal text-gray-700">
+                <span className="hidden md:block font-normal text-gray-700">
                   {' - ' + user?.invName || ''}
                 </span>
               )}
@@ -179,7 +165,6 @@ export default function CashiersPage() {
         />
       </div>
 
-      {/* Add Cashier Popup */}
       {showAddPopup && (
         <AddCashierPopup
           adminId={user?.adminId}

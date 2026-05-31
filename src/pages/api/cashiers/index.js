@@ -1,6 +1,7 @@
 import prisma from '@/lib/prisma';
+import { withAuth } from '@/lib/middlewares/withAuth';
 
-export default async function handler(req, res) {
+async function handler(req, res) {
   const { method } = req;
 
   try {
@@ -49,6 +50,13 @@ async function handleGetCashiers(req, res) {
     return res.status(404).json({ error: 'Inventory not found' });
   }
 
+  const take = req.query.pageSize
+    ? Math.min(parseInt(req.query.pageSize, 10), 200)
+    : 100;
+  const skip = req.query.page
+    ? Math.max(parseInt(req.query.page, 10) - 1, 0) * take
+    : 0;
+
   const cashiers = await prisma.cashier.findMany({
     where: {
       inventoryId: inventory.id,
@@ -70,9 +78,11 @@ async function handleGetCashiers(req, res) {
       Inventory: { select: { id: true, name: true } },
     },
     orderBy: { id: 'asc' },
+    take,
+    skip,
   });
 
-  return res.json({ cashiers });
+  return res.json({ success: true, data: cashiers });
 }
 
 /**
@@ -90,7 +100,7 @@ async function handleAddCashier(req, res) {
         userId: userId,
       },
     });
-    return res.status(201).json({ cashier });
+    return res.status(201).json({ success: true, data: cashier });
   } else {
     if (!userId || !firstName)
       return res.status(400).json({ error: 'Missing data' });
@@ -139,7 +149,7 @@ async function handleAddCashier(req, res) {
         userId: user.id,
       },
     });
-    return res.status(201).json({ cashier });
+    return res.status(201).json({ success: true, data: cashier });
   }
 }
 
@@ -267,3 +277,4 @@ async function handleUpdatePassword(req, res) {
 
   return res.json({ message: 'Password updated successfully' });
 }
+export default withAuth(handler);

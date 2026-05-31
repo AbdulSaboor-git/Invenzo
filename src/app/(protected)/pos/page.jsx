@@ -1,4 +1,5 @@
 'use client';
+import { isWeightVolumeUnit } from '@/utils/units';
 import Header from '@/components/header';
 import React, { useEffect, useState } from 'react';
 import { MdClose, MdDelete, MdSearch } from 'react-icons/md';
@@ -10,6 +11,7 @@ import Cart from './components/cart';
 import Loading from '@/app/loading';
 import ProductCard from './components/product_card';
 import Footer from '@/components/footer';
+import { apiFetch } from '@/utils/apiFetch';
 
 export default function POSPage() {
   const { user } = useSelector((state) => state.user);
@@ -28,24 +30,15 @@ export default function POSPage() {
   const [placingOrder, setPlacingOrder] = useState(false);
 
   function createCartItem(product) {
-    const unitPricePerBase =
-      product.unit === 'kg'
-        ? product.salePrice / 1000
-        : product.unit === 'liter'
-          ? product.salePrice / 1000
-          : product.salePrice;
+    const isWeightOrVolume = isWeightVolumeUnit(product.unit);
+    const unitPricePerBase = isWeightOrVolume
+      ? product.salePrice / 1000
+      : product.salePrice;
 
-    let quantity = 1; // base unit
-    product.unit === 'kg' && (quantity = 1000); // default 1000g for kg
-    product.unit === 'liter' && (quantity = 1000); // default 1000ml for liter
-
+    const quantity = isWeightOrVolume ? 1000 : 1; // 1000g or 1000ml default for weight/volume units
     const price = Number((quantity * unitPricePerBase).toFixed(2));
 
-    return {
-      product,
-      quantity,
-      price,
-    };
+    return { product, quantity, price };
   }
 
   async function loadFreshData() {
@@ -57,9 +50,7 @@ export default function POSPage() {
     }
     try {
       if (inventory && !loadingInventory) await fetchAndStoreData();
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   }
 
   useEffect(() => {
@@ -86,13 +77,12 @@ export default function POSPage() {
     try {
       setLoadingInventory(true);
 
-      let response = await fetch(`/api/inventory?adminId=${user?.adminId}`);
+      let response = await apiFetch(`/api/inventory?adminId=${user?.adminId}`);
 
       if (!response.ok) throw new Error('Failed to fetch inventory');
 
       const data = await response.json();
       setInventory(data.inventory);
-      console.log(data.inventory);
 
       if (typeof window !== 'undefined') {
         const cached = localStorage.getItem(localStorageKey);
@@ -119,7 +109,7 @@ export default function POSPage() {
       setRefreshFailed(false);
       setLoadingData(true);
       setRefreshing(true);
-      const response = await fetch(
+      const response = await apiFetch(
         `/api/inventory/${inventory?.id}?userId=${user?.id}`
       );
       if (!response.ok) throw new Error('Failed to fetch from server');
@@ -196,12 +186,8 @@ export default function POSPage() {
           parsed.inventory == null
         ) {
           if (parsed.inventory == null) {
-            console.log(parsed.inventory);
-          } else if (typeof parsed.inventory !== 'object')
-            console.log('inv not obj');
-          return false;
+          } else if (typeof parsed.inventory !== 'object') return false;
         }
-        console.log(parsed.products);
         setProducts(parsed.products);
         setCategories(parsed.categories);
         setInventory(parsed.inventory);

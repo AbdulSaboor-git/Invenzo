@@ -1,3 +1,28 @@
+enum Role {
+  admin
+  cashier
+  superadmin
+}
+
+enum Unit {
+  kg
+  g
+  litre
+  ml
+  pc
+  dozen
+  box
+  pack
+}
+
+enum PayMode {
+  cash
+  credit
+  card
+  upi
+  other
+}
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -19,7 +44,7 @@ model User {
   lastLogin      DateTime?
   profilePicture String?
   isActive       Boolean    @default(true)
-  role           String?
+  role           Role?
   Cashier        Cashier?
   Inventories    Inventory?
 }
@@ -50,7 +75,7 @@ model Product {
   purchasePrice Float
   salePrice     Float
   tags          String?
-  unit          String?
+  unit          Unit?
   category      Category   @relation(fields: [categoryId], references: [id])
   inventory     Inventory  @relation(fields: [inventoryId], references: [id])
   SaleItem      SaleItem[]
@@ -79,14 +104,14 @@ model Cashier {
 
 model Sale {
   id          Int        @id @default(autoincrement())
-  createdAt   DateTime?  @default(now()) @db.Timestamp(6)
+  createdAt   DateTime   @default(now()) @db.Timestamp(6)
   totalAmount Float
   cashierId   Int
   inventoryId Int
   discount    Float      @default(0)
   tax         Float      @default(0)
   paidAmount  Float?
-  paymentMode String     @default("cash")
+  paymentMode PayMode    @default(cash)
   note        String?
   deactivated Boolean    @default(false)
   Cashier     Cashier    @relation(fields: [cashierId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_cashier")
@@ -95,11 +120,12 @@ model Sale {
 }
 
 model SaleItem {
-  id        Int     @id @default(autoincrement())
-  saleId    Int
-  productId Int
-  quantity  Float
-  price     Float
-  Product   Product @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_product")
-  Sale      Sale    @relation(fields: [saleId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_sale")
+  id            Int     @id @default(autoincrement())
+  saleId        Int
+  productId     Int
+  quantity      Float
+  price         Float
+  purchasePrice Float? // snapshot of product.purchasePrice at time of sale (ARCH-04)
+  Product       Product @relation(fields: [productId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_product")
+  Sale          Sale    @relation(fields: [saleId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_sale")
 }

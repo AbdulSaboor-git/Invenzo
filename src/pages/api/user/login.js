@@ -72,10 +72,11 @@ export default async function handler(req, res) {
     const invName = user.Cashier?.Inventory?.name ?? user.Inventories?.name;
     const invId = user.Cashier?.Inventory?.id ?? user.Inventories?.id;
     const cashierId = user.Cashier?.id ?? null;
-    // Step 5: Generate JWT
+    // Step 5: Generate JWT (7-day expiry; role included for middleware role-checks)
     const token = jwt.sign(
-      { userId: user.id, email: user.email },
-      process.env.JWT_SECRET
+      { userId: user.id, email: user.email, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
     );
 
     // Step 6: Return token + safe user info

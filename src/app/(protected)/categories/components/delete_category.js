@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { apiFetch } from '@/utils/apiFetch';
 
 export default function DeleteCategoryPopup({
   invId,
@@ -19,7 +20,7 @@ export default function DeleteCategoryPopup({
 
     setLoading(true);
     try {
-      const res = await fetch(`/api/inventory/${invId}/category`, {
+      const res = await apiFetch(`/api/inventory/${invId}/category`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ categoryId: category.id }),

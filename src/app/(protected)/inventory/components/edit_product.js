@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { toast } from 'sonner';
+import { apiFetch } from '@/utils/apiFetch';
 
 export default function EditProduct({
   editProduct,
@@ -58,7 +59,7 @@ export default function EditProduct({
         return;
       }
 
-      const response = await fetch(`/api/inventory/${inventoryId}`, {
+      const response = await apiFetch(`/api/inventory/${inventoryId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -260,8 +261,8 @@ export default function EditProduct({
               <option value="">Select unit</option>
               <option value="g">Gram (g)</option>
               <option value="kg">Kilogram (kg)</option>
-              <option value="ml">Milliliter (ml)</option>
-              <option value="litter">Liter (l)</option>
+              <option value="ml">Millilitre (ml)</option>
+              <option value="litter">litre (l)</option>
               <option value="pc">Piece (pc)</option>
               <option value="dozen">Dozen</option>
               <option value="pack">Pack</option>

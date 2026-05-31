@@ -18,6 +18,7 @@ import NotFound from '@/app/not-found';
 import SearchBar from '@/components/search_bar';
 import Footer from '@/components/footer';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { apiFetch } from '@/utils/apiFetch';
 
 export default function Inventory() {
   // const { user, logout } = useAuthUser();
@@ -75,7 +76,7 @@ export default function Inventory() {
     try {
       setLoadingNameChange(true);
       if (inventory.name == newName.trim()) return;
-      const response = await fetch(`/api/inventory`, {
+      const response = await apiFetch(`/api/inventory`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ id: inventory.id, name: newName.trim() }),
@@ -120,7 +121,7 @@ export default function Inventory() {
     try {
       setLoadingInventory(true);
 
-      let response = await fetch(`/api/inventory?adminId=${user?.adminId}`);
+      let response = await apiFetch(`/api/inventory?adminId=${user?.adminId}`);
 
       if (!response.ok) throw new Error('Failed to fetch inventory');
 
@@ -153,7 +154,7 @@ export default function Inventory() {
       setRefreshFailed(false);
       setLoadingData(true);
       setRefreshing(true);
-      const response = await fetch(
+      const response = await apiFetch(
         `/api/inventory/${inventory?.id}?userId=${user?.id}`
       );
       if (!response.ok) throw new Error('Failed to fetch from server');
