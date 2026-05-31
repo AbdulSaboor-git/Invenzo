@@ -98,10 +98,8 @@ async function handleGet(req, res, inventoryId) {
         .json({ message: 'User is not authorized to access this inventory' });
     }
 
-    // Fetch products — supports optional ?search, ?page, ?pageSize
+    // Fetch products — supports optional ?search
     const search = req.query.search ?? '';
-    const take = req.query.pageSize ? Math.min(parseInt(req.query.pageSize, 10), 500) : 100;
-    const skip = req.query.page ? Math.max(parseInt(req.query.page, 10) - 1, 0) * take : 0;
 
     const products = await prisma.product.findMany({
       where: {
@@ -121,8 +119,6 @@ async function handleGet(req, res, inventoryId) {
         },
       },
       orderBy: { name: 'asc' },
-      take,
-      skip,
     });
 
     // Fetch categories
