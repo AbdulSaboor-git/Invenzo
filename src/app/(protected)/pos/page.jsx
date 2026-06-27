@@ -1,7 +1,7 @@
 'use client';
 import { isWeightVolumeUnit } from '@/utils/units';
 import Header from '@/components/header';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { MdClose, MdDelete, MdSearch } from 'react-icons/md';
 import { useSelector } from 'react-redux';
 import RefreshButton from '../inventory/components/refresh_btn';
@@ -72,7 +72,7 @@ export default function POSPage() {
     });
   }
 
-  const fetchInventory = async () => {
+  const fetchInventory = useCallback(async () => {
     if (!user) return;
     try {
       setLoadingInventory(true);
@@ -99,9 +99,9 @@ export default function POSPage() {
     } finally {
       setLoadingInventory(false);
     }
-  };
+  }, [user, localStorageKey]);
 
-  const fetchAndStoreData = async () => {
+  const fetchAndStoreData = useCallback(async () => {
     if (!user?.id || !inventory || loadingInventory) {
       return;
     }
@@ -147,7 +147,7 @@ export default function POSPage() {
       setLoadingData(false);
       setRefreshing(false);
     }
-  };
+  }, [user?.id, inventory?.id, localStorageKey, loadingInventory]);
 
   const RefreshData = async () => {
     if (!navigator.onLine) {
@@ -206,6 +206,13 @@ export default function POSPage() {
 
     const hasLocal = loadFromLocalStorage();
     if (!hasLocal) {
+      if (!navigator.onLine) {
+        setLoadingData(false);
+        toast.error(
+          'You are offline and no cached data is available. Please connect to the internet.'
+        );
+        return;
+      }
       setFetchedInv(true);
       fetchInventory();
     } else {

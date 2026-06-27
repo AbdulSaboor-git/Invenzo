@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import ScrollToTop from '@/components/scroll_to_top';
 import Header from '@/components/header';
@@ -44,7 +44,7 @@ export default function Inventory() {
 
   const localStorageKey = user?.id ? `inventoryData_${user.id}` : null;
 
-  const fetchInventory = async () => {
+  const fetchInventory = useCallback(async () => {
     if (!user) return;
     try {
       setLoadingInventory(true);
@@ -72,9 +72,9 @@ export default function Inventory() {
     } finally {
       setLoadingInventory(false);
     }
-  };
+  }, [user, localStorageKey]);
 
-  const fetchAndStoreData = async () => {
+  const fetchAndStoreData = useCallback(async () => {
     if (!user?.id || !inventory || loadingInventory) {
       return;
     }
@@ -114,7 +114,7 @@ export default function Inventory() {
       setLoadingData(false);
       setRefreshing(false);
     }
-  };
+  }, [user?.id, inventory?.id, localStorageKey, loadingInventory]);
 
   const RefreshData = async () => {
     if (!navigator.onLine) {
@@ -173,6 +173,13 @@ export default function Inventory() {
 
     const hasLocal = loadFromLocalStorage();
     if (!hasLocal) {
+      if (!navigator.onLine) {
+        setLoadingData(false);
+        toast.error(
+          'You are offline and no cached data is available. Please connect to the internet.'
+        );
+        return;
+      }
       setFetchedInv(true);
       fetchInventory();
     } else {
