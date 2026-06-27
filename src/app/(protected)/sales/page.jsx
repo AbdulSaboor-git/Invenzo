@@ -59,6 +59,11 @@ export default function SalesPage() {
   // --- Fetch all sales from server ---
   const fetchAllSales = async () => {
     if (!user?.id) return;
+    if (!navigator.onLine) {
+      // Load from cache when offline so filter changes still show cached data
+      loadFromLocalStorage();
+      return;
+    }
 
     setRefreshFailed(false);
     try {

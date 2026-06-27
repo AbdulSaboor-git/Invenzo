@@ -40,6 +40,7 @@ export default function DashboardPage() {
   }, [user, fromDate, toDate]);
 
   async function fetchMetrics() {
+    if (!navigator.onLine) return;
     setLoading(true);
     setError(null);
     try {

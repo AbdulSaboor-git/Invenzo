@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Invenzo — Offline</title>
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f9fafb;
+      color: #111827;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100dvh;
+      padding: 24px;
+      text-align: center;
+      gap: 16px;
+    }
+
+    .icon {
+      font-size: 56px;
+      line-height: 1;
+    }
+
+    h1 {
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    p {
+      font-size: 15px;
+      color: #6b7280;
+      max-width: 300px;
+      line-height: 1.5;
+    }
+
+    button {
+      margin-top: 8px;
+      padding: 10px 24px;
+      background: #f87e47;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    button:active {
+      opacity: 0.85;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="icon">📡</div>
+  <h1>You're offline</h1>
+  <p>Invenzo couldn't load this page. Connect to the internet and try again.</p>
+  <button onclick="window.location.reload()">Retry</button>
+</body>
+
+</html>

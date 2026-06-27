@@ -147,6 +147,15 @@ async function handlePatch(req, res) {
   } = req.body;
 
   try {
+    // Authorization: verify product belongs to the requester's inventory
+    const product = await prisma.product.findUnique({
+      where: { id },
+      include: { Inventory: { select: { adminId: true } } },
+    });
+    if (!product) return res.status(404).json({ message: 'Product not found' });
+    if (product.Inventory.adminId !== req.user.userId)
+      return res.status(403).json({ message: 'Forbidden' });
+
     const updatedProduct = await prisma.product.update({
       where: { id: id },
       data: {
@@ -173,10 +182,16 @@ async function handleDelete(req, res) {
   try {
     const existingProduct = await prisma.product.findUnique({
       where: { id },
+      include: { Inventory: { select: { adminId: true } } },
     });
 
     if (!existingProduct) {
       return res.status(404).json({ error: 'Product not found', errorCode: 3 });
+    }
+
+    // Authorization: only the inventory admin may delete their products
+    if (existingProduct.Inventory.adminId !== req.user.userId) {
+      return res.status(403).json({ error: 'Forbidden' });
     }
 
     await prisma.product.delete({

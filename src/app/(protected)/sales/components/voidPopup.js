@@ -20,13 +20,6 @@ export default function VoidSalePopup({ sale, onClose, onSuccess }) {
         body: JSON.stringify({ id: sale.id }),
       });
 
-      if (res.status === 204) {
-        toast.success('Sale voided successfully');
-        onSuccess?.();
-        onClose?.();
-        return;
-      }
-
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         toast.error(data?.error || 'Failed to void sale');

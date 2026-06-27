@@ -23,6 +23,18 @@ const DELETE = async (req, res, inventoryId) => {
       return res.status(400).json({ error: "Invalid inventory ID" });
     }
 
+    // Authorization: verify the requesting user owns this inventory
+    const inventory = await prisma.inventory.findUnique({
+      where: { id },
+      select: { adminId: true },
+    });
+    if (!inventory) {
+      return res.status(404).json({ error: "Inventory not found" });
+    }
+    if (inventory.adminId !== req.user.userId) {
+      return res.status(403).json({ error: "Forbidden" });
+    }
+
     // Start a transaction to ensure all operations succeed or fail together
     await prisma.$transaction([
       // Delete all products related to the inventory

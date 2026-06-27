@@ -42,23 +42,6 @@ export default function POSPage() {
     return { product, quantity, price };
   }
 
-  async function loadFreshData() {
-    if (!navigator.onLine) {
-      toast.error(
-        'Network not available. Please check your internet connection.'
-      );
-      return;
-    }
-    try {
-      if (inventory && !loadingInventory) await fetchAndStoreData();
-    } catch (error) {}
-  }
-
-  useEffect(() => {
-    if (!user) return;
-    loadFreshData();
-  }, [user]);
-
   function addToCart(product) {
     setCart((prevCart) => {
       const existingItem = prevCart.find(
@@ -176,20 +159,17 @@ export default function POSPage() {
     try {
       if (typeof window !== 'undefined') {
         const cached = localStorage.getItem(localStorageKey);
-        if (!cached) {
-          return false;
-        }
+        if (!cached) return false;
 
         const parsed = JSON.parse(cached);
         if (
           !parsed ||
           !Array.isArray(parsed.products) ||
           !Array.isArray(parsed.categories) ||
-          typeof parsed.inventory !== 'object' ||
-          parsed.inventory == null
+          parsed.inventory == null ||
+          typeof parsed.inventory !== 'object'
         ) {
-          if (parsed.inventory == null) {
-          } else if (typeof parsed.inventory !== 'object') return false;
+          return false;
         }
         setProducts(parsed.products);
         setCategories(parsed.categories);

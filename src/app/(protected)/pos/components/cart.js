@@ -1,5 +1,5 @@
 import { calculateCartItemProfit, normaliseQuantity } from '@/utils/profit';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import CartItem from './cart_item';
 import { MdOutlineDragIndicator } from 'react-icons/md';
 import { toast } from 'sonner';
@@ -21,6 +21,8 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
 
   const [saleId, setSaleId] = useState(null);
   const [showInvoice, setShowInvoice] = useState(false);
+  // Guard: restore from localStorage only once per mount, regardless of user re-renders
+  const cartRestoredRef = useRef(false);
 
   useEffect(() => {
     if (showInvoice) {
@@ -32,7 +34,9 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
   }, [showInvoice]);
 
   useEffect(() => {
-    if (!user?.id) return;
+    if (!user?.id || cartRestoredRef.current) return;
+    cartRestoredRef.current = true;
+
     const localCart = localStorage.getItem(`cart_${user.id}`);
     if (!localCart) return;
 
@@ -142,7 +146,7 @@ export default function Cart({ setPlacingOrder, cart, setCart, user, invId }) {
       }
 
       const data = await response.json();
-      setSaleId(data.sale.id);
+      setSaleId(data.data.id);
       setShowInvoice(true);
       toast.success('Order placed successfully', { id });
       clearCart();

@@ -30,6 +30,11 @@ const PATCH = async (req, res) => {
         .json({ error: 'Error: Inventory not found', errorCode: 3 });
     }
 
+    // Authorization: only the inventory's admin may update it
+    if (existingInventory.adminId !== req.user.userId) {
+      return res.status(403).json({ error: 'Forbidden' });
+    }
+
     const dataToUpdate = {};
     if (name !== undefined) dataToUpdate.name = name;
     if (profilePicture !== undefined)
@@ -63,6 +68,12 @@ export const GET = async (req, res) => {
     if (isNaN(parsedAdminId))
       return res.status(400).json({ error: 'Invalid adminId' });
 
+    // A cashier's adminId is their admin's userId; an admin's adminId is their own userId.
+    // Either way, req.user.userId must match the requested adminId.
+    if (parsedAdminId !== req.user.userId) {
+      return res.status(403).json({ error: 'Forbidden' });
+    }
+
     const inventory = await prisma.inventory.findUnique({
       where: { adminId: parsedAdminId },
     });
@@ -87,6 +98,11 @@ export const POST = async (req, res) => {
     const parsedAdminId = parseInt(adminId, 10);
     if (isNaN(parsedAdminId))
       return res.status(400).json({ error: 'Invalid adminId' });
+
+    // Only allow creating an inventory for your own account
+    if (parsedAdminId !== req.user.userId) {
+      return res.status(403).json({ error: 'Forbidden' });
+    }
 
     let inventory = await prisma.inventory.findUnique({
       where: { adminId: parsedAdminId },

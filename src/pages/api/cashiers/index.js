@@ -34,6 +34,25 @@ async function handler(req, res) {
 }
 
 /**
+ * Verify req.user owns the inventory for a given adminId.
+ * Returns the inventory or sends a 403/404 and returns null.
+ */
+async function requireInventoryOwner(req, res, adminId) {
+  const inventory = await prisma.inventory.findUnique({
+    where: { adminId: Number(adminId) },
+  });
+  if (!inventory) {
+    res.status(404).json({ error: 'Inventory not found' });
+    return null;
+  }
+  if (inventory.adminId !== req.user.userId) {
+    res.status(403).json({ error: 'Forbidden' });
+    return null;
+  }
+  return inventory;
+}
+
+/**
  * GET – Fetch cashiers (excluding admin)
  */
 async function handleGetCashiers(req, res) {
@@ -42,13 +61,8 @@ async function handleGetCashiers(req, res) {
     return res.status(400).json({ error: 'Missing userId' });
   }
 
-  const inventory = await prisma.inventory.findUnique({
-    where: { adminId: Number(userId) },
-  });
-
-  if (!inventory) {
-    return res.status(404).json({ error: 'Inventory not found' });
-  }
+  const inventory = await requireInventoryOwner(req, res, userId);
+  if (!inventory) return;
 
   const take = req.query.pageSize
     ? Math.min(parseInt(req.query.pageSize, 10), 200)
@@ -117,11 +131,8 @@ async function handleAddCashier(req, res) {
         .json({ error: 'Last name can only contain letters' });
     }
 
-    const inventory = await prisma.inventory.findUnique({
-      where: { adminId: Number(userId) },
-    });
-    if (!inventory)
-      return res.status(404).json({ error: 'Inventory not found' });
+    const inventory = await requireInventoryOwner(req, res, userId);
+    if (!inventory) return;
 
     const email = `cashier.${firstName.replace(/\s+/g, '').toLowerCase()}@invenzo.com`;
 
@@ -164,6 +175,15 @@ async function handleEditCashier(req, res) {
   if (!cashierId || !firstName)
     return res.status(400).json({ error: 'Missing data' });
 
+  // Authorization: only the inventory admin may edit their cashiers
+  const existing = await prisma.cashier.findUnique({
+    where: { id: Number(cashierId) },
+    include: { Inventory: { select: { adminId: true } } },
+  });
+  if (!existing) return res.status(404).json({ error: 'Cashier not found' });
+  if (existing.Inventory.adminId !== req.user.userId)
+    return res.status(403).json({ error: 'Forbidden' });
+
   const cashier = await prisma.cashier.update({
     where: { id: Number(cashierId) },
     data: {
@@ -190,9 +210,13 @@ async function handleResetPassword(req, res) {
 
   const cashier = await prisma.cashier.findUnique({
     where: { id: Number(cashierId) },
-    include: { User: true },
+    include: { User: true, Inventory: { select: { adminId: true } } },
   });
   if (!cashier) return res.status(404).json({ error: 'Cashier not found' });
+
+  // Authorization: only the inventory admin may reset a cashier's password
+  if (cashier.Inventory.adminId !== req.user.userId)
+    return res.status(403).json({ error: 'Forbidden' });
 
   await prisma.user.update({
     where: { id: cashier.userId },
@@ -217,13 +241,18 @@ async function handleDeleteCashier(req, res) {
   try {
     const cashier = await prisma.cashier.findUnique({
       where: { id: Number(cashierId) },
-      include: { Sale: true }, // include sales
+      include: { Sale: true, Inventory: { select: { adminId: true } } },
     });
 
     if (!cashier) {
       return res
         .status(404)
         .json({ success: false, error: 'Cashier not found' });
+    }
+
+    // Authorization: only the inventory admin may delete their cashiers
+    if (cashier.Inventory.adminId !== req.user.userId) {
+      return res.status(403).json({ success: false, error: 'Forbidden' });
     }
 
     if (cashier.Sale.length > 0) {

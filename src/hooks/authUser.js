@@ -1,5 +1,5 @@
 'use client';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setUser, setUserLoading, logoutUser } from '@/redux/userSlice';
 import { toast } from 'sonner';
@@ -14,7 +14,7 @@ export default function useAuthUser() {
   const hasShownOfflineToast = useRef(false);
   const { user, userLoading } = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  const [isFirstLoad, setIsFirstLoad] = useState(true);
+  const isFirstLoadRef = useRef(true);
   const intervalRef = useRef(null);
 
   const logout = useCallback(() => {
@@ -126,7 +126,7 @@ export default function useAuthUser() {
 
       if (!navigator.onLine) {
         const hasCachedUser = !!localStorage.getItem('user');
-        if (isFirstLoad && !hasShownOfflineToast.current && !hasCachedUser) {
+        if (isFirstLoadRef.current && !hasShownOfflineToast.current && !hasCachedUser) {
           toast.error('You are offline. Some features may be unavailable.');
           hasShownOfflineToast.current = true;
         }
@@ -157,7 +157,7 @@ export default function useAuthUser() {
       dispatch(setUser(null));
     } finally {
       dispatch(setUserLoading(false));
-      setIsFirstLoad(false);
+      isFirstLoadRef.current = false;
     }
 
     // ---- setup interval (every 2 min) ----
@@ -176,7 +176,7 @@ export default function useAuthUser() {
       if (intervalRef.current) clearInterval(intervalRef.current);
       window.removeEventListener('online', handleOnline);
     };
-  }, [dispatch, logout, checkStaleAndFetch, isFirstLoad]);
+  }, [dispatch, logout, checkStaleAndFetch]);
 
   return { user, userLoading, logout, fetchFreshUser };
 }
