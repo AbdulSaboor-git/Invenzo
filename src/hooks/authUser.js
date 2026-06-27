@@ -125,10 +125,10 @@ export default function useAuthUser() {
       }
 
       if (!navigator.onLine) {
-        if (isFirstLoad && !hasShownOfflineToast.current) {
+        const hasCachedUser = !!localStorage.getItem('user');
+        if (isFirstLoad && !hasShownOfflineToast.current && !hasCachedUser) {
           toast.error('You are offline. Some features may be unavailable.');
           hasShownOfflineToast.current = true;
-        } else {
         }
       }
 

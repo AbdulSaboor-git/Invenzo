@@ -4,9 +4,12 @@ import { Toaster } from 'sonner';
 
 export const metadata = {
   title: 'Invenzo - Inventory Management',
-  description: '',
+  description: 'Shop inventory management system',
+  manifest: '/manifest.json',
+  themeColor: '#ffffff',
   icons: {
-    icon: '/src/app/icon.png',
+    icon: '/icon-192.png',
+    apple: '/icon-192.png',
   },
 };
 
@@ -25,6 +28,8 @@ export default function RootLayout({ children }) {
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <link rel="preload" href="/invenzo_logo.png" as="image" />
+        <meta name="theme-color" content="#ffffff" />
+        <link rel="apple-touch-icon" href="/icon-192.png" />
       </head>
       <body>
         <ReduxProvider>

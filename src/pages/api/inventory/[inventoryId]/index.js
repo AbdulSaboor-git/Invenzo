@@ -67,30 +67,23 @@ async function handleGet(req, res, inventoryId) {
       return res.status(400).json({ message: 'User ID is required' });
     }
 
-    // Find inventory with adminId
-    const inv = await prisma.inventory.findUnique({
-      where: { id },
-      select: { id: true, adminId: true },
-    });
+    // Run auth checks in parallel — avoids holding two sequential connections
+    const [inv, cashierExists] = await Promise.all([
+      prisma.inventory.findUnique({
+        where: { id },
+        select: { id: true, adminId: true },
+      }),
+      prisma.cashier.findFirst({
+        where: { inventoryId: id, userId },
+        select: { id: true },
+      }),
+    ]);
 
     if (!inv) {
       return res.status(404).json({ message: 'Invalid inventory ID' });
     }
 
-    // Check if admin
-    let isAuthorized = inv.adminId === userId;
-
-    // If not admin, check if cashier
-    if (!isAuthorized) {
-      const cashierExists = await prisma.cashier.findFirst({
-        where: {
-          inventoryId: id,
-          userId: userId,
-        },
-        select: { id: true },
-      });
-      isAuthorized = Boolean(cashierExists);
-    }
+    const isAuthorized = inv.adminId === userId || Boolean(cashierExists);
 
     if (!isAuthorized) {
       return res
@@ -98,39 +91,39 @@ async function handleGet(req, res, inventoryId) {
         .json({ message: 'User is not authorized to access this inventory' });
     }
 
-    // Fetch products — supports optional ?search
+    // Fetch products and categories in parallel — one round-trip instead of two
     const search = req.query.search ?? '';
 
-    const products = await prisma.product.findMany({
-      where: {
-        inventoryId: id,
-        ...(search
-          ? {
-              OR: [
-                { name: { contains: search, mode: 'insensitive' } },
-                { tags: { contains: search, mode: 'insensitive' } },
-              ],
-            }
-          : {}),
-      },
-      include: {
-        category: {
-          select: { id: true, name: true },
+    const [products, categories] = await Promise.all([
+      prisma.product.findMany({
+        where: {
+          inventoryId: id,
+          ...(search
+            ? {
+                OR: [
+                  { name: { contains: search, mode: 'insensitive' } },
+                  { tags: { contains: search, mode: 'insensitive' } },
+                ],
+              }
+            : {}),
         },
-      },
-      orderBy: { name: 'asc' },
-    });
-
-    // Fetch categories
-    const categories = await prisma.category.findMany({
-      where: { inventoryId: id },
-      include: {
-        _count: {
-          select: { products: true },
+        include: {
+          category: {
+            select: { id: true, name: true },
+          },
         },
-      },
-      orderBy: { name: 'asc' },
-    });
+        orderBy: { name: 'asc' },
+      }),
+      prisma.category.findMany({
+        where: { inventoryId: id },
+        include: {
+          _count: {
+            select: { products: true },
+          },
+        },
+        orderBy: { name: 'asc' },
+      }),
+    ]);
 
     return res.status(200).json({ products, categories });
   } catch (error) {

@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import useAuthUser from '@/hooks/authUser';
 import Loading from '../loading';
+import OfflineBanner from '@/components/OfflineBanner';
 
 /**
  * BUG-03 fix:
@@ -33,5 +34,10 @@ export default function ProtectedLayout({ children }) {
     return <Loading />;
   }
 
-  return <>{children}</>;
+  return (
+    <div>
+      <OfflineBanner />
+      {children}
+    </div>
+  );
 }
