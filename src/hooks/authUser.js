@@ -69,6 +69,7 @@ export default function useAuthUser() {
       }
 
       if (res.status === 401) {
+        logout();
         return;
       }
 

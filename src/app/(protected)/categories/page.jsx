@@ -43,11 +43,13 @@ export default function Inventory() {
   const buttonRef = useRef(null);
 
   const localStorageKey = user?.id ? `inventoryData_${user.id}` : null;
+  const loadingInventoryRef = useRef(false);
 
   const fetchInventory = useCallback(async () => {
     if (!user) return;
     try {
       setLoadingInventory(true);
+      loadingInventoryRef.current = true;
 
       let response = await apiFetch(`/api/inventory?adminId=${user?.adminId}`);
 
@@ -71,11 +73,12 @@ export default function Inventory() {
       console.error('Error fetching inventories:', error);
     } finally {
       setLoadingInventory(false);
+      loadingInventoryRef.current = false;
     }
   }, [user, localStorageKey]);
 
   const fetchAndStoreData = useCallback(async () => {
-    if (!user?.id || !inventory || loadingInventory) {
+    if (!user?.id || !inventory || loadingInventoryRef.current) {
       return;
     }
     try {
@@ -114,7 +117,7 @@ export default function Inventory() {
       setLoadingData(false);
       setRefreshing(false);
     }
-  }, [user?.id, inventory?.id, localStorageKey, loadingInventory]);
+  }, [user?.id, inventory?.id, localStorageKey]);
 
   const RefreshData = async () => {
     if (!navigator.onLine) {

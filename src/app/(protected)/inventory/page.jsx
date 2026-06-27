@@ -1,5 +1,5 @@
 'use client';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { HiOutlineSwitchVertical } from 'react-icons/hi';
 
 import { MdEdit } from 'react-icons/md';
@@ -62,6 +62,7 @@ export default function Inventory() {
   );
 
   const localStorageKey = user?.id ? `inventoryData_${user.id}` : null;
+  const loadingInventoryRef = useRef(false);
 
   const updateInventoryName = async (newName) => {
     if (!navigator.onLine) {
@@ -120,6 +121,7 @@ export default function Inventory() {
     if (!user) return;
     try {
       setLoadingInventory(true);
+      loadingInventoryRef.current = true;
 
       let response = await apiFetch(`/api/inventory?adminId=${user?.adminId}`);
 
@@ -143,11 +145,12 @@ export default function Inventory() {
       console.error('Error fetching inventories:', error);
     } finally {
       setLoadingInventory(false);
+      loadingInventoryRef.current = false;
     }
   }, [user, localStorageKey]);
 
   const fetchAndStoreData = useCallback(async () => {
-    if (!user?.id || !inventory || loadingInventory) {
+    if (!user?.id || !inventory || loadingInventoryRef.current) {
       return;
     }
     try {
@@ -193,7 +196,7 @@ export default function Inventory() {
       setLoadingData(false);
       setRefreshing(false);
     }
-  }, [user?.id, inventory?.id, localStorageKey, loadingInventory]);
+  }, [user?.id, inventory?.id, localStorageKey]);
 
   const RefreshData = async () => {
     if (!navigator.onLine) {

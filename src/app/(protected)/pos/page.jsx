@@ -1,7 +1,7 @@
 'use client';
 import { isWeightVolumeUnit } from '@/utils/units';
 import Header from '@/components/header';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { MdClose, MdDelete, MdSearch } from 'react-icons/md';
 import { useSelector } from 'react-redux';
 import RefreshButton from '../inventory/components/refresh_btn';
@@ -27,6 +27,7 @@ export default function POSPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [cart, setCart] = useState([]);
   const localStorageKey = user?.id ? `inventoryData_${user.id}` : null;
+  const loadingInventoryRef = useRef(false);
   const [placingOrder, setPlacingOrder] = useState(false);
 
   function createCartItem(product) {
@@ -76,6 +77,7 @@ export default function POSPage() {
     if (!user) return;
     try {
       setLoadingInventory(true);
+      loadingInventoryRef.current = true;
 
       let response = await apiFetch(`/api/inventory?adminId=${user?.adminId}`);
 
@@ -98,11 +100,12 @@ export default function POSPage() {
       console.error('Error fetching inventories:', error);
     } finally {
       setLoadingInventory(false);
+      loadingInventoryRef.current = false;
     }
   }, [user, localStorageKey]);
 
   const fetchAndStoreData = useCallback(async () => {
-    if (!user?.id || !inventory || loadingInventory) {
+    if (!user?.id || !inventory || loadingInventoryRef.current) {
       return;
     }
     try {
@@ -147,7 +150,7 @@ export default function POSPage() {
       setLoadingData(false);
       setRefreshing(false);
     }
-  }, [user?.id, inventory?.id, localStorageKey, loadingInventory]);
+  }, [user?.id, inventory?.id, localStorageKey]);
 
   const RefreshData = async () => {
     if (!navigator.onLine) {
